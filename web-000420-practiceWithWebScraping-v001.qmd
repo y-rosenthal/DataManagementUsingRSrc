@@ -1,0 +1,288 @@
+library(rvest)
+
+#########################################################.
+# CSS Selector questions and answers
+#########################################################.
+# For information about CSS selectors, see the explanations on the 
+# various levels of the CSS selector Game found here:
+# https://flukeout.github.io/
+#########################################################.
+
+#########################################################################.
+# The following code is how we typically worked with local HTML files
+# in class:
+#
+#
+# This is the folder that contains the HTML file
+#    folder = "/Users/yrose/Dropbox (Personal)/website/yu/ids2460-dataMgmtForAnal/83spr23-ids2460-dataManagement/000600-WebScraping"
+#    setwd(folder)
+#
+# This is the html file name
+#    fullPage = read_html("000420-practiceWithWebScraping-v001.html")
+#
+# This command reads the HTML file into R
+#    fullPage = read_html("000420-practiceWithWebScraping-v001.html")
+#########################################################################.
+
+# NOTE
+# Instead of reading from an HTML file, I put the text of the HTML directly
+# into the R file by using an R r"(raw string)".  You can enclose anything
+# between r"(   and   )"   without using backslashes on the contents. 
+# This allows us to very simply create a single R variable that contains
+# the entire text of the HTML file directly in this R file. That makes 
+# understanding the answers to the questions below easier since you can
+# see the HTML directly in this file.
+
+textOfHtmlFile = r"(
+<html>
+  <head>
+    <title>this is the title</title>
+  </head>
+  <body>
+    <h1>one</h1>
+
+    <div class="a">
+      <h2>three</h2>
+      <p class="c">four</p>
+      <p class="d">five</p>
+    </div>
+
+    <div class="b">
+      <h2>six</h2>
+      <p class="d">seven</p>
+      <p class="c">eight</p>
+    </div>
+
+    <h3>nine</h3>
+    <div class="c">
+      <p>ten</p>
+      <p>eleven</p>
+      <p>twelve</p>
+      <p>thirteen</p>
+      <p>fourteen</p>
+      <p>fifteen</p>
+      <p>sixteen</p>
+      <p>seventeen</p>
+    </div>
+
+    <p id="x">eighteen</p>
+  </body>
+</html>
+)"
+
+fullPage = read_html(textOfHtmlFile)
+
+# For your convenience you can use this function to view the HTML
+# directly in the RStudio "Viewer" tab 
+# (by default Viewer is in the lower right corner of the RStudio window)
+viewHtmlInRStudio = function(htmlText){
+  filename = tempfile()   # create a temporary filename
+  filename = paste0(filename, ".html")  # add an html extension to the filename
+  cat("Html is in ", filename , "\n", sep="") # show where the file is (you can ignore this)
+  writeLines(htmlText, filename) # write the html text to the file
+  rstudioapi::viewer(filename)  # display the html page in the RStudio viewer
+  
+  # Wait 2 seconds before removing the file to make sure it has already
+  # been displayed in the RStudio "viewer" tab
+  Sys.sleep(2)
+  unlink(filename)  # remove the temporary file
+}
+
+
+viewHtmlInRStudio (textOfHtmlFile)
+
+
+
+
+
+########################################################################.
+# Question 1a.
+#
+# What CSS selector targets just the following words: 
+#  eighteen
+########################################################################.
+
+
+# This is ONE POSSIBLE answer
+# Use the #id selector
+# See "level 3" and the explanation in the CSS selector game here:
+# https://flukeout.github.io/
+css = "#x"
+  
+# test the answer to make sure it works
+fullPage %>% 
+  html_nodes(css) %>%
+  html_text2()
+
+
+########################################################################.
+# Question 1b.
+#
+# What CSS selector targets just the following words: 
+#  three
+#  six
+#  ten
+########################################################################.
+
+# This is ONE POSSIBLE answer
+# Use the following selector rules:
+#
+#   Descendant Selector (i.e. Selector1  Selctor2)  # see level 4 of CSS Game
+#   :first-child                                    # see level 15 of CSS Game
+
+css = "div  :first-child"
+
+# test the answer to make sure it works
+fullPage %>% 
+  html_nodes(css) %>%
+  html_text2()
+
+########################################################################.
+# Question 1c.
+#
+# What CSS selector targets just the following words: 
+#  four
+#  seven
+########################################################################.
+
+# This is ONE POSSIBLE answer
+# Use the following selector rules:
+#
+#   Adjacent Sibling Selector  # see level 12 of CSS Game
+
+css = "h2 + p"
+
+# test the answer to make sure it works
+fullPage %>% 
+  html_nodes(css) %>%
+  html_text2()
+
+########################################################################.
+# Question 1d.
+#
+# What CSS selector targets just the following words:
+#  thirteen
+#  fifteen
+#  seventeen
+########################################################################.
+
+# This is ONE POSSIBLE answer
+# Use the following selector rules:
+#
+#   nth-of-type   # see level 22 of CSS Game
+
+css = "p:nth-of-type(2n+4)"
+
+# test the answer to make sure it works
+fullPage %>% 
+  html_nodes(css) %>%
+  html_text2()
+
+
+########################################################################.
+# Question 1e.
+#
+# What CSS selector targets just the following words: 
+#  six
+#  seven
+#  eight
+########################################################################.
+
+
+# This is ONE POSSIBLE answer
+# Use the following selector rules:
+#
+#   Class Selector (i.e. .classname)                # see level 6 of CSS Game
+#   Descendant Selector (i.e. Selector1  Selctor2)  # see level 4 of CSS Game
+#   The Universal Selector (i.e. *)                 # see level 10 of CSS Game
+css = ".b *"
+
+# test the answer to make sure it works
+fullPage %>% 
+  html_nodes(css) %>%
+  html_text2()
+
+
+
+########################################################################.
+# Question 2.
+#
+# Save the HTML code in a file and display it in your browser. Modify the code 
+# so that the oddNumber numbered words appear in green text and the evenNumber numbered 
+# words appear in red text. You may add any HTML or css code that you think is
+# appropriate. However, do not modify the overall layout of the page (e.g. all
+# headings should remain headings, all paragraphs should remain paragraphs,
+# etc.)
+########################################################################.
+
+# NOTE - instead of modifying the HTML in a file I will show how to 
+# modify the HTML code directly in this R file.
+#
+# The following is the original HTML code from above with some modifications.
+#
+# Step1 :   add class="evenNumber" to the tags that contain evenNumber numbers
+#           add class="oddNumber" to the tags that contain evenNumber numbers
+#
+#    The words "evenNumber" and "oddNumber" are NOT part of CSS or HTML. 
+#    They are just class names that I "made up".
+#
+#    If a tag already has a class="something" just add the new class name
+#    by putting a space between the new name and the original name. 
+#    For example  <p class="oddNumber d">seven</p>
+#    means that the p tag has both a class named "oddNumber" and a class
+#    named "d".
+#
+# Step 2: Add the following <style> element with these CSS rules into
+#         the <head>...</head> element of the page.
+#
+#             <style>
+#               .oddNumber { color: green; }
+#               .evenNumber { color: red; }
+#             </style>
+  
+modifiedHtml = r"(
+<html>
+  <head>
+    <title>this is the title</title>
+
+    <!-- add the following css rules -->
+    <style>
+      .oddNumber { color: green; }
+      .evenNumber { color: red; }
+    </style>
+
+  </head>
+  <body>
+    <h1 class="oddNumber">one</h1>
+
+    <div class="a">
+      <h2 class="oddNumber">three</h2>
+      <p class="evenNumber c">four</p>
+      <p class="oddNumber d">five</p>
+    </div>
+
+    <div class="b">
+      <h2 class="evenNumber">six</h2>
+      <p class="oddNumber d">seven</p>
+      <p class="evenNumber c">eight</p>
+    </div>
+
+    <h3 class="oddNumber">nine</h3>
+    <div class="c">
+      <p class="evenNumber">ten</p>
+      <p class="oddNumber">eleven</p>
+      <p class="evenNumber">twelve</p>
+      <p class="oddNumber">thirteen</p>
+      <p class="evenNumber">fourteen</p>
+      <p class="oddNumber">fifteen</p>
+      <p class="evenNumber">sixteen</p>
+      <p class="oddNumber">seventeen</p>
+    </div>
+
+    <p class="evenNumber" id="x">eighteen</p>
+  </body>
+</html>
+)"
+
+# Show the results
+viewHtmlInRStudio(modifiedHtml)

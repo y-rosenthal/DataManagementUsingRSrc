@@ -1,0 +1,165 @@
+# Get the data - "books database" and other tables
+
+```{r}
+#| echo: false
+#| output: false
+
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
+
+As we learn about databases and SQL we will need to refer to various 
+collections of data (i.e. "tables" of data in SQL terminology). 
+See below for info on how to download and install
+the various collections of data into R.
+
+
+```{r}
+#| include: FALSE
+
+require(sqldf)
+file.copy(from="data/grades.csv", to=".")
+file.copy(from="data/sqlbolt_tables-v007.RData", to=".")
+```
+
+## Download all of the files
+
+Download the files by clicking on the links below.
+To load the various collections of data into R
+see the instructions in the sections below.
+
+- The following file contains the grades table:  
+
+  * [grades.csv](grades.csv)
+
+- The following file contains several tables of data    
+  (customers, orders, movies, north_american_cities, boxOffice, 
+  buildings, employees)  
+
+  * [sqlbolt_tables-v007.RData](sqlbolt_tables-v007.RData)
+
+- The following files are all associated with the "Books database": 
+
+  * [booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v020.docx) 
+  
+    This file contains a description of the database as well as a discussion of
+    different concepts related to databases in general. You should use this
+    file as a tutorial about the books database. The end of this file
+    contains many questions/answers to test your knowledge of SQL.
+    
+
+  * The following are the files that you can use to import the data
+    for the database into R.
+    
+    - [titles.csv](data/booksDatabase/titles.csv)
+    
+    - [authors.csv](data/booksDatabase/authors.csv)
+    
+    - [publishers.csv](data/booksDatabase/publishers.csv)
+    
+    - [title_authors.csv](data/booksDatabase/title_authors.csv)
+  
+    - [royalties](data/booksDatabase/royalties.csv)
+
+
+## Prepare to import the data
+
+In order to read the data into R and to access the data using SQL, we will
+need to load the R packages "readr" and "sqldf". We do so with
+the following commands:
+
+```{r}
+#| output: false
+#| warning: false
+
+if(!require(readr)){install.packages("readr");require(readr);}
+if(!require(sqldf)){install.packages("sqldf");require(sqldf);}
+```
+
+
+## import the data: grades
+
+[grades.csv](grades.csv) is a .csv file that contains information
+about students and their grades.
+You can read the contents of the file into R 
+with the read.csv function as shown below.
+
+```{r}
+grades = read.csv("grades.csv")
+```
+  
+Once you've done so, you can display the data:
+
+```{r}
+sqldf("select * from grades")
+```
+
+
+## import the data: customers, orders, movies, north_american_cities, etc
+
+The file [sqlbolt_tables-v007.RData](sqlbolt_tables-v007.RData)
+contains the following different collections of information:
+
+- customers
+- orders
+- movies
+- north_american_cities
+- as well as some others (boxOffice, buildings, employees)
+
+Use the load function as shown below to load the data into R.
+
+```{r}
+load("sqlbolt_tables-v007.RData")
+```
+
+Below are the contents of these tables:
+
+```{r}
+sqldf("select * from grades")
+sqldf("select * from movies")
+sqldf("select * from orders")
+sqldf("select * from customers")
+sqldf("select * from north_american_cities")
+```
+
+
+## import the data: "books database"
+
+The "books database" is a collection of several relational database tables. 
+The links to download the files for this database are located at the top
+of this webpage.
+
+Pay special attention to the file
+[booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v020.docx)
+which contains a description of the database as well as a discussion of
+different concepts related to databases in general. You should use this
+file as a tutorial about the books database. The end of this file
+contains many questions/answers to test your knowledge of SQL.
+
+Once you've downloaded the various files you can run the following commands to 
+import the data into R.
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The books database contains information about various books, authors,
+# publishers, etc.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Read in the data for the books database - see the 
+titles = read_csv("data/booksDatabase/titles.csv", na="NULL", show_col_types=FALSE)
+authors = read_csv("data/booksDatabase/authors.csv", na="NULL", show_col_types=FALSE)
+publishers = read_csv("data/booksDatabase/publishers.csv", na="NULL", show_col_types=FALSE)
+title_authors = read_csv("data/booksDatabase/title_authors.csv", na="NULL", show_col_types=FALSE)
+royalties = read_csv("data/booksDatabase/royalties.csv", na="NULL", show_col_types=FALSE)
+```
+
+Below are the contents of these tables:
+
+```{r}
+sqldf("select * from titles")
+sqldf("select * from publishers")
+sqldf("select * from title_authors")
+sqldf("select * from authors")
+sqldf("select * from royalties")
+```
+

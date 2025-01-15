@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.537">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>tdyvrsdplyr-v004</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="0500100-tdyvrsDplyr-v004_files/libs/clipboard/clipboard.min.js"></script>
+<script src="0500100-tdyvrsDplyr-v004_files/libs/quarto-html/quarto.js"></script>
+<script src="0500100-tdyvrsDplyr-v004_files/libs/quarto-html/popper.min.js"></script>
+<script src="0500100-tdyvrsDplyr-v004_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="0500100-tdyvrsDplyr-v004_files/libs/quarto-html/anchor.min.js"></script>
+<link href="0500100-tdyvrsDplyr-v004_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="0500100-tdyvrsDplyr-v004_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="0500100-tdyvrsDplyr-v004_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="0500100-tdyvrsDplyr-v004_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="0500100-tdyvrsDplyr-v004_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="intro-to-dplyr" class="level1">
+<h1>Intro to dplyr</h1>
+<section id="intro-to-dplyr-1" class="level2">
+<h2 class="anchored" data-anchor-id="intro-to-dplyr-1">Intro to dplyr</h2>
+<p>The dplyr R package is part of the tidyverse family of packages. It is used to “slice and dice” tibbles to get exactly the data you want, in the form that you want it.</p>
+<p>The dplyr R package performs the same kinds of tasks that the “SQL select statement” performs. We’ll learn more about SQL later.</p>
+<p>Sources for info about the dplyr package:</p>
+<ul>
+<li><p>The book “R for Data Science, second edition” is available online and in print. The online version is here: <a href="https://r4ds.hadley.nz/" class="uri">https://r4ds.hadley.nz/</a> The intro to dplyr appears here: <a href="https://r4ds.hadley.nz/data-transform" class="uri">https://r4ds.hadley.nz/data-transform</a></p></li>
+<li><p>The official tidyverse website,<a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>, is a great place to start when you’re looking for information about any of the tidyverse packages. The dplyr webpage is <a href="https://dplyr.tidyverse.org/" class="uri">https://dplyr.tidyverse.org/</a></p></li>
+<li><p>You can also look at the official CRAN page for dplyr, <a href="https://cloud.r-project.org/web/packages/dplyr/index.html" class="uri">https://cloud.r-project.org/web/packages/dplyr/index.html</a> See the vignettes on this page for good tutorial material.</p></li>
+</ul>
+</section>
+<section id="download-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="download-the-data">Download the data</h2>
+</section>
+<section id="load-the-packages-well-neeed" class="level2">
+<h2 class="anchored" data-anchor-id="load-the-packages-well-neeed">Load the packages we’ll neeed</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(tibble)){<span class="fu">install.packages</span>(<span class="st">"tibble"</span>);<span class="fu">require</span>(tibble);}</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(dplyr)){<span class="fu">install.packages</span>(<span class="st">"dplyr"</span>);<span class="fu">require</span>(dplyr);}</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(readr)){<span class="fu">install.packages</span>(<span class="st">"readr"</span>);<span class="fu">require</span>(readr);}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="get-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="get-the-data">Get the data</h2>
+<p>The data we are using in this section is contained in a csv file. If you’d like to follow along with this tutorial on your own computer you can</p>
+<ul>
+<li><p>download the .csv file we are using by clicking <a href="data/salespeople-v001.csv">here</a>.</p></li>
+<li><p>Put the file in a folder named “data”. Make sure that the folder is a subfolder of your “working directory”. You can find your “working directory” with the R function <code>getwd()</code>. Alternatively, you can change the read_csv function below to reflect the location where you put the file.</p></li>
+</ul>
+<p>The data contains information about salespeople who are employees of a company. Each row of the data contains info about one salesperson. They get paid as a combination of their “base pay” and a commission that is a percentage of the total dollar amount of sales they make.</p>
+<section id="download-the-data-if-you-like" class="level3">
+<h3 class="anchored" data-anchor-id="download-the-data-if-you-like">Download the data if you like</h3>
+</section>
+<section id="read-in-the-data-into-a-tibble" class="level3">
+<h3 class="anchored" data-anchor-id="read-in-the-data-into-a-tibble">Read in the data into a tibble</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in the data into a tibble</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that the following code uses the readr::read_csv function from the readr</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># package which is part of the tidyverse collection of packages. </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># This function is similar to the base-R read.csv function.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># read_csv returns a tibble, which is the data structure that the </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># tidyverse packages use in lieu of dataframes. A tibble is basically</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># a dataframe with extra features.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># By contrast, the base-r read.csv function returns a dataframe.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>sales <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"data/salespeople-v001.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 24 Columns: 7
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): first, last, title, region
+dbl (3): baseInThousands, salesInThousands, yearsWithCompany
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="display-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="display-the-data">Display the data</h2>
+<p>Since the data is in a tibble, by default, only the first 10 rows are displayed. In addition, only the columns that fit on the screen will be displayed. If the rows are too wide for the screen, then some columns may not be displayed and/or the contents of some columns may be shortened.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows and columns of the sales data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sales</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   first  last    title region baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Joe    Smith   Mana… usa                 40              100               10
+ 2 Sam    Lee     Sale… usa                 40              200                6
+ 3 Sue    Sallin… Sale… asia                30              150               10
+ 4 Barb   Brown   Sr. … asia                35               79                4
+ 5 Jack   Martin  Mana… europe              20               40                3
+ 6 Kate   Carey   Sr. … europe              20               69                2
+ 7 Emy    Parsons Sale… africa              25               87                3
+ 8 Monica Oja     Sale… africa              35               98               10
+ 9 Jim    Kuruzo… Sr. … usa                 35              140                3
+10 Zeke   Cohen   Mana… usa                 30              250               10
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="display-more-rowscolumns-of-the-tibble" class="level2">
+<h2 class="anchored" data-anchor-id="display-more-rowscolumns-of-the-tibble">Display more rows/columns of the tibble</h2>
+<section id="print-some_tibble-nnumber_of_rows" class="level3">
+<h3 class="anchored" data-anchor-id="print-some_tibble-nnumber_of_rows">print( SOME_TIBBLE, n=NUMBER_OF_ROWS)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the print function to modify the output. Use the following arguments:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    n - number of rows to display (Inf, i.e. infinity, for all rows)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    width - maximum width of a row to display (might wrap if it's too long for your screen)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sales, <span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+  first last      title region baseInThousands salesInThousands yearsWithCompany
+  &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+1 Joe   Smith     Mana… usa                 40              100               10
+2 Sam   Lee       Sale… usa                 40              200                6
+3 Sue   Sallinger Sale… asia                30              150               10
+# ℹ 21 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="print-some_tibble-widthwidth_of_data" class="level3">
+<h3 class="anchored" data-anchor-id="print-some_tibble-widthwidth_of_data">print( SOME_TIBBLE, width=WIDTH_OF_DATA)</h3>
+<pre><code># Display all rows and all columns
+print(sales, n=Inf, width=Inf)</code></pre>
+</section>
+<section id="other-ways-of-viewing-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="other-ways-of-viewing-the-data">Other ways of viewing the data</h3>
+<pre><code># To see the entire tibble in a separate tab in RStudio
+# you can use the following command
+#
+#View(sales)
+
+# Show all column names and datatypes plus some actual data
+glimpse(sales)
+
+# Show just the column names (could be useful for a quick reminder when you need it)
+colnames(sales)</code></pre>
+</section>
+</section>
+<section id="convert-between-tibbles-and-dataframes" class="level2">
+<h2 class="anchored" data-anchor-id="convert-between-tibbles-and-dataframes">Convert between tibbles and dataframes</h2>
+<p>The majority of the dplyr functions work with tibbles or dataframes. However, the tidyverse in general and dplyr specifically is designed to work better with tibbles.</p>
+<p>If you need to, you can always convert a tibble to a dataframe or a dataframe to a tibble.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the tibble to a data.frame</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dfSales <span class="ot">=</span> <span class="fu">as.data.frame</span>(sales)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert a dataframe to a tibble</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>tblSales <span class="ot">=</span> <span class="fu">as_tibble</span>(dfSales)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble is also a dataframe.</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># This is similar to how a square is also a rectangle.</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># You can see that from the class of the variable. </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># The class of a tibble contains "tbl_df" "tbl" as well as "data.frame"</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(tblSales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "tbl_df"     "tbl"        "data.frame"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># However, a dataframe is not necessarily a tibble.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This is similar ot how a rectangle is not necessarily a square.</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice how the class of dfSales is only "data.frame"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dfSales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.frame"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The head function is designed to work with dataframes</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dfSales, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  first      last       title region baseInThousands salesInThousands
+1   Joe     Smith     Manager    usa              40              100
+2   Sam       Lee Salesperson    usa              40              200
+3   Sue Sallinger Salesperson   asia              30              150
+  yearsWithCompany
+1               10
+2                6
+3               10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Therefore the head function also works with tibbles</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tblSales, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 7
+  first last      title region baseInThousands salesInThousands yearsWithCompany
+  &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+1 Joe   Smith     Mana… usa                 40              100               10
+2 Sam   Lee       Sale… usa                 40              200                6
+3 Sue   Sallinger Sale… asia                30              150               10</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">#######################################################################</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># However, features of some functions that are designed to</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># work with tibbles might not work with data.frames.</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">#######################################################################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This works fine - display the first 3 rows of the tibble.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tblSales, <span class="at">n=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+  first last      title region baseInThousands salesInThousands yearsWithCompany
+  &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+1 Joe   Smith     Mana… usa                 40              100               10
+2 Sam   Lee       Sale… usa                 40              200                6
+3 Sue   Sallinger Sale… asia                30              150               10
+# ℹ 21 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ERROR - n argument is not designed to work with dataframes that aren't tibbles</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dfSales, <span class="at">n=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in print.default(m, ..., quote = quote, right = right, max = max): invalid 'na.print' specification</code></pre>
+</div>
+</div>
+</section>
+<section id="select" class="level2">
+<h2 class="anchored" data-anchor-id="select">select</h2>
+<p>Use the select function to get just the specified columns.</p>
+<p>The first argument to the select function is named .data (notice the period before .data). It is used to specify which tibble or dataframe you are working with. The other arguments are used to specify which columns you’d like to see from the dataframe/tibble. Note that there are NO quotes around the column names (this differs from the base-r way of specifying column names in a dataframe).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show just the specified columns from the sales tibble</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(<span class="at">.data=</span>sales, first, last, salesInThousands)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 3
+   first  last       salesInThousands
+   &lt;chr&gt;  &lt;chr&gt;                 &lt;dbl&gt;
+ 1 Joe    Smith                   100
+ 2 Sam    Lee                     200
+ 3 Sue    Sallinger               150
+ 4 Barb   Brown                    79
+ 5 Jack   Martin                   40
+ 6 Kate   Carey                    69
+ 7 Emy    Parsons                  87
+ 8 Monica Oja                      98
+ 9 Jim    Kuruzovich              140
+10 Zeke   Cohen                   250
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+<p>The columns appear in whatever order you specified in the select function. If you want to bring a few columns to the front followed by the rest of the columns, you can use the everything() function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the specified columns first, followed by the other columns.</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(<span class="at">.data=</span>sales, first, last, <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   first  last    title region baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Joe    Smith   Mana… usa                 40              100               10
+ 2 Sam    Lee     Sale… usa                 40              200                6
+ 3 Sue    Sallin… Sale… asia                30              150               10
+ 4 Barb   Brown   Sr. … asia                35               79                4
+ 5 Jack   Martin  Mana… europe              20               40                3
+ 6 Kate   Carey   Sr. … europe              20               69                2
+ 7 Emy    Parsons Sale… africa              25               87                3
+ 8 Monica Oja     Sale… africa              35               98               10
+ 9 Jim    Kuruzo… Sr. … usa                 35              140                3
+10 Zeke   Cohen   Mana… usa                 30              250               10
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="filter" class="level2">
+<h2 class="anchored" data-anchor-id="filter">filter</h2>
+<p>The filter function is used to retrieve the rows from a tibble that match a condition.</p>
+<ul>
+<li><p>The first argument of the filter function is also .data. Just as with the select function this argument for the filter function is expected to be a tibble or a dataframe.</p></li>
+<li><p>The next argument to filter is a logical expression. You can use the names of the columns of the tibble/dataframe in the expression. filter will examine each row of the tibble/dataframe and only return those rows whose values match the stated condition.</p></li>
+</ul>
+<p>The following code displays only those rows whose salesInThousands is less than 100.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="at">.data=</span>sales, salesInThousands <span class="sc">&lt;</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 7
+  first  last    title  region baseInThousands salesInThousands yearsWithCompany
+  &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+1 Barb   Brown   Sr. S… asia                35               79                4
+2 Jack   Martin  Manag… europe              20               40                3
+3 Kate   Carey   Sr. S… europe              20               69                2
+4 Emy    Parsons Sales… africa              25               87                3
+5 Monica Oja     Sales… africa              35               98               10</code></pre>
+</div>
+</div>
+</section>
+<section id="using-the-dplyr-functions-in-a-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-dplyr-functions-in-a-pipeline">Using the dplyr functions in a “pipeline”</h2>
+<p>The tidyverse functions are designed so that you can be apply them one after the other. The clearest way to do that is to “pipe” the output of one function into the input of another.</p>
+<p>The following pipeline first applies select to generate a new tibble that only contains the specified columns. Then the filter function then chooses only those rows that meet the specified condition.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(first, last, salesInThousands) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(salesInThousands <span class="sc">&lt;</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  first  last    salesInThousands
+  &lt;chr&gt;  &lt;chr&gt;              &lt;dbl&gt;
+1 Barb   Brown                 79
+2 Jack   Martin                40
+3 Kate   Carey                 69
+4 Emy    Parsons               87
+5 Monica Oja                   98</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In this example we could apply the filter before select.</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># It technically doesn't matter which order you apply the functions in </span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># as long as you realize that the output of one function is fed into </span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the input of the next function.</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(salesInThousands <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(first, last, salesInThousands) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  first  last    salesInThousands
+  &lt;chr&gt;  &lt;chr&gt;              &lt;dbl&gt;
+1 Barb   Brown                 79
+2 Jack   Martin                40
+3 Kate   Carey                 69
+4 Emy    Parsons               87
+5 Monica Oja                   98</code></pre>
+</div>
+</div>
+<p>The dplyr functions listed in the next section all take a tibble/dataframe as their first argument and return a modified tibble/dataframe. Therefore each of these functions can be called as part of a pipeline. This allows us to start with some raw data in a tibble/dataframe and manipulate it in numerous ways.</p>
+</section>
+<section id="important-dplyr-functions-for-manipulating-tibbles" class="level2">
+<h2 class="anchored" data-anchor-id="important-dplyr-functions-for-manipulating-tibbles">Important dplyr functions for manipulating tibbles</h2>
+<ul>
+<li><p>select - choose the columns you want (described above)</p></li>
+<li><p>filter - choose the rows based on a condition (also described above)</p></li>
+<li><p>arrange - reorder the rows based on the specified sorting rules</p></li>
+<li><p>mutate - adds additional columns to the tibble/dataframe</p></li>
+<li><p>group_by - identify which rows will be aggregated by a subsequent summarize function (see below) (This isn’t too useful unless it is followed by a subsequent call to summarize).</p></li>
+<li><p>summarize - aggregrate several rows of data into a single row of data by using “aggregate functions” such as max(), min(), etc</p></li>
+</ul>
+<p>See more details below in the subsequent sectoins. The dplyr package contains many, many functions. The functions listed above are of the most important functions in dplyr and by combining them in pipelines you can retrieve data from a tibble in many different ways. The documentation sometimes refers to these functions as “dplyr verbs” since each of them “do something” to the data.</p>
+</section>
+<section id="arrange" class="level2">
+<h2 class="anchored" data-anchor-id="arrange">arrange</h2>
+<p>The arrange function reorders the rows based on specified sorting rules.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange all of the rows based on salesInThousands. </span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(salesInThousands)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   first  last    title region baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Jack   Martin  Mana… europe              20               40                3
+ 2 Kate   Carey   Sr. … europe              20               69                2
+ 3 Barb   Brown   Sr. … asia                35               79                4
+ 4 Emy    Parsons Sale… africa              25               87                3
+ 5 Monica Oja     Sale… africa              35               98               10
+ 6 Joe    Smith   Mana… usa                 40              100               10
+ 7 Jack   Aames   Sale… usa                 43              105                4
+ 8 Larry  Green   Sr. … europe              20              113                4
+ 9 Zeke   Smith   Sale… asia                20              120                3
+10 Jim    Kuruzo… Sr. … usa                 35              140                3
+# ℹ 14 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the first, last names and salesInThousands</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for only those rows for which salesInThousands is less than 100.</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the rows so that they appear in order of the salesInThousands.</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(first, last, salesInThousands) <span class="sc">|&gt;</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(salesInThousands <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(salesInThousands)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  first  last    salesInThousands
+  &lt;chr&gt;  &lt;chr&gt;              &lt;dbl&gt;
+1 Jack   Martin                40
+2 Kate   Carey                 69
+3 Barb   Brown                 79
+4 Emy    Parsons               87
+5 Monica Oja                   98</code></pre>
+</div>
+</div>
+<section id="arrange-by-more-than-one-column" class="level3">
+<h3 class="anchored" data-anchor-id="arrange-by-more-than-one-column">arrange by more than one column</h3>
+<p>If you pass more than one column name to the arrange function</p>
+<ul>
+<li><p>the rows are arranged by the first specified column</p></li>
+<li><p>all rows that have the same value of the first column passed to arrange are further arranged within that cluster of rows by the 2nd column name that was passed to arrange</p></li>
+<li><p>You can specify as many column names as you like in the arrange function. Column names that appear later in the call to arrange only effect the final order for those rows that share the same value for the earlier column names in the arrange function.</p></li>
+</ul>
+<p>See the examples below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show the rows in alphabetical order based on the names of the salespeople.</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(last,first) <span class="sc">|&gt;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   first  last    title region baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Barb   Aames   Sale… usa                 21              255                7
+ 2 Jack   Aames   Sale… usa                 43              105                4
+ 3 Sue    Aames   Sr. … africa              35              600               10
+ 4 Hugh   Black   Sr. … africa              40              261                9
+ 5 Barb   Brown   Sr. … asia                35               79                4
+ 6 Jim    Brown   Sale… europe              50              167                2
+ 7 Kate   Carey   Sr. … europe              20               69                2
+ 8 Zeke   Cohen   Mana… usa                 30              250               10
+ 9 Larry  Green   Sr. … europe              20              113                4
+10 Jim    Kuruzo… Sr. … usa                 35              140                3
+11 Sam    Lee     Sale… usa                 40              200                6
+12 Sam    Lincoln Mana… europe              30              500                2
+13 Amy    Markov… Sale… asia                46              340                3
+14 Jack   Martin  Mana… europe              20               40                3
+15 Monica Oja     Sale… africa              35               98               10
+16 Emy    Parsons Sale… africa              25               87                3
+17 Sue    Sallin… Sale… asia                30              150               10
+18 Joe    Smith   Mana… usa                 40              100               10
+19 Zeke   Smith   Sale… asia                20              120                3
+20 Joe    Washin… Sr. … europe              33              370                2
+21 Laura  White   Mana… africa              20              281                8
+22 Emy    Zeitch… Mana… asia                34              166                4
+23 Kate   Zeitch… Sr. … usa                 50              187                4
+24 Monica Zeitch… Sale… asia                23              184                1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange by title, then by last names and finally by first names</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(title, last, first) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   first  last    title region baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Zeke   Cohen   Mana… usa                 30              250               10
+ 2 Sam    Lincoln Mana… europe              30              500                2
+ 3 Jack   Martin  Mana… europe              20               40                3
+ 4 Joe    Smith   Mana… usa                 40              100               10
+ 5 Laura  White   Mana… africa              20              281                8
+ 6 Emy    Zeitch… Mana… asia                34              166                4
+ 7 Barb   Aames   Sale… usa                 21              255                7
+ 8 Jack   Aames   Sale… usa                 43              105                4
+ 9 Jim    Brown   Sale… europe              50              167                2
+10 Sam    Lee     Sale… usa                 40              200                6
+11 Amy    Markov… Sale… asia                46              340                3
+12 Monica Oja     Sale… africa              35               98               10
+13 Emy    Parsons Sale… africa              25               87                3
+14 Sue    Sallin… Sale… asia                30              150               10
+15 Zeke   Smith   Sale… asia                20              120                3
+16 Monica Zeitch… Sale… asia                23              184                1
+17 Sue    Aames   Sr. … africa              35              600               10
+18 Hugh   Black   Sr. … africa              40              261                9
+19 Barb   Brown   Sr. … asia                35               79                4
+20 Kate   Carey   Sr. … europe              20               69                2
+21 Larry  Green   Sr. … europe              20              113                4
+22 Jim    Kuruzo… Sr. … usa                 35              140                3
+23 Joe    Washin… Sr. … europe              33              370                2
+24 Kate   Zeitch… Sr. … usa                 50              187                4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># It might help to read if you display the columns you are sorting by first.</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co"># To do so, simply add a select to the pipeline. </span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># In this example, it makes no difference</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co"># if the select appears before or after the arrange function.</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice that the names are alphabetically arranged only with a group of</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co"># rows that all have the same title.</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(title, last, first, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(title, last, first) <span class="sc">|&gt;</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   title    last  first region baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Manager  Cohen Zeke  usa                 30              250               10
+ 2 Manager  Linc… Sam   europe              30              500                2
+ 3 Manager  Mart… Jack  europe              20               40                3
+ 4 Manager  Smith Joe   usa                 40              100               10
+ 5 Manager  White Laura africa              20              281                8
+ 6 Manager  Zeit… Emy   asia                34              166                4
+ 7 Salespe… Aames Barb  usa                 21              255                7
+ 8 Salespe… Aames Jack  usa                 43              105                4
+ 9 Salespe… Brown Jim   europe              50              167                2
+10 Salespe… Lee   Sam   usa                 40              200                6
+11 Salespe… Mark… Amy   asia                46              340                3
+12 Salespe… Oja   Moni… africa              35               98               10
+13 Salespe… Pars… Emy   africa              25               87                3
+14 Salespe… Sall… Sue   asia                30              150               10
+15 Salespe… Smith Zeke  asia                20              120                3
+16 Salespe… Zeit… Moni… asia                23              184                1
+17 Sr. Sal… Aames Sue   africa              35              600               10
+18 Sr. Sal… Black Hugh  africa              40              261                9
+19 Sr. Sal… Brown Barb  asia                35               79                4
+20 Sr. Sal… Carey Kate  europe              20               69                2
+21 Sr. Sal… Green Larry europe              20              113                4
+22 Sr. Sal… Kuru… Jim   usa                 35              140                3
+23 Sr. Sal… Wash… Joe   europe              33              370                2
+24 Sr. Sal… Zeit… Kate  usa                 50              187                4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can get even more fine grained. This time we will arrange</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># by title, then by region, then by last names and finally by first names.</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice that the names are alphabetically arranged only with a group of</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co"># rows that all have the same title and region.</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(title, region, last, first, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(title, region, last, first) <span class="sc">|&gt;</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   title    region last  first baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Manager  africa White Laura              20              281                8
+ 2 Manager  asia   Zeit… Emy                34              166                4
+ 3 Manager  europe Linc… Sam                30              500                2
+ 4 Manager  europe Mart… Jack               20               40                3
+ 5 Manager  usa    Cohen Zeke               30              250               10
+ 6 Manager  usa    Smith Joe                40              100               10
+ 7 Salespe… africa Oja   Moni…              35               98               10
+ 8 Salespe… africa Pars… Emy                25               87                3
+ 9 Salespe… asia   Mark… Amy                46              340                3
+10 Salespe… asia   Sall… Sue                30              150               10
+11 Salespe… asia   Smith Zeke               20              120                3
+12 Salespe… asia   Zeit… Moni…              23              184                1
+13 Salespe… europe Brown Jim                50              167                2
+14 Salespe… usa    Aames Barb               21              255                7
+15 Salespe… usa    Aames Jack               43              105                4
+16 Salespe… usa    Lee   Sam                40              200                6
+17 Sr. Sal… africa Aames Sue                35              600               10
+18 Sr. Sal… africa Black Hugh               40              261                9
+19 Sr. Sal… asia   Brown Barb               35               79                4
+20 Sr. Sal… europe Carey Kate               20               69                2
+21 Sr. Sal… europe Green Larry              20              113                4
+22 Sr. Sal… europe Wash… Joe                33              370                2
+23 Sr. Sal… usa    Kuru… Jim                35              140                3
+24 Sr. Sal… usa    Zeit… Kate               50              187                4</code></pre>
+</div>
+</div>
+</section>
+<section id="descsome_column---arrange-in-descending-order" class="level3">
+<h3 class="anchored" data-anchor-id="descsome_column---arrange-in-descending-order">desc(SOME_COLUMN) - arrange in descending order</h3>
+<p>Use the desc function to specify “descending” order. See the examples.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In the following, the rows with the highest values</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of salesInThousands are at the top.</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(salesInThousands <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(first, last, salesInThousands) <span class="sc">|&gt;</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(salesInThousands))  <span class="sc">|&gt;</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  first  last    salesInThousands
+  &lt;chr&gt;  &lt;chr&gt;              &lt;dbl&gt;
+1 Monica Oja                   98
+2 Emy    Parsons               87
+3 Barb   Brown                 79
+4 Kate   Carey                 69
+5 Jack   Martin                40</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange alphabetically by the region.</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Within each region, show the sales in decreasing order.</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, baseInThousands, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region,  <span class="fu">desc</span>(baseInThousands)) <span class="sc">|&gt;</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   region baseInThousands first  last    title salesInThousands yearsWithCompany
+   &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 africa              40 Hugh   Black   Sr. …              261                9
+ 2 africa              35 Monica Oja     Sale…               98               10
+ 3 africa              35 Sue    Aames   Sr. …              600               10
+ 4 africa              25 Emy    Parsons Sale…               87                3
+ 5 africa              20 Laura  White   Mana…              281                8
+ 6 asia                46 Amy    Markov… Sale…              340                3
+ 7 asia                35 Barb   Brown   Sr. …               79                4
+ 8 asia                34 Emy    Zeitch… Mana…              166                4
+ 9 asia                30 Sue    Sallin… Sale…              150               10
+10 asia                23 Monica Zeitch… Sale…              184                1
+11 asia                20 Zeke   Smith   Sale…              120                3
+12 europe              50 Jim    Brown   Sale…              167                2
+13 europe              33 Joe    Washin… Sr. …              370                2
+14 europe              30 Sam    Lincoln Mana…              500                2
+15 europe              20 Jack   Martin  Mana…               40                3
+16 europe              20 Kate   Carey   Sr. …               69                2
+17 europe              20 Larry  Green   Sr. …              113                4
+18 usa                 50 Kate   Zeitch… Sr. …              187                4
+19 usa                 43 Jack   Aames   Sale…              105                4
+20 usa                 40 Joe    Smith   Mana…              100               10
+21 usa                 40 Sam    Lee     Sale…              200                6
+22 usa                 35 Jim    Kuruzo… Sr. …              140                3
+23 usa                 30 Zeke   Cohen   Mana…              250               10
+24 usa                 21 Barb   Aames   Sale…              255                7</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the names, titles and salesInThousands for</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># people who sell to the usa and for people who sell to europe.</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the results so that all titles are grouped together.</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Within the rows of a particular title sort the results in </span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co"># descending order based on the salesInThousands so that the </span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># rows with greater salesInThousands appear earlier.</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Only show salespeople for the usa and europe</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(first, last, title, salesInThousands, region) <span class="sc">|&gt;</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"usa"</span>, <span class="st">"europe"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(title, <span class="fu">desc</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 5
+   first last       title           salesInThousands region
+   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;                      &lt;dbl&gt; &lt;chr&gt; 
+ 1 Sam   Lincoln    Manager                      500 europe
+ 2 Zeke  Cohen      Manager                      250 usa   
+ 3 Joe   Smith      Manager                      100 usa   
+ 4 Jack  Martin     Manager                       40 europe
+ 5 Barb  Aames      Salesperson                  255 usa   
+ 6 Sam   Lee        Salesperson                  200 usa   
+ 7 Jim   Brown      Salesperson                  167 europe
+ 8 Jack  Aames      Salesperson                  105 usa   
+ 9 Joe   Washington Sr. Salesperson              370 europe
+10 Kate  Zeitchik   Sr. Salesperson              187 usa   
+11 Jim   Kuruzovich Sr. Salesperson              140 usa   
+12 Larry Green      Sr. Salesperson              113 europe
+13 Kate  Carey      Sr. Salesperson               69 europe</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Careful - if you do not include region in the select , it won't work</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(first, last, title, salesInThousands) <span class="sc">|&gt;</span>  <span class="co"># region is missing here</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"usa"</span>, <span class="st">"europe"</span>)) <span class="sc">|&gt;</span>        <span class="co"># but you need it here</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(title, <span class="fu">desc</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `filter()`:
+ℹ In argument: `region %in% c("usa", "europe")`.
+Caused by error:
+! object 'region' not found</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rearrange the order of the function calls to get it to work</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(title, <span class="fu">desc</span>(salesInThousands)) <span class="sc">|&gt;</span>   </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"usa"</span>, <span class="st">"europe"</span>)) <span class="sc">|&gt;</span>       <span class="co"># we use region here</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(first, last, title, salesInThousands)    <span class="co"># we can now exclude region</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 4
+   first last       title           salesInThousands
+   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;                      &lt;dbl&gt;
+ 1 Sam   Lincoln    Manager                      500
+ 2 Zeke  Cohen      Manager                      250
+ 3 Joe   Smith      Manager                      100
+ 4 Jack  Martin     Manager                       40
+ 5 Barb  Aames      Salesperson                  255
+ 6 Sam   Lee        Salesperson                  200
+ 7 Jim   Brown      Salesperson                  167
+ 8 Jack  Aames      Salesperson                  105
+ 9 Joe   Washington Sr. Salesperson              370
+10 Kate  Zeitchik   Sr. Salesperson              187
+11 Jim   Kuruzovich Sr. Salesperson              140
+12 Larry Green      Sr. Salesperson              113
+13 Kate  Carey      Sr. Salesperson               69</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="mutate---add-new-columns" class="level2">
+<h2 class="anchored" data-anchor-id="mutate---add-new-columns">mutate - add new columns</h2>
+<p>Use the mutate function to add new columns. These new columns can be based on existing data. See the examples below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># All salespeople get a commission equal to 10% of their sales.</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new column with the name commission that shows the value of their commission.</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The following code creates the new column as the last column in the tibble.</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">commission=</span><span class="fl">0.10</span><span class="sc">*</span>salesInThousands, <span class="at">takeHome=</span>baseInThousands <span class="sc">+</span> <span class="fl">0.10</span><span class="sc">*</span>salesInThousands ) <span class="sc">|&gt;</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 9
+   first  last       title           region baseInThousands salesInThousands
+   &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Joe    Smith      Manager         usa                 40              100
+ 2 Sam    Lee        Salesperson     usa                 40              200
+ 3 Sue    Sallinger  Salesperson     asia                30              150
+ 4 Barb   Brown      Sr. Salesperson asia                35               79
+ 5 Jack   Martin     Manager         europe              20               40
+ 6 Kate   Carey      Sr. Salesperson europe              20               69
+ 7 Emy    Parsons    Salesperson     africa              25               87
+ 8 Monica Oja        Salesperson     africa              35               98
+ 9 Jim    Kuruzovich Sr. Salesperson usa                 35              140
+10 Zeke   Cohen      Manager         usa                 30              250
+   yearsWithCompany commission takeHome
+              &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+ 1               10       10       50  
+ 2                6       20       60  
+ 3               10       15       45  
+ 4                4        7.9     42.9
+ 5                3        4       24  
+ 6                2        6.9     26.9
+ 7                3        8.7     33.7
+ 8               10        9.8     44.8
+ 9                3       14       49  
+10               10       25       55  
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+<section id="before-and-.after" class="level3">
+<h3 class="anchored" data-anchor-id="before-and-.after">.before and .after</h3>
+<p>Use the .before and .after argument to mutate to specify where the new columns should appear in the tibble. See the examples below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Place the newly created column at the beginning of the tibble,</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># i.e. .before the 1st column.</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">commission=</span><span class="fl">0.10</span><span class="sc">*</span>salesInThousands, <span class="at">.before=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 8
+   commission first  last       title    region baseInThousands salesInThousands
+        &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1       10   Joe    Smith      Manager  usa                 40              100
+ 2       20   Sam    Lee        Salespe… usa                 40              200
+ 3       15   Sue    Sallinger  Salespe… asia                30              150
+ 4        7.9 Barb   Brown      Sr. Sal… asia                35               79
+ 5        4   Jack   Martin     Manager  europe              20               40
+ 6        6.9 Kate   Carey      Sr. Sal… europe              20               69
+ 7        8.7 Emy    Parsons    Salespe… africa              25               87
+ 8        9.8 Monica Oja        Salespe… africa              35               98
+ 9       14   Jim    Kuruzovich Sr. Sal… usa                 35              140
+10       25   Zeke   Cohen      Manager  usa                 30              250
+# ℹ 14 more rows
+# ℹ 1 more variable: yearsWithCompany &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Place the newly created column as the 3rd column</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co"># i.e. .after the 2nd column.</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (.before=4 would also work)</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">commission=</span><span class="fl">0.10</span><span class="sc">*</span>salesInThousands, <span class="at">.after=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 8
+   first  last       commission title    region baseInThousands salesInThousands
+   &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Joe    Smith            10   Manager  usa                 40              100
+ 2 Sam    Lee              20   Salespe… usa                 40              200
+ 3 Sue    Sallinger        15   Salespe… asia                30              150
+ 4 Barb   Brown             7.9 Sr. Sal… asia                35               79
+ 5 Jack   Martin            4   Manager  europe              20               40
+ 6 Kate   Carey             6.9 Sr. Sal… europe              20               69
+ 7 Emy    Parsons           8.7 Salespe… africa              25               87
+ 8 Monica Oja               9.8 Salespe… africa              35               98
+ 9 Jim    Kuruzovich       14   Sr. Sal… usa                 35              140
+10 Zeke   Cohen            25   Manager  usa                 30              250
+# ℹ 14 more rows
+# ℹ 1 more variable: yearsWithCompany &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .before and .after can also refer to specific columns</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># For example the following also places the commission after the last name column</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">commission=</span><span class="fl">0.10</span><span class="sc">*</span>salesInThousands, <span class="at">.after=</span>last)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 8
+   first  last       commission title    region baseInThousands salesInThousands
+   &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Joe    Smith            10   Manager  usa                 40              100
+ 2 Sam    Lee              20   Salespe… usa                 40              200
+ 3 Sue    Sallinger        15   Salespe… asia                30              150
+ 4 Barb   Brown             7.9 Sr. Sal… asia                35               79
+ 5 Jack   Martin            4   Manager  europe              20               40
+ 6 Kate   Carey             6.9 Sr. Sal… europe              20               69
+ 7 Emy    Parsons           8.7 Salespe… africa              25               87
+ 8 Monica Oja               9.8 Salespe… africa              35               98
+ 9 Jim    Kuruzovich       14   Sr. Sal… usa                 35              140
+10 Zeke   Cohen            25   Manager  usa                 30              250
+# ℹ 14 more rows
+# ℹ 1 more variable: yearsWithCompany &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="a-new-column-that-depends-on-other-new-columns" class="level3">
+<h3 class="anchored" data-anchor-id="a-new-column-that-depends-on-other-new-columns">a new column that depends on other new columns</h3>
+<p>The following code creates two new columns.</p>
+<p>The commission column is created as in the last example.</p>
+<p>The takeHome column is the total take home pay for the salesperson, i.e.&nbsp; their baseInThousands plus the commission.</p>
+<p>If you create both columns in a single call to mutate, you will need to repeat the calculation for the commission twice (see examples below). An alternative is to call the mutate function twice. For tibbles with many rows this can take longer to process but is less error prone when you write the code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># All salespeople get a commission equal to 10% of their sales.</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new column with the name commission that shows the value of their commission.</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create another column called takeHome which has their total takehome pay.</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="co"># We can do it all in one call to mutate.</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="co"># However, that require repeating the code for calculating for the commission.</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">commission=</span><span class="fl">0.10</span><span class="sc">*</span>salesInThousands, <span class="at">takeHome=</span>baseInThousands <span class="sc">+</span> <span class="fl">0.10</span><span class="sc">*</span>salesInThousands, <span class="at">.before=</span><span class="dv">1</span> ) <span class="sc">|&gt;</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 9
+   commission takeHome first  last       title           region baseInThousands
+        &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt;
+ 1       10       50   Joe    Smith      Manager         usa                 40
+ 2       20       60   Sam    Lee        Salesperson     usa                 40
+ 3       15       45   Sue    Sallinger  Salesperson     asia                30
+ 4        7.9     42.9 Barb   Brown      Sr. Salesperson asia                35
+ 5        4       24   Jack   Martin     Manager         europe              20
+ 6        6.9     26.9 Kate   Carey      Sr. Salesperson europe              20
+ 7        8.7     33.7 Emy    Parsons    Salesperson     africa              25
+ 8        9.8     44.8 Monica Oja        Salesperson     africa              35
+ 9       14       49   Jim    Kuruzovich Sr. Salesperson usa                 35
+10       25       55   Zeke   Cohen      Manager         usa                 30
+   salesInThousands yearsWithCompany
+              &lt;dbl&gt;            &lt;dbl&gt;
+ 1              100               10
+ 2              200                6
+ 3              150               10
+ 4               79                4
+ 5               40                3
+ 6               69                2
+ 7               87                3
+ 8               98               10
+ 9              140                3
+10              250               10
+# ℹ 14 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># By separating the code into two calls to mutate, we can refer to the </span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="co"># newly created "commission" column when calculating the takeHome column.</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that the 2nd call to mutate below receives a tibble that already has a</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co"># commission column as the first column. That is why .before=2 (and not .before=1)</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">commission=</span><span class="fl">0.10</span><span class="sc">*</span>salesInThousands, <span class="at">.before=</span><span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">takeHome=</span>baseInThousands <span class="sc">+</span> commission, <span class="at">.before=</span><span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 9
+   commission takeHome first  last       title           region baseInThousands
+        &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt;
+ 1       10       50   Joe    Smith      Manager         usa                 40
+ 2       20       60   Sam    Lee        Salesperson     usa                 40
+ 3       15       45   Sue    Sallinger  Salesperson     asia                30
+ 4        7.9     42.9 Barb   Brown      Sr. Salesperson asia                35
+ 5        4       24   Jack   Martin     Manager         europe              20
+ 6        6.9     26.9 Kate   Carey      Sr. Salesperson europe              20
+ 7        8.7     33.7 Emy    Parsons    Salesperson     africa              25
+ 8        9.8     44.8 Monica Oja        Salesperson     africa              35
+ 9       14       49   Jim    Kuruzovich Sr. Salesperson usa                 35
+10       25       55   Zeke   Cohen      Manager         usa                 30
+   salesInThousands yearsWithCompany
+              &lt;dbl&gt;            &lt;dbl&gt;
+ 1              100               10
+ 2              200                6
+ 3              150               10
+ 4               79                4
+ 5               40                3
+ 6               69                2
+ 7               87                3
+ 8               98               10
+ 9              140                3
+10              250               10
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="distinct" class="level2">
+<h2 class="anchored" data-anchor-id="distinct">distinct()</h2>
+<p>The distinct function eliminates any duplicate rows from a tibble. See the examples.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the just the region for each row in the tibble</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (region) <span class="sc">|&gt;</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 1
+   region
+   &lt;chr&gt; 
+ 1 usa   
+ 2 usa   
+ 3 asia  
+ 4 asia  
+ 5 europe
+ 6 europe
+ 7 africa
+ 8 africa
+ 9 usa   
+10 usa   
+11 asia  
+12 asia  
+13 europe
+14 europe
+15 africa
+16 usa   
+17 usa   
+18 usa   
+19 asia  
+20 asia  
+21 europe
+22 europe
+23 africa
+24 africa</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same thing using distinct()</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Show just the distinct (ie. different) regions</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (region) <span class="sc">|&gt;</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span>       <span class="co"># show just the distinct rows</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  region
+  &lt;chr&gt; 
+1 usa   
+2 asia  
+3 europe
+4 africa</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="do">###############################################################</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co"> - all values in the row must be exactly the same</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the distinct() function to eliminate the duplicate rows.</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="do">###############################################################</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the region and title for rows </span></span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="co"># whose region is either europe or asia.</span></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the output so they come up sorted.</span></span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, title) <span class="sc">|&gt;</span></span>
+<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'europe'</span>, <span class="st">'asia'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region, title) <span class="sc">|&gt;</span></span>
+<span id="cb71-14"><a href="#cb71-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   region title          
+   &lt;chr&gt;  &lt;chr&gt;          
+ 1 asia   Manager        
+ 2 asia   Salesperson    
+ 3 asia   Salesperson    
+ 4 asia   Salesperson    
+ 5 asia   Salesperson    
+ 6 asia   Sr. Salesperson
+ 7 europe Manager        
+ 8 europe Manager        
+ 9 europe Salesperson    
+10 europe Sr. Salesperson
+11 europe Sr. Salesperson
+12 europe Sr. Salesperson</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same thing using distinct()</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Show just the distinct rows from the previous command</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, title) <span class="sc">|&gt;</span></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'europe'</span>, <span class="st">'asia'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span>                                 <span class="co"># eliminate duplicate rows</span></span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region, title) <span class="sc">|&gt;</span></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  region title          
+  &lt;chr&gt;  &lt;chr&gt;          
+1 asia   Manager        
+2 asia   Salesperson    
+3 asia   Sr. Salesperson
+4 europe Manager        
+5 europe Salesperson    
+6 europe Sr. Salesperson</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice that in the previous output, there were multiple</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rows that contained "europe", multiple rows that contained "asia"</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="co"># as well as multiple rows that contained each of the different titles.</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="co"># However - there were NO rows that contained exact duplicates of both</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the region and the title.</span></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The moral of the story is that distinct() will only elminate rows </span></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a><span class="co"># that are EXACT duplicates in EVERY column.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, title, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region, title)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   region title    first last  baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 africa Manager  Laura White              20              281                8
+ 2 africa Salespe… Emy   Pars…              25               87                3
+ 3 africa Salespe… Moni… Oja                35               98               10
+ 4 africa Sr. Sal… Sue   Aames              35              600               10
+ 5 africa Sr. Sal… Hugh  Black              40              261                9
+ 6 asia   Manager  Emy   Zeit…              34              166                4
+ 7 asia   Salespe… Sue   Sall…              30              150               10
+ 8 asia   Salespe… Zeke  Smith              20              120                3
+ 9 asia   Salespe… Amy   Mark…              46              340                3
+10 asia   Salespe… Moni… Zeit…              23              184                1
+# ℹ 14 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, title) <span class="sc">|&gt;</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region, title)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 2
+   region title          
+   &lt;chr&gt;  &lt;chr&gt;          
+ 1 africa Manager        
+ 2 africa Salesperson    
+ 3 africa Salesperson    
+ 4 africa Sr. Salesperson
+ 5 africa Sr. Salesperson
+ 6 asia   Manager        
+ 7 asia   Salesperson    
+ 8 asia   Salesperson    
+ 9 asia   Salesperson    
+10 asia   Salesperson    
+# ℹ 14 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region,title) <span class="sc">|&gt;</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region, title) <span class="sc">|&gt;</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   region title          
+   &lt;chr&gt;  &lt;chr&gt;          
+ 1 africa Manager        
+ 2 africa Salesperson    
+ 3 africa Sr. Salesperson
+ 4 asia   Manager        
+ 5 asia   Salesperson    
+ 6 asia   Sr. Salesperson
+ 7 europe Manager        
+ 8 europe Salesperson    
+ 9 europe Sr. Salesperson
+10 usa    Manager        
+11 usa    Salesperson    
+12 usa    Sr. Salesperson</code></pre>
+</div>
+</div>
+</section>
+<section id="summarize-and-group_by" class="level2">
+<h2 class="anchored" data-anchor-id="summarize-and-group_by">summarize and group_by</h2>
+<p>The summarize() and group_by() functions work together. We’ll explain exactly how below …</p>
+<section id="aggregate-functions" class="level3">
+<h3 class="anchored" data-anchor-id="aggregate-functions">aggregate functions</h3>
+<p>The summarize function is used to condense the contents of several rows of data into a single row of data. It does this by using functions such as min(), max(), mean(), etc. These functions can take several values and return a single value. Such functions are known as <strong>aggregate functions</strong>.</p>
+</section>
+<section id="summarize-without-group_by" class="level3">
+<h3 class="anchored" data-anchor-id="summarize-without-group_by">summarize (without group_by)</h3>
+<p>The summarize function is often preceded by a call to the group_by() function (which we will cover in the next section). group_by() is used to contol which rows of data will be affected by a subsequent call to the summarize() function. This will be explained in more detail below. For now, we will just focus on how summarize() works when it is NOT preceded by a call to group_by().</p>
+<p>When summarize() is NOT preceded by a call to group_by() then the job of the summarize() function is to return a single row of summary by applying aggregate functions (such as min, max, mean, etc) to columns of the tibble.</p>
+<p>See the examples below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mean salesInThousands (for all rows)</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that this returns a tibble with exactly one row and one column.</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarize</span>(<span class="fu">mean</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  `mean(salesInThousands)`
+                     &lt;dbl&gt;
+1                     203.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can change the column name as shown below</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarize</span>(<span class="at">averageSales =</span> <span class="fu">mean</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  averageSales
+         &lt;dbl&gt;
+1         203.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can filter the rows before calculating the mean results (or use any other of the dplyr functions)</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the mean sales for just the USA.</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"usa"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">usaSales =</span> <span class="fu">mean</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  usaSales
+     &lt;dbl&gt;
+1     177.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can get more than one column in our summary tibble</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">meanSales =</span> <span class="fu">mean</span>(salesInThousands), <span class="at">maxSales=</span><span class="fu">max</span>(salesInThousands), <span class="at">minSales=</span><span class="fu">min</span>(salesInThousands),</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">maxBase =</span> <span class="fu">max</span>(baseInThousands), <span class="at">minBase=</span><span class="fu">min</span>(baseInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+  meanSales maxSales minSales maxBase minBase
+      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1      203.      600       40      50      20</code></pre>
+</div>
+</div>
+</section>
+<section id="the-n-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-n-function">The n() function</h3>
+<p>The n() function returns the number of rows.</p>
+<p>The n_distinct() function returns the number of rows that have distinct (i.e.&nbsp;different) values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show all of the rows ordered by region and title</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, title, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   region title    first last  baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 usa    Manager  Joe   Smith              40              100               10
+ 2 usa    Salespe… Sam   Lee                40              200                6
+ 3 asia   Salespe… Sue   Sall…              30              150               10
+ 4 asia   Sr. Sal… Barb  Brown              35               79                4
+ 5 europe Manager  Jack  Mart…              20               40                3
+ 6 europe Sr. Sal… Kate  Carey              20               69                2
+ 7 africa Salespe… Emy   Pars…              25               87                3
+ 8 africa Salespe… Moni… Oja                35               98               10
+ 9 usa    Sr. Sal… Jim   Kuru…              35              140                3
+10 usa    Manager  Zeke  Cohen              30              250               10
+11 asia   Salespe… Zeke  Smith              20              120                3
+12 asia   Salespe… Amy   Mark…              46              340                3
+13 europe Sr. Sal… Joe   Wash…              33              370                2
+14 europe Manager  Sam   Linc…              30              500                2
+15 africa Sr. Sal… Sue   Aames              35              600               10
+16 usa    Salespe… Barb  Aames              21              255                7
+17 usa    Salespe… Jack  Aames              43              105                4
+18 usa    Sr. Sal… Kate  Zeit…              50              187                4
+19 asia   Manager  Emy   Zeit…              34              166                4
+20 asia   Salespe… Moni… Zeit…              23              184                1
+21 europe Salespe… Jim   Brown              50              167                2
+22 europe Sr. Sal… Larry Green              20              113                4
+23 africa Manager  Laura White              20              281                8
+24 africa Sr. Sal… Hugh  Black              40              261                9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># n() - returns the number of rows in the tibble</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="co"># n_distinct(COL1, COL2, ...) - returns the number of rows for which </span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   the specified columns taken all together are distinct among all other rows.</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, title, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">n</span>(), <span class="fu">n_distinct</span>(region), <span class="fu">n_distinct</span>(title), <span class="fu">n_distinct</span>(region, title))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  `n()` `n_distinct(region)` `n_distinct(title)` `n_distinct(region, title)`
+  &lt;int&gt;                &lt;int&gt;               &lt;int&gt;                       &lt;int&gt;
+1    24                    4                   3                          12</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="group_by-and-summarize-or-summarise" class="level2">
+<h2 class="anchored" data-anchor-id="group_by-and-summarize-or-summarise">group_by and summarize (or summarise)</h2>
+<p>The examples above for summarize all return a single row of data. This is because they are summarizing all of the rows for the tibble that summarize received. Note that this is true even if the rows have been filtered first. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The following returns just one row.</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The summarize function is summarizing ALL of the rows </span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the tibble that it was given.</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">%&gt;%</span> </span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"usa"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">numberOfRows=</span><span class="fu">n</span>(), <span class="at">maxUsaSales =</span> <span class="fu">max</span>(salesInThousands), <span class="at">minUsaSales=</span><span class="fu">min</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  numberOfRows maxUsaSales minUsaSales
+         &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+1            7         255         100</code></pre>
+</div>
+</div>
+<p>The functions, group_by and summarize functions are designed to work together. The job of the group_by function is to separate the rows of data into different “groups” that will later be processed separately by the summarize function.</p>
+<p>If you use a group_by function in general it is followed a call to summarize()</p>
+<p>To understand the examples below, it is helpful to first see the rows sorted by region and title</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, title, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region, title)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   region title    first last  baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 africa Manager  Laura White              20              281                8
+ 2 africa Salespe… Emy   Pars…              25               87                3
+ 3 africa Salespe… Moni… Oja                35               98               10
+ 4 africa Sr. Sal… Sue   Aames              35              600               10
+ 5 africa Sr. Sal… Hugh  Black              40              261                9
+ 6 asia   Manager  Emy   Zeit…              34              166                4
+ 7 asia   Salespe… Sue   Sall…              30              150               10
+ 8 asia   Salespe… Zeke  Smith              20              120                3
+ 9 asia   Salespe… Amy   Mark…              46              340                3
+10 asia   Salespe… Moni… Zeit…              23              184                1
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+<p>Notice how the rows that have the same region can be thought of as a “group” of rows for that region.</p>
+<p>See the examples below</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show summary information for each of the different regions.</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Each row in the output corresponds only to the rows for the region shown on that row of output.</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">|&gt;</span>    <span class="co"># create a different group for each region</span></span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">numberOfRows=</span><span class="fu">n</span>(), <span class="fu">mean</span>(baseInThousands), <span class="fu">mean</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  region numberOfRows `mean(baseInThousands)` `mean(salesInThousands)`
+  &lt;chr&gt;         &lt;int&gt;                   &lt;dbl&gt;                    &lt;dbl&gt;
+1 africa            5                    31                       265.
+2 asia              6                    31.3                     173.
+3 europe            6                    28.8                     210.
+4 usa               7                    37                       177.</code></pre>
+</div>
+</div>
+<p>Similarly we can group the rows by those with the same value in the title column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show summary information for each of the different titles.</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Each row in the output corresponds only to the rows for the title shown on that row of output.</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span>    <span class="co"># create a different group for each title</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">numberOfRows=</span><span class="fu">n</span>(), <span class="fu">mean</span>(baseInThousands), <span class="fu">mean</span>(salesInThousands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  title           numberOfRows `mean(baseInThousands)` `mean(salesInThousands)`
+  &lt;chr&gt;                  &lt;int&gt;                   &lt;dbl&gt;                    &lt;dbl&gt;
+1 Manager                    6                    29                       223.
+2 Salesperson               10                    33.3                     171.
+3 Sr. Salesperson            8                    33.5                     227.</code></pre>
+</div>
+</div>
+<section id="group_by-without-summarize-has-no-noticeable-effect" class="level3">
+<h3 class="anchored" data-anchor-id="group_by-without-summarize-has-no-noticeable-effect">group_by without summarize has no noticeable effect</h3>
+<p>Note that on its own, the group_by function doesn’t appear to do anything. It only has a tangible effect when a summarize function is called after the group_by function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># group_by without a subsequent call to summarize doesn't appear to do anything special</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">|&gt;</span> </span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+# Groups:   title [3]
+   first  last    title region baseInThousands salesInThousands yearsWithCompany
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Joe    Smith   Mana… usa                 40              100               10
+ 2 Sam    Lee     Sale… usa                 40              200                6
+ 3 Sue    Sallin… Sale… asia                30              150               10
+ 4 Barb   Brown   Sr. … asia                35               79                4
+ 5 Jack   Martin  Mana… europe              20               40                3
+ 6 Kate   Carey   Sr. … europe              20               69                2
+ 7 Emy    Parsons Sale… africa              25               87                3
+ 8 Monica Oja     Sale… africa              35               98               10
+ 9 Jim    Kuruzo… Sr. … usa                 35              140                3
+10 Zeke   Cohen   Mana… usa                 30              250               10
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="group_by-more-than-one-column" class="level3">
+<h3 class="anchored" data-anchor-id="group_by-more-than-one-column">group_by more than one column</h3>
+<p>A call to group_by that has more than one column creates a separate group for the rows that have the same values for all of the specified columns. To understand this look at the following output:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>asia_europe_sales <span class="ot">=</span> </span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  sales <span class="sc">|&gt;</span></span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(region, title, baseInThousands) <span class="sc">|&gt;</span></span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'europe'</span>, <span class="st">'asia'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(region, title)</span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>asia_europe_sales  <span class="sc">|&gt;</span></span>
+<span id="cb104-8"><a href="#cb104-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   region title           baseInThousands
+   &lt;chr&gt;  &lt;chr&gt;                     &lt;dbl&gt;
+ 1 asia   Manager                      34
+ 2 asia   Salesperson                  30
+ 3 asia   Salesperson                  20
+ 4 asia   Salesperson                  46
+ 5 asia   Salesperson                  23
+ 6 asia   Sr. Salesperson              35
+ 7 europe Manager                      20
+ 8 europe Manager                      30
+ 9 europe Salesperson                  50
+10 europe Sr. Salesperson              20
+11 europe Sr. Salesperson              33
+12 europe Sr. Salesperson              20</code></pre>
+</div>
+</div>
+<p>We can treat the rows that have the same values for both the region and title as a single group of rows. For example we can treat all of the rows for “asia Salesperson” as a group and the rows for “eroupe Manager” as a separate group. The output of the following command returns one row for each group.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create groups based on region and sales</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>asia_europe_sales <span class="sc">|&gt;</span> </span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region, title) <span class="sc">|&gt;</span></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">n</span>(), <span class="fu">max</span>(baseInThousands), <span class="fu">mean</span>(baseInThousands))<span class="sc">|&gt;</span></span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'region'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+# Groups:   region [2]
+  region title           `n()` `max(baseInThousands)` `mean(baseInThousands)`
+  &lt;chr&gt;  &lt;chr&gt;           &lt;int&gt;                  &lt;dbl&gt;                   &lt;dbl&gt;
+1 asia   Manager             1                     34                    34  
+2 asia   Salesperson         4                     46                    29.8
+3 asia   Sr. Salesperson     1                     35                    35  
+4 europe Manager             2                     30                    25  
+5 europe Salesperson         1                     50                    50  
+6 europe Sr. Salesperson     3                     33                    24.3</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You might be wondering about the somewhat cryptic message from the previous command:</p>
+<blockquote class="blockquote">
+<p><code>summarise()</code> has grouped output by ‘region’. You can override using the <code>.groups</code> argument.</p>
+</blockquote>
+<p><em>When group_by is called with more than one column name the</em> <em>subsequent summarize call will generate a message similar to the one shown</em> <em>above. You can ignore this message without any issue. If you want to understand</em> <em>it better - look at </em> <em><a href="https://community.rstudio.com/t/summarise-has-grouped-output-by-x-you-can-override-using-the-groups-argument/174520">this</a>.</em></p>
+</div>
+</div>
+</section>
+<section id="order-of-columns-in-group_by-is-irrelevant" class="level3">
+<h3 class="anchored" data-anchor-id="order-of-columns-in-group_by-is-irrelevant">order of columns in group_by is irrelevant</h3>
+<p>Note that it makes no difference which order you specify the column names in the call to group by. The following command reverses the order of the columns in the call to group_by but returns the exact same result as the previous command.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create groups based on region and sales</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>asia_europe_sales <span class="sc">|&gt;</span> </span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title, region) <span class="sc">|&gt;</span>   <span class="co"># the order of the columns in group_by makes no difference</span></span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">n</span>(), <span class="fu">max</span>(baseInThousands), <span class="fu">mean</span>(baseInThousands))<span class="sc">|&gt;</span></span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'title'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+# Groups:   title [3]
+  title           region `n()` `max(baseInThousands)` `mean(baseInThousands)`
+  &lt;chr&gt;           &lt;chr&gt;  &lt;int&gt;                  &lt;dbl&gt;                   &lt;dbl&gt;
+1 Manager         asia       1                     34                    34  
+2 Manager         europe     2                     30                    25  
+3 Salesperson     asia       4                     46                    29.8
+4 Salesperson     europe     1                     50                    50  
+5 Sr. Salesperson asia       1                     35                    35  
+6 Sr. Salesperson europe     3                     33                    24.3</code></pre>
+</div>
+</div>
+</section>
+<section id="some-other-aggregate-functions" class="level3">
+<h3 class="anchored" data-anchor-id="some-other-aggregate-functions">some other aggregate functions</h3>
+<p>As mentioned above, an “aggregate function” is a function that can take several values as input but returns a single value. It is these types of functions that are used by summarize()</p>
+<p>The following are some other commonly used aggregate functions that can be used in summarize. There are many, many others.</p>
+<ul>
+<li><p>Statistics: mean(), median(), sd(), IQR(), mad()</p></li>
+<li><p>Range: min(), max(),</p></li>
+<li><p>Position: first(), last(), nth(),</p></li>
+<li><p>Counting: n(), n_distinct()</p></li>
+<li><p>Logical: any(), all()</p></li>
+</ul>
+<!--
+
+## other resources
+
+### Videos
+
+across function  
+<https://www.youtube.com/watch?v=6fEowYTlNT8>
+
+-->
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

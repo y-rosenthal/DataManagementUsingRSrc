@@ -1,0 +1,122 @@
+# Intro to Command Line Interfaces (CLIs)
+
+## WHAT IS A COMMAND LINE INTERFACE (CLI)?
+
+Modern computers and the programs that they run allow you to click and
+drag icons, use menus, open many programs at once, etc. It\'s hard to
+imagine a computer that doesn\'t have these features. However, a long
+time ago (pre 1990\'ish) none of this was possible. In order to use a
+computer you had to memorize many different commands. You would type
+these commands into the computer in order to run programs and interact
+with the computer.
+
+Today the modern computer \"interface\" (the one that has icons, menus,
+etc.) is known as a Graphical User Interface or GUI (pronounced
+\"gooey\"). The old-style interface that required that you type commands
+to do ANYTHING is still able to be used. This type of interface is known
+as a \"Command Line Interface\" or CLI.
+
+## WHY SHOULD I CARE ABOUT A CLI ?
+
+For day to day casual computer work, it may be hard to understand why
+anyone would use a CLI instead of a modern GUI interface. Using a CLI
+requires memorizing many different seemingly arcane commands instead of
+just \"pointing and clicking\" on what you want. Why would anyone want
+to do that?
+
+### Reason 1 - it allows you to do powerful things quickly
+
+Many of the CLI commands can be quite powerful and can cut
+down the amount of time it takes to do things by A LOT. For example,
+suppose a folder contains 1000 files. For example,
+\"expenseReport-Jan2020.xlsx\", \"meetingMinutes-Jan012020.docx\",
+etc. (1000 such files) You are told by your boss that you must add
+your name as part of the filename for each of these 1000 files. If
+you are using a GUI, that could take hours. However, for someone who
+is proficient with a using a CLI, it could take seconds to type in
+the correct commands to do that for all 1000 files.
+
+### Reason 2: - you can create "scripts" to automate many things
+
+Suppose your boss told you that everyone in the company
+needs to make the same changes to their filenames. However, not
+everyone knows how to use a CLI. You could theoretically create a
+small \"script\" (ie. a program) using the CLI commands that would
+allow anyone to \"run the script\" to make the changes. Tasks that
+need to be done repeatedly are often best accomplished by creating a
+CLI script. The script can then be run anytime the task needs to be
+done. Note that you can create similar scripts or programs using
+another programming language but a CLI script is often the easiest
+and most appropriate method to create such scripts.
+
+### Reason 3: Tech and data professionals are often expected to understand how to use a CLI.
+
+Often many advanced commands are only available to be run from the
+command line. For example, the wget program is a command line
+program that can be used to download the code for an entire website
+or just specific files that you'd like to get.
+
+Many basic concepts from the command
+line carry over directly to any programming language (including R)
+in relation to interacting with the operating system. Concepts such
+as absolute and relative paths, wildcards in filenames, etc. come up
+over and over again when you work with data.
+
+## DIFFERENT CLIs FOR DIFFERENT COMPUTER SYSTEMS
+
+Just as the Graphical User Interface (GUI) for the Mac is different from
+the GUI for Windows, the standard CLI available for the Mac is different
+from the CLI(s) that are available on Windows. This means that the
+commands that you need to type on Mac are different from the commands
+that you would type on Windows.
+
+### Mac
+
+The Mac CLI is used by running the Terminal program that comes with
+the Mac. The terminal program actual runs a form of the Bash shell (see
+more below).
+
+### Windows
+
+Windows comes with two different CLIs built into the system:
+
+- The "Command Prompt" (cmd) : This was the original CLI for
+  Windows. It is a little bit dated and not as powerful as other
+  options. Nevertheless it is still very popular.
+
+- "Powershell": This is a newer CLI that Microsoft first
+  introduced in 2006. It is more complicated to use than the
+  "Command Prompt" but in many ways is more powerful. Today
+  Windows comes with both CLIs.
+
+- There are also options for installing a version of the "Bash Shell" on
+  Windows. See below for more info.
+  
+
+## What is the "Bash Shell" program?
+
+While most computer users today use either the Windows or Mac operating
+system, the Linux operating system is very popular for running
+"server" computers. These are the computers that support many of the
+"backoffice" tasks in companies today. These include computers that
+host company websites as well as company databases and many other
+critical corporate technology services.
+
+Linux is a derivative of the Unix operating system. These operating
+systems, (Linux and Unix), have many different "command line
+interface" (CLI) programs available to choose from. A very popular CLI
+on these computers is the "Bash Shell". The word "shell" is a
+synonym for a "command line interface". The word "shell" was first
+coined by the creators of Unix. The idea is that to interact with guts
+of the operating system you must "go through" the shell (i.e. use the
+CLI commands), similar to the way you must "go through the shell" of an
+egg in order to get to the inside.
+
+Note that the "Bash Shell" has become somewhat of a standard. Apple
+Mac is also derived from the original Unix operating system and by
+default, the Mac Terminal program also runs a version of the Bash Shell.
+While Windows doesn\'t natively come with the Bash Shell, you can
+download many different versions of a \"Bash\" CLI program that can be
+used on Windows. Some of these are listed below. Note that installing these
+go beyond the scope of what we are covering here. For more info search
+online for info about each of these options.

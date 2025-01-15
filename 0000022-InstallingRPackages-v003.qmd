@@ -1,0 +1,448 @@
+# Intro to R packages
+
+R can be extended with many different "packages" which contain
+functions that extend R's capabilities. There are currently 
+over twenty thousand R packages. 
+
+Each "package" usually contains
+numerous functions that are all related to a single topic. For example, 
+the "stringr" package contains many functions for working with
+"character" data (also known as "string" data). 
+Many packages also include data sets. For example the "Lahman" package 
+includes many dataframes with data about baseball statistics. You can see 
+more about that package here - https://github.com/cdalzell/Lahman.
+
+::: {.callout-note}
+# What is a string?
+The word "string" is just another way of saying "character value". 
+The word "string" is popular in many programming languages and environments.
+R typically refers to these values as "character values". However R is not
+always consistent and occasionally you will see references in the R 
+documentation or function names and arguments that refer to "strings".
+:::
+
+
+## What is CRAN?
+
+CRAN stands for the "Comprehensive R Archive Network".
+
+R is free software that is supported by many different organizations. 
+The official website for "R" is <https://cran.r-project.org/>.
+From this website you can download the "base R" software. This is also 
+the official source of many things related to R.
+(*NOTE that information about RStudio is NOT found on this website.*
+*RStudio is a program created by a for-profit company, Posit.*
+*The RStudio software is built on top of "base R". The official website*
+*for RStudio is <https://posit.co/>*)
+
+The list of "officially recognized" R packages can be found here: 
+<https://cran.r-project.org/web/packages/available_packages_by_name.html>
+From this page, you can get a lot more information about each 
+of the different packages. 
+To learn more about packages in general, click on the "packages" link
+located on this page <https://cran.r-project.org/>.
+
+## What is a CRAN mirror?
+
+It can cost a lot of money to maintain a popular website. Since R is a free 
+program, the costs for hosting the offical website are divided among
+many of the organizations that have an interest in seeing R succeed. 
+(Many of these organizations are educational institutions located 
+around the world). Each of these organizations hosts a complete repository
+of the "base R" software as well as all of the R packages. 
+All of the repositories together are known as CRAN, i.e. the "Comprehensive 
+R Archive Network".
+Because the repositories hosted by each organization have identical contents, 
+the repositories are also known as "CRAN mirrors".
+Whenever you install an R package *(see install.packages below)*, the files 
+for the package are downloaded from one of the CRAN mirror websites.
+
+
+## install.packages( "SOME_PACKAGE" )
+
+To use a package you must first "install" the package with the
+install.packages function. install.packages downloads the package files 
+from one of the CRAN mirror websites and installs them on your computer.
+
+You only need to use install.packages on your computer once. 
+After you've installed a package it will continue to be installed until 
+you until you "remove" it from your computer with the function
+remove.packages().
+
+See an example of installing the stringr package below. Pay special attention
+the the #comments in the code.
+
+```{r}
+# When calling install.packages, you must use "quotes" around the package name.
+install.packages("stringr")   
+
+# By default, install.packages will choose one of the CRAN mirror websites to 
+# download the package from. The exact CRAN mirror website that it uses
+# is configured in your R software. However, if for some reason, it fails
+# to download from the default CRAN mirror website, you will need to 
+# specify the exact CRAN mirror URLs in the repos argument as shown below.
+#
+# If you specify more than one website, install.packages will keep trying, 
+# starting from the first one specified, until it is successful. The 
+# following page contains the list of the CRAN mirror websites:
+#
+#    https://cran.r-project.org/mirrors.html
+#
+# It makes very little difference which mirror you choose. In order to 
+# speed up the downloads it's recommended to choose a mirror that is 
+# close to where you are located. The following command specifies the full
+# list of mirrors that are located in the USA.
+
+install.packages(
+  "stringr", 
+  repos = c(
+    "https://mirror.las.iastate.edu/CRAN/", 	  # Iowa State University, Iowa
+    "http://ftp.ussg.iu.edu/CRAN/", 	          # Indiana University, Indiana
+    "https://repo.miserver.it.umich.edu/cran/",	# University of Michigan
+    "https://cran.wustl.edu/", 	            # Washington University, Missouri
+    "https://archive.linux.duke.edu/cran/",	# Duke University, NC
+    "https://cran.case.edu/",            	# Case Western Reserve University, OH
+    "https://ftp.osuosl.org/pub/cran/", 	# Oregon State University
+    "http://lib.stat.cmu.edu/R/CRAN/", 	  # Carnegie Mellon University, PA
+    "https://cran.mirrors.hoobly.com/", 	# Hoobly Classifieds, PA
+    "https://mirrors.nics.utk.edu/cran/") # Nat. Inst. 4 Computational Sci, TN 
+)
+```
+
+## Help for the package.
+
+Once you've installed the package you can access the help pages for the 
+package with the following command:
+
+>  help(package="SOME_PACKAGE")
+
+```{r}
+##############################################################################.
+# To see the functions in the package use the following command
+##############################################################################.
+help(package="stringr")
+```
+
+To see examples of how to use a specific function. Click on the 
+"Run examples" link that appears at the bottom of the help page.
+Try this for the following functions in the stringr package:
+
+* str_trunc
+* str_split
+
+## Using a package without "loading" it.
+
+Below you will learn how to "load" a package using the library and require
+functions. This functions make it easier to use a package. However, 
+even before you "load" a package, you can still use it by specifying  
+PACKAGE_NAME::FUNCTION_NAME(ARGUMENTS,GO,HERE)
+when you call the function. 
+
+See the example below:
+
+```{r}
+# After installing a package you can use the functions by specifying 
+# the name of the package and the function as shown in the 
+# example below. This example uses the str_trunc and the str_split
+# functions. Both of these functions are included in the stringr package.
+#
+# The str_trunc function "truncates" or "chops off the end" of long strings. 
+# The str_split function splits up strings .
+#
+# See the documentation for more info about these functions:
+# help(package="stringr")
+
+# Create a vector.
+sayings = c("roses are red, violets are blue", 
+            "a stitch in time saves nine")
+
+# Chop off each of the strings after in the vector after the 25th character
+stringr::str_trunc(sayings, width=25)
+
+# Split the words in each of the strings. This function returns a list.
+stringr::str_split(sayings, pattern=" ")
+```
+
+##  loading packages - library() or require()
+
+### library(SOME_PACKAGE)
+
+```{r}
+# In the example above, to run the functions we used the syntax
+# PACKAGENAME::FUNCTIONNAME(), e.g. stringr::str_trunc( ARGUMENTS GO HERE )
+#
+# At this point, if you try to run the function without the package name you
+# will get an error, e.g. str_trun( ARGUMENTS GO HERE ) 
+#
+# Compare the command below with the similar command above.
+
+# ERROR - function str_trunc not found.
+str_trunc(sayings, width=25)
+
+# ERROR - function str_trunc not found.
+str_split(sayings, pattern=" ")
+```
+
+The reason why you get an error in the code above is because, while the 
+package was "installed" on your computer, R doesn't know to look in that
+package for functions.
+
+The library function, e.g. library(stringr), tells R to add the package
+to the list of packages that R looks through to find functions.
+This allows you to call functions in a package without
+specifying the package name. For example, after calling library(stringr)
+you may call any of the functions in the stringr package without 
+needing to specify the word stringr.
+
+```{r}
+# you don't need quotes
+library(stringr)   
+
+# You can now call any functions in the stringr package without 
+# specifying stringr::
+
+# Now it works without prefixing the function calls with stringr::
+str_trunc(sayings, width=25)
+str_split(sayings, pattern=" ")
+```
+
+### install.packages vs library
+
+As we said above, you only need to call install.packages(SOME_PACKAGE)
+once. Even if you reboot your computer, the package will still be installed.
+
+However, you need to call library(SOME_PACKAGE) every time you restart R if 
+you want to be able to use the functions in the package without 
+specifying the package name every time you call a function.
+
+### require(SOME_PACKAGE)
+
+There is another function, *require(SOME_PACKAGE)*, that basically accomplishes
+the same thing as the *library(SOME_PACKAGE)* function 
+(*the differences between library and require are explained below*). 
+You may use either *library* or *require*.
+You never need to use both. For example, the commands below are 
+an alternative to the commands shown above.
+
+```{r}
+#  Just like with library, after calling require(stringr) you no longer
+#  need to specify stringr:: before calling a function.
+
+#require(stringr)
+
+#str_trunc(c("roses are red, violets are blue", "a stitch in time saves nine"),
+#              width = 25)
+
+# Now you can continue to call any functions from the stringr package 
+# without specifying stringr::
+```
+
+### Calling library or require more than once is fine.
+
+In case you were wondering, if you call library(SOME_PACKAGE) or 
+require(SOME_PACKAGE) once and then call one of these functions 
+again, nothing happens the 2nd time. No errors or warnings are generated. 
+
+
+### The difference between library and require
+
+The difference between **library(SOME_PACKAGE)** vs **require(SOME_PACKAGE)**
+is regarding the return value of library vs require. 
+
+By default library and require do not display their return values - they have 
+"invisible" return values. However, while the return values are not displayed,
+they do exist. To see an "invisible" return value you can either capture
+the return value in a variable. For example:
+
+```{r}
+# The return value of library is the vector of packages that have have 
+# already been "loaded". Note that there are some packages that are 
+# automatically loaded when you start R without you needing to 
+# run the library/require command.
+
+returnValue = library(stringr)
+
+# show the names of the loaded packages
+returnValue
+
+
+# The require function returns a very different value.
+# The require function returns TRUE if the packages was loaded
+# successfully and returns FALSE otherwise. 
+
+returnValue = require(stringr)
+returnValue
+
+# One common reason for a package NOT loading successfully
+# is if the package hadn't been installed yet (using install.packages).
+# For example, the "glue" package contains some useful functions but we
+# haven't installed the glue package yet. Therefore the following
+# call to require will return FALSE. 
+
+returnValue = require(glue)   # FALSE - we haven't installed glue yet
+```
+
+### See invisible return values by using (parentheses)
+```{r} 
+# Note you can also see the "invisible" return values by simply
+# surrounding the function calls with (parentheses). For example
+
+library(stringr)   # return value is invisible
+require(stringr)   # return value is invisible
+
+(library(stringr))   # use (parentheses) to see the return value
+(require(stringr))   # use (parentheses) to see the return value
+```
+
+### installing and loading the package in one line of code
+
+Some packages can take a while to install. Therefore you usually 
+don't want to install a package more than once. You can use the 
+return value from require to write code that only installs the package
+if the call to require fails. For example
+
+Note that you can run several R commands in a single line
+by putting a semicolon between those commands. 
+Similarly you can write a function on a single line.
+Therefore the following example shows how you can use a single line of
+code to install the package only if necessary and to then load the package.
+This type of code is very convenient to put at the top of .R files.
+
+```{r}
+# First try to load stringr with the require function.
+# If stringr is not installed, then require will return FALSE.
+#
+# Only if require returns FALSE will stringr be installed.
+# After it is installed the require function is called again to make sure 
+# that the package is loaded.
+
+if(!require(stringr)){install.packages("stringr");require(stringr)}
+
+# Now you should be able to use any function from stringr without specifying
+# stringr::
+str_trunc("An apple a day keeps the doc away", 18)
+```
+
+## unloading and removing packages
+
+It's not usually necessary, but it is possible to unload packaes or remove packages 
+entirely from your computer. 
+
+You may want to unload a package (without uninstalling it) if the name of
+a function in the package is interfering with another package that has a 
+function with the same name.
+
+You may want to uninstall a package to make room on your hard drive.
+
+### detach("package:PACKAGE_NAME", unload=TRUE)
+
+The "opposite" of libarary(SOME_PACKAGE) and require(SOME_PACKAGE)
+is detach("package:PACKAGE_NAME", unload=TRUE).
+See the documentation for more info : ?detach
+To call it you must specify the word "package" before the actual 
+package name. See the example below:
+
+```{r}
+###################################.
+# Package is already loaded
+###################################.
+
+# We loaded stringr above (with library or require) so this works
+str_trunc("An apple a day keeps the doc away", 18)
+
+# and so does this ... (but it's unnecessary to specify the package)
+stringr::str_trunc("An apple a day keeps the doc away", 18)
+
+###################################.
+# Detaching the package ...
+###################################.
+detach(package:stringr, unload=TRUE)
+
+# Since we detached the package the function will not work without 
+# specifying the name of the package:
+
+# This doesn't work now
+str_trunc("An apple a day keeps the doc away", 18)
+
+# However, this does:
+stringr::str_trunc("An apple a day keeps the doc away", 18)
+
+###################################.
+# loading the package again ...
+###################################.
+
+# loading the package again ...
+library(stringr)  # or reqruire(stringr)
+
+# once again, both commands work:
+str_trunc("An apple a day keeps the doc away", 18)
+stringr::str_trunc("An apple a day keeps the doc away", 18)
+
+```
+
+
+### remove.packages(SOME_PACKAGE)
+
+The "opposite" of install.packages(SOME_PACKAGE) is remove.packages(SOME_PACKAGE)
+*NOT uninstall!*
+See the documentation for more info : ?remove.packages
+
+```{r}
+# What is CRAN?
+# 
+# See this - <https://www.youtube.com/watch?v=GM6MCBkVNtQ>
+```
+
+## vignettes
+
+Vignettes are tutorials on some of a package.
+These are often a good source of information.
+To see vignettes for a package that you haven’t installed, look at the
+“Vignettes” listing on its CRAN page.
+
+You can find the CRAN page for a package here and then search for 
+"vignettes" on the page.
+
+> <https://cran.r-project.org/web/packages/available_packages_by_name.html>
+
+The following is the page for the stringr package:
+> <https://cran.r-project.org/web/packages/stringr/index.html>
+
+The following are some vignettes listed on that page:
+
+> <https://cran.r-project.org/web/packages/stringr/vignettes/from-base.html>
+
+> <https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html>
+
+> <https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html>
+
+
+## Packages from other sources
+
+R packages can be created by anyone and then be submitted to be hosted
+on CRAN. The official procedures for doing so can be found by reviewing the 
+information here <https://cran.r-project.org/submit.html>. 
+There are also books and other sources of information about how to create
+R packages and submit them to CRAN.
+
+However, a package doesn't have to be on CRAN to be used. Many software 
+developers create R packages that are distributed in other ways.
+
+github.com is a website that hosts code "repositories". Software
+developers often post code on github.com that may be freely downloaded and
+installed. Often developers of R packages first make the package available
+on github before the package becomes available on CRAN. Sometimes the package 
+never becomes available on CRAN. Often a package is hosted on both 
+github and CRAN. Often github contains the "bleeding edge" version of  
+a package while CRAN hosts packages that have been more fully tested.
+
+Other sites that are similar to github.com are bitbucket, gitlab and others.
+
+If you come across a package that is on github, bitbucket, etc
+that you'd like to install you can do so 
+
+The "devtools" and "remotes" packages (that are available on CRAN) contain
+functions, similar to install.packages, that allow you to install R packages
+directly from repositories such as github, etc. It's pretty easy to 
+find information online about how to use these packages to install R
+packages from github, bitbucket, etc.

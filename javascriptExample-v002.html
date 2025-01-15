@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Javascript Example</title>
+
+    <!-- The following is JavaScript.
+         It can be placed in a <script> element. -->
+    <script>
+        // function to generate random strings
+        function generateString(length) {
+            const characters ='abcdefghijklmnopqrstuvwxyz';
+            let result = ' ';
+            const charactersLength = characters.length;
+            for ( let i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+
+            return result;
+        }
+
+        // function to add a random paragraph to end of web page
+        function addRandomParagraph () {
+            const theNewParagraph = document.createElement('p');
+            numberOfWords = Math.floor(Math.random() * 200) + 1 ; // max of 30 words
+            for ( let i = 0; i < numberOfWords; i++ ) {
+                wordLength = Math.floor(Math.random() * 7) + 1 ; 
+                theNewParagraph.innerHTML += generateString(wordLength) + " ";
+            }
+            document.body.appendChild(theNewParagraph);
+        }
+        
+    </script>
+
+</head>
+<body>
+    <!-- When you click on the link, it will generate a new paragraph by calling the 
+         javascript function -->
+    <a href="#" onclick="addRandomParagraph()">Click here to add a new paragraph at the end of this webpage.</a>
+</body>
+</html>

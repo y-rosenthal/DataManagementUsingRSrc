@@ -1,0 +1,6 @@
+# Intro {.unnumbered}
+
+This course covers many different topics related to the processing and
+management of data. For a quick overview of many of 
+the topics see the "Topics" section
+in the Appendix.

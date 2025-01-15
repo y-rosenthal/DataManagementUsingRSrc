@@ -1,0 +1,745 @@
+# Inner Joins.
+
+```{r}
+#| echo: false
+#| output: false
+
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
+
+```{r}
+#| warning: false
+
+# load the packages that we'll need
+if (!require(sqldf)) { install.packages("sqldf"); require(sqldf) }
+if (!require(readr)) { install.packages("readr"); require(readr) }
+```
+
+## Importing the data into R
+
+In section we will be referring to the 
+"customers" and the "orders" tables as well as various tables from the 
+"books database".
+Instructions for downloading the necessary files and importing them into R are
+included in section above that describes how to "Get the data".
+
+
+## Intro to "JOIN"ing two tables
+
+```{r}
+#| warning: false
+
+# read the data for the tables we'll be using
+customers = read_csv("data/customers.csv", show_col_types=FALSE)
+orders = read_csv("data/orders.csv", show_col_types=FALSE)
+```
+
+### Overview of the customers and orders tables
+
+```{r}
+# The examples in this page use the customers and orders tables.
+# The data for those tables can be imported into R using the
+# customers.csv and the orders.csv files.
+# This code to read in the data from the csv files appears 
+# further up in this file. 
+#
+# see this page for more info: https://www.w3schools.com/sql/sql_join.asp
+
+
+#........................................................................
+# Lets see a few rows from the customers table and from the orders table
+#........................................................................
+
+sqldf("select * from customers order by CustomerId limit 10")
+sqldf("select * from orders order by CustomerId limit 10")
+```
+
+## "Primary Keys" and "Foreign Keys"
+
+```{r}
+#------------------------------------------------
+# Primary keys and Foreign keys
+#------------------------------------------------
+
+# - Primary Key
+#
+#   Many relational database tables have a column that contains a unique value
+#   for every row in the table. For example the customers table in the example
+#   below contains a CustomerId column in the customers table. Each row in the 
+#   customers table contains a different value for the CustomerId. 
+#   This allows you to identify a specific customer (i.e a specific row in the table)
+#   by the customer id. For example CustomerId 100 corresponds to one and only one
+#   row in the customers table.
+#   The CustomerId column in the Customers table is known as a "primary key". 
+#
+#   Similarly, the orders table in the example below contains an OrderId
+#   column. Each row in the orders table contains a unique value for the
+#   OrderId. For example, orderId 10248 corresponds to exactly one row 
+#   in the orders table. Therefore we say that the OrderId column is the 
+#   "primary key" for the orders table.
+#
+#
+#
+# - Foreign Key
+#
+#   Note that the orders table ALSO contains a CustomerId column.
+#   The customerId in the orders table indicates which customer
+#   placed a specific order. To find the name of the customer, the address
+#   of the customer etc. you can look in the customers table for the row
+#   that contains the specific customerId for the order.
+#
+#   Since a single customer can have many different orders,
+#   the values of the CustomerId column in the orders table contains
+#   repeats of the same CustomerId value (in different rows of the orders table). 
+#   The customerId column in the orders table is NOT a primary key.
+#   The customerId column in the orders table exists so that we
+#   can look up the customer information for a particular order.
+#   The CustomerId column in the orders table is known as a "foreign key".
+#   In general a column in a table that contains information from
+#   the primary key of a different table is known as a "foreign key".
+#
+# In summary
+# - The CustomerId column in the customers table is a primary key
+# - The OrderId column in the orders table is a primary key
+# - The CustomerId column in the orders table is a foreign key
+#
+```
+
+### More about the customers and orders tables
+
+```{r}
+# show the orders table arranged in the order of the customerID
+
+sqldf("select *
+       from orders
+       order by CustomerID")
+
+
+# Show customer info for customer id 10
+
+sqldf("select * from customers where CustomerId = 10")
+
+
+# Show all orders for customer id 10
+
+sqldf("select * from orders where CustomerId = 10")
+```
+
+### JOINing customers and orders into a single output
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# using the JOIN to combine information from two tables into a single output
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# Combine information from the customers and the orders table.
+#
+# Specifically, show the following data
+# - customer name and country from the customers table
+# - orderId, OrderDate from the orders table
+#
+# Only show data for all orders placed by customer 10
+
+sqldf("select OrderID, customers.CustomerId, CustomerName, Country, OrderDate
+       from orders join customers on orders.customerId = customers.CustomerId
+       where customers.CustomerId = 10")   # ame result if you say orders.customerId
+
+
+# do the same for customerids 1 through 5
+
+sql="select OrderID, customers.CustomerId, CustomerName, OrderDate
+     from orders join customers on orders.customerId = customers.CustomerId
+     where customers.CustomerId >= 1 and customers.CustomerId <= 5" 
+sqldf(sql)
+
+# another way, with the IN operator
+sql="select OrderID, customers.CustomerId, CustomerName, OrderDate
+     from orders join customers on orders.customerId = customers.CustomerId
+     where customers.CustomerId IN (1,2,3,4,5)"   # you would get the same result if you said orders.customerId
+sqldf(sql)
+
+
+# show the orders that were shipped by shipper #3 for customers who
+# are from Mexico. Sort the results by the orderId
+sql="select orderId, customerName, customers.customerId, shipperId, country
+     from orders join customers on orders.customerId = customers.customerId
+     where shipperId = 3 and country = 'Mexico'
+     order by orderId"
+sqldf(sql)
+```
+
+## One to Many relationships
+
+```{r}
+#####################################################################
+#
+# One to Many relationships
+#
+# EXAMPLE:
+#           a single SPECIFIC customer may have many orders
+#           a single SPECIFIC order is related to exactly one customer 
+#
+# IN GENERAL:
+#
+# A single SPECIFIC row in table A may be related to many (or possibly zero)
+# rows from table B. 
+#
+# However a single SPECIFIC row from table B is related to 
+# EXACTLY ONE row from table A
+#
+# We'll call table A the "one table" and 
+#            table B the "many table"
+#
+# - The "one" table has a primary key.
+#
+# - The "many" table has a foreign key that contains values of the
+#   other table's primary key values.
+#####################################################################
+```
+
+## Many to Many relationships
+
+```{r}
+#####################################################################
+#
+# Many to Many relationships
+#
+# EXAMPLE:
+#           a single SPECIFIC author may have written many titles
+#           a single SPECIFIC book   may have many authors
+#
+#
+# Many to many relationships cannot be directly expressed in relational
+# databases. 
+# 
+# To establish a many to many relationship, a "middle" table is created
+# that contains the to foreign keys. Each of the foreign keys relate 
+# back to the primary key of one of the two tables. 
+# In the books database, the middle table is called title_authors.
+#####################################################################
+```
+
+## Practice - "one to many" or "many to many"?
+
+```{r}
+###################################
+# Practice identifying relationships
+#
+# - one to many
+#
+# - many to many
+#
+###################################
+
+# QUESTION 
+#
+# A university uses to tables to track their real estate.
+#
+# The BUILDINGS table contains one row for each building they own.
+# 
+# The ROOMS table contains one row for each room in each building.
+#
+# Are the BUILDINGS and ROOMS tables in a "1 to many" or a 
+# "many to many" relationship?
+#
+# Given the following definitions of a BUILDINGS table and 
+# a ROOMS table draw a "crows foot" Entity Relationship Diagram.
+# Make sure to show the symbols for the maximum and minimum 
+# cardinalities. Explain in English what each symbol on your
+# diagram means. 
+#------------------------------------------------------------------ 
+#    BUILDINGS TABLE
+#
+#    bldgCode    (PK)
+#    streetAddress
+#    city
+#    state
+#    zip
+#    numOfFloors
+#
+#
+#    ROOMS TABLE
+# 
+#    bldgCode (PK)
+#    roomNum  (PK)
+#    capacity
+#    type    (classroom, dorm room, office)
+#    hasVideoProjection (TRUE/FALSE)
+#
+#########################################################################
+
+
+
+#########################################################################
+# 
+# The same university keeps track of their professors, the courses 
+# that are in the course catalog and the specific offerings every
+# semester. Think about how these concepts are related to each other.
+#
+# How are PROFESSORS related to COURSES? "one to many", "many to one", "many to many"?
+#
+# How are PROFESSORS related to OFFERINGS? "one to many", "many to one", "many to many"?
+#
+# How are COURSES related to OFFERINGS? "one to many", "many to one", "many to many"?
+#
+# The following tables could be used to track this info.
+# Draw the crows foot Entity Relationship Diagram.
+# Make sure to show the symbols for the maximum and minimum 
+# cardinalities. Explain in English what each symbol on your
+# diagram means. 
+#------------------------------------------------------------------------
+#
+# PROFESSORS TABLE
+#
+# Description: this table contains exactly one row for each professor that is
+# employed by the university. 
+# 
+# facultyId (PK)
+# firstName
+# lastName
+# department
+# salary
+# yearHired
+#
+#
+#
+# OFFERINGS TABLE
+#
+# Description: this table contains info about the sections that are 
+# being offered in particular semesters.
+#
+# crn (PK)
+# courseNumber (FK1)
+# semester
+# year
+# room
+# buildingId
+# facutyId (FK2)
+#
+#
+#
+# COURSES TABLE 
+# Description: This table contains one row for each course in the course catalog.
+# Note that not every course is offered every semester. Some courses have
+# multiple offerings in a single semester.
+#
+# courseNumber (PK)
+# courseName
+# credits
+# description
+#############################################################################
+```
+
+
+## Using JOIN with the books database
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The books database contains information about various books, authors,
+# publishers, etc.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Read in the data for the books database - see the 
+titles = read_csv("data/booksDatabase/titles.csv", na="NULL", show_col_types=FALSE)
+authors = read_csv("data/booksDatabase/authors.csv", na="NULL", show_col_types=FALSE)
+publishers = read_csv("data/booksDatabase/publishers.csv", na="NULL", show_col_types=FALSE)
+title_authors = read_csv("data/booksDatabase/title_authors.csv", na="NULL", show_col_types=FALSE)
+royalties = read_csv("data/booksDatabase/royalties.csv", na="NULL", show_col_types=FALSE)
+
+
+# QUESTION: Write a SQL select statement (i.e. a "query") to display the following data.
+# For each title, show the 
+# - title name
+# - num pages
+# - publisher name
+# - publisher country
+
+# ANSWER
+
+sql = "select title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id"
+sqldf(sql)
+
+# To be more clear where each column comes from you can
+# write the columns in the format tableName.columnName.
+# (In this example it's not necessary to do so - but can make your code easier
+# to understand. Later we'll see examples where you must specify the 
+# tablename.colname format).
+
+sql = "select titles.title_name, titles.pages, publishers.pub_name, publishers.country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id"
+sqldf(sql)
+```
+
+
+
+::: {.callout-note}
+# See next section about "CROSS JOINS"
+
+Before going further, please take a few minutes and read the 
+information on "CROSS JOIN" 
+that is found in the next section of this website.
+The discussion of CROSS JOINS will be moved to this location soon...
+:::
+
+
+```{r}
+# DEEPER EXPLANATION
+#
+# We learned earlier about a "CROSS JOIN" that takes the rows of two different
+# tables and combines them in every way. This is useful when you want to see
+# every possible combination of the rows of two different tables. For example,
+# if you have a table of shirts and a table of pants and you want to see every
+# possible combination of a shirt with a pair of pants, a cross join might
+# be appropriate. However, most of the time that is not what you want to do.
+# Most of the time, the appropropriate type of join is known a an "INNER JOIN"
+# (or just simply "JOIN", the word inner is optional).
+# An inner join matches up those rows from two
+# different tables that share a primary key and a foreign key with the same
+# values.
+#
+# However, a cross join is actually at the heart of how the database 
+# performs an inner join internally. Specifically whenever the SQL code
+# specifies an inner join (i.e. "join") the database first performs a
+# cross join and then removes the rows from the cross join 
+# results that do not match the ON clause of the INNER JOIN.
+#
+# Let's look at that in a little more detail ...
+#
+# First thing that happens when the above query is processed internally
+# is the following cross join
+```
+
+```{r}
+#| column: screen-inset-right
+
+sql = "select titles.*, publishers.*
+       from titles cross join publishers"
+sqldf(sql)
+```
+
+```{r}
+# after that , the rows that don't match the "on" clause in the inner join
+# are removed from the results. This can be seen by adding a where clause 
+# to the cross join shown above.
+
+sql = "select titles.*, publishers.*
+       from titles cross join publishers
+       where titles.pub_id = publishers.pub_id"
+sqldf(sql)
+
+# The last thing that happens is that just the columns that appear in 
+# the select clause are displayed. Therefore, the following two 
+# queries are equivalent
+
+# This is the inner join version (we copied this from above)
+sql = "select title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id"
+sqldf(sql)
+
+# Version with a cross join - this is what happens internally when
+# you write an inner join (i.e. "join")
+sql = "select title_name, pages, pub_name, country
+       from titles cross join publishers
+       where titles.pub_id = publishers.pub_id"
+sqldf(sql)
+
+
+
+# QUESTION
+# Only show results for books that have at least 100 pages
+
+sql = "select title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where pages >= 100"
+sqldf(sql)
+
+
+# QUESTION
+# Only show books that are at least 100 pages and published in the USA
+
+sql = "select title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where pages >= 100 and country = 'USA'"
+sqldf(sql)
+
+
+# QUESTION
+# Show books that are shorter than 100 pages  and books that are at least 1000 pages
+# Do not show any other books.
+# Only show books from the USA.
+
+sql = "select title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where (pages < 100 or pages >= 1000) and country = 'USA' "
+sqldf(sql)
+
+
+# QUESTION
+# show the results in the order of the length of the book (i.e. # of pages)
+# show the shortest books at the top
+
+sql = "select title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where (pages < 100 or pages >= 1000) and country = 'USA' 
+       order by pages asc"     # asc is optional - you don't have to write it - it is the default
+sqldf(sql)
+
+
+# QUESTION
+# do the same thing but put the largest books at the top
+
+sql = "select title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where (pages < 100 or pages >= 1000) and country = 'USA' 
+       order by pages desc"     # you must write desc (i.e. descending)
+sqldf(sql)
+
+
+
+# QUESTION - add the pub_id to the output of the previous query.
+
+
+# ANSWER
+#
+# Because the pub_id exists in both the publishers and the titles
+# tables, every time that pub_id is used in the query, you must also include
+# the name of the table.
+#
+# For more info, see the comment below entitled
+#     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     # select table.column ...        vs       select column ... 
+#     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sql = "select publishers.pub_id, title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where (pages < 100 or pages >= 1000) and country = 'USA' 
+       order by pages desc"     
+sqldf(sql)
+
+
+
+# it will also work if you write titles.pub_id because once the table have been
+# joined together, the row from the publishers table and the corresponding
+# row from the titles table both have the same value for the pub_id
+#
+# For more info, see the comment below entitled
+#
+#     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     # select table.column ...        vs       select column ... 
+#     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+
+sql = "select titles.pub_id, title_name, pages, pub_name, country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where (pages < 100 or pages >= 1000) and country = 'USA' 
+       order by pages desc"     
+ sqldf(sql)
+
+
+
+# You could include the table names even for columns that don't rquire it.
+sql = "select titles.pub_id, titles.title_name, titles.pages, publishers.pub_name, publishers.country
+       from publishers  join   titles  on  publishers.pub_id = titles.pub_id
+       where (pages < 100 or pages >= 1000) and country = 'USA' 
+       order by pages desc"     
+sqldf(sql)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# select table.column ...        vs       select column ... 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You must include table names in the SELECT clause for columns that 
+# appear in more than one table. Column names that that only appear 
+# in a single table in the query do NOT need to be preceded by the table name. 
+#
+# However, it is PERMISSIBLE to include the table name for ANY column (even
+# if the column only appears in a single table).
+# Some people prefer to include the table name even when it 
+# is not necessary (as done above) to make it clearer to someone reading the 
+# code which table contains which columns.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# QUESTION
+#
+# Show the title_id, the title, and the author ID
+# for each author that had a part in writing a book. 
+#
+# If there is more than one author for a title then show a different row
+# in the output for each author.
+#
+# Show the rows in alphabetical order by title.
+
+# ANSWER
+
+sql = "select titles.title_id, title_name, au_id
+       from titles join title_authors   on    titles.title_id = title_authors.title_id
+       order by title_name"
+sqldf(sql)
+```
+
+## Joining three or more tables
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Joining three or more tables
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# For many queries you will need to join more than two tables together.
+# For example, suppose we wanted to list the titles and the author names
+# for each title.
+#
+# The title_name column is in the titles table. 
+# The au_fname and au_lname columns are in the authors tables.
+#
+# Therefore, you will obviously need to include the titles and authors
+# tables in the select statement. However, the only way to figure
+# out which authors wrote which titles is to 
+# also look at the title_authors table. Therefore the title_authors
+# table must also be part of the query.
+#
+# The best way to understand which tables must be included in a query
+# is to look at the ERD (Entity Relationship Diagram) for the database.
+# If you need data from two different tables that are not directly 
+# connected to each other on the diagram, you will also need to join all of the
+# tables that lie BETWEEN those tables also.
+#
+# To join multiple tables together, look at the diagram and find "path" on the
+# diagram starting with one table that you need data from and ending with 
+# another table that you need data from. 
+#
+# For example, if you want to show
+# the author names and the title names, you can start with the authors
+# table, then join onto that the title_authors table, then finally join 
+# the authors table.
+# 
+# Alternatively, you could start with the titles table, then join onto
+# that the title_authors table and then finally join the authors table.
+# It doesn't make a difference which table you start with and which table you
+# end with, as long as you join all of the tables in the path of tables.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# QUESTION
+# Show the the same info as the previous query but instead of the au_id,
+# show the authors first and last names.
+
+sql = "select titles.title_id, title_name, authors.au_id, au_fname, au_lname
+       from titles join title_authors   on    titles.title_id = title_authors.title_id
+                   join authors         on    authors.au_id   = title_authors.au_id
+       order by titles.title_id"
+sqldf(sql)
+
+
+# QUESTION 
+# Same as previous question but show the au_id in addition to the authors' names.
+
+# ANSWER
+# The only extra issue in this question is that since the au_id column 
+# appears in more than one table in the query (i.e. it's in titles
+# and in the title_authors tables), You cannot simply type au_id in 
+# the select clause - that would be an ambiguous column name. 
+# Rather you must write either authors.au_id or title_authors.au_id.
+# Either one authors.au_id or title_authors.au_id will yield the exact
+# same results because after the "on" clauses got finished processing
+# the only rows left from the cross join are rows in which the
+# authors.au_id and title_authors.au_id columns contain the same values.
+# or title_authors.au_id. You 
+
+# WRONG ... the au_id column is ambiguous - you need to specify the table name
+sql = "select titles.title_id, title_name, au_id, au_fname, au_lname
+       from titles join title_authors   on    titles.title_id = title_authors.title_id
+                   join authors         on    authors.au_id   = title_authors.au_id
+       order by titles.title_id"
+sqldf(sql)
+
+# This works (authors.au_id)
+sql = "select titles.title_id, title_name, authors.au_id, au_fname, au_lname
+       from titles join title_authors   on    titles.title_id = title_authors.title_id
+                   join authors         on    authors.au_id   = title_authors.au_id
+       order by titles.title_id"
+sqldf(sql)
+
+# This also works (title_authors.au_id)
+sql = "select titles.title_id, title_name, title_authors.au_id, au_fname, au_lname
+       from titles join title_authors   on    titles.title_id = title_authors.title_id
+                   join authors         on    authors.au_id   = title_authors.au_id
+       order by titles.title_id"
+sqldf(sql)
+
+
+
+
+# QUESTION
+# 19.	List the publisher name, the title_name, the authors first and last names,
+#     the author's state and the publishers state for all books.
+#     Make sure that in the output the authors state and publishers state
+#     columns are clearly labeled as such.
+#     Sort the rows alphabetically by the title name. If a title has more than one 
+#     author then there will be a different row in the output for each author.
+#     Sort those rows alphabetically by the publisher name, then by the 
+#     title and finally by the author's names.
+
+# ANSWER
+# This query requires joining 4 different tables.
+# See the code for details.
+# Notice that in the order by the au_lname comes before au_fname (this is in
+# general how people's names are sorted alphabetically)
+
+sql = "select pub_name, title_name, au_fname, au_lname,
+              authors.state as 'author state', 
+              publishers.state as 'publisher state'
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id
+  order by pub_name, title_name, au_lname, au_fname"
+sqldf(sql)
+
+# The following shows a breakdown of what is actually happening when you 
+# join multiple tables. All of the following "steps" happen at once when 
+# you run the single query shown above in the answer. This breakdown
+# of the steps helps you to understand what exactly is happening.
+
+# step 1 - the first two tables are joined 
+sql = "select authors.*, title_authors.*
+	from authors join title_authors on authors.au_id = title_authors.au_id"
+sqldf(sql)
+
+# step 2 - the results from the join of the
+#          1st two tables (authors and title_authors) is joined with
+#          the 3rd table (titles)
+
+sql = "select authors.*, title_authors.*, titles.*
+	from authors join title_authors on authors.au_id = title_authors.au_id
+	                      join titles on title_authors.title_id = titles.title_id" 
+
+sqldf(sql)
+
+
+# step 3 - the results from the join of the first 3 tables (authors,
+#          title_authors, titles) is then joined with the 4th table (publishers)
+
+sql = "select authors.*, title_authors.*, titles.*, publishers.*
+	from authors join title_authors on authors.au_id = title_authors.au_id
+	                      join titles on title_authors.title_id = titles.title_id
+                        join publishers on publishers.pub_id = titles.pub_id" 
+
+sqldf(sql)
+
+# step 4 - the order by clause puts the rows in the correct order
+sql = "select authors.*, title_authors.*, titles.*, publishers.*
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id"
+sqldf(sql)
+
+# step 5 - the select clause specifies which columns are actually displayed
+sql = "select pub_name, title_name, au_fname, au_lname,
+              authors.state as 'author state', 
+              publishers.state as 'publisher state'
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id
+  order by pub_name, title_name, au_lname, au_fname"
+sqldf(sql)
+```

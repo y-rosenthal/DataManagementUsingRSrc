@@ -1,0 +1,62 @@
+# Additional topics
+
+The following are additional topics that I plan to move to the main 
+portion of the text. This page is a temporary place to put the info as it's
+being developed.
+
+
+
+## Importing Data
+
+<https://rafalab.dfci.harvard.edu/dsbook-part-1/R/importing-data.html>
+
+
+
+### Excel
+
+Read excel file with formulas in cells into R  
+<https://stackoverflow.com/questions/32014692/read-excel-file-with-formulas-in-cells-into-r>
+
+XLConnect  
+<https://www.rdocumentation.org/packages/XLConnect/versions/1.0.8/topics/getCellFormula-methods>
+<https://cran.r-project.org/web/packages/XLConnect/vignettes/XLConnect.pdf>
+<https://financetrain.com/using-xlconnect-in-r-programming>
+
+
+
+## Using AI to code
+
+Using Gihub Copilot with RStudio  
+<https://www.youtube.com/watch?v=t7NrkAeosog&list=PLSjaBj3ul8GpuMUaSGME2_NomnIsYWIDj>
+
+
+
+## APIs
+
+How to work with APIs uing R (httr2 package tutorial)
+<https://www.youtube.com/watch?v=8tilyqp4bZY>
+
+Trends in API world
+<https://www.forbes.com/sites/forbestechcouncil/2024/02/07/four-trends-shaping-apis-in-2024/?sh=14a432ea3369>
+
+
+
+## Online books
+
+Introduction to Data Science
+Data Wrangling and Visualization with R  
+<https://rafalab.dfci.harvard.edu/dsbook-part-1/>
+
+Advanced Data Science
+Statistics and Prediction Algorithms Through Case Studies  
+<https://rafalab.dfci.harvard.edu/dsbook-part-2/>
+
+
+## Online exercises and other resources
+
+<https://docs.dodona.be/en/>
+<https://dodona.be/en/activities/?tab=all&programming_language=R>
+
+
+
+<https://financetrain.com/using-xlconnect-in-r-programming>

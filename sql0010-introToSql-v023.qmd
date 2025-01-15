@@ -1,0 +1,2041 @@
+# Relational Databases and SQL (using R)
+
+```{r}
+#| include: false
+
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
+
+We will spend the next few sections focusing on 
+"Structured Query Language (SQL)", the language that is used for accessing
+data in a relational database. Remember that a relational database
+stores its information as a collection of several "tables". Each table
+arranges its data in rows and columns.
+
+
+## Web resources for learning SQL
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The following websites contains a basic overview of many SQL 
+# commands and concepts. We will be going through the concepts and many 
+# of the interactive exercises from these websites
+#
+# https://www.w3schools.com/sql/
+#
+# https://sqlbolt.com/
+#
+# https://www.sqlitetutorial.net/
+#
+# https://mode.com/sql-tutorial/
+#
+# https://sqlzoo.com/
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# See this page 
+#
+#   https://sqlbolt.com/lesson/introduction
+# 
+# For an overview of :
+#
+# - What is Structured Query Language (SQL) - pronounced "sequel"
+# 
+# - What is a "Relational Database"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+## What software do I need to use SQL?
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The sqldf package in R.  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# To use SQL you must have access to software that interacts with 
+# a relational database. As mentioned above many such software packages
+# exist, e.g.
+#
+#      - Microsoft SQL Server
+#      - Oracle Relational Database Management System
+#      - MySql
+#      - Postgres
+#      - MariaDb
+#      - many many others
+#
+# In addition many custom software packages exist that use
+# SQL to manipulate relational databases. 
+#
+# Many of these software packages tend to be overly complex to install. 
+# However, the underlying SQL language that is used by all of these 
+# different software packages tends to be very, very similar. 
+# 
+# For this class we will be using R to learn the basic SQL commands.
+# The sqldf package in R includes the sqldf function that takes a single
+# character value. The value is expected to be a valid SQL command. 
+# Instead of referring to database "tables" the sqldf function interprets
+# database table names found in the commands as referring to R dataframes.
+# This makes sense since R dataframes are very similar in structure to 
+# relational database tables.
+#
+# The version of SQL that is used by default with the sqldf package
+# is the "sqlite" version. You can search online for more information
+# about sqlite if you want to understand more about the specifics 
+# of this "flavor" of SQL. The following website is a good place to
+# start: https://www.sqlitetutorial.net/
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### The sqldf R package
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Using the sqldf R package ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# SQL is NOT an "R" concept ... however we can use SQL in R via 
+# the sqldf package.
+#
+# The "sqldf" package in R allows you to use the sqldf() function
+# to run sql statements using R dataframes instead of database tables.
+# We will be using this package to introduce the first sql commands
+# we will learn. 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# install and load (i.e. require) the sqldf package 
+
+if(!require(sqldf)){install.packages("sqldf");require(sqldf);}
+```
+
+## data for this part of the tutorial
+
+```{r}
+#| include: FALSE
+
+file.copy(from="data/grades.csv", to=".")
+file.copy(from="data/sqlbolt_tables-v007.RData", to=".")
+```
+
+You can download the data for this tutorial from the following files.
+
+- [grades.csv](grades.csv)
+  This is a .csv file. You can read the contents of the file into R 
+  with the read.csv function as shown below.
+  
+- [sqlbolt_tables-v007.RData](sqlbolt_tables-v007.RData)
+  This is a .RData file. You can read the contents of the file into R 
+  with the load function as shown below.
+
+You can load these tables into your R session with the following commands.
+
+```{r}
+grades = read.csv("grades.csv")
+load("sqlbolt_tables-v007.RData")
+```
+
+Below are the contents of these tables:
+
+```{r}
+# Tables that we will be using in this presentation.
+
+sqldf("select * from grades")
+sqldf("select * from movies")
+sqldf("select * from orders")
+sqldf("select * from customers")
+sqldf("select * from north_american_cities")
+```
+
+
+
+## SQL SELECT statement
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# SQL select statement                                                     ####
+#
+# The select statement is used to retrieve information from a relational
+# database table (or in our case, from an R dataframe). The select statement
+# has several "clauses". The following are the allowed clauses. The ... after
+# each clause name represents additional text that needs to be typed. We will
+# learn how to use each of these different clauses below.
+# 
+# The following are the clauses of a SQL select statement:
+#
+#     select ...
+#     from ...
+#     where ...
+#     group by ..
+#     having ...
+#     order by ..
+#     limit ...        (NOTE: the limit clause is found in many SQL implementations but is not standard)
+#
+#
+# NOTES: 
+#
+# 1. All of the clauses are optional, except for the select clause.
+#
+# 2. The clauses that appear in a particular select statement must be 
+#    in the order shown above. 
+#
+# 3. The limit clause is not a standard part of SQL but is commonly used in many flavors
+#    of the SQL language.
+#
+# 4. According to the ANSI SQL standard, SQL is NOT case sensitive.
+#    In other words you can type "SELECT ..." or "select ...". 
+#
+#    Often, programmers will capitalize the clause names in select statements however,
+#    this is not required.
+#
+#    Some SQL products do make SQL case sensitive. This is especially true
+#    when it comes to names of tables and names of columns in the tables.
+#
+#    The sqldf package that we will be using is case-insensitve (i.e. case does
+#    NOT matter) for everything EXCEPT for table names (i.e. dataframe names).
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+## How to use the R sqldf() function
+
+```{r}
+#| output: false
+#| warning: false
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The sqldf function accepts a single argument that is expected to 
+# be a SQL SELECT command. The table names in the SELECT command are expected to 
+# be R dataframes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# See help info about the sqldf package
+help(package="sqldf")
+
+# See help about the sqldf function that is part of the sqldf package
+?sqldf
+```
+
+## Intro to the SQL SELECT command
+
+```{r}
+# select clause specifies which columns you'd like to 
+# see in the results.
+
+sqldf("select student, test1, test2 
+      from grades")
+```
+
+## SELECT * FROM .....
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# SELECT * FROM ....
+#
+# You can type * instead of the column names to get all of the columns.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select * from grades")   # display the entire grades table
+```
+
+
+## capturing the output of sqldf in R
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The output of sqldf is another dataframe   ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# In a relational database there is usually a way to 
+# capture the output of a select statement in a different table
+# however, the actual mechanism is not standard. MANY sql database
+# software products use the "into" clause of the select statement
+# to do so. I am not going to talk about that here because that
+# really depends on the exact sql product you are using.
+#
+# In R, when using the sqldf function, you can capture the output of sqldf
+# in another variable. This simply creates a new R dataframe (which in sqldf
+# is analogous to a database table).
+#
+# Remember though that the actual sqldf() function in R is NOT technically 
+# part of the SQL language. It is simply how we can use SQL commands to 
+# manipulate R dataframes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Example: Capture the output of the sql command in a new dataframe
+
+justTest1 = sqldf("select student, test1, test2
+                   from grades")
+
+# Here is the original table
+sqldf("select * from grades")
+
+# Here is the new table
+sqldf("select * from justTest1")
+```
+
+
+
+## case-sensitivity in SQL
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# A note about case-sensitivity ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# NOTE: as mentioned above, sqldf is case-INsensitive regarding parts of the
+# command OTHER THAN the table names (i.e. the dataframe names).
+# To demonstrate, the following will produce the same results as the 
+# command above.
+
+# same results as above
+sqldf("SELECT STUDENT, TEST1, TEST2   
+      FROM grades")
+
+# However, the following command will NOT work since there is no variable
+# named GRADES (the name is grades)
+
+# ERROR - should be "grades", not "GRADES"
+
+sqldf("SELECT STUDENT, TEST1, TEST2    
+       FROM GRADES")                      # Error: no such table: GRADES
+```
+
+## order by
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ORDER BY                                                     ####
+#
+# The ORDER BY clause allows you to specify the order that
+# the rows should appear in the results.
+# Numbers are ordered numerically.
+# Character data is ordered alphabetically.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# Order by test1
+sqldf("select student, year, test1, test2
+      from grades
+      order by test1")
+
+# Order by student
+sqldf("select student, year, test1, test2
+      from grades
+      order by student")
+
+# Order by year
+sqldf("select student, year, test1, test2
+      from grades
+      order by year")
+
+#..........................................................................
+# You can specify asc to indicate "ascending" order  (this is the default)
+#
+# You can specify desc to indicate "descending" order
+#..........................................................................
+
+# specify asc for order (i.e. ascending) - this is the default.
+# if you dont' specify asc you will get the same results.
+
+sqldf("select student, year, test1, test2
+      from grades
+      order by test1 asc")
+
+# reversed - order is descending, ie. desc
+sqldf("select student, year, test1, test2
+      from grades
+      order by test1 desc")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You can specify more than one column in the order by clause
+# The 2nd specified column will only have an effect for rows 
+# that have the same value in the first specified column.
+#
+# Notice that there is a separate asc or desc indicator
+# for each of the columns in the order by clause
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#.............................
+# ordering by a single column
+#.............................
+
+# order the data in increasing order of test1 value
+# Notice that the year values are NOT in order
+
+sqldf("select student, year, test1
+      from grades
+      order by test1 asc")
+
+# order the data in increasing order of year value (alphabetical order)
+# Notice that the test values are NOT in order
+
+sqldf("select student, year, test1
+      from grades
+      order by year asc")
+
+#..................................................
+# order the data by two different columns
+#..................................................
+
+# Order the data alphabetically by year.
+# For all of the rows for a particular year, sort the test1 values
+# in ascending numeric order.
+
+sqldf("select student, year, test1, test2
+      from grades
+      order by year asc, test1 asc")
+
+
+# Order the data by alphabetically by year.
+# For all of the rows for a particular year, sort the test1 values
+# in descending numeric order.
+
+sqldf("select student, year, test1, test2
+      from grades
+      order by year asc, test1 desc")
+
+
+# Order the data by test1.
+# For all the rows that have the same value for test1 sort the rows by test2
+
+
+sqldf("select student, test1, test2
+      from grades
+      order by test1 desc, test2 desc")
+
+# Show the rows in descending order of the test1 grades.
+# If several students got the same grade on test1 then show 
+# those rows in alphabetical order of the student names.
+
+sqldf("select student, test1, test2
+      from grades
+      order by test1 desc, student asc")
+
+#..................................................
+# order the data by three different columns
+#..................................................
+
+# Order all of the rows by year 
+#
+# among the rows that have the same year
+# order within those rows by test1
+#
+# among the rows that have the same year and test1 values
+# order within those rows by test2
+
+sqldf("select student, year, test1, test2
+      from grades
+      order by year, test1 desc, test2 desc")
+```
+
+
+## limit clause
+
+```{r}
+###############################################################.
+# LIMIT <M>       and     LIMIT <M> OFFSET <N>
+###############################################################.
+#
+# The LIMIT clause must come at the very end of the SQL 
+# statement. You can use it to display only some of the 
+# rows that would otherwise have been displayed.
+###############################################################.
+```
+
+For example: 
+
+```{r}
+# Display the first 3 students
+sqldf("SELECT *
+      FROM grades
+      ORDER BY student
+      LIMIT 3")
+```
+
+```{r}
+###############################################################.
+# In general the limit clause has two different forms: 
+#
+#      <SOME SELECT STATEMENT>
+#      limit M
+#
+# (where M is an integer) results in only the first
+# M rows of data from what would normally have been displayed 
+# had the LIMIT clause not been specified.
+# 
+#      <SOME SELECT STATEMENT>
+#      limit M offset N
+#
+# (where both M and N are integers) 
+# starts the output from the N+1'th row of what would normally 
+# have been displayed without the limit clause and then 
+# displays the next M rows of data.
+#
+# LIMIT is often used in combination with the ORDER BY clause.
+###############################################################.
+```
+
+
+For example: 
+
+```{r}
+# Display the first 3 students
+sqldf("SELECT *
+      FROM grades
+      ORDER BY student
+      LIMIT 3")
+
+# Display the next 3 students
+sqldf("SELECT *
+      FROM grades
+      ORDER BY student
+      LIMIT 3 OFFSET 3")
+
+# Display the next 3 students
+sqldf("SELECT *
+      FROM grades
+      ORDER BY student
+      LIMIT 3 OFFSET 6")
+```
+
+
+
+## Using calculations in the select clause
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Using calculations in the select clause    ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# You can use math or SQL functions to modify the values
+# that are returned. We will discuss SQL functions later.
+# For now, let's demonstrate the concept using math.
+# See the questions and answers below:
+```
+
+```{r}
+#/////////////////////////////////////////////////////////////////////////
+# QUESTION
+#
+# Display the student, test1 and test2 columns from the grades table.
+# In addition, display a column named that contains
+# the values from the test2 column with 10 points added to each number.
+#/////////////////////////////////////////////////////////////////////////
+
+# ANSWER
+
+sqldf("select student, test1, test2, test2 + 10 
+      from grades")
+```
+
+## Renaming columns
+
+```{r}
+#/////////////////////////////////////////////////////////////////////////
+# QUESTION
+#
+# Answer the same question, but this time change the name of the new
+# column to "test2_curved".
+#/////////////////////////////////////////////////////////////////////////
+
+# ANSWER
+
+# Use AS to change the name of the column in the output
+
+sqldf("select student, test1, test2, test2 + 10 as test2_curved
+      from grades")
+
+
+
+# You don't actually need to write "AS" 
+
+sqldf("select student, test1, test2, test2 + 10 test2_curved
+      from grades")
+```
+
+## 'Quoting' column names that contain spaces (or other special characters)
+
+In general, column names and table names should only contain letters and 
+numbers. If the name of a column or a table needs to contain spaces or 
+other "special characters" (e.g. !@#$%^&*()_+~~ etc.) you need to
+'quote' the name using 'apostrophes' or "quotes". See the following example
+which contains a space in the new column name. 
+
+```{r}
+# You must 'quote column names that contain spaces' 
+
+sqldf("select student, test1, test2, test2 + 10 'test2 curved'
+      from grades")
+```
+
+Note that in the SQLite dialect of SQL 
+(which is what is being used in R with sqldf) you can use 
+'apostrophes' in place of quotes. We used 'apostrophes' 
+instead of "quotes" to quote the new column name to avoid issues
+that would arise if we used "quotes" since we are already 
+using "quotes" to surround the entire SQL statement. 
+See the next section for more info.
+
+## 'single quotes' vs "double quotes"
+
+In many areas of technology, 'apostrophes' are used to 'quote' text 
+instead of "quotation marks". 
+Apostrophes are used in this way, are referred to 
+as 'single quotes' whereas quotation marks are referred to 
+as "double quotes" (since an apostophe has one short line while a single
+quotation mark is comprised of two short lines).
+
+In SQL, there are two different situations where something needs to be quoted.
+One situation is as shown above to create column headings that contain
+spaces or special characters. Another situation is
+where you want to include some literal text  (see the description 
+of "concatenation" below). 
+
+In this presentation we are using 'single quotes' for most purposes inside
+our SQL statements. This is because
+SQLite (i.e. the dialect of SQL we are using here) allows for the use
+of either 'single quotes' or "double quotes" wherever you need to quote
+something. Using 'single quotes' allows us to sidestep issues that would
+arise with "double quotes". Using double quotes inside the SQL statement 
+would interfere with the "double quotes" that we are using to "quote" 
+the entire sql statement in our call to sqldf(" ... "). 
+Other SQL envirnoments that do not rely on sqldf() do not have this issue.
+
+It should be noted though that the 
+ANSI SQL standard, calls for using 
+double quotes for column names (as in the example above) and for using
+single quotes to quote textual values (as in the concatenation example below).
+
+(see <https://www.googlecloudcommunity.com/gc/Technical-Tips-Tricks/In-SQL-do-I-use-double-quotes-or-single-quotes-for-string/ta-p/584590>)
+
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 'single quotes' (ie. 'apostrophes')   vs     "double quotes" (ie. "quotes")  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Explicit textual values need to be 'quoted'.
+#
+# Standard SQL uses single quotes for quoting values.
+#
+# Many sql software packages allow for "double quotes" however, that is not 
+# officially part of the standard.
+#
+# The sqlite dialect of SQL (which is the default dialect used by sqldf)
+# DOES recognize "double quotes" too. However, we will try to stick to 
+# 'single quotes' in order to adhere to the standard SQL notation.
+#
+# The following example combines the id and the student name into a single
+# value with a dash (i.e. - ) between them. Notice the 'single quotes' around
+# the dash.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+
+
+
+## Concatenation: 'abc' || 'def' is 'abcdef'
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# To "concatenate" two values means to "paste" them together 
+# into a single character value.
+# ANSI SQL defines the  || as the "concatenation" operator.
+# This is similar to the & operator in Excel.
+#
+# Sqlite (which is used by R's sqldf package) uses the ANSI standard || operator.
+#
+# See the examples below.
+#
+# NOTE: Some other database software products use non-standard 
+#       operators for concatenation. For example:
+#
+#   * MySql does not have a concatenation operator. MySql uses || for logical or. 
+#     Rather, it uses the function, concat(a, b), to concatenate a with b.
+#
+#   * Microsoft SQL Server uses + for concatenation.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+#///////////////////////////////////////////////////////////////
+# QUESTION
+#
+# Show a column named id_student that contains the values from the 
+# the id and student columns concatenated together. Also show the 
+# test1, test2 and test3 columns.
+#///////////////////////////////////////////////////////////////
+
+# ANSWER 
+
+sqldf("select id || student as id_student, test1, test2, test3
+      from grades")
+```
+
+```{r}
+#///////////////////////////////////////////////////////////////
+# QUESTION
+#
+# Modify the answer to the previous question so that the
+# "id_student" column contains a dash between the 
+# id and the name of the student.
+#///////////////////////////////////////////////////////////////
+
+# ANSWER:
+# 
+# You need to use 'quotes' around the '-' dash.
+# First concatenate the id with '-' (don't forget the 'single quotes').
+# Then concatenate the student's name.
+
+sqldf("select id || '-' || student as id_student, test1, test2, test3
+      from grades")
+```
+
+## Rules for naming tables and columns
+
+**NOTE**: 
+
+- "IDS1020-Intro to IDS" students can ignore this section.
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Rules for naming tables and columns:
+#
+# What happens if you use non-standard characters in the names.
+#
+#   - ANSI standard SQL - use "double quotes" for non-standard column or
+#     table names ( NOT 'single quotes' )
+#
+#   - some other flavors of SQL may use other symbols for this purpose.
+#     For example:
+#       o Microsoft Access uses [square brackets] and 
+#       o MySql uses `grave accent` characters (AKA `backticks`)
+#         (https://en.wikipedia.org/wiki/Grave_accent)
+#     
+#   - sqlite (i.e. the default version of SQL for sqldf) allows all of the 
+#     above, i.e. "double quotes", `back ticks` and [square brackets]
+#     to surround non-standard names. However, it is best to use 
+#     "double quotes" as that is the ANSI standard.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Every version of SQL has its own rules for which characters are allowed
+# to be used in table names and column names. To be safe that your code will work
+# on any version of SQL the best bet is to stick to the following rules for 
+# both table names and for column names:
+# 
+#   1. only use letters, numbers and underscores
+#   2. start the name with a letter
+#
+# However, many SQL versions allow for non-standard characters to be included
+# in a table name or column name. However, if you use a non-standard character
+# then you must 'quote' the name of the table or name of the column
+# in SQL commands using the quoting rules provided by the version of SQL
+# you are using. When using sqldf, if you use a non-standard character 
+# (e.g. a period, a space, etc) then you should surround the name of the 
+# table or column with "double quotes" (`backticks` and [square brackets] also
+# work but "double quotes" are preferred as that is the ANSI standard).
+# You cannot use 'single quotes' for this purpose.
+#
+# To demonstrate we can use the iris dataframe that is built into R.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### WARNING: In SQLite, you must use "double quotes" for non standard table or column names.
+
+**NOTE**: 
+
+- "IDS1020-Intro to IDS" students can ignore this section.
+
+- "IDS2460-Data Management" you should be aware of the following issue.
+
+This doesn't come up too often but if you are using sqldf to work with R
+dataframes you should be aware of the following issue. R dataframes often
+use periods in the column names. This is non-standard for SQL.
+
+```{r}
+# Show the first 10 rows of the iris dataframe that comes built into R.
+head(iris,10)
+
+#//////////////////////////////////////////////////////////////////////////
+# QUESTION
+#
+# Use sqldf to display just the Sepal.Length, Sepal.Width and Species columns 
+# from the "iris" dataframe.
+#//////////////////////////////////////////////////////////////////////////
+
+
+# ANSWER
+#
+# This dataframe has column names that contain periods. A period
+# is NOT a standard character for table and column names. Therefore
+# we must use "double quotes" or `back ticks` to quote these column names.
+#
+# This does NOT work because of the periods in the column names
+
+# sqldf("select Sepal.Length, Sepal.Width, Species 
+#         from iris")                              # ERROR: no such column Sepal.Length
+
+# This works - i.e. use "double quotes". Note that we used 
+# 'single quotes' to quote the entire select statement.
+sqldf('select "Sepal.Length", "Sepal.Width", Species from iris')
+
+# Same thing but we used "double quotes" to quote the entire select statement.
+# Therefore we used \" for every double quote that is inside the command.
+sqldf("select \"Sepal.Length\", \"Sepal.Width\", Species from iris")
+
+# This also works - use `back ticks`
+sqldf('select `Sepal.Length`, `Sepal.Width`, Species from iris')
+
+# *** WARNING!!! ***
+#
+# BE CAREFUL - don't use 'single quotes' here. Single quotes will NOT
+# work to quote column names or table names.
+#
+# The following will simply display the words 'Sepal.Length' and 'Sepal.Width'
+# for every row in the output.
+sqldf("select 'Sepal.Length', 'Sepal.Width', Species from iris")
+```
+
+### Aside: using R "raw strings" (only for those learning R)
+
+**NOTE**: 
+
+- "IDS1020-Intro to IDS" students can ignore this section.
+
+If you are learning SQL but are not interested in learning more about 
+R right now you can safely skip this section.
+
+```{r}
+# RAW STRINGS in R  - i.e.    r"( ... )"
+#
+# You can also use a "raw string" - introduced in R 4.0
+# Any string (ie. character value) that appears between r"( .... )"
+# is quoted as exactly the value that appears between the r"( and )"
+# symbols. For detailed info about R's new raw string feature see this page:
+#
+#    https://r4ds.hadley.nz/strings.html#sec-raw-strings
+#
+# You can use an R "raw string" to quote anything without
+# resorting to backslahes or other techniques.
+#
+# To create a "raw string" in R place the text that you want to quote
+# between    r"(      and      )"
+# The r stands for raw, not "R". 
+# The text being quoted can safely include any characters you like.
+# For example, the following "strangeValue" gets displayed just fine.
+
+strangeValue = r"( Backslash: \  Quote: "  Apostrophe: ' )"
+
+cat(strangeValue)    # Backslash: \  Quote: "  Apostrophe: ' 
+
+
+# You can use r"(raw strings)" to very simply quote any SQL command
+# that you want to pass to sqldf, regardless of what is in the SQL.
+
+sqldf( r"(select "Sepal.Length", "Sepal.Width", Species from iris)" )
+
+
+# NOTE - R's new "raw string" syntax is very useful for 
+# writing regular expression patterns in R
+# For example:
+#
+#   without raw strings - you NEED \\double-backslashes
+
+pattern = "\\d+\\.\\d+" 
+cat(pattern)   # \d+\.\d+
+
+#   with raw strings - you DON'T need the \\double-backslashes
+pattern = r"(\d+\.\d)"      
+cat(pattern)   # \d+\.\d+
+
+charNums = c("one", "1.593", "278.123", "999")
+grep(pattern, charNums, value=TRUE)
+```
+
+## where clause
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# where clause   ####
+#
+# The where clause allows you to specify the rows that you want.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# The where clause include a logical expression. The expression is evaluated
+# separately for each row in the table (i.e. dataframe in our case). 
+# The data from the row is substituted into the logical expression. If the
+# logical expression results in TRUE then information from the row becomes
+# encorporated into the output. If the logical expression results in FALSE 
+# for the row then the row does not appear in the output.
+
+# Only the rows that have a TRUE result are displayed
+
+sqldf("select student, test1, test2 
+      from grades
+      where test1 > test2")
+
+# You can get all of the columns by using the * instead of the column names
+sqldf("select *
+      from grades
+      where test1 > test2")
+
+sqldf("select student, test1, test2 
+      from grades
+      where test1 >= test2")
+
+sqldf("select student, honors, test1, test2 
+      from grades 
+      where honors == TRUE and test1 < 90 and test2 < 90")
+
+sqldf("select student, honors, test1, test2 
+      from grades 
+      where honors != TRUE and test1 > 90 and test2 > 90")
+
+
+# NOTE: 
+#
+# When using the relational operators >  <   >=   <=
+# with character data, values that would appear earlier in a dictionary
+# are considered "less than" values that would appear later in the dictionary.
+```
+
+## SQL operators
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+# SQL operators
+#
+# Different flavors of SQL sometimes use different operators.
+# Look up the documentation for your particular flavor of SQL.
+# See the SQLite operators here
+# https://www.tutorialspoint.com/sqlite/sqlite_operators.htm
+# They are summarized below.
+#
+#                        R operator        sqlite operator
+#                        -----------       ---------------
+#
+#   ARITHMETIC OPERATORS
+#   addition                +                 same as R
+#   subtraction             -                 same as R
+#   multiplication          *                 same as R
+#   regular division        /                 /     depends on the type of data
+#   integer division        %/%               /     depends on the type of data
+#   modulus (remainder)     %%                %
+#
+#   LOGICAL OPERATORS
+#   equal to                ==                = or == (they both work)
+#   not equal to            !=                != or <> (they both work)
+#   greater than            >                 same as R
+#   less than               <                 same as R
+#   greater or equal        >=                same as R
+#   less or equal           <=                same as R
+#
+#   logical not             !                 not
+#   logical and             &&                and
+#   logical or              ||                or
+#
+#   CHARACTER OPERATORS
+#   concatenation           paste0(a,b)       a || b
+#
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+#
+#   NOTE - the following operators exist in sqlite but mean different 
+#          things than what they mean in R.
+#          We will probably not cover the details of these operators
+#          (unless we have extra time) but you should be aware that
+#          they do NOT do the same thing as in R.
+#
+#                        R operator      sqlite operator
+#                        -----------     ---------------
+#   BITWISE OPERATORS - we will probably not cover these unless we have extra time.
+#
+#   bitwise "and"        not avaialble        &
+#   bitwise "or"         not avaialble        |
+#   bitwise "not"        not avaialble        ~
+#   left shift bits      not avaialble        <<
+#   right shift bits     not avaialble        >>
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+```
+
+## Performing calculations with SQL
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+# Using SQL to perform calculations  ####
+#
+# In the sqlite flavor of SQL you can perform calculations by simply
+# using SELECT without a FROM clause.
+#
+# Some other versions of SQL (e.g. Oracle) require a FROM clause in every select.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
+# RESULTS of following query
+#
+#     3+2   23/5    23.0/5
+#       5      4       4.6
+
+sqldf("select 3+2, 23/5, 23.0 / 5")   # 5   4   4.6 (headings show calculations)
+
+
+
+
+# Same result but headings show Sum, IntegerDivision, RealDivision
+#
+#     Sum   IntegerDivision   RealDivision
+#       5                 4            4.6
+
+sqldf("select 3+2 as Sum, 
+      23/5 as IntegerDivision, 
+      23.0 / 5 as RealDivision")   # 5   4   4.6   (same results with differnet headings)
+
+
+# You don't actullay need the word "as" but it makes the code more readable.
+# The following will produce the same results as above.
+
+sqldf("select 3+2 Sum, 
+      23/5 IntegerDivision, 
+      23.0 / 5 RealDivision")   # 5   4   4.6   (same results with differnet headings)
+
+
+
+# The column heading must only use legal column heading characters.
+# If you want to add non-legal column-heading characters, you can put the
+# column heading in "double quotes".
+# The following adds spaces to some of the column headings.
+
+sqldf('select 3+2 "Sum", 
+      23/5 "Integer Division", 
+      23.0 / 5 "Real Division"')   # 5   4   4.6   (same results with differnet headings)
+
+# If you perform calculations that do not refer to the columns in a table,
+# you will get back the result of the calculation for every row of the table.
+# 
+# The following will return multiple rows of the answers, one row for each
+# of the grades table.
+# 
+# You generally don't want to do this, which is why we left off the FROM 
+# clause in our earlier examples.
+
+sqldf('select 3+2 "Sum", 
+      23/5 "Integer Division", 
+      23.0 / 5 "Real Division"
+      from grades')                # you probably dont want the from clause here
+
+sqldf("select 3 as curve, student, test1, test1 + 3 as curved_test1 from grades")
+```
+
+
+## Reminder - how NA works in R
+
+**NOTE**: 
+
+- "IDS1020-Intro to IDS" students can ignore this section.
+
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Remember how NA works in R  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANY expression that contains NA results in NA
+
+franksSalary = 100
+tinasSalary = 200
+nancysSalary = NA
+nedsSalary = NA
+
+# all of the following result in NA
+
+franksSalary > nancysSalary  # NA
+nancysSalary == nedsSalary   # NA
+franksSalary + nancysSalary  # NA
+
+# The only way to test for NA in R is with the is.na function
+
+salarys = c(100,200,NA,NA) 
+salarys == NA     # NA NA NA NA
+is.na(salarys)    # FALSE FALSE TRUE TRUE
+
+# In R, you can check for non-na values using not operator ( ! )
+
+!is.na(salarys)   # TRUE TRUE FALSE FALSE
+```
+
+```{r}
+#..................................................................
+# Remember in R that when you perform any operation with NA
+# the result is NA. For example:
+#
+#    > NA + 10
+#    [1] NA
+#
+#    > NA == NA  
+#    [1] NA
+#
+#    > NA != NA  
+#    [1] NA
+#   
+# SQL has the same approach to NULL values. Any operation with NULL
+# results in NULL.
+#..................................................................
+```
+
+## NULL in SQL
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# NULL values in SQL  ####
+#
+# In relational database tables, the value NULL is used to record 
+# a value that is "not known". For example a salary value of NULL
+# is treated as a salary that hasn't been recorded in the database yet. 
+# This is very different from a salary of 0 which would be the case if 
+# someone is volunteering or donating their time.
+#
+# Note that when using sqldf to run SQL commands in R
+# the data is stored in an R dataframe. Therefore these types of values
+# appear in the dataframe as NA but the SQL statements use the term NULL.
+# In an actual relational database these values would also appear in the 
+# table as NULL (not as NA)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#...............................................................
+# Check for values that are NULL in the following way:
+#     
+#     WHERE COLUMN_NAME IS NULL
+#     (see examples below)
+#
+# NOTE: DO NOT USE "== NULL". The == operator will NOT work with NULL
+#...............................................................
+
+# show all rows for which the test3 grade is NULL 
+# 
+# NOTE: Remember that R does not understand NULL, R uses NA.
+#       Remember that SQL understands NULL and does not understand NA.
+#       Since sqldf uses R dataframes, the sqldf function automatically 
+#       translates NULL into NA and vice versa when using SQL code to 
+#       access data in R dataframes.
+
+sqldf("select *
+      from grades
+      where test3 is NULL")
+
+
+# DON'T DO THE FOLLOWING !!! IT DOESN'T WORK!!!
+
+sqldf("select *
+      from grades
+      where test3 = NULL")  # use IS NULL!!!
+
+#...............................................................
+# Check for values that aren't NULL in the following way:
+#     
+#     WHERE COLUMN_NAME IS NOT NULL
+#     (see examples below)
+#
+# NOTE: DO NOT USE "!= NULL". The != operator will NOT work with NULL
+#...............................................................
+
+# show all rows for which the test3 grade is NOT NULL (i.e. isn't NA)
+
+sqldf("select *
+      from grades
+      where test3 is NOT NULL")
+
+
+# DON'T DO THE FOLLOWING !!! IT DOESN'T WORK!!!
+
+sqldf("select *
+      from grades
+      where test3 != NULL")   # use IS NOT NULL !!!
+```
+
+
+## Practice
+
+```{r}
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+# QUESTION
+#
+# curve all test3 grades by 10 points (NULLs remain NULL)
+#
+# (remember that since we are using R, the NULL values
+#  appear as NA)
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+sqldf("select student, test3, test3 + 10 as curved_test3
+       from grades
+       order by student")
+
+
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+# QUESTION
+#
+# Show rows where both test2 and test3 are NULL
+# REMEMBER when looking for NULL values: 
+#
+#    USE:        value IS NULL      # correct
+#    DON'T use:  value = NULL       # wrong
+#
+#    USE:        value IS NOT NULL  # correct
+#    DON'T use:  value != NULL      # wrong
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+sqldf("select student, test1, test2, test3
+       from grades
+       where test2 IS NULL and test3 IS NULL  
+       order by student")
+
+
+# DON'T DO THE FOLLOWING !!! IT DOESN'T WORK!!!
+
+sqldf("select student, test1, test2, test3
+       from grades
+       where test2 == NULL and test3 == NULL  
+       order by student")
+```
+
+
+## Tutorials sqlbolt.com and w3chools.com 
+
+Please see the tutorials at the following locations.
+
+- <https://sqlbolt.com/>
+  These pages cover basic SELECT statements.
+  They refer to the following tables
+    * movies
+    * north_american_cities
+
+- <https://www.w3schools.com/sql/sql_join.asp>
+  This page teaches how to work with more than one table.
+  They refer to the following tables
+    * customers
+    * orders
+    
+The file <sqlbolt_tables-v007.RData> contains the dataframes with the information
+for each table that are used on these websites.
+These dataframes can be loaded into R from this file with the 
+following command.
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# sqlbolt.com    and    https://www.w3schools.com/sql/sql_join.asp    ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+load("sqlbolt_tables-v007.RData")
+```
+
+Below are the contents of these tables:
+
+```{r}
+sqldf("select * from movies")
+sqldf("select * from orders")
+sqldf("select * from customers")
+sqldf("select * from north_american_cities")
+```
+
+### Practice - select clause
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# https://sqlbolt.com/lesson/select_queries_introduction
+#
+# Concepts:
+#
+#  Select query for a specific columns
+#
+#   SELECT column, another_column, .
+#   FROM mytable;
+#
+#
+#  Select query for all columns
+#   
+#    SELECT * 
+#    FROM mytable;
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#https://sqlbolt.com/lesson/select_queries_introduction
+
+movies  
+
+###########################
+#Exercise 1 - Tasks
+###########################
+
+#Find the title of each film
+
+sql = 
+  "select title
+   from movies"
+
+sql
+sqldf(sql)
+
+#Find the director of each film
+
+sql = 
+  "select director
+   from movies"
+
+sqldf(sql)
+
+#Find the title and director of each film
+
+sql = 
+  "select title, director
+   from movies"
+
+sqldf(sql)
+
+
+#Find the title and year of each film
+
+sql = 
+  "select title, year
+   from movies"
+
+sqldf(sql)
+
+#Find all the information about each film
+
+sqldf("select *
+       from movies")
+
+# The following produces the exact same results as above
+
+sqldf("select id, title, director, year, length_minutes
+       from movies")
+```
+
+#### Practice - ADDITIONAL QUESTIONS (not on sqlbolt.com)
+
+```{r}
+# QUESTION
+# Show the movie name, length_minutes and a third column that you 
+# calculate which is the length in hours
+
+# ANSWER
+#
+# when you divide an integer by an integer the result in sql in an integer
+# if you divide a floating point number by an integer or vice versa the 
+# result is floating point (i.e. a number that has values after the decimal point)
+
+# This is a good start but the length_hours column will always show up 
+# as a whole number - this is NOT what we wanted.
+
+sql = "select title, length_minutes, length_minutes/60 as length_hours
+       from movies"
+sqldf(sql)
+
+# Change 60 to 60.0 to produce a "floating point" value (i.e. a value
+# that contains numbers after the decimal point)
+
+sql = "select title, length_minutes, length_minutes/60.0 as length_hours
+       from movies"
+sqldf(sql)
+
+
+# QUESTION
+# show the length in hours, minutes - eg. 81 minutes show as 2 hours and 21 minutes
+
+# ANSWER
+sql =
+  "select title, length_minutes, length_minutes / 60 as hours,
+                  length_minutes - 60 * (length_minutes/60) as minutes
+   from movies"
+sqldf(sql)
+
+# ANSWER - using sqlite's % operator
+sql =
+  "select title, length_minutes, length_minutes / 60 as hours,
+                  length_minutes % 60 as minutes
+   from movies"
+sqldf(sql)
+
+# Note that while it is tempting to refer to hours on line 2 of the following
+# query, R's version of SQL (ie. sqlite) will not allow for this.
+# Some SQL flavors will allow this.
+#
+# The following WILL NOT WORK IN R's VERSION OF SQL
+sql =
+  "select title, length_minutes, length_minutes / 60 as hours,
+                  length_minutes - 60 * hours as minutes
+   from movies"
+
+# sqldf(sql)       # ERROR - no such column: hours
+```
+
+### Practice - where clause
+
+```{r}
+#-------------------------------------------------------------------------
+# https://sqlbolt.com/lesson/select_queries_with_constraints
+# 
+# CONCEPTS
+#
+# Select query with constraints
+# SELECT column, another_column, .
+# FROM mytable
+# WHERE condition
+# AND/OR another_condition
+# AND/OR .;
+# 
+# 
+# 
+# # List of SQL operators (see webpage) 
+# Operator 	Condition 	SQL Example
+# =, !=, < <=, >, >= 	Standard numerical operators 	col_name != 4
+# BETWEEN . AND . 	Number is within range of two values (inclusive) 	col_name BETWEEN 1.5 AND 10.5
+# NOT BETWEEN . AND . 	Number is not within range of two values (inclusive) 	col_name NOT BETWEEN 1 AND 10
+# IN (.) 	Number exists in a list 	col_name IN (2, 4, 6)
+# NOT IN (.) 	Number does not exist in a list 	col_name NOT IN (1, 3, 5)
+
+
+
+###########################
+# Exercise 2 - Tasks
+###########################
+ 
+# Find the movie with a row id of 6
+
+sql = "
+  select *
+  from movies
+  where id=6"
+
+sqldf(sql)
+
+
+
+###############################################################.
+#  BETWEEN ... AND ...
+#
+#    and 
+#
+#  NOT BETWEEN ... AND ...
+###############################################################.
+
+# Find the movies released in the years between 2000 and 2010
+
+sql = "select * 
+       from movies
+       where year >= 2000 and year <= 2010 "
+sqldf(sql)
+
+# you can combine the above where clause with a different select clause:
+# For example:
+
+sql = "select title, length_minutes, length_minutes / 60 as hours,
+                  length_minutes - 60 * (length_minutes/60) as minutes,
+                  year
+       from movies
+       where year >= 2000 and year <= 2010 "
+sqldf(sql)
+
+# use the BETWEEN ... AND ...
+# to do the same thing
+
+sql = "select * 
+       from movies
+       where year between 2000 and 2010"
+
+sqldf(sql)
+
+# Find the movies not released in the years between 2000 and 2010
+
+sql = "select * 
+       from movies
+       where year < 2000 or year > 2010"
+sqldf(sql)
+
+# use the NOT BETWEEN ... AND ...
+# to do the same thing
+
+sql = "select * 
+       from movies
+       where year not between 2000 and 2010"
+
+sqldf(sql)
+```
+
+### Practice - limit clause
+
+```{r}
+###############################################################.
+# LIMIT <M>       and     LIMIT <M> OFFSET <N>
+###############################################################.
+#
+# The LIMIT clause must come at the very end of the SQL 
+# statement. For example: 
+#   
+#      SELECT *
+#      FROM grades
+#      ORDER BY student
+#      LIMIT 3
+# 
+# Displayes the first 3 students.
+#
+# In general:
+#
+#      <SOME SELECT STATEMENT>
+#      limit M
+#
+# (where M is an integer) results in only the first
+# M rows of data from what would normally have been displayed 
+# had the LIMIT clause not been specified.
+# 
+#      <SOME SELECT STATEMENT>
+#      limit M offset N
+#
+# (where both M and N are integers) 
+# starts the output from the N+1'th row of what would normally 
+# have been displayed without the limit clause and then 
+# displays the next M rows of data.
+###############################################################.
+
+
+# Find the first 5 movies and their release year
+
+# We will learn the best way to do this a little later. The
+# answer on the sqlbolt website is not ideal.
+
+sqldf("select * 
+      from movies
+      order by year")
+
+# The limit clause allows to retrieve the first several values from an 
+# ordered query
+
+sqldf("select * 
+      from movies
+      order by year
+      limit 5")
+
+# Get the next 2 movies
+
+sqldf("select * 
+      from movies
+      order by year
+      limit 2 offset 5")
+
+
+
+# Find all movies that were released in 2000, 2004 or 2008
+
+sql = 
+  "select * 
+  from movies
+  where year = 2000 or year = 2004 or year = 2008"
+
+sqldf(sql)
+
+# Do this again using the IN operator
+#
+# The IN operators takes a LIST of information
+# A LIST is a set of values in parentheses, separated by commans.
+
+sql = 
+  "select * 
+  from movies
+  where year in (2000,2004,2008)"
+sqldf(sql)
+
+
+# show the movies that were released in years other than 2000, 2004, 2008
+
+sql = 
+  "select * 
+  from movies
+  where year != 2000 and year != 2004 and year != 2008"
+
+sqldf(sql)
+
+# A student asked if we could change the and's in the previous question
+# to be or's instead. The answer is you can but in addition to 
+# changing the and's to or's you must also modify the logical expression
+# in other ways. Specifically, DeMorgan's law describes how to 
+# rewrite any logical expression that uses and's and or's into an
+# equivalent expression.
+#
+# DeMorgans law says: to convert a logical expression 
+# step 1: negate it twice (ie. use two not's)
+# Step 2: (a) distribute one of the not's over the expression
+#         (b) change the and's to or's 
+#         (c) change the or's to and's
+sql = 
+  "select * 
+  from movies
+  where not ( year = 2000 or year = 2004 or year = 2008)"
+
+sqldf(sql)
+
+
+
+# do this with the "not in" operator
+
+sql = 
+  "select * 
+  from movies
+  where year not in (2000,2004,2008)"
+sqldf(sql)
+
+
+# warning - the "in" operator is followed by a list of values.
+# The list of values is in parentheses.
+#
+# if the values are numbers there are no quotes e.g. (2000,2004,2005)
+#
+# If the values are character values then in SQL you must use
+# 'single quotes' around the different values.
+#
+# See the next question
+
+
+# Write a SQL SELECT statment to show all the movies that
+# were directed by any of the following people:
+#     Pete Docter , Brad Bird, Dan Scanlon
+#
+# (a) Write it using the IN operator
+# (b) write it without using the IN operator
+
+# ANSWER - part (a)
+sql = "select * 
+       from movies
+       where director IN ('Pete Docter', 'Brad Bird', 'Dan Scanlon')
+       order by director"
+
+sqldf(sql)
+
+# ANSWER - part (b) - without the IN operator
+sql = "select * 
+       from movies
+       where director='Pete Docter' or  director='Brad Bird' or director = 'Dan Scanlon'
+       order by director"
+
+sqldf(sql)
+```
+
+### Practice - "like" operator
+
+```{r}
+######################################################################.
+# The "like" operator
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The like operator in sql uses a "pattern" to match data values
+# This is similar to regular expressions. However, the SQL like 
+# operator uses very different meta characters. 
+#
+# The two standard metacharacters that are used by the sql like 
+# operator in the pattern are:
+#
+#   %    will "match" 0 or more characters  (equivalent to .* in regex)
+#
+#   _    i.e. an underscore, will "match" exactly one character (equivalent to . in regex)
+#
+# Some DBMS software allows for additional metacharacters in LIKE clauses
+# For example, MySql allows for the following. (sqlite does not)
+#
+#   [abc]  MySQL DBMS software recognizes these "character classes" 
+#   [a-c]  similar to regular expressions. Not all DBMS software recognizes
+#   [^a-c] these. sqlite does not.
+######################################################################.
+
+
+# exercise 3
+
+# Exercise 3 - Tasks
+# Find all the Toy Story movies
+sql = "select *
+       from movies
+       where title like 'Toy Story%'"
+sqldf(sql)
+
+
+
+# Find all the movies directed by John Lasseter
+
+sql = "select *
+       from movies
+       where director = 'John Lasseter'"
+sqldf(sql)
+
+
+# Find all the movies (and director) not directed by John Lasseter
+sql = "select * 
+       from movies 
+       where director != 'John Lasseter'"
+sqldf(sql)
+
+
+# The following will work but is NOT recommended (no pun intended)
+sql = "select * 
+       from movies 
+       where NOT ( director = 'John Lasseter' ) "
+sqldf(sql)
+
+
+
+# Find all the WALL-* movies
+sql = "select *
+       from movies
+       where title like 'WALL-_'"
+sqldf(sql)
+
+
+movies
+
+
+
+# QUESTION 
+# Show all movies that start with a "T" and end with an "s"
+
+sql = "select * 
+       from movies
+       where title like 'T%s'
+       order by title"
+sqldf(sql)
+
+# QUESTION 
+# Show all movies whose title is exactly 6 charcters (including spaces)
+
+sql = "select * 
+       from movies
+       where title like '______'
+       order by title"
+sqldf(sql)
+
+
+# QUESTION
+# Show all movies whose title starts with A,B or C
+# and whose title is 10 characters or longer
+
+sql ="select title
+      from movies
+      where title BETWEEN 'A' AND 'D' and
+            title LIKE '__________%'"
+sqldf(sql)
+
+# QUESTION
+# Show all movies whose title starts with A,B or C
+# and whose title is fewer than 10 characters or long
+
+sql ="select title
+      from movies
+      where title BETWEEN 'A' AND 'D' and
+            title NOT LIKE '__________%'"
+sqldf(sql)
+
+
+
+
+sql="select substr(title, 1,1) from movies order by 1"
+sqldf(sql)
+
+sqldf("select * from movies where substr(title,1,1) = 'M'")
+
+sqldf("select * from movies where title < 'D'")
+```
+
+### Practice - select distinct
+
+```{r}
+################################################################.
+# SELECT DISTINCT ...
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Depending on which values are selected, a SELECT ... statement
+# might return exactly the same row in the output multiple times. 
+#
+# To instead, show only one copy of each row in the output,
+# start the statement with  SELECT DISTINCT ... 
+# (instead of just SELECT ...)
+#
+# See the examples below.
+################################################################.
+
+
+# The output of the following query includes some rows
+# that are exactly the same as other rows.
+
+sqldf("select year, honors, major 
+      from grades
+      where honors = TRUE and major = 'IDS'
+      order by year")
+
+# The following query is exactly the same as the previous query, except
+# that the following query includes the word DISTINCT at the beginning
+# of the query.
+#
+# This version of the query does not include any duplicated rows in the output.
+
+sqldf("select DISTINCT year, honors, major 
+      from grades
+      where honors = TRUE and major = 'IDS'
+      order by year, major")
+
+
+
+sqldf("select DISTINCT student, year, honors, major 
+      from grades
+      where honors = TRUE and major = 'IDS'
+      order by year, major")
+
+
+
+# Exercise 4
+
+
+# Show just the director column
+sql = "select director 
+       from movies"
+sqldf(sql)
+       
+# List all directors of movies, without duplicates
+
+sql = "select DISTINCT director 
+       from movies"
+sqldf(sql)
+
+# List all directors of movies (alphabetically), without duplicates
+sql = "select DISTINCT director 
+       from movies
+       order by director"
+sqldf(sql)
+
+# Both the where clause and the order by clause may refer to information
+# that is not actually displayed by the select clause
+# 
+# For example
+
+# List the title and year for all movies directed by John Lasseter.
+# Do not John Lasseter's name in the output.
+sql = "select title, year 
+       from movies
+       where director = 'John Lasseter'"
+sqldf(sql)
+
+
+# List the title of all movies in "reverse chronological order". 
+# In other words, the most recent movie should be listed first and the 
+# oldest movie listed last.
+# Do NOT show the actual year in the output.
+sql = "select title 
+       from movies
+       order by year desc"
+sqldf(sql)
+
+
+
+# List the last four movies released (ordered from least recent to most recent)
+sql = "select * 
+       from movies
+       order by year"
+sqldf(sql)
+
+# the following does the same thing
+sql = "select * 
+       from movies
+       order by year asc"
+sqldf(sql)
+
+# List the last four movies released (ordered from most recent to last)
+#
+# To order a column in descending order follow the name of the column with desc
+sql = "select * 
+       from movies
+       order by year desc"
+sqldf(sql)
+
+sql = "select * 
+       from movies
+       order by year desc
+       limit 4"
+sqldf(sql)
+
+
+
+# List all movies sorted alphabetically by title
+
+sql = "select * 
+       from movies
+       order by title"
+sqldf(sql)
+
+# List the first five movies sorted alphabetically
+sql = "select * 
+       from movies
+       order by title
+       limit 5"
+sqldf(sql)
+
+
+# List the next five movies sorted alphabetically
+
+sql = "select * 
+       from movies
+       order by title
+       limit 5 offset 5"
+sqldf(sql)
+
+# List the next five movies sorted alphabetically
+
+sql = "select * 
+       from movies
+       order by title
+       limit 5 offset 10"
+sqldf(sql)
+```
+
+### Practice - more practice - north_american_cities
+
+
+```{r}
+# Review 1 - Tasks
+#
+# https://sqlbolt.com/lesson/select_queries_review
+
+
+# See the table (i.e. dataframe)
+sqldf("select * north_american_cities")
+
+# List all the Canadian cities and their populations
+
+sql = "select country, city, population
+       from north_american_cities
+       where country='Canada'"
+sqldf(sql)
+
+# Order all the cities in the United States by their latitude from north to south
+sql = "
+select *
+from north_american_cities
+where country = 'United States'
+order by latitude desc"
+sqldf(sql)
+
+
+# List all the cities west of Chicago, ordered from west to east
+
+sql = "select *
+from north_american_cities
+where longitude < -87.62980
+order by longitude
+"
+sqldf(sql)
+
+
+
+# List the two largest cities in Mexico (by population)
+
+# Start by listing all of the cities in Mexico in order of decreasing population
+sql = "select *
+       from north_american_cities
+       where country = 'Mexico'
+       order by population desc"
+sqldf(sql)
+
+# use the limit clause to limit results to only a specified number of values
+# Start by listing all of the cities in Mexico
+sql = "select *
+       from north_american_cities
+       where country = 'Mexico'
+       order by population desc
+       limit 2"
+sqldf(sql)
+
+
+# The limit clause takes an option "offset"
+# Each row in the data has an imaginary number starting with 0 for the 1st row
+# and 1 for the 2nd row , etc.
+
+sql = "select * from north_american_cities
+       order by population desc"
+sqldf(sql)
+
+# Do the same thing but only get the 3 largest cities
+sql = "select * from north_american_cities
+       order by population desc
+       limit 3"
+sqldf(sql)
+
+# Do the same thing but get the 4th, 5th and 6th largest cities
+sql = "select * from north_american_cities
+       order by population desc
+       limit 3 offset 3"
+sqldf(sql)
+
+# Do the same thing but get the 7th 8th and 9th largest cities
+sql = "select * from north_american_cities
+       order by population desc
+       limit 3 offset 6"
+sqldf(sql)
+
+# List the third and fourth largest cities (by population) in the United States and their population
+
+# Let's start by showing all USA cities
+sql = "select * 
+       from north_american_cities
+       where country = 'United States'
+       order by population desc
+       "
+sqldf(sql)
+
+# Use limit 2 offset 3 to just show the 3rd and 4th largest cities
+sql = "select * 
+       from north_american_cities
+       where country = 'United States'
+       order by population desc
+       limit 2 offset 2
+       "
+sqldf(sql)
+```
+
+## dynamic SQL - a brief introduction
+
+**NOTE**: 
+
+- "IDS1020-Intro to IDS" students can ignore this section.
+
+```{r}
+########################################################################.
+# It is very common for SQL to be "embedded" in another language
+# very similar to what we are doing with R. There are ways to 
+# "embed" SQL in all popular programming languages.
+#
+# This technique of building a sql statement  from different parts of
+# info using another language (in this case R) is known
+# as "dynamic sql".
+########################################################################.
+
+#################################################################.
+# Brief intro to an advanced concept: "dynamic SQL"?
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# As we've already learned, the sqldf function takes a
+# single character value that contains
+# a SQL command, e.g. sqldf("SELECT * FROM SOME_TABLE")
+# This allows us to use the SQL language inside our R programs.
+# However, you must remember that SQL and R are very different 
+# languages. As we learn SQL, we will focus primarily on how to write
+# various forms of SQL commands. We wont focus much on R
+# other than to use the sqldf function to run the SQL code.
+#
+# However, sometimes it is adventageous to 
+# use R code (more than just sqldf) to "dynamically" construct a
+# SQL statement based on some other information that is 
+# available to your R code but would not have been available
+# at the time you are writing the SQL code.
+#
+# For example, the following function, mySelect
+# takes two arguments: 
+#
+#    table - The name of a table 
+#    cols - The names of the columns to display from the table
+#
+# It displays just the specified columns from the specified table.
+
+mySelect = function( table, cols){
+  colsList = paste(cols, collapse=",")
+  selectStatement = paste0( "select ", colsList, " from ", table)
+  sqldf(selectStatement)
+}
+
+# The function can now be called with different tables and 
+# lists of columns
+
+mySelect("movies", c("title","director"))
+
+mySelect("grades", c("student", "year", "test1", "test2"))
+```

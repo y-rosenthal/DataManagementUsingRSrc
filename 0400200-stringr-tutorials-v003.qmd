@@ -1,0 +1,328 @@
+# stringr tutorial
+
+This is an overview of the stringr package that is part of the "tidyverse"
+family of packages. 
+
+The info in this section comes from this youtube playlist:
+<https://www.youtube.com/watch?v=oIu5jK8DeX8&list=PLiC1doDIe9rDwsUhd3FtN1XGCV2ES1xZ2>
+
+## tidyverse
+
+See these resources for more info about the entire tidyverse
+family of packages.
+
+* <https://r4ds.hadley.nz/>
+* <https://tidyverse.org/>
+
+## Other tidyverse material
+
+* tibble package: <https://tibble.tidyverse.org/>
+* magrittr: <https://magrittr.tidyverse.org/>
+* lubridate package: <https://lubridate.tidyverse.org/>
+* hms package: <https://hms.tidyverse.org/>
+* dplyr package: <https://dplyr.tidyverse.org/>
+  - Also see this playlist for info about dplyr:
+    <https://www.youtube.com/watch?v=THGFXV4RW8U&list=PLiC1doDIe9rC8RgWPAWqDETE-VbKOWfWl>
+
+```{r}
+#| echo: false
+#| output: false
+
+# Load in some data for use in some of the lessons
+#library(RSQLite)
+#library(tidyverse)
+
+sub <- "MachineLearning" 
+#db <- src_sqlite('../input/reddit-comments-may-2015/reddit-comments-may-2015/database.sqlite', create = F)
+
+# Load the desired subset of data from the database
+#db_subset <- db %>% 
+#             tbl('May2015') %>% 
+#             filter(subreddit == sub)
+          
+#data <- data.frame(db_subset)[, c("author","score","body")]
+
+CRANrepos = c(
+    "https://mirror.las.iastate.edu/CRAN/",       # Iowa State University, Iowa
+    "http://ftp.ussg.iu.edu/CRAN/",               # Indiana University, Indiana
+    "https://repo.miserver.it.umich.edu/cran/", # University of Michigan
+    "https://cran.wustl.edu/",              # Washington University, Missouri
+    "https://archive.linux.duke.edu/cran/",     # Duke University, NC
+    "https://cran.case.edu/",                   # Case Western Reserve University, OH
+    "https://ftp.osuosl.org/pub/cran/",         # Oregon State University
+    "http://lib.stat.cmu.edu/R/CRAN/",    # Carnegie Mellon University, PA
+    "https://cran.mirrors.hoobly.com/",         # Hoobly Classifieds, PA
+    "https://mirrors.nics.utk.edu/cran/") # Nat. Inst. 4 Computational Sci, TN
+
+
+if (!require(tidyverse)){install.packages("tidyverse", repos=CRANrepos);require(tidyverse)}
+
+
+data = read.csv("data3.csv")
+names(data) = c("author","score","body")
+```
+
+## stringr: Basic String Manipulation
+
+```{r}
+chr_data <- c("Data", "Daft", "YouTube", "channel",
+             "learn", "and", "have", "FUN!")
+```
+
+```{r}
+# Check the length of a string
+str_length("Hi there! How are you?")
+str_length(chr_data)
+```
+
+```{r}
+# Convert string letters to uppercase
+str_to_upper(chr_data)
+```
+
+```{r}
+# Convert string letters to lowercase
+str_to_lower(chr_data)
+```
+
+```{r}
+# Convert string to title (first letter uppercase)
+str_to_title(chr_data)
+```
+
+```{r}
+# Convert string to sentence (only first letter of first word uppercase)
+str_to_sentence("make me into a SENTENCE!")
+```
+
+```{r}
+# Trim whitespace
+str_trim("  Trim Me!   ")
+```
+
+```{r}
+# Pad strings with whitespace
+str_pad("Pad Me!", width = 15, side="both")
+```
+
+```{r}
+# Truncate strings to a given length
+str_trunc("If you have a long string, you might want to truncate it!", 
+          width = 50)
+```
+
+## stringr: Split and Join Strings
+
+```{r}
+# Split strings
+str_split("Split Me!", pattern = " ")
+
+food <- c(
+  "apples and oranges and pears and bananas",
+  "pineapples and mangos and guavas"
+)
+
+stringr::str_split(food, " and ")
+```
+
+```{r}
+# Join strings (equivalent to base R paste())
+str_c("Join", "Me!", sep="_")
+
+# Join strings (equivalent to base R paste())
+str_c(c("Join", "vectors"), c("Me!", "too!"), sep="_")
+```
+
+```{r}
+# Collapse a vector of strings into a single string
+str_c(c("Turn", "me", "into", "one", "string!"), collapse= " ")
+```
+
+```{r}
+# Convert NA values in character vector to string "NA"
+str_replace_na(c("Make", NA, "strings!"))
+```
+
+## stringr: Sorting Strings
+
+```{r}
+sort_data <- c("sort", "me", "please!")
+
+# Get vector of indicies that would sort a string alphabetically
+str_order(sort_data)
+```
+
+```{r}
+# Use discovered ordering to extract data in sorted order
+sort_data[str_order(sort_data)]
+```
+
+```{r}
+# Directly extract sorted strings
+str_sort(sort_data)
+```
+
+```{r}
+# Extract in reverse sorted order
+str_sort(sort_data, decreasing = TRUE)
+```
+
+## stringr: String Interpolation
+
+```{r}
+first <- c("Luke", "Han", "Jean-Luc")
+last <- c("Skywalker", "Solo", "Picard")
+
+# Interpolate (insert variable values) into strings with str_glue()
+str_glue("My name is {first}. {first} {last}.")
+```
+
+```{r}
+minimum_age <- 18
+over_minimum <- c(5, 17, 33)
+
+# Interpolate the result of an execution into a string
+str_glue("{first} {last} is {minimum_age + over_minimum} years old.")
+```
+
+```{r}
+num <- c(1:5)
+
+# Interpolate the result of function calls
+str_glue("The square root of {num} is {round(sqrt(num), 3)}.")
+```
+
+```{r}
+fuel_efficiency <- 30
+
+# Interpolate strings using data from a data frame
+mtcars %>% rownames_to_column("Model") %>%
+         filter(mpg > fuel_efficiency) %>%
+         str_glue_data("The {Model} gets {mpg} mpg.")
+```
+
+## stringr: String Matching
+
+```{r}
+head(data,8)
+```
+
+```{r}
+# Detecting the presence of a pattern in strings
+str_detect(data$body[1:100], pattern="deep")
+```
+
+```{r}
+# Get the indicies of matched strings
+str_inds <- str_which(data$body[1:100], pattern="deep")
+str_inds
+```
+
+```{r}
+# Extract matched strings using detected indicies
+data$body[str_inds]
+```
+
+```{r}
+# Count the number of matches
+str_count(data$body[1:100], "deep")
+```
+
+```{r}
+# Get the position of matches
+str_locate_all(data$body[1], "deep")
+```
+
+```{r}
+# Get a list of the first match found in each string as a vector
+str_extract(data$body[1:3], "deep|the|and")
+```
+
+```{r}
+# Get a list of the first match found in each string as matrix
+str_match(data$body[1:3], "deep|the|and")
+```
+
+```{r}
+# Get a list of the all matches found in each string as list of matricies
+str_match_all(data$body[1:3], "deep|the|and")
+```
+
+## stringr: Subset and Replace Strings
+
+```{r}
+head(data,8)
+```
+
+```{r}
+# Get a string subset based on character position
+str_sub(data$body[1], start=1, end=100)
+```
+
+```{r}
+# Get a string subset based on words
+word(data$body[1], start=1, end=10)
+```
+
+```{r}
+# Get the strings that contain a certain pattern
+str_subset(data$body[1:100], pattern="deep")
+```
+
+```{r}
+# Replace a substring with a new string by substring position
+str_sub(data$body[1], start=1, end=100) <- str_to_upper(str_sub(data$body[1], 
+                                                                start=1, 
+                                                                end=100))
+str_sub(data$body[1], start=1, end=100)
+```
+
+```{r}
+# Replace first occurrence of a substring with a new string by matching
+str_replace(data$body[1], pattern="deep|DEEP", replacement="multi-layer")
+```
+
+```{r}
+# Replace all occurrences of a substring with a new string by matching
+str_replace_all(data$body[1], pattern="deep|DEEP", replacement="multi-layer")
+```
+
+
+## stringr: Viewing Strings
+
+```{r}
+# Basic printing
+print(data$body[1:10])
+```
+
+```{r}
+deep_learning_posts <- data$body[str_which(data$body, "deep learning")]
+
+# View strings in HTML format with the first occurence of a pattern highlighted
+str_view(deep_learning_posts, pattern="deep")
+```
+
+```{r}
+# View strings in HTML format with the first all occurences highlighted
+str_view_all(deep_learning_posts, pattern="deep")
+```
+
+```{r}
+# Format strings into paragraphs of a given width with str_wrap()
+wrapped <- str_wrap(data$body[str_which(data$body, "deep learning")][1], 
+                    width = 50)
+wrapped 
+```
+
+```{r}
+# Print wrapped string with output obeying newlines
+wrapped %>% cat()
+```
+
+```{r}
+# Display wrapped paragraph as HTML, inserting paragraph breaks
+str_wrap(data$body[str_which(data$body, "deep learning")][1], width = 50) %>%
+str_replace_all("\n", "<br>") %>%
+str_view_all(pattern = "deep")
+```
+

@@ -1,0 +1,90 @@
+# Bibliography
+
+The following is a list of books and online resources that we will use 
+during the course.
+
+## SQL (Structured Query Language)
+
+* online resources:    
+  - <https://www.w3schools.com/sql/default.asp>
+  - <https://www.sqlzoo.net/wiki/SQL_Tutorial>
+  
+* Books - don't buy these (yet):
+
+  - Murach’s MySQL (4th Edition)  
+    by Joel Murach  
+    20 chapters, 648 pages, 266 figures  
+    Published November 2023  
+    ISBN 978-1-943873-10-4  
+    publisher: <https://www.murach.com/shop/murach-s-mysql-4th-edition-detail>
+    amazon.com: <https://www.amazon.com/Murachs-MySQL-Reference-Joel-Murach/dp/B0CHMPQ3FC>
+      
+  - SQL QuickStart Guide: The Simplified Beginner's Guide  
+    to Managing, Analyzing, and Manipulating Data With SQL   
+    (QuickStart Guides™ - Technology)  
+    by Walter Shields (Author)
+    Paperback  
+    November 18, 2019
+
+
+## R and tidyverse
+
+* [R 4 Data Science, 2nd edition (R4DS) by Hadly Wickham](https://r4ds.hadley.nz/)
+  - Free to read online: <https://r4ds.hadley.nz/>
+  - Purchase hardcopy: <https://www.amazon.com/Data-Science-Transform-Visualize-Model/dp/1492097403/>
+    
+* Unofficial r4ds solution manual - 
+  <https://jrnold.github.io/r4ds-exercise-solutions/>
+  
+* tidyverse packages - <https://www.tidyverse.org/packages/>
+    - tibble <https://tibble.tidyverse.org/>
+    - readr <https://readr.tidyverse.org/>
+      * read_csv(): comma-separated values (CSV)
+      * read_tsv(): tab-separated values (TSV)
+      * read_csv2(): semicolon-separated values with , as the decimal mark
+      * read_delim(): delimited files (CSV and TSV are important special cases)
+      * read_fwf(): fixed-width files
+      * read_table(): whitespace-separated files
+      * read_log(): web log files
+    - dplyr 
+      * <https://dplyr.tidyverse.org/>
+      * <https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html>
+    
+    
+
+    - stringr
+    - tidyr <https://tidyr.tidyverse.org/>
+
+  - Other tidyverse packages
+  
+    - ggplot <https://ggplot2.tidyverse.org/>
+    
+
+
+## Various topics - bash command line, html, css, regular expressions (regex) 
+
+* <https://ryanstutorials.net/>
+  - <https://ryanstutorials.net/html-tutorial/>
+  - <https://ryanstutorials.net/css-tutorial/>
+  - <https://ryanstutorials.net/regular-expressions-tutorial/>
+  
+## Bash command line 
+
+* A Comprehensive Introduction to Command Line for R Users
+  - <https://blog.rsquaredacademy.com/command-line-basics-for-r-users/>
+  
+* Using the RStudio Terminal
+  - <https://support.posit.co/hc/en-us/articles/115010737148-Using-the-RStudio-Terminal>
+  - <https://support.posit.co/hc/en-us/articles/115010737148-Using-the-RStudio-Terminal-in-the-RStudio-IDE>
+
+* <https://ryanstutorials.net/>
+  - <https://ryanstutorials.net/linuxtutorial/>
+  - <https://ryanstutorials.net/bash-scripting-tutorial/>
+
+* linux man pages - describes commands you can use in Bash
+  - <https://man7.org/linux/man-pages/dir_section_1.html>
+  
+* vim text editor
+  - <https://www.openvim.com/>
+  - <https://linuxconfig.org/vim-tutorial>
+

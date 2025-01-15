@@ -1,0 +1,20 @@
+# Scraping Dynamic (JavaScript) Websites
+
+## Files for the rest of this presentation
+
+Click here to download a zip file that contains several files we
+will use in this presentation:
+
+[htmlExamples-v001.zip](htmlExamples-v001.zip)
+
+## Intro to RSelenium
+
+- This is an example of a JavaScript enabled webpage.
+
+  [javascriptExample-v002.html](javascriptExample-v002.html)
+  
+- Click here for a Word document that discusses scraping
+  JavaScript enabled websites with RSelenium.
+
+  [000130-WebscrapingJavascriptSitesWithRselenium-v002.docx](000130-WebscrapingJavascriptSitesWithRselenium-v002.docx)
+

@@ -1,0 +1,64 @@
+# "Cleaning" data
+
+Often data comes to us in a "messy" format. One of the "less glamorous" but
+very important jobs of anyone
+working with data is to know how to "clean up" "messy" data. In other words
+to put the data into a common format. 
+
+For example, suppose that employees in a company submit expense reports
+every month for travel and other business expenses. It would be best if the
+data entry system (e.g. a website) enforced a standard format for the data.
+However, this doesn't always happen. Sometimes the system tries to enforce
+a specific format but people "misuse" the system leading to 
+inconsistencies between different entries. Sometimes data from different
+data entry systems are combined into a single data set.
+
+The data below represents expenses from various employees. There are many
+inconsistencies between different entries. For example, 
+some names are in "first last" format and some names are in "last, first" format. 
+There are many other 
+formatting inconsistencies that are listed below.
+
+```{r}
+library(tibble)
+expenses = tribble(
+  ~employee,           ~date,          ~amount,          ~category,         ~comments,
+  "Sue Smith",         "1/19/2023",    "59.99",         "food",            "lunch with client",
+  "Schwartz, Joe",     "01/19/2023",   "$27.00",        "office supplies", "paper for printer",
+  "mike david harris", "2023-01-19",   "25",            "Office Stuff",    NA,
+  "Dr. A. Davis",      "19/1/2023",    "five hundred",  "FOOD",            "NA",
+  "Dr Jones",          "1/19/23",      "1,234.56",      "office suppl.",   "chairs",
+  "S. Jones Jr",       "19/1/23",      "1000",          "Office supplies", "desk",
+  "Conway, Ella Sr.",  "Jan 19, 2023", "$35.23",        "LUNCH",           "---",
+)
+
+as.data.frame(expenses)
+```
+
+The following are many of the inconsistencies
+
+- Inconsistencies with the name entries
+  * some names are in "first last" format and some names are in "last, first" format. 
+  * some names are capitalized, some aren't
+  * some names have middle include middle names, some don't
+  * some names include titles, some don't
+  * some names include a title, e.g. Dr. , while some don't
+  * some of the titles contain a period after the title, some don't
+  * some names include a suffix (e.g. Jr), some don't
+
+- Inconsistencies with dates
+  * some dates are in mm/dd/yyyy format (USA style)
+  * some dates are in dd/mm/yyyy format (European style)
+  * some dates are in yyyy-mm-dd format (standard for many computer systems)
+  * some dates use 4 digit years, some use 2 digit years
+  * some dates have a leading zero for single digit days or months
+
+- There are additional inconsistencies with the amount, category and comments
+  columns
+  
+# What you need to do 
+
+Write the following function named cleanUp that takes the dataframe as 
+an argument and returns a cleaned dataframe where all of the values in 
+each column
+follow a consistent structure.

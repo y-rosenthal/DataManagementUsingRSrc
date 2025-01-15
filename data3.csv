@@ -1,0 +1,8 @@
+benanne,3,"I would advise against using RBMs nowadays. If you want to pre-train a deep autoencoder, you can just train shallow autoencoders to do that. It will work just as well as training an RBM and it's much simpler conceptually and in terms of implementation. But depending on the problem, pre-training may be unnecessary anyway. Just build a deep autoencoder with ReLUs and possibly dropout and you should be able to train that end-to-end in many cases."
+butt_ghost,3,"Hdf5. It's structured, it's easy to get data in and out, and it's fast. Plus it will scale if you ever get up there in dataset size."
+buntaro_pup,1,"yep, good point."
+iidealized,2,Google must have done (and is doing) serious internal research in ranking. I've heard they're pretty good at that and they've even made some money doing it :P
+[deleted],1,[deleted]
+stathibus,6,"Sebastian Thrun's book, Probabilistic Robotics, goes through this in great detail. Get it, read it, make it your bible."
+soulslicer0,2,"This. Such a legendary book. Kalman filters, particle filters, recursive Bayesian filters and a whole bunch of other stuff. I learnt so much. Read these 3 for starts from the book, then come back and ask the questions"
+swiftsecond,1,Do you still need help?

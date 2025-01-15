@@ -1,0 +1,5 @@
+# SQL "window" functions
+
+See the following for more info:
+
+<https://learnsql.com/blog/why-should-i-learn-sql-window-functions/>

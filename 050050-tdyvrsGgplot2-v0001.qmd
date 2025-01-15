@@ -1,0 +1,143 @@
+# Intro to ggplot2
+
+The info below is adapted from the book "R for Data Science, second edition" (r4ds2e).
+The book is available both online and
+in print.  It was written by Hadley Wickham, who in large part is the driving
+force behind the tidyverse packages.  
+The online version of r4ds2e is here:&nbsp;<https://r4ds.hadley.nz/>  
+The intro to ggplot2 chapter appears here:&nbsp;<https://r4ds.hadley.nz/data-visualize>
+
+In class we covered sections 1.1 through 1.3 of chapter 1, Data visualization 
+from r4ds2e. In that context we discussed different "geometries" of a graph (e.g. dot plot, 
+histogram, bar plot, box plot), aesthetics of a particular 
+geometry (e.g. x position, y position, color, shape, size). We also discussed
+the concept of how variables in your data can be "mapped" to particular
+aesthetics.
+
+## Code from sections 1.1 thorugh 1.3 of r4ds2e
+
+Below is a summary of the code that we went through.  
+Please see the following webpage for more info:  <https://r4ds.hadley.nz/data-visualize>
+
+```{r}
+#| warning: false
+
+if(!require(palmerpenguins)){install.packages("palmerpenguins");require(palmerpenguins);}
+if(!require(dplyr)){install.packages("dplyr");require(dplyr);} # needed for glimpse
+if(!require(ggplot2)){install.packages("ggplot2");require(ggplot2);}
+```
+
+```{r}
+# Here are the first few rows data.
+# When viewing a tibble, you may not see all the columns if your screen is too narrow.
+
+penguins
+
+# You can use the dplyr::glimpse function to 
+# view the names and datatypes of ALL the columns as well as 
+# view the first few values of each column.
+glimpse(penguins)
+
+# You can also use the following command to "View" the entire tibble in the 
+# RStudio viewer window:
+#
+#View(penguins)  # It is a capital "V" in "View"
+
+# Setting up the "aesthetics"
+# This doesn't display any actual data.
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+)
+
+# You will start seeing "data" on the plot once you set the "geometry".
+# Here we set the "geometry" to be geom_point().
+# Each "dot" on the plot represents a row of data from the tibble, i.e. one penguin.
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point()
+
+# We can add some color and shapes to each dot on the plot based on the species.
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species, shape=species)
+) +
+  geom_point()
+
+
+# The function call, geom_smooth(method = "lm") 
+# adds linear regressions lines, one for each species. 
+#
+# Since "color=species, shape=species" was mapped in the ggplot function, the data was
+# divided into 3 different subsets, one for each species. 
+# That is why there are 3 different linear regression lines, one for
+# each species (compare this with the next plot).
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species, shape=species)
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+# In the following plot, "color=species, shape=species", was moved
+# from the ggplot function to the geom_point function.
+# Since we did not set the color in the ggplot function we no longer
+# consider the data as three different subsets and we get a single linear 
+# regression line for the entire set of data.
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+
+
+# Finally, the following plot adds a title and subtitle to the graph
+# and labels for the x-axis, y-axis and legend.
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(aes(color = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "Penguin Species", shape = "Penguin Species"
+  )
+```
+
+
+## Other stuff
+
+The info above goes through the main ideas of how to use ggplot2.
+Using that knowledge you should be in good shape for learning on your own
+how to use other more advanced features of ggplot2. 
+
+The rest of the webpage, <https://r4ds.hadley.nz/data-visualize>,
+shows how to use several other features of ggplot2. 
+The following topics are described on the rest of that webpage:
+
+- Other geometries (histograms, box plots, etc)
+
+  How to use several other geometries
+  (i.e. bar blots, histograms, density plots, box plots, stacked bar plots).
+
+- Facets
+
+  How to break up a graph into several smaller graphs using 
+  the facet_wrap function.
+
+- How to save a plot to an image file
+
+  You can use the ggsave function to save an image file with a copy of the 
+  last plot that you created. You can then import the image file to other
+  files, e.g. a Word document, a powerpoint, etc.
+
+  See ?ggsave for more info. 
+

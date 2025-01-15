@@ -1,0 +1,23 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+/.quarto/
+.Rdata
+.httr-oauth
+.DS_Store
+.quarto.save
+/tmp/
+/tmp_files/
+/_book.save/
+.swp
+/_book/
+/*-save[0-9]*/
+/*.save[0-9]*/
+
+# ignreo all other folders
+/*/
+
+# do NOT ignore images folder
+!/images/

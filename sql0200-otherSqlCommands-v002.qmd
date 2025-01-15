@@ -1,0 +1,138 @@
+# other commands: update/delete, create/drop/insert
+
+As we've seen, the SQL SELECT command is used to retrieve data from a 
+database in many different forms. This is by far the most important SQL command 
+for a data analyst to know. However there are numerous other sql commands.
+The following gives a brief overview of many of those commands. 
+
+## db-fiddle website
+
+sqldf cannot run SQL commands other than SELECT.
+
+We will use the following website to demonstrate other SQL commands.
+
+***Just create the database on db-fiddle***
+
+<https://www.db-fiddle.com/f/uWwmfDJJeCdeS6Xiy3e1bm/0>
+
+***some sample select statements with the same tables***
+
+<https://www.db-fiddle.com/f/uWwmfDJJeCdeS6Xiy3e1bm/11>
+
+
+## update
+
+The UPDATE command is used for modifying the data in a table.
+See the following for more info:
+
+- <https://www.sqlitetutorial.net/sqlite-update/>
+
+## delete
+
+The DELETE command is used  to delete entire rows of data from a table.
+See the following for more info:
+
+- <https://www.sqlitetutorial.net/sqlite-delete/>
+
+## create table
+
+The CREATE TABLE command is used to create tables in a relational 
+database. See the following for more info:
+
+- <https://www.sqlitetutorial.net/sqlite-create-table/>
+
+As part of the create table command, you can specify certain "constraints"
+on the columns of the table. For example, you can specify that a particular
+column or columns should never be allowed to contain any NULL values or that
+all of the values in a particular column should be unique (in addition
+to this requirement for the primary key). See the following for info
+about how to apply various constraints to the columns in a table:
+
+- <https://www.sqlitetutorial.net/sqlite-not-null-constraint/>
+- <https://www.sqlitetutorial.net/sqlite-unique-constraint/>
+- <https://www.sqlitetutorial.net/sqlite-check-constraint/>
+- <https://www.sqlitetutorial.net/sqlite-autoincrement/>
+
+## insert a new row into a table
+
+The INSERT command is used to
+insert one or more new rows into a table. See the following for more info:
+
+- <https://www.sqlitetutorial.net/sqlite-insert/>
+
+
+## drop table
+
+The DROP TABLE command removes an entire table (including the
+structure of the table and all rows of data) from a database.
+See the following for more info:
+
+- <https://www.sqlitetutorial.net/sqlite-drop-table/>
+
+
+## SQL "DML" vs "DDL" commands
+
+The commands in SQL are often categorized into the following two distinct 
+categories:
+
+### Data Manipulation Language (DML) SQL commands
+
+The commands in SQL that are used for creating, reading, updating and deleting
+data (collectively referred to as "CRUD" operations) are known as 
+"Data Manipulation Language" (DML) SQL commands. These include
+the following SQL commands:
+
+- insert (for "creating" rows of data)
+- select (for "reading" rows of data)
+- update (for "updating" rows of data)
+- delete (for "deleting" rows of data)
+
+The term DML or "Data Manipulation Language" is often misunderstood. 
+DML is NOT a new language. DML is simply the term that is used to refer
+to the parts of SQL for "manipulating" data (i.e. performing CRUD operations). 
+
+### Data Definition Language (DML) SQL commands
+
+The commands in SQL that are used for creating and managing the database tables
+are known as "Data Definition Language" (DML) SQL commands. These include
+the following. 
+
+- CREATE TABLE - used to create a table
+- DROP TABLE - used to destroy an entire table (its structure and its data)
+- ALTER TABLE - used to change the structure of a table (e.g. add columns)
+
+Many RDBMS products include other DDL commands for example to rename tables
+as well as to work with other more advanced structure. For more info,
+see the documentation for your particular RDBMS product.
+
+
+
+
+```{r}
+# There are many SQL commands other than select.
+# The following is a list of some of the more common SQL commands. 
+# The list below doesn't include the entire syntax. 
+# See this page for more info on the syntax for individual
+# SQL commands: https://www.w3schools.com/sql/default.asp
+#
+#  # create a new table structure
+#  # see : https://www.w3schools.com/sql/sql_create_table.asp
+#  CREATE TABLE someTable ...
+# 
+#  # "drop" or entirely remove the table structure and all rows of data
+#  DROP TABLE someTable    
+#
+#  # Insert a new row into a table
+#  INSERT INTO someTable ...
+#
+#  # modify the values in a table
+#  UPDATE someTable ...
+#
+#  # delete some or all of the rows in a table
+#  DELETE FROM someTable ...
+#
+#
+#
+# FOR MORE DETAILS ABOUT THESE STATEMENTS, SEE THE catering DATABASE AND
+# THE VARIOUS FILES CONTAINED IN cateringDatabase-v003.zip
+```

@@ -1,0 +1,25 @@
+first,last,title,region,baseInThousands,salesInThousands,yearsWithCompany
+Joe,Smith,Manager,usa,40,100,10
+Sam,Lee,Salesperson,usa,40,200,6
+Sue,Sallinger,Salesperson,asia,30,150,10
+Barb,Brown,Sr. Salesperson,asia,35,79,4
+Jack,Martin,Manager,europe,20,40,3
+Kate,Carey,Sr. Salesperson,europe,20,69,2
+Emy,Parsons,Salesperson,africa,25,87,3
+Monica,Oja,Salesperson,africa,35,98,10
+Jim,Kuruzovich,Sr. Salesperson,usa,35,140,3
+Zeke,Cohen,Manager,usa,30,250,10
+Zeke,Smith,Salesperson,asia,20,120,3
+Amy,Markovic,Salesperson,asia,46,340,3
+Joe,Washington,Sr. Salesperson,europe,33,370,2
+Sam,Lincoln,Manager,europe,30,500,2
+Sue,Aames,Sr. Salesperson,africa,35,600,10
+Barb,Aames,Salesperson,usa,21,255,7
+Jack,Aames,Salesperson,usa,43,105,4
+Kate,Zeitchik,Sr. Salesperson,usa,50,187,4
+Emy,Zeitchik,Manager,asia,34,166,4
+Monica,Zeitchik,Salesperson,asia,23,184,1
+Jim,Brown,Salesperson,europe,50,167,2
+Larry,Green,Sr. Salesperson,europe,20,113,4
+Laura,White,Manager,africa,20,281,8
+Hugh,Black,Sr. Salesperson,africa,40,261,9

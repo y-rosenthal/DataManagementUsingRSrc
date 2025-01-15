@@ -1,0 +1,171 @@
+# Intro to dplyr
+
+The dplyr R package is part of the tidyverse family of packages.
+It is used to "slice and dice" tibbles/dataframes to get exactly the 
+data you want, in the form that you want it.
+
+The dplyr R package is performs the same kinds of tasks that the 
+"SQL select statement" performs. We learn more about SQL later.
+
+Sources info about the dplyr package:
+
+- The official tidyverse website,<https://www.tidyverse.org/>, is a
+  great place to start when you're looking for information about any of 
+  the tidyverse packages. The dplyr webpage is <https://dplyr.tidyverse.org/>
+  
+- You can also look at the official CRAN page for dplyr, 
+  <https://cloud.r-project.org/web/packages/dplyr/index.html>
+  See the vignettes on this page for good tutorial material.
+  
+- The book "R for Data Science, second edition" is available online and in 
+  print. The online version is here: <https://r4ds.hadley.nz/>
+  The intro to dplyr appears here: <https://r4ds.hadley.nz/data-transform>
+
+
+# r4ds book
+
+R for Data Science Book: <https://r4ds.hadley.nz/>
+
+- visualizing with ggplot2 - <https://r4ds.hadley.nz/data-visualize>
+
+- <https://r4ds.had.co.nz/transform.html>
+
+
+
+Introductory tutorials:
+
+```{r}
+library(dplyr)
+
+starwars %>% 
+  filter(species == "Droid")
+  
+  
+starwars %>% 
+  select(name, ends_with("color"))
+
+starwars %>% 
+     mutate(name, bmi = mass / ((height / 100)  ^ 2)) %>%
+     select(name:mass, bmi)
+
+
+starwars %>% 
+  arrange(desc(mass))
+  
+starwars %>%
+  group_by(species) %>%
+  summarise(
+    n = n(),
+    mass = mean(mass, na.rm = TRUE)
+  ) %>%
+  filter(
+    n > 1,
+    mass > 50
+  )
+```
+
+
+## Another package - dbplyr (notice the 2nd letter is "b")
+
+```{r}
+#library(dplyr, warn.conflicts = FALSE)
+library(dplyr)
+
+# Create an "in memory" sqlite database
+con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+
+# Create a connection to the mtcars table in the database
+copy_to(con, mtcars)
+
+mtcars2 <- tbl(con, "mtcars")
+mtcars2 
+
+# lazily generates query
+summary <- mtcars2 %>% 
+  group_by(cyl) %>% 
+  summarise(mpg = mean(mpg, na.rm = TRUE)) %>% 
+  arrange(desc(mpg))
+
+# see query
+summary %>% show_query()
+
+# execute query and retrieve results
+summary %>% collect()
+```
+
+## Using dbplyr with starwars data
+
+```{r}
+# Create a connection to the mtcars table in the database
+starwars = as.data.frame(starwars)
+copy_to(con, starwars)
+
+sw2 <- tbl(con, "starwars")
+sw2 
+
+sw2 %>% 
+  filter(species == "Droid") %>% show_query()
+  
+  
+sw2 %>% 
+  select(name, ends_with("color")) %>% show_query()
+
+sw2 %>% 
+     mutate(name, bmi = mass / ((height / 100)  ^ 2)) %>%
+     select(name:mass, bmi) %>% show_query()
+
+
+sw2 %>% 
+  arrange(desc(mass)) %>% show_query()
+  
+sw2 %>%
+  group_by(species) %>%
+  summarise(
+    n = n(),
+    mass = mean(mass, na.rm = TRUE)
+  ) %>%
+  filter(
+    n > 1,
+    mass > 50
+  ) %>% show_query()
+```
+
+
+## Actually running dbquery
+
+```{r}
+sw2 %>% 
+  filter(species == "Droid")
+  
+  
+sw2 %>% 
+  select(name, ends_with("color"))
+
+sw2 %>% 
+     mutate(name, bmi = mass / ((height / 100)  ^ 2)) %>%
+     select(name:mass, bmi) 
+
+
+sw2 %>% 
+  arrange(desc(mass)) 
+  
+sw2 %>%
+  group_by(species) %>%
+  summarise(
+    n = n(),
+    mass = mean(mass, na.rm = TRUE)
+  ) %>%
+  filter(
+    n > 1,
+    mass > 50
+  ) 
+```
+
+
+
+## other resources
+
+### Videos
+
+across function  
+<https://www.youtube.com/watch?v=6fEowYTlNT8>

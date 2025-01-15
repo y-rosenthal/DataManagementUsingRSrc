@@ -1,0 +1,113 @@
+# Using pipes, i.e. %>% and |>
+
+## Intro to the "pipe", i.e. %>% from the magrittr package
+
+```{r}
+# The pipe symbol, i.e. %>% that we will be discussing below
+# is part of the magrittr package. You can install/load magrittr directly.
+# Alternatively, magrittr is automatically installed/loaded with most of the
+# tidyverse packages. 
+if(!require(magrittr)) {install.packages("magrittr");require(magrittr);}
+
+# For more info see:
+#
+# help(package="magrittr")`
+
+```
+
+## Using the %>% operator.
+
+The %>% operator is used to send the output of one command into the 
+into a 2nd commmand. Specifically, the info 
+on the left side of the %>% is sent into the first argument 
+of the function on the right hand side of the %>%
+See the example below.
+
+```{r}
+# The following is code that does NOT use a "pipe".
+x = seq(4,6)
+rep(x, 3)
+
+
+# The following code uses a "pipe", i.e. %>%, to send
+# the info from the left of the %>% into the first argument
+# of the function that appears on the right hand side
+# of the %>%
+seq(4, 6) %>% rep(3)
+
+# We can extend this further
+seq(4, 6)  %>%  rep(3)  %>%  sum()
+
+# To make it easier to read, we can put each function
+# call on a separate line.
+seq(4, 6) %>%
+  rep(3) %>%
+  sum()
+
+# Notice in the code above that the %>% appears at the end of 
+# each line. This is necessary to indicate to R that the command
+# isn't finished yet.
+
+# Without pipes, we could have coded the same thing using the
+# following R code. This still works but the pipes make it easier
+# to read and understand the code.
+
+x = seq(4,6)
+y = rep(x, 3)
+sum(y)
+```
+
+## Passing a value to an argument that is not the 1st argument
+
+If you want to send a value to an argument that is not the first,
+you can use the period as shown in the code below.
+
+```{r}
+# define a vector of numbers
+nums = c(1,3)
+
+# This is without the pipe:
+rep("hello", sum(nums))
+
+# This is with the pipe. We use the . in the rep function to show
+# where the output of the pipe should go.
+
+sum(nums) %>%
+  rep("hello", .)
+
+```
+
+## You can also use the |> operator
+
+The %>% was and is still part of the magrittr package. The pipe was seen
+as such a useful tool that as of R version 4.1 "base-R" started to include 
+its own version of the pipe. The base-R version of the pipe is |> while
+the magrittr version of the pipe is %>%
+
+The pipe symbol that is now built into R (without needing to load the
+magrittr package) provides basic pipe functionality. However,
+if you want extra features (e.g. using the . to show where the data
+should be placed) then you still need to use the magrittr version 
+of the pipe.
+
+
+```{r}
+
+# The following is the new base-R version of the pipe
+seq(4, 6) |>
+  rep(3) |>
+  sum()
+
+# Unfortunately you cannot use |> to send the output to any location
+# other than the 1st argument. For example:
+nums = c(1,3)
+
+# this doesn't work:
+sum(nums) |>        # using the new base-R pipe symbol |>
+  rep("hello", .)   
+
+# but this does
+sum(nums) %>%       # using magrittr pipe symbol %>%
+  rep("hello", .)   
+
+```

@@ -1,0 +1,105 @@
+# Working with Excel files
+
+```{r}
+#| warning: false
+
+if(!require(rvest)){install.packages("rvest");require(rvest)}
+if(!require(stringr)){install.packages("stringr");require(stringr)}
+if(!require(dplyr)){install.packages("dplyr");require(dplyr)}
+if(!require(lubridate)){install.packages("lubridate");require(lubridate)}
+if(!require(kableExtra)){install.packages("kableExtra");require(kableExtra)}
+```
+
+There are many R packages that work with Excel files. Some of these packages
+are easier to use while some are more complex but offer more functionality. 
+
+There are several R packages that can be used to read and write data between R 
+and Excel. However, many of these packages are limited in the extent of what
+they can do. For example many packages, can only read the results of Excel 
+formulas in R but cannot read the actual formulas into R.
+
+When it comes to more advanced Excel features, such as charts and 
+pivot tables, only some R packages offer any functionality.
+
+The best way to learn about these packages is to search for current info.
+Once you've identified a package that might be appropriate for your task it
+would be a good idea to look at the help for the package 
+(i.e. `help(package="SOME_PACKAGE")` as well as 
+any vignettes that might be available - a good place to find these is 
+on the CRAN website.
+
+## Some suggested packages
+
+### readxl
+
+If all you want to do is to read the data from an Excel file into R, a 
+good choice is the readxl pakcage that is part of the tidyverse.
+See the tidyverse website or CRAN for more info. 
+
+### 
+If you are 
+
+## A list of Excel related packages
+
+The set of R packages on CRAN can be found here:
+<https://cran.r-project.org/web/packages/available_packages_by_name.html>
+
+To get a 
+Below is the list of these packages (as of `r format(Sys.Date(), format="%b %d, %Y")`)
+that contain the word "Excel" or the text "xls" or "xlsx" (i.e. the filename extensions for Excel files)
+in either the pacakage name or the description
+
+::: {.content-hidden}
+```{r}
+if(!require(rvest)){install.packages("rvest");require(rvest)}
+
+page = read_html("https://cran.r-project.org/web/packages/available_packages_by_name.html")
+
+pkgs = page %>% 
+  html_element("table") %>%
+  html_table()
+
+names(pkgs) = c("pkg", "description")
+
+excelPkgs = pkgs[ grepl("excel",pkgs$pkg,ignore.case=TRUE) |
+            grepl("excel",pkgs$description,ignore.case=TRUE) , ]
+
+widthPkgName = max(nchar(excelPkgs$pkg))
+
+excelPkgs$description = stringr::str_wrap(excelPkgs$description, width = 78 - widthPkgName)
+
+as.data.frame(excelPkgs)
+
+#grep("excel", lines, ignore.case = TRUE, value=TRUE)
+```
+:::
+
+## Control Excel (old versions on Windows) from R
+
+<https://bert-toolkit.com/>
+
+
+## with dplyr
+
+```{r}
+#| paged.print: false
+#| echo: false
+
+page = read_html("https://cran.r-project.org/web/packages/available_packages_by_name.html")
+
+pkgs = page %>% 
+  html_element("table") %>%
+  html_table() %>%
+  rename(c(pkg=1, description=2)) %>%
+  filter(
+    str_detect(pkg,regex("Excel", ignore_case=TRUE)) | 
+      str_detect(description,regex("Excel",ignore_case=TRUE)) |
+      str_detect(description,regex("xls",ignore_case=TRUE))
+    ) %>%
+  mutate(description = str_wrap(description, width = 70 - max(str_width(pkg)))) %>%
+  kableExtra::kbl(caption="Excel packages") %>%
+  kable_styling(bootstrap_options=c("striped","hover","condensed","responsive",full_width=FALSE,position="center",fixed_thead=TRUE))
+
+pkgs
+
+```

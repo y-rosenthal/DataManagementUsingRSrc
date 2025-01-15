@@ -1,0 +1,132 @@
+# Where to find APIs
+
+# How to use APIs
+
+See this video <https://www.youtube.com/watch?v=8tilyqp4bZY>
+
+You can use the curl command line tool to get info from the APIs too.
+
+
+***Note that the following was compiled circa `r format(Sys.Date(), "%B %Y")`.***
+
+There is a incredible amount of data
+that can be accessed online by using an API. Some APIs are free to use but many 
+will require some form of payment. Unfortunately, every API has its own 
+set of rules and regulations. You must read the documentation for each API
+to understand what type of data is available through the API, how to use
+the API and how much it may cost.
+
+In the past it was possible to go to "API Directory" website and "API Hubs"
+to find APIs. For example, see the following. 
+
+* <https://www.postman.com/explore>
+
+* <https://rapidapi.com/hub>
+
+* <https://www.openapihub.com/en-us/>
+
+* <https://www.jsonapi.co/public-api>
+
+* <https://github.com/public-apis/public-apis?tab=readme-ov-file>
+
+* <https://sourceforge.net/software/api-hubs/>
+
+* <https://nordicapis.com/13-api-directories-to-help-you-discover-apis/>
+
+However, the API landscape
+has changed a lot in recent years. There are so many APIs, it
+has become almost impossible to 
+maintain a list of available APIs. Many companies have an API that make
+their services available programatically via APIs. However, these services
+are hard to find if you don't know what to look for. Many companies maintain
+a "developers" portion of their websites. You can also look for "API" in 
+the fineprint of the website info.
+
+* <https://platform.openai.com/>
+
+* <https://developers.facebook.com/>
+
+* <https://developer.linkedin.com/>
+
+* <https://developers.google.com/>
+
+* <https://developer.ups.com/>
+
+* <https://developer.spotify.com/>
+
+* <https://developer.ebay.com/>
+
+* <https://developer.twitter.com/en> , <https://developer.twitter.com/en/docs/twitter-api>
+
+* <https://www.sec.gov/edgar/sec-api-documentation>
+
+
+
+
+## Packages in R for specific APIs
+
+Usually, accessing data from an API requires a technical understanding about 
+how to use APIs in general. However, there are many R packages that make the 
+process of accessing data from specific APIs much easier. These R packages
+"wrap" the technical details of how to access the API in R functions.
+
+To get an idea of what APIs have R packages, you can search the list 
+packages on CRAN 
+(<https://cran.r-project.org/web/packages/available_packages_by_name.html>)
+for the word API. 
+
+```{r}
+# Find the number of packages that have the letters API in 
+# the package name or in the description.
+if(!require(rvest)){install.packages("rvest");require(rvest);}
+url = "https://cran.r-project.org/web/packages/available_packages_by_name.html"
+page = read_html(url)
+tables = html_elements(page, "table")
+pkgs = as.data.frame(html_table(tables[[1]]))
+
+names(pkgs) = c("package", "description")
+rows = grepl("API", pkgs[,"package"], ignore.case = TRUE) | 
+       grepl("API", pkgs[,"description"], ignore.case = TRUE)
+
+numberOfApiPackages = sum(rows)
+```
+
+As of the date this document was compiled there were `r numberOfApiPackages`
+packages on CRAN that have the letters API in either the name of the package
+or the description.
+
+However, be aware that the API ecosystem can change rapidly and the R
+packages don't always keep up. For example, twitter used to allow searching
+for tweets for free using their API. However, they started charging for those
+services. There are many youtube videos 
+explaining how to search twitter for free using the twitter api via the 
+"twittR" packager. These videos are no longer applicable. 
+
+
+
+### R for finance
+
+Below are some R resources for working with financial data <span class="yrdate">Feb 2, 2024</span> 
+
+**R package for financial data - getting, charting, modeling**
+
+- github: (this seems to be the most up to date info)   
+  <https://github.com/joshuaulrich/quantmod>
+
+- website: (this seems VERY out of date - but it's much easier to get a quick idea of what is possible circa 2009. For more up to date info look at the github page or the official documentation accessible from the CRAN website)
+  <https://www.quantmod.com/>  
+  <https://www.quantmod.com/examples/intro/>
+
+- "official" documentation from the "Comprehensive R Archive Network (CRAN)" website  
+  <https://cran.r-project.org/web/packages/quantmod/index.html>
+
+**Related R package for doing technical analysis**
+
+-   <https://github.com/joshuaulrich/TTR>
+
+
+
+## APIs
+
+You learn about many different APIs via this website
+<https://rapidapi.com/collection/amazon-products>

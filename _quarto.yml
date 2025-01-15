@@ -1,0 +1,108 @@
+project:
+  type: book
+
+book:
+  title: "Data Management With R"
+  author: "Y. Rosenthal"
+#  date: "1/21/2024"
+  chapters:
+    - index.qmd
+#    - 00000-tmpMermaid.qmd
+#        - 0000051-filenames-v001.qmd
+    - 0000017-introToQuarto-v001.qmd
+    - 0000022-InstallingRPackages-v003.qmd
+#    - part: 0200001-part-bash-v001.qmd
+    - part: Bash
+      chapters:
+      #- 0000013-IntroToTheBashCli-v009.qmd
+      - 0000011-WhatIsACli-v010.qmd
+      - 0000013-HowToRunTheBashShellCli-v011.qmd
+      - 0000025-introToBash-v007.qmd
+      
+#    - part: 0300005-part-regex-v001.qmd
+    - part: Regular Expressions
+      chapters:
+      - 0200200-introToRegularExpressions-v036.qmd
+      - 000260-PracticeWithRegulaExpressions-v003.qmd
+
+#    - part: part-dplyrAndSql-v001.qmd
+    - part: Intro to tidyverse
+      chapters:
+      - 0400050-whatIsTidyverse-v001.qmd
+      - 0400100-usingPipes-v001.qmd
+      - 0400200-stringr-tutorials-v003.qmd
+      
+    - part: visualizations with ggplot2
+      chapters:
+      - 050050-tdyvrsGgplot2-v0001.qmd
+    
+    - part: Intro to dplyr and to SQL
+      chapters:
+      - 0500100-tdyvrsDplyr-v005.qmd
+      - 0500400-sqlSelectIntro-v003.qmd                             # assumes dplyr knowledge
+      
+    - part: Relational databases and SQL (no dplyr knowledge needed)
+      chapters:
+      - sql0006-introToDatabases-v023.qmd                           # copied from introToSQL
+      - sql0014-theBooksDatabase-v001.qmd                           # NEW
+      - sql0010-introToSql-v023.qmd                                 # NEW
+      - sql0035-workingWithMultipleTables-v012.qmd                  # renumbered from sql0020
+      - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd
+      - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd
+      - sql0050-commonTableExpressions-v001.qmd                     # NEW
+      - sql0200-otherSqlCommands-v002.qmd                           # EDIT THIS 
+      - sql0900-sqlWindowFunctions-v002.qmd                         # NEW
+      - sql0950-workingWithDatabasesInR-v010.qmd
+      - 0600100-introToDb-v001.qmd
+#       - 0500500-tdyvrsDbplyr-v002.qmd # TODO - look at the code from 0500100-tdyvrsDplyr-v0001.qmd for dbplyr
+#        - 83spr23/sqlNotes/sql0010-introToSql-v023.qmd
+
+    - part: Web Scraping
+      chapters:
+      - web-000300-internetArchitecture-v001.qmd
+      - web-000400-webscrapingContinued-015.qmd
+      - web-000130-WebscrapingJavascriptSites-v003.qmd
+      #- web-000420-practiceWithWebScraping-v001.qmd
+      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd
+      
+#      
+#    - part: 0300100-excelAndR-v001.qmd
+#    - part: Excel and R
+
+#    - part: 0990000-part-Questions-v001.qmd
+    - part: Questions
+      chapters:
+        - 0990100-cleaningData-v001.qmd
+        
+#    - part: 0999000-appendices-v001.qmd
+    - part: Appendices
+      chapters:
+        - 0000100-topics-v001.qmd
+        - 0000200-bibliography-v001.qmd
+        - 0000300-whereToFindDatasets-v001.qmd
+        - 0000310-whereToFindApis-v001.qmd
+        - 0999000-toDo-v001.qmd
+#    - intro.qmd
+#    - summary.qmd
+#    - references.qmd
+#
+# bibliography: references.bib
+
+execute:
+  error: true
+  warning: true
+
+format:
+  html:
+    theme: cosmo
+    toc-expand: true
+    fontsize: 80%
+    number-depth: 3
+    link-external-newwindow: true
+    include-in-header: yrNocacheHeaders-v001.html
+#  pdf:
+#    documentclass: scrreprt
+#    fontsize: 9px
+  docx: default
+editor: source
+

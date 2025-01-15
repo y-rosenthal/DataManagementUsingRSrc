@@ -1,0 +1,37 @@
+## .RData files - save.image() and load functions
+
+The save.image function creates a file that contains the variables from your R 
+environment. The created files typically have an .RData extension.
+You can then reload those variables with R's load function.
+
+See these help pages for more info.
+
+`?save.image`
+`?load`
+
+The dataframes for the books database have been saved in the file
+
+    booksDatabase-v004.RData
+
+You can load those dataframes into your environment with the following
+command (the command assumes that the file is in a subfolder
+named "data" that is in the working directory).
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Loading data from an .RData file
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+load("data/booksDatabase-v004.RData")
+
+authors
+
+publishers
+
+royalties
+
+titles
+
+title_authors
+
+
+```

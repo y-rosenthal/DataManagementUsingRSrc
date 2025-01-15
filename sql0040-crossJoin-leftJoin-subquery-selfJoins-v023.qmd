@@ -1,0 +1,2174 @@
+# more joins (cross/left/right/full), subqueries, set operations, case, self joins
+
+```{r}
+#| echo: false
+#| output: false
+
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
+
+## The "books database"
+
+In this and other sections we will be referring to the "books database".
+
+Click below 
+to download a document that describes the books database
+and database technology in general. 
+This document also contains many questions/answers to test your knowledge
+of SQL.
+You can also download the CSV files
+that contain the data for the books database.
+
+
+## click to download the specified files
+
+- [booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v020.docx) 
+- [titles.csv](data/booksDatabase/titles.csv)
+- [authors.csv](data/booksDatabase/authors.csv)
+- [publishers.csv](data/booksDatabase/publishers.csv)
+- [title_authors.csv](data/booksDatabase/title_authors.csv)
+- [royalties](data/booksDatabase/royalties.csv)
+
+
+## read in the data
+ 
+```{r}
+# load the packages we'll need
+if (!require(sqldf)) { install.packages("sqldf"); require(sqldf) }
+if (!require(readr)) { install.packages("readr"); require(readr) }
+
+# Read in the data for the books database - see the 
+titles = read_csv("data/booksDatabase/titles.csv", na="NULL", show_col_types=FALSE)
+authors = read_csv("data/booksDatabase/authors.csv", na="NULL", show_col_types=FALSE)
+publishers = read_csv("data/booksDatabase/publishers.csv", na="NULL", show_col_types=FALSE)
+title_authors = read_csv("data/booksDatabase/title_authors.csv", na="NULL", show_col_types=FALSE)
+royalties = read_csv("data/booksDatabase/royalties.csv", na="NULL", show_col_types=FALSE)
+
+```
+
+## CROSS JOIN
+
+```{r}
+##############################################################################
+# A "cross join" is very different from the joins that we've already learned about.
+# A "cross join" joins EVERY row from 1st table with EVERY row from 2nd table.
+# For this reason, a cross join does not specify an on condition.
+##############################################################################
+
+# Example - suppose a kindergarten teacher is using a relational database 
+# to manage her classroom :)    Suppose she has several toys and several children.
+# One table, students, describes the children,
+# Another table, toys, describes the toys.
+
+students <- data.frame(
+  first_name = c("abie", "bobbie", "clara"),
+  last_name = c("aames", "berger", "cohen"),
+  gender = c("m", "m", "f")
+)
+students
+
+toys = data.frame(
+  toy_name = c("doggie", "dumbo"),
+  description = c("suffed dog", "elephant")
+)
+toys
+
+sqldf("select * from students order by last_name, first_name")
+sqldf("select * from toys order by toy_name")
+
+
+# The teacher wants to make sure that each child has a chance to play
+# with each of the toys. 
+#
+# Therefore she might run the following "cross join" to see a list
+# of each child and each toy. She can use this result as a checklist
+# to make sure that each child actually did play with each toy.
+
+sqldf("select students.*, toys.*
+       from students CROSS JOIN toys
+       order by last_name, first_name, toy_name")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# About the asterisks ( * ) in the SELECT clause ...
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The asterisks in the query above (i.e. select students.*, toys.* ...)
+# means that the results should include all of the columns from the
+# students table (i.e. students.*) and all of the columns from the
+# toys table (i.e. toys.*). 
+#
+# This can be done more concisely with just "select * ..." the query below
+# does the exact same thing as the query above since "select * ..." means
+# to include all of the columns from all of the tables in the output.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select *
+       from students CROSS JOIN toys
+       order by last_name, first_name, toy_name")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The reason for using tablename.* is apparent when you want to 
+# include all of the columns from some of the tables but not from the other
+# tables. For example the following query displays only some of the columns
+# from the students table (students.gender is NOT displayed). It does display
+# ALL of the columns from the toys table (ie. toys.*)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select students.first_name, students.last_name, toys.*
+       from students CROSS JOIN toys
+       order by last_name, first_name, toy_name")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# select table.column ...        vs       select column ... 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You must include table names in the SELECT clause for columns that 
+# appear in more than one table. Column names that that only appear 
+# in a single table in the query do NOT need to be preceded by the table name. 
+#
+# Therefore the following 
+# query is the same as the above query. This is because first_name and
+# last_name only appear as columns in the students table and do not appear 
+# in the toys table.
+#
+# However, it is PERMISSIBLE to include the table name for ANY column (even
+# if the column only appears in a single table).
+# Some people prefer to include the table name even when it 
+# is not necessary (as done above) to make it clearer to someone reading the 
+# code which table contains which columns.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Same results as above (read comment above)
+sqldf("select first_name, last_name, toys.*
+       from students CROSS JOIN toys
+       order by last_name, first_name, toy_name")
+
+
+#-----------------------------------------------------------
+#    # rows   =   #rows from table1   X   #rows from table2
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The total number of rows in the output of a "cross join" is
+# the product of the number of rows in the first table times 
+# the number of rows in the 2nd table. In the example above, since
+# students contains 3 rows and toys contains 2 rows, the cross 
+# join contains 6 rows.
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# You can use any other clauses in a cross join
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You an add any of the other clauses (where, group by, having, limit) 
+# to a "cross join". For example, if the teacher only needs the
+# results of the "cross join" for the boys she can add a where
+# clause as follows:
+#-----------------------------------------------------------
+
+sqldf("select students.*, toys.*
+       from students CROSS JOIN toys
+       where gender = 'm'
+       order by last_name, first_name, toy_name
+      ")
+
+#--------------------------------------------------------------------------
+# "Cartesian product" is another name for a "cross join"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The concept of a "cross join" also exists outside the scope of databases.
+# Specifically in mathematical "set theory" the concept of a "cross join" 
+# is known as a "cartesian product". Sometimes, people will refer to 
+# the term "cartesian product" in discussions about databases. However in 
+# a select statement the words you can type are only "cross join" (NOT "cartesian product"). 
+#--------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------
+# All other types of joins depend on cross joins
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# On some occasions the need for a cross join arises, but 
+# cross joins are not used nearly as often as other types of joins. 
+# Nevertheless, it is important to understand the concept of a cross join since
+# every other type of join ("innner join", "left join", "right join", "full join")
+# depends on a "cross join".
+#
+# For example when calculating the result of an
+# "inner join" the database management system (DBMS) starts by first performing a cross join.
+# The DBMS then removes rows from the result of the cross join based on the 
+# conditions specified in the on clause and the where clause of the "inner join".
+#---------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------
+# A more typical example
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Many people find it hard to understand why you would want to use a cross join.
+# This confusion stems from the fact that rows from the two tables are combined
+# in the result even if there is seemingly no logical reason to combine them.
+#
+# It is easiest to see the results of a cross join when you have very few rows.
+# Therefore we will create two very small tables, favTitles and favPublishers
+#---------------------------------------------------------------------------
+
+# My favorite titles
+favTitles = sqldf("select title_name, type, pub_id, pages
+                   from titles
+                   where title_id in ('T04', 'T05', 'T10')
+                   order by title_name")
+favTitles
+
+# Publishers of those favorite titles
+favPublishers = sqldf("select pub_id, pub_name, city
+                       from publishers
+                       where pub_id in ('P01', 'P05')
+                       order by pub_id")
+favPublishers
+
+
+# The following is a cross join. It returns every record from the 
+# first table (favTitles) paired up with every record from the 2nd table
+# (favPublishers). 
+#
+# Notice that the pub_id's on each row of the cross join results do NOT
+# necessarily match. Therefore, it may be confusing as to why you should
+# use a cross join ... (keep reading)
+
+sqldf("select favTitles.*, favPublishers.*
+       from favTitles CROSS JOIN favPublishers
+      ")
+```
+
+## Every INNER JOIN starts with a CROSS JOIN
+
+```{r}
+# The following adds a where clause to the code. The where clause
+# removes those rows from
+# the cross join for which the favTitles.pub_id and the favPublishers.pub_id
+# don't match. This is really what you want in this case. In order
+# to get the correct results, first a CROSS JOIN was done that created
+# all possible combinations of a row from favTitles with a row from favPublishers.
+# Then the where clause eliminated the rows in the output that didn't make sense.
+# This leaves us with rows that show the details for a title and the details
+# of the publisher who published that title. 
+
+sqldf("select favTitles.*, favPublishers.*
+       from favTitles CROSS JOIN favPublishers
+       where favTitles.pub_id = favPublishers.pub_id
+      ")
+
+# Another way of writing the same query is with an "inner join" (which 
+# can also be written as just "join"). This version of the query 
+# uses the word "join" instead of "cross join" and moves the condition
+# that ties the tables together from the where clause into the "on" clause.
+# This does EXACTLY THE SAME THING as the above query (with CROSS JOIN). 
+# However, the "join" syntax with its "on" clause makes the details of 
+# how the two tables are related to each other more obvious. 
+
+sqldf("select favTitles.*, favPublishers.*
+       from favTitles JOIN favPublishers ON favTitles.pub_id = favPublishers.pub_id
+      ")
+```
+
+## The word INNER in "INNER JOIN" is optional
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# JOIN vs INNER JOIN
+#
+# The technical term for this type of join is an "INNER JOIN".
+# However, you can write either "INNER JOIN" or just "JOIN".
+# The following does the same thing as the previous query.
+# The only difference in the code is that we added the
+# word "INNER".
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select favTitles.*, favPublishers.*
+       from favTitles INNER JOIN favPublishers ON favTitles.pub_id = favPublishers.pub_id
+      ")
+```
+
+## Example
+
+```{r}
+# QUESTION 
+#
+#	For each publisher, list the name of the publisher and total
+# number of pages that the publisher has published in all their books (ie. add
+# up all the pages in all books for each publisher). Show the publishers who
+# have published the most pages at the top of the result list.
+
+# ANSWER
+#
+# Step 1 - since publishers contains the pub_name  and  titles contains the 
+# number of pages (num_pages) for each book, we need to join those tables.
+sqldf("select *
+       from publishers join titles on publishers.pub_id = titles.pub_id
+      ")
+
+# Step 2 - use group by and sum to add up the pages for each publisher
+sqldf("select pub_name, sum(pages)
+       from publishers join titles on publishers.pub_id = titles.pub_id
+       group by publishers.pub_id, pub_name
+      ")
+
+# Step 3 - use order by 
+sqldf("select pub_name, sum(pages)
+       from publishers join titles on publishers.pub_id = titles.pub_id
+       group by publishers.pub_id, pub_name
+       order by sum(pages) desc
+      ")
+
+
+# REMEMBER - every inner join starts out under the covers as a cross join
+# The following two commands are equivalent
+
+sqldf("select au_fname, au_lname   
+      from authors INNER join title_authors on authors.au_id = title_authors.au_id    
+      where title_id = 'T11'
+      order by au_lname, au_fname")
+
+
+sqldf("select au_fname, au_lname   
+      from authors CROSS join title_authors    
+      where authors.au_id = title_authors.au_id
+                  and 
+            title_id = 'T11'
+      order by au_lname, au_fname")
+```
+
+## Even more types of JOINs
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# SEVERAL DIFFERENT TYPES OF "JOINS"
+#
+# NOTE: There are actually several different types of "joins". They all do
+# slightly different things. For example:
+#
+#    CROSS JOIN                             - see the top of this file
+#    INNER JOIN (or just JOIN)              - we just described this above
+#    LEFT OUTER JOIN  (or just LEFT JOIN)   - we'll cover this later
+#    RIGHT OUTER JOIN  (or just RIGHT JOIN) - we'll cover this later
+#    FULL OUTER JOIN  (or just FULL JOIN)   - we'll cover this later
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# INNER JOIN   ( or just "JOIN" )
+#
+# The following is an "inner join" (or just "join").
+# (We already covered this above. It's repeated here for completeness).
+
+sqldf("select title_name, pub_name
+      from favTitles JOIN favPublishers ON favTitles.pub_id = favPublishers.pub_id")
+```
+
+## "old" ANSI SQL way of doing inner joins
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ANSI SQL  - American National Standards Institute 
+# 
+# There are different versions of the ANSI SQL standard. The versions are
+# named by the year that the version came out. See this for a full history of SQL:   
+#   https://learnsql.com/blog/history-of-sql-standards/
+#
+# Joins were done differently before SQL 92 
+# They CAN still be done the "old way" (and often are). Some people prefer
+# the "old way" since there is less to type.
+#
+# The "old way " for a cross join is to not specify cross join 
+# at all. Just list the tables with commas between them.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("
+  select favTitles.*, favPublishers.*
+  from favTitles, favPublishers
+")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The "old way" of doing an "inner join" (i.e. a "regular - join")
+# is to do a "cross join" the old way and then add a where clause
+# that does the job of the "on".
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("
+  select favTitles.*, favPublishers.*
+  from favTitles, favPublishers
+  where favTitles.pub_id = favPublishers.pub_id
+")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# in the "old way" of doing inner joins, you could add additional 
+# conditions to the where clause just like in the "new way" of
+# writing queries.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("
+  select favTitles.*, favPublishers.*
+  from favTitles, favPublishers
+  where favTitles.pub_id = favPublishers.pub_id and
+        pages >= 300
+")
+```
+
+## LEFT JOIN
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# LEFT OUTER JOIN   (or just "LEFT JOIN")
+#
+# Before learning about "LEFT JOIN", you should first understand one 
+# issue that comes up when using "INNER JOIN"s. 
+#
+# This issue is best shown by way of an example. 
+# Publisher, P04 - Tenterhooks Press, does not have any corresponding rows in
+# the titles table (perhaps it's a new publishing company that is just getting
+# started).  For this reason when you use an "inner join" to join the titles
+# table and the publishers table you will NOT see any rows for Tenterhooks press.
+# The following "inner join" (or just "join") shows the output below.
+# Tenterhooks Press does not appear in the output at all.
+# 
+#    > sqldf("select pub_name, title_name
+#           from publishers JOIN titles on publishers.pub_id = titles.pub_id
+#           order by pub_name, title_name")
+#    
+#    pub_name                          title_name
+#    1        AAA Publishing         Not Without My Fabrerge Egg
+#    2        AAA Publishing    Perhaps It's a Glandular Problem
+#    3        AAA Publishing           Spontaneous, Not Annoying
+#    4     Abatis Publishers                               1977!
+#    5     Abatis Publishers           But I Did It Unconciously
+#    6     Abatis Publishers              Exchange of Platitudes
+#    7     Abatis Publishers                    How About Never?
+#    8     Abatis Publishers        Just Wait Until After School
+#    9     Abatis Publishers                     Kiss My Boo Boo
+#    10      Core Dump Books        Ask Yor System Administrator
+#    11 Schandenfreude Press           200 Years of German Humor
+#    12 Schandenfreude Press                   I Blame My Mother
+#    13 Schandenfreude Press What Are The Civilian Applications?
+#
+#
+# However, suppose you want to see the same output, but you'd also like
+# to see Tenterhooks Press, even though they haven't actually published
+# any titles yet? .... that is where a LEFT JOIN is useful.
+#
+
+# The output of a "left join" contains all of the rows of an "inner join"
+# plus possibly a few more rows that would not appear in the output of 
+# an inner join. 
+# By simply changing the "inner join" (i.e. "join") in the previous
+# query to "left join" (or "left outer join") we get the following results.
+# Notice that Tenterhooks Press now DOES appear in a single row. 
+# All columns that would have come from the corresponding rows in the titles
+# table are NULL (i.e. NA in R dataframes) for the Tenterhooks Press row.
+
+
+#    > sqldf("select pub_name, title_name
+#           from publishers LEFT JOIN titles on publishers.pub_id = titles.pub_id
+#           order by pub_name, title_name")
+#    
+#    pub_name                          title_name
+#    1        AAA Publishing         Not Without My Fabrerge Egg
+#    2        AAA Publishing    Perhaps It's a Glandular Problem
+#    3        AAA Publishing           Spontaneous, Not Annoying
+#    4     Abatis Publishers                               1977!
+#    5     Abatis Publishers           But I Did It Unconciously
+#    6     Abatis Publishers              Exchange of Platitudes
+#    7     Abatis Publishers                    How About Never?
+#    8     Abatis Publishers        Just Wait Until After School
+#    9     Abatis Publishers                     Kiss My Boo Boo
+#    10      Core Dump Books        Ask Yor System Administrator
+#    11 Schandenfreude Press           200 Years of German Humor
+#    12 Schandenfreude Press                   I Blame My Mother
+#    13 Schandenfreude Press What Are The Civilian Applications?    
+#    14    Tneterhooks Press                                <NA>
+#
+#
+# WHAT DOES "LEFT" MEAN ???
+#
+# The word "left" and "right" in "left join" and "right join" refer to the
+# location of the table names in the SQL code. Specifically, the text of 
+# the code of every JOIN has a table name to the LEFT of the word "JOIN" and 
+# a table name to the right of the word "JOIN". When you specify
+#
+#       "... tableA LEFT JOIN tableB ON ..." 
+#
+# tableA is the "left" table and 
+# tableB is the "right" table
+#
+# The LEFT JOIN syntax says that if there are rows in the left table (tableA
+# in the example above) that don't have corresponding rows in the "right" table
+# (tableB in the example above) then those rows from tableA should still 
+# appear in the output. Any columns that would have come from tableB will 
+# have NULL values (i.e. NA in R dataframes) in that row.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The following is a "regular join" (i.e. an "inner join")
+#
+# Tenterhooks press does not show up since they have no titles
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select titles.title_name, pub_name, publishers.pub_id
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The following is a "left join"
+#
+# Tenterhooks press DOES show up since a left join will add to 
+# the results of an inner join, any rows that appear in the "left"
+# hand table that have no corresponding rows in the right hand table.
+# In the result set, the columns from the right hand table in these
+# rows are NULL (or "NA" when using sqldf in R)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select titles.title_name, pub_name, publishers.pub_id
+      from publishers left join titles on titles.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ALL of the columns from the right hand table contain NULLs (i.e. NA)
+# for the extra rows that are added by the left join
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# To prove that point, the following shows all of the columns from both
+# the left hand table (publishers) and the right hand table (titles) 
+# Notice that ALL of the columns for the right hand table will have 
+# NULLs (i.e. NA in sqldf in R) for those rows of the output that 
+# contain data from the left hand table for which there is no corresponding
+# row in the right hand table
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select publishers.*, titles.*
+      from publishers left join titles on titles.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+
+# BE CAREFUL ...
+#
+# When doing an "inner join" (i.e. a "join") it doesn't make a difference
+# which table you type to the left of the word "join" and which to the right.
+#
+# HOWEVER - for "LEFT JOIN"s it DOES MATTER!!!
+#
+# If we modify the previous query and put the publishers table on the 
+# right side of the "LEFT JOIN" keyword, we will again NOT see Teneterhooks Press
+# since a LEFT JOIN only adds extra rows to the output for the rows in the 
+# LEFT hand table that don't have corresponding rows in the right hand table.
+
+
+# Tenterhooks Press does NOT appear since the publishers table is on the
+# right hand side of the "LEFT JOIN" keywords
+
+sqldf("select titles.title_name, pub_name, publishers.pub_id
+      from titles left join publishers on titles.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+
+# Lets add a row to the titles table that doesn't have a correponding row
+# in the publishers table.
+
+newBook = data.frame(title_id='014', title_name='Data Everywhere', type='computer', pub_id='P99', pages='200', price='19.99', sales=0, pubdate='1/01/2024')
+titles2 = rbind(titles, newBook)
+titles2
+
+sqldf("select titles2.title_name, pub_name, publishers.pub_id
+      from publishers left join titles2 on titles2.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+
+sqldf("select titles2.title_name, pub_name, publishers.pub_id
+      from titles2 left join publishers on titles2.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+```
+
+## Practice
+
+```{r}
+##########################################################################
+# PRACTICE QUESTION
+#
+# Write a query that shows the publisher name (i.e. pub_name) for those publishers
+# (and only those publishers)) who have no titles in the titles table.
+##############################################################################
+
+# Remember this query
+sqldf("select publishers.*, titles.*
+      from publishers left join titles on publishers.pub_id = titles.pub_id
+      ")
+
+# add a where clause as shown below to get ONLY those rows from the left table that have no matching rows in the right table
+sqldf("select publishers.*, titles.*
+      from publishers left join titles on publishers.pub_id = titles.pub_id
+      where titles.type is null
+      ")
+
+
+# The following works, but it isn't ideal .... because titles.type 
+# is not the best column to choose to test for null (keep reading for an explanation ...)
+
+sqldf("select pub_name
+      from publishers left join titles on publishers.pub_id = titles.pub_id
+      where titles.type is null
+      ")
+
+# To explain why titles.type was not the best column to choose above compare
+# the query below where we used titles.pages to test for NULL. 
+# Since there is a row in titles table that contains NULL for pages that row
+# causes the publisher for that row (i..e AAA Publishing) to be displayed
+# in the output.
+
+sqldf("select pub_name
+      from publishers left join titles on publishers.pub_id = titles.pub_id
+      where titles.pages is null
+      ")
+
+#----------------------------------------------------------------------------
+# The best way to identify only those rows that were added due to the
+# "left" join is to look for NULL in a column that would otherwise never
+# contain a NULL.
+#
+# Best choices are
+# - a primary key field (i.e. column)
+# - or another column that is defined in the database to never allow NULLs
+#----------------------------------------------------------------------------
+
+# The best way to do the same query is by checking the primary key of the right 
+# hand table for NULL in the where clause.
+
+sqldf("select pub_name
+      from publishers left join titles on publishers.pub_id = titles.pub_id
+      where titles.title_id is null
+      ")
+```
+
+## RIGHT JOIN and FULL JOIN
+
+```{r}
+###############################################################.
+# RIGHT JOIN    and    FULL JOIN
+#
+# LEFT JOIN   is also known as a   LEFT OUTER JOIN
+# RIGHT JOIN   is also known as a  RIGHT OUTER JOIN
+# FULL JOIN   is also known as a   FULL OUTER JOIN
+#
+# These are all known as "OUTER" joins
+###############################################################.
+
+# ANSI SQL also has "right join" and "full join"
+#
+# A right join does the same thing as a left join except that
+# "right join" shows rows in the output that correspond to rows from the 
+# right hand table that don't have corresponding rows in the left hand table.
+
+# The following LEFT JOIN ...
+sqldf("select publishers.*, titles.*
+      from publishers left join titles on titles.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+
+# ... will generate the EXACT SAME OUTPUT as the following RIGHT JOIN
+sqldf("select publishers.*, titles.*
+      from titles right join publishers on titles.pub_id = publishers.pub_id
+      order by pub_name, title_id")
+
+# HOWEVER - SQLite does not implement RIGHT JOIN even though it is part of the ANSI Standard for SQL
+
+# Similarly a "full join" shows rows in the output for BOTH
+# - rows in the left hand table that don't have corresponding rows in the right hand table and
+# - rows in the right hand table that don't have corresponding rows in the left hand table and
+#
+# SQLite - the database that are using does not implement RIGHT JOINs or FULL JOINs
+# However, there are simple workarounds for both.
+# The workaround for a right join is simply to use a left join and type 
+# the table names in the opposite order.
+#
+# The workaround for FULL JOIN requires you to understand "UNION" ... see below
+
+
+##########################################################################.
+### UPDATE !!!
+###
+###     As of now (in 2024) sqlite has implemented both RIGHT JOIN
+###     and FULL JOIN. I will update these notes with that info soon.
+##########################################################################.
+```
+
+## SQL set operations (i.e. UNION, EXCEPT, INTERSECT)
+
+```{r}
+##################################################
+# Combining the output of 2 queries
+#
+#     UNION
+#     UNION ALL
+#     EXCEPT
+#     INTERSECT
+##################################################
+
+# The following is a query that you should already understand.
+# There is nothing new here. We will see below how to rewrite this 
+# query in a different way by using "UNION"
+#
+# The following displays titles that have fewer than 10 pages
+# and also titles that have more than 20 pages.
+
+sqldf("select title_name, price
+      from titles
+      where price < 10 or price > 20
+      order by price")
+```
+
+### UNION
+
+```{r}
+#----------------------------------------------------------------------
+# UNION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# union is used to combine two different queries into one output set.
+# The 2 queries must have the same number of columns and the same type
+# of columns.
+#
+# The order by is done after both queries and combines the rows from 
+# the two select statements in the specified order.
+#----------------------------------------------------------------------
+
+# First ... let's see each of the queries on their own ...
+
+# get the titles that are < 10 dollars
+sqldf("select title_name, price
+      from titles
+      where price < 10
+")
+
+# get the titles that are > 20 dollars
+sqldf("select title_name, price
+      from titles
+      where price > 20
+")
+
+# Now, let's see how to use
+# UNION to combine the two previous queries into a single output.
+
+sqldf("select title_name, price
+      from titles
+      where price < 10
+      
+      union
+      
+      select title_name, price
+      from titles
+      where price > 20
+      
+      order by price")
+
+
+# Do the same but order by title_name
+sqldf("select title_name, price
+      from titles
+      where price < 10
+      
+      union
+      
+      select title_name, price
+      from titles
+      where price > 20
+      
+      order by title_name")
+
+
+# Another example
+# Show all book titles for which the price is > 20 or the pages is > 500
+
+sqldf("select title_name, price, pages
+      from titles
+      where price > 20 or pages > 500
+      order by price")
+```
+
+### UNION ALL
+
+```{r}
+#----------------------------------------------------------
+# UNION removes duplicate rows from the output
+#
+# UNION ALL does NOT remove duplicate rows
+#----------------------------------------------------------
+
+
+# Union removes duplicate rows from the output
+#
+# Notice that some books match both conditions but only come up in the 
+# results once. 
+
+sqldf("select title_name, price, pages
+      from titles
+      where price > 20
+      
+      union
+      
+      select title_name, price, pages
+      from titles
+      where pages > 500
+      
+      order by price")
+
+
+# UNION ALL
+#
+# Running the same query as above but typing "UNION ALL"
+# Will show the rows that meet both conditions, twice.
+
+sqldf("select title_name, price, pages
+      from titles
+      where price > 20
+      
+      union all
+      
+      select title_name, price, pages
+      from titles
+      where pages > 500
+      
+      order by price")
+```
+
+### Practice
+
+```{r}
+# PRACTICE QUESTION
+# 
+# Show the names of all authors and publishers and the city that they are from.
+# Indicate if the row in the output is for a 'publisher' or for an 'author'.
+# For authors dispaly the name of the author as FIRST LAST in a single column.
+# This column should be called 'name' - this is the same column as 
+# the publisher's name would appear. 
+# Sort the results by the name.
+#
+# NAME       CITY       Pub_or_author
+# Joe Smith  New York   Author
+# AAA pubs   Seattle    Publisher
+# Sue Cohen  LA         Author
+# etc.
+
+# We can create two queries, one for authors and one for publishers
+sqldf("select au_fname || ' ' || au_lname as name, city, 'Author' as 'pub_or_author'
+      from authors")
+
+
+sqldf("select pub_name, city, 'Publisher' as 'pub_or_author'
+      from publishers")
+
+
+# Then combine the two queries with union
+
+sqldf("select au_fname || ' ' || au_lname as name, city, 'Author' as 'pub_or_author'
+      from authors
+      
+      union
+      
+      select pub_name, city, 'Publisher' as 'pub_or_author'
+      from publishers
+      
+      order by 1")
+```
+
+### EXCEPT
+
+```{r}
+
+###################################
+# EXCEPT
+###################################
+
+# QUESTION
+# Show the publishers who publish biography books but not history books
+
+# ANSWER
+
+# Let's start by first writing a query that gets those publishers who have
+# published biographies (spoiler alert ... we are later going to 
+# remove from this list those publishers who have published history books)
+
+sqldf("select distinct pub_name 
+      from publishers join titles on publishers.pub_id = titles.pub_id
+      where titles.type = 'biography'")
+
+# If you take out the distinct you will get duplicate copies of publisher names
+sqldf("select pub_name 
+      from publishers join titles on publishers.pub_id = titles.pub_id
+      where titles.type = 'biography'")
+
+# You get the duplicates for publishers who published more than one biography
+#
+# You can see that by looking at all of the data, not just the publisher name.
+
+sqldf("select publishers.*, titles.*
+      from publishers join titles on publishers.pub_id = titles.pub_id
+      where titles.type = 'biography'")
+
+
+# Once again, this is the query that shows publishers who published biographies
+sqldf("select distinct pub_name 
+      from publishers join titles on publishers.pub_id = titles.pub_id
+      where titles.type = 'biography'")
+
+# This is the query for publishers who published history books
+sqldf("select distinct pub_name 
+      from publishers join titles on publishers.pub_id = titles.pub_id
+      where titles.type = 'history'")
+
+# Now show publishers who published biograhpies BUT NOT history books
+
+sqldf("select distinct pub_name 
+      from publishers join titles on publishers.pub_id = titles.pub_id
+      where titles.type = 'biography'
+      
+      EXCEPT
+      
+      select distinct pub_name 
+      from publishers join titles on publishers.pub_id = titles.pub_id
+      where titles.type = 'history'")
+```
+
+### INTERSECT
+
+```{r}
+###################################
+# INTERSECT
+###################################
+
+#---------------------------------------------------------------------
+# Show the cities that have both publishers and authors residing there.
+#---------------------------------------------------------------------
+
+# show the cities that have publishers
+sqldf("select distinct city, state
+      from publishers
+      order by city
+      ")
+
+# Show the cities that have authors
+sqldf("select distinct city, state
+      from authors
+      order by city")
+
+# Combine the two queries with INTERSECT.
+# This will only show rows that are output from both of the
+# select statements.
+
+sqldf("   select distinct city, state
+          from publishers
+
+      INTERSECT
+
+         select distinct city, state
+         from authors
+         
+      order by city")
+```
+
+## Subqueries
+
+```{r}
+###################################################.
+# Subqueries
+####################################################.
+
+#------------------------------------------------------------------------
+# Subqueries that return a single value
+#------------------------------------------------------------------------
+
+# Show titles whose price is greater than the average price of all titles
+
+sqldf("select title_name, price
+      from titles
+      where price > 
+              (
+                 select avg(price)
+                 from titles
+              )
+      order by title_name
+      ")
+
+# prove it by determining the avg price of all titles
+
+sqldf(" select avg(price)
+        from titles
+")
+
+
+# YOU CANNOT WRITE THIS QUERY WITHOUT USING A SUBQUERY!!!!
+# THE FOLLOWING WILL PRODUCE AN ***ERROR*** SINCE
+# YOU MAY NOT USE AN AGGREGATE FUNCTION SUCH AS AVG
+# INSIDE A WHERE CLAUSE
+# 
+# AGGREGATE FUNCTIONS ARE ONLY ALLOWED INSIDE
+# HAVING AND INSIDE SELECT FOR QUERIES THAT HAVE A GROUP BY
+
+sqldf("select title_name, price
+      from titles
+      where price > avg(price)
+      order by title_name
+      ")
+```
+
+### Subquery in SELECT, FROM, WHERE, HAVING
+
+```{r}
+#-----------------------------------------------------------------------------------.
+# A subquery can appear in any of the following clauses in a select statement
+#
+# SELECT    - the subquery must return a single item (i.e. single row single column)
+#
+# FROM - subqueries in the FROM clause may return many rows and many columns.
+#        The subquery is treated as though it were an actual table.
+#        You need to follow the subquery with a 'name' that will be used
+#        as the name of the pseudo-table that is generated by the subquery.
+#        This is similar to the way you can name columns with aliases.
+#
+# WHERE or the HAVING - these subqueries may return the following:
+#
+#         (a)  a single row, single column , i.e. a single value
+#              e.g. a subquery that appears before or after a + sign or a > sign
+#               or anywhere that you'd expect a single value to appear.
+#
+#         (b) possibly many rows of a single column -
+#             after the IN operator
+#
+#         (c) possibly many rows, many columns -
+#             after the EXISTS operator 
+#-----------------------------------------------------------------------------------.
+```
+
+### subquery in SELECT
+
+```{r}
+#----------------------------------------------------------------------
+# Subqueries in the SELECT clause must return a single row, single column.
+#----------------------------------------------------------------------
+
+# QUESTION : 
+# Write a query that shows the title_name, price and the amount the price is above average
+# for those titles whose price is above average.
+
+sqldf("select title_name, price, price - (select avg(price) from titles) as 'amt_above_avg'
+      from titles
+      where price > (select avg(price) from titles)
+      order by title_name
+      ")
+
+
+# QUESTION - same as above but also show the average price of all books as a column in the results
+
+sqldf("select title_name, 
+              price,
+              (select avg(price) from titles) as avgPriceOfAllBooks,
+              price - (select avg(price) from titles) as 'amt_above_avg'
+      from titles
+      where price > (select avg(price) from titles)
+      order by title_name
+      ")
+
+
+# When the query above is processed, the subqueries get run and produce
+# the result 18.3875. That value is then plugged into the outer query
+# and the outer query is run. The following is what the outer query
+# would look like after the result of the subqueries are plugged into the
+# outer query. You never have to type this. It is done automatically.
+
+sqldf("select title_name, 
+              price,
+              18.3875 as avgPriceOfAllBooks,
+              price - 18.3875 as 'amt_above_avg'
+      from titles
+      where price > 18.3875
+      order by title_name
+      ")
+```
+
+### subquery after IN can return a single column
+
+```{r}
+#------------------------------------------------------------------------
+# Subqueries that return a single column of values
+# can appear after the IN operator.
+#------------------------------------------------------------------------
+
+# Show authors that live in the same city as at least one  publisher
+
+ # First let's get all the cities where publishers are located
+
+sqldf("select distinct city
+      from publishers")
+
+# You can use the "in" operator in sql to compare a value to a "list" of
+# values.
+# 
+# The following will work ... but it forces us to type in the names 
+# of the publisher's cities. If we change the data in the publishers table,
+# this "hard-coded" version of the query may not work correctly anymore.
+
+sqldf("select au_fname, au_lname, city
+       from authors
+       where city in ('New York','San Francisco','Hamburg','Berkeley')
+       order by au_lname, au_fname")
+
+
+# We can replace the list of cities with a subquery that automatically
+# figures out that list. This subquery returns a single column
+# that can be used in place of the hard-coded data from the previous query.
+
+sqldf("select au_fname, au_lname, city
+       from authors
+       where city in 
+           (
+              select distinct city 
+              from publishers
+           )
+       order by au_lname, au_fname")
+```
+
+## Correlated Subqueries
+
+```{r}
+############################
+# Correlated subqueries
+############################
+
+
+# In a "correlated" subquery, the subquery is executed once for each
+# row in the outer query. 
+# The subquery can refer to the data in the row for the outer query.
+# Notice that in the following query the sub-query
+# refers to the authors.au_id table even thought the from clause in the
+# subquery does NOT include the authors table. This is actually a reference
+# to the row from the authors table that is being processed while the subqery
+# is running. 
+#
+# This subquery will be run again and again for every row that 
+# is processed in the outer query.
+#
+# Notice that the subquery is in the where clause and the order by clause
+# at the end is once again from the outer query.
+
+# Show authors who published more than 2 titles 
+sqldf("select au_fname, au_lname
+      from authors
+      where 
+         (select count(*)
+          from title_authors
+          where authors.au_id = title_authors.au_id) > 2
+      order by au_lname, au_fname")
+
+
+sqldf("select au_fname, au_lname,
+          (select count(*)
+          from title_authors
+          where authors.au_id = title_authors.au_id) as numTitles
+      from authors
+      where 
+         (select count(*)
+          from title_authors
+          where authors.au_id = title_authors.au_id) > 2
+      order by au_lname, au_fname")
+
+
+
+#------------------------------------------------------------------.
+# You cannot run the subquery from a correlated-subquery on its
+# own. It must be part of a larger query. For example the following
+# TRIES to run the subquery from the previous example but fails
+# with an error
+#------------------------------------------------------------------.
+
+sqldf("select count(*)
+          from title_authors
+          where authors.au_id = title_authors.au_id")  # ERROR - no such column authors.au_id
+
+
+# A separate inner query is run for every row that is processed in the outer query
+
+# This is the subquery that is run for the row in the authors for Sarah Buchman
+sqldf("select count(*)
+       from title_authors
+       where 'A01' = title_authors.au_id")
+
+
+# This is the subquery that is run for the row in the authors for Wendy Heydemark
+sqldf("select count(*)
+       from title_authors
+       where 'A02' = title_authors.au_id")
+
+# This is the subquery that is run for the row in the authors for Hallie Hull
+sqldf("select count(*)
+       from title_authors
+       where 'A03' = title_authors.au_id")
+
+# etc ...
+
+
+
+
+
+#------------------------------------------------------------------.
+# The following is another way to get the same results without using any subqueries.
+# Instead of a subquery, the following query uses
+# a join and makes use of the group by and having clauses.
+#------------------------------------------------------------------.
+
+sqldf("select au_fname, au_lname
+      from authors join title_authors on authors.au_id = title_authors.au_id
+      group by authors.au_id, au_fname, au_lname
+      having count(*) > 2
+      order by au_lname, au_fname")
+
+#------------------------------------------------------------------.
+# Some people will think that the 1st version (with the subquery)
+# is easier to understand.
+#
+# Some people will think that the 2nd version (with the join, group by, having)
+# is easier to understand.
+#
+# Generally it is a matter of style - they are both valid.
+# (NOTE - As a general rule - you should avoid correlated subqueries if possible
+# as they tend to run slower than other types of queries since the correlated
+# subquery is run many times. This is a rule of thumb but depending on the 
+# exact queries, it is possible that a correlated subquery will run as 
+# fast or faster than alternate queries that return the same results.)
+#
+# HOWEVER
+#
+# If you want to actually see how many books each author wrote, only the 2nd
+# version (without the subquery) will work. See the following. This is exactly the
+# same as the 2nd query above with the addition of
+#
+#            "count(*) as num_titles)"
+#
+# on the first line of the query.
+#------------------------------------------------------------------.
+
+sqldf("select au_fname, au_lname, count(*) as num_titles 
+      from authors join title_authors on authors.au_id = title_authors.au_id
+      group by authors.au_id
+      having count(*) > 2
+      order by au_lname, au_fname")
+
+#------------------------------------------------------------------.
+# You CANNOT add the number of titles to the version with the subquery as
+# the outer query does not have access to ANY information about the titles
+# since the "from" in the outer query only includes the "authors" table. 
+# Therefore the "select" clause in the outer query may only refer
+# to information from the authors table.
+#
+# TAKEAWAY: 
+# When using a subquery in the where or having clauses
+# The only information that can be displayed by the outer query is 
+# info that is available in the tables listed 
+# in the "from" of the outer query. 
+#------------------------------------------------------------------.
+```
+
+## Table aliases with subqueries
+
+```{r}
+##################################################################
+# USING TABLE ALIASES FOR CORRELATED SUBQUERIES THAT USE THE SAME TABLES
+# IN THE INNER AND OUTER QUERIES
+#
+# In correlated subqueries if the inner query refers to the same 
+# table(s) as the outer query - you must use a table alias.
+##################################################################
+
+# Show the books whose length in pages is longer than the average
+# length of books OF THE SAME TYPE
+# 
+# You need to use a correlated subquery here. 
+#
+# You need to use a subquery to compare the length of a particular
+# book (which is a non-aggregated value) to the avg(length) 
+# (which is an aggregated value). 
+#
+# To be more specific, you must use a "correlated" subquery
+# since each title will have a potentially differnt type. Therefore
+# the average length will be potentially different for books
+# of different types and sql will need to run the subquery once
+# for each row in the titles table.
+#
+# To be even more specific ... the inner query and the 
+# outer query refer to the SAME table, i.e. the titles table.
+# AND the inner query must refer to information that is taken from 
+# the outer query for that table. Therefore you must somehow make 
+# it clear in the inner query which information is from the outer-query-title-table
+# and which information is from the version of the title table that is
+# in the inner query's from clause. 
+# This is done by using "alias" names for the outer query's copy of the titles table
+# and a different "alias" for the inner query's copy of the titles table as shown below.
+
+sqldf("
+      select title_name, type, pages
+      from titles as outerTitles 
+      where pages > 
+          (
+            select avg(pages) 
+            from titles as innerTitles
+            where innerTitles.type = outerTitles.type
+          )
+      order by type, pages desc
+      ")
+
+# We can prove to ourselves that this worked by showing the average
+# number of pages for each type of title
+
+sqldf("select type, avg(pages)
+      from titles
+      group by type
+      order by type")
+
+# We can see those books that are below average in length for their
+# type of book by simply changing the > to a < in 
+# the query
+
+sqldf("
+      select title_name, type, pages
+      from titles as outerTitles 
+      where pages <
+          (
+            select avg(pages) 
+            from titles as innerTitles
+            where innerTitles.type = outerTitles.type
+          )
+      order by type, pages desc
+      ")
+```
+
+## EXISTS (some subquery)
+
+```{r}
+#-------------------------------------------------------------------------------
+# Using "EXISTS" with correlated subqueries that may or may not return any rows.
+#
+# The EXISTS keyword can be used in WHERE and in HAVING clauses.
+#
+# e.g.    WHERE EXISTS (SOME_SUBQUERY)
+#
+#         HAVING EXISTS (SOME_SUBQUERY)
+#
+# The EXISTS keyword is always followed by a subquery.
+#
+# If the subquery returns any rows then EXISTS (subquery) evaluates to TRUE. 
+# If the subquery returns zero rows then EXISTS (subquery) evaluates to FALSE. 
+#-------------------------------------------------------------------------------
+
+# "EXISTS ( some subquery )"  is used inside a where or having clause. 
+# The row from the outer query is included in the results if the subquery
+# contains ANY rows. The actual data resturned by the subqeury is not significant.
+# The only significance is if the subquery returns SOMETHING or returns NOTHING.
+
+# EXAMPLE:
+# Show authors that live in the same city as at least one publisher.
+#
+# [NOTE: above we saw a different way to do this by using "IN (subquery)" ]
+
+sqldf("select au_fname, au_lname, authors.city
+      from authors
+      where EXISTS
+              (select *
+               from publishers
+               where publishers.city = authors.city)
+      order by au_lname, au_fname
+      ")
+
+# You know that the subquery is a CORRELATED subquery because it 
+# cannot be run by itself (as shown below). This is because
+# the query refers to the the authors table but does not include
+# the authors table in the from clause.
+sqldf( "select *
+          from publishers
+        where publishers.city = authors.city")
+```
+
+## MULTIPLE WAYS OF ACCOMPLISHING THE SAME THING
+
+```{r}
+#############################################################.
+# MULTIPLE WAYS OF ACCOMPLISHING THE SAME THING
+#
+# There are often multiple different ways you can write queries
+# that result in the same output. Different people will approach
+# the same problem differently. 
+#
+# When faced with different approaches, you should try if possible to
+# avoid correlated subqueries. This is because
+# as a "rule of thumb" correlated subqueries will run slower
+# than other approaches since the subquery is re-run many times, 
+# i.e. once for  each row in the outer query.
+#
+# The following is an example of a query that can be accomplished
+# in many several different ways.
+#############################################################.
+
+#-------------------------------------------------------.
+# QUESTION:
+#
+#   Write a query to show the names of the authors
+#   who did NOT write any psychology books
+#-------------------------------------------------------.
+
+
+#...........................................................
+# One answer - using a correlated subquery with NOT EXISTS
+#...........................................................
+
+# Authors who did not write any psychology books:
+
+sqldf("select au_fname, au_lname
+       from authors
+       where NOT EXISTS
+             (select * 
+              from title_authors join titles 
+                                   on title_authors.title_id = titles.title_id
+              where title_authors.au_id = authors.au_id and
+                    type = 'psychology')
+      
+       order by au_lname, au_fname
+      ")
+
+# FYI - in case you're curious - this is a query for the authors who DID
+# write psychology books
+
+# authors who did write psychology books
+sqldf("select distinct au_fname, au_lname
+       from authors join title_authors on authors.au_id = title_authors.au_id
+                    join titles on title_authors.title_id = titles.title_id
+       where type = 'psychology'")
+
+#...........................................................
+# Another answer - using EXCEPT
+#
+# The first query before the except retrieves all the authors names.
+# The 2nd query after the EXCEPT retrieves authors who wrote psychology books.
+# The EXCEPT removes the rows returned by the 2nd query from the results of
+# the first query.
+#...........................................................
+
+# Authors who did not write any psychology books:
+
+sqldf("-- get all the authors' names
+       select au_fname, au_lname
+       from authors
+      
+   EXCEPT   -- except removes any row that appears in the 2nd query
+   
+      -- get the authors who wrote psychology books
+      select distinct au_fname, au_lname
+      from authors join title_authors on authors.au_id = title_authors.au_id
+                   join titles on titles.title_id = title_authors.title_id
+      where type = 'psychology'
+   
+   order by au_lname, au_fname")
+
+
+#...........................................................
+# 
+# Another answer - using a LEFT JOIN combined with a subquery in a FROM clause.
+#
+# You can use a subquery in a FROM clause to create a temporary table
+# that will be used for the query. The temporary table needs to be
+# given an alias. 
+#
+# The example below uses a left join and a subquery in the FROM clause
+# to retrieve the authors who did not write psychology books.
+# This is yet one more way to accomplish the same results as the 
+# examples above.
+#---------------------------------------------------------------------.
+
+# Yet another way of doing the same thing - by using a LEFT join.
+# This also shows an example of using a subquery in a from clause
+# to create a temporary table.
+
+sqldf("
+  select au_fname, au_lname
+  from authors LEFT JOIN 
+
+           -- the following subquery creates a temporary table
+           -- that contains the authors/titles of psychology books
+  
+           (select *                 
+            from title_authors join titles 
+                                 on title_authors.title_id = titles.title_id
+            where type = 'psychology') AS psychologyTitles
+  
+       on authors.au_id = psychologyTitles.au_id
+  
+  where psychologyTitles.au_id is NULL
+  order by au_lname, au_fname")
+
+# You can see the contents of the temporary table by running the
+# subquery by itself as shown here:
+sqldf("select *
+       from title_authors join titles 
+                            on title_authors.title_id = titles.title_id
+       where type = 'psychology'")
+
+# You can see all the columns from the left join here
+sqldf("
+  select *
+  from authors LEFT JOIN 
+
+           -- the following subquery creates a temporary table
+           -- that contains the authors/titles of psychology books
+  
+           (select *                 
+            from title_authors join titles 
+                                 on title_authors.title_id = titles.title_id
+            where type = 'psychology') AS psychologyTitles
+  
+       on authors.au_id = psychologyTitles.au_id
+  
+  -- where psychologyTitles.au_id is NULL
+  order by au_lname, au_fname")
+```
+
+## case - like an if for SQL
+
+```{r}
+######################################################################.
+# The case operator can appear in a SELECT clause to create a custom column.
+# It works similar to IF/ELSE/ELSE IF constructs that appear in other 
+# languages.
+#
+# The example below should be easy to understand.
+#
+# If there is no ELSE part and no conditions are true, it returns NULL.
+#
+# SELECT ... SOME COLUMNS ... , 
+#
+#       case when LOGICAL EXPRESSION then RESULT1
+#            when LOGICAL EXPRESSION then RESULT2
+#            when LOGICAL EXPRESSION then RESULT3
+#              ... etc
+#            else RESULT_IF_NO_LOGICAL_EXPRESSION_WAS_TRUE
+#       end   as   COLUMN_NAME,
+#
+#       ... SOME OTHER COLUMNS ...
+#
+# FROM ... etc
+######################################################################.
+
+# EXAMPLE - this shows the lengths and prices of books in categories 
+#           rather than actual numbers.
+
+sqldf("select title_name,
+              case
+                 when pages is null then 'unknown'
+                 when pages < 100 then 'short'
+                 when pages < 500 then 'medium'
+                 when pages < 1000 then 'long'
+                 else  'crazy long'
+              end as length,
+              pages,
+              case
+                 when price < 25 then 'cheap'
+                 when price is null then 'unknown'
+                 when price < 30 then 'midrange'
+                 else 'expensive'
+              end as afforability,
+              price
+       from titles
+       order by pages, title_name")
+
+
+# EXAMPLE:
+#
+# NOTE: Even if you don't understand this description the results below
+# should be pretty easy to understand.
+#
+# DESCRIPTION: 
+# Show a list of all the authors.
+#
+# Authors who wrote at least one psychology
+# book should appear on a row with the word psycology in the column 
+# named psycology_or_other.
+#
+# Authors who wrote non-psychology books should appear in a row with the
+# word "other" in the psychology_or_other column.
+#
+# Authors who wrote both psychology and non-psychology books should
+# appear in two different rows. One for pyschology and one for other.
+
+sqldf("select distinct
+              case when type = 'psychology' then 'psychology'
+                   else 'other'
+              end as pyschology_or_other,
+              au_lname, au_fname
+      from authors join title_authors on authors.au_id = title_authors.au_id
+                   join titles on titles.title_id = title_authors.title_id
+      order by pyschology_or_other, au_lname, au_fname")
+```
+
+## self joins
+
+```{r}
+######################################################
+# Self joins
+######################################################
+
+# A "self join" is used when you want to compare two different rows 
+# FROM THE SAME TABLE. To do so, the from clause uses two different
+# copies of the same table in a join. 
+# The best way to understand this is with an example:
+
+#--------------------------------------------------------------------------
+# find the names of authors who share the same address as another author
+#--------------------------------------------------------------------------
+
+# We want to compare two different rows from the authors table to see if
+# they are from the same address. 
+
+
+# Look at the where clause ... why do you think it uses a ">" sign?
+sqldf("
+      select authors1.au_fname, authors1.au_lname, authors2.au_fname, authors2.au_lname, authors1.address
+      from authors authors1 join authors authors2 on authors1.address = authors2.address
+      where authors1.au_id > authors2.au_id ")
+
+# let's analyze what's really going on by showing the CROSS JOIN that happens
+# internally as the above select statement is being processed
+sqldf("select authors1.au_id, authors1.au_fname, authors1.au_lname, authors1.address,
+              authors2.au_id, authors2.au_fname, authors2.au_lname, authors2.address
+       from authors authors1 CROSS JOIN authors authors2
+       order by authors1.au_id, authors2.au_id")
+
+# If you take out the where clause, you will get extra rows
+sqldf("
+      select authors1.au_fname, authors1.au_lname, authors2.au_fname, authors2.au_lname, authors1.address
+      from authors authors1 join authors authors2 on authors1.address = authors2.address
+      ")
+
+
+# To understand why you get extra rows without the where take a look at the output
+# of the cross join of the authors table with itself. It is this cross join
+# that is then filtered by the on clause and by the where clause.
+sqldf("select authors1.au_fname, authors1.au_lname , authors1.address, authors2.au_fname, authors2.au_lname, authors2.address
+      from authors as authors1   cross join    authors as authors2
+      order by authors1.au_lname, authors1.au_fname, authors2.au_lname, authors2.au_fname")
+
+
+
+# You might think that we'd solve the problem if we used != instead of >
+# However, this is still a problem. Can you figure out why?
+sqldf("
+      select authors1.au_fname, authors1.au_lname, authors2.au_fname, authors2.au_lname, authors1.address
+      from authors authors1 join authors authors2 on authors1.address = authors2.address
+      where authors1.au_id != authors2.au_id ")
+
+
+# if we want to check that multiple columns are equal we can do that too 
+sqldf("
+      select authors1.au_fname, authors1.au_lname, authors2.au_fname, authors2.au_lname, authors1.address
+      from authors authors1 join authors authors2 
+                  on 
+           authors1.address = authors2.address and
+           authors1.city = authors2.city and
+           authors1.state = authors2.state and
+           authors1.zip = authors2.zip
+      where authors1.au_id > authors2.au_id ")
+
+# If we used a subquery for this type of question
+# we could not see both authors being displayed on the same row
+```
+
+## self joins - another example
+
+```{r}
+#------------------------------------------------------------------------
+# ANOTHER SELF JOIN EXAMPLE
+#------------------------------------------------------------------------
+# Organization management hierarchy 
+# - see the file "orgChart_large.png"
+#------------------------------------------------------------------------
+
+employees = data.frame(
+  empid = c( 1,         2,        3,          4,         5,   6,          7,           8,    9,         10,     11),
+  name = c("ann",      "floyd", "randall",   "albert","shawn","tyrone", "calvin", "harold", "tanya", "jorge", "claire" ),
+  lastname = c("sanders","flake","rodgers",   "aames","stevens","tex", "coolidge", "hughs", "tamashevsky","jones", "coolidge" ),
+  salary = c(200,       50,     75,            90,     150,     250,     75,        190,      150,    175,      110 ),
+  mgr = c(NA,            1,        1,           1,       2,      3,        3,       2,         7,      2,        7)
+)
+
+employees
+
+
+# write a query that shows SO_AND_SO is managed by SO_AND_SO for each person
+
+sqldf("select emp.name || ' is managed by ' || manager.name
+       from employees AS emp join employees AS manager on emp.mgr = manager.empid
+       order by emp.name
+      
+      ")
+
+# To make it a little easier to read we could use the 
+# aliasses emps and mgrs instead of emp1 and emp2
+
+sqldf("select emps.name || ' is managed by ' || mgrs.name
+       from employees emps join employees mgrs on emps.mgr = mgrs.empid
+       order by emps.name
+      
+      ")
+
+sqldf("select emps.name || ' is managed by ' || mgrs.name
+       from employees as emps join employees as mgrs on emps.mgr = mgrs.empid
+       order by emps.name
+      
+      ")
+
+
+sqldf("select publishers.pub_name, titles.title_name
+       from publishers join titles on publishers.pub_id = titles.pub_id
+       where publishers.pub_name like 'A%'")
+
+sqldf("select publishers.pub_name, titles.title_name
+       from publishers join titles on publishers.pub_id = titles.pub_id
+                                      and publishers.pub_name like 'A%'")
+
+
+sqldf("select publishers.pub_name, titles.title_name
+       from publishers, titles 
+       where publishers.pub_id = titles.pub_id
+             and publishers.pub_name like 'A%'")
+
+
+
+# It might help to understand what's going on by looking
+# at the cross join of the two tables.
+
+sqldf("select emps.*, mgrs.*
+       from employees as emps CROSS JOIN employees as mgrs
+       order by emps.empid, mgrs.empid")
+```
+
+## Practice (question #rs are from booksDatabase Word document.)
+
+```{r}
+#######################################################################.
+# PRACTICE with subqueries, outer joins, unions and other stuff.
+# Note that many of the questions shown below come from the
+# booksDatabase word document. The numbers for the questions
+# are the numbers from that document.
+#######################################################################.
+```
+
+### Question 35
+
+```{r}
+# Show the title names  and number of pages for those books that are
+# longer than (ie.  more pages than) the average length of all books.
+```
+
+```{r}
+#~~~~~~~~~~~~~~
+# ANSWER
+#~~~~~~~~~~~~~~
+
+sqldf("
+select title_name , pages
+from titles
+where pages >= (select avg(pages) from titles)
+")
+```
+
+### Question 36
+
+```{r}
+#	Show each publisher's name and the number of authors who have written books
+# for that publisher.
+```
+
+```{r}
+#~~~~~~~~~~~~~~
+# ANSWER
+#~~~~~~~~~~~~~~
+
+sqldf("
+select pub_name, count(DISTINCT authors.au_id) as '# of authors'
+from authors join title_authors on authors.au_id = title_authors.au_id 
+join titles on title_authors.title_id = titles.title_id 
+join publishers on publishers.pub_id = titles.pub_id
+group by publishers.pub_id, pub_name;
+")
+
+# EXPLANATION
+
+# The following query shows the first step that would be necessariy to thinking about
+# how to find the final answer (shown above). The following shows a separate
+# row for each publisher and an author that wrote for that publisher. If you
+# order the results by publisher, it is easy to see that you can think of
+# each different publisher as a "group". That is what the group by
+# does in the answer (see above). The count(DISTINCT authors.au_id)
+# gets the number of "distinct" authors for the particular publisher.
+# The "distinct" is necessary to ensure that you don't count an author
+# twice for the same publisher (e.g. Sarah Buchman wrote two books
+# for Schandenfreude Press but should only be counted once as an
+# author for Scandenfreude Press)
+
+sqldf("
+select pub_name, authors.au_fname, authors.au_lname
+from authors join title_authors on authors.au_id = title_authors.au_id 
+join titles on title_authors.title_id = titles.title_id 
+join publishers on publishers.pub_id = titles.pub_id
+order by pub_name, au_fname, au_lname
+")
+```
+
+### Question 36.5
+
+```{r}
+# Show the pub_name and the number of titles published by that publisher. 
+```
+
+```{r}
+#~~~~~~~~~~~~~~
+# ANSWER
+#~~~~~~~~~~~~~~
+
+sqldf("select pub_name, count(*) as num_titles
+       from publishers join titles on publishers.pub_id = titles.pub_id
+       group by publishers.pub_id, pub_name
+       order by pub_name")
+```
+
+
+### Question 37
+
+```{r}
+# Show the pub_name and the number of titles published by that publisher. 
+# Only include publishers for whom at least 4 authors have worked. 
+#
+# (this question combines the concepts of the previous two questions)
+```
+
+```{r}
+#~~~~~~~~~~~~~~~~.
+# ANSWER
+#~~~~~~~~~~~~~~~~.
+
+sqldf("
+select pub_name, count(*) as 'Number of Titles'
+from publishers as pub1 join titles on pub1.pub_id = titles.pub_id
+group by pub1.pub_id, pub_name
+having   4 <= (	select count(DISTINCT authors.au_id)
+                from authors join title_authors on authors.au_id = title_authors.au_id 
+                join titles on title_authors.title_id = titles.title_id 
+                join publishers as pub2 on pub2.pub_id = titles.pub_id
+                where pub2.pub_id = pub1.pub_id ) 
+order by pub_name
+")
+
+# Note - the subquery is a correlated subquery. 
+# It returns the number of authors who published with a particular publisher.
+# The following are the acutal subqueries that are run for each publisher:
+# This happens automatically.
+
+# For Abatis - 'P01'
+
+sqldf(" select count(DISTINCT authors.au_id)
+        from authors join title_authors on authors.au_id = title_authors.au_id 
+                     join titles on title_authors.title_id = titles.title_id 
+                     join publishers as pub2 on pub2.pub_id = titles.pub_id
+        where pub2.pub_id = 'P01'")
+
+# For Core Dump Books - 'P02'
+
+sqldf(" select count(DISTINCT authors.au_id)
+        from authors join title_authors on authors.au_id = title_authors.au_id 
+                     join titles on title_authors.title_id = titles.title_id 
+                     join publishers as pub2 on pub2.pub_id = titles.pub_id
+        where pub2.pub_id = 'P02'")
+```
+
+### Question 38
+
+```{r}
+# Show the names of publishers who did not publish any books.
+# (I guess they are just getting started in the business ... )
+```
+
+```{r}
+#~~~~~~~~~~~~~~~~.
+# ANSWER
+#~~~~~~~~~~~~~~~~.
+
+# ANSWER - with a subquery
+
+sqldf("
+select pub_name 
+from publishers  as   pub1
+where not exists
+( select * 
+    from publishers  as pub2  join titles on pub2.pub_id = titles.pub_id
+  where pub2.pub_id = pub1.pub_id );
+")
+
+
+# ANSWER - with a left join
+
+sqldf("
+select pub_name from publishers left join titles on publishers.pub_id = titles.pub_id
+where title_id is NULL;
+")
+```
+
+### Question 39(a)
+
+```{r}
+# List the name of each publisher and the total number of books that
+# each publisher has published. Sort the results so that the publishers who
+# published the most books appear at the top. If two or more publishers
+# published the same number of books then they should be listed in alphabetical order. 
+#
+# a.	The answer should only include publisher who have published some books.
+```
+
+```{r}
+#~~~~~~~~~~~~~~~~.
+# ANSWER
+#~~~~~~~~~~~~~~~~.
+
+sqldf("
+select pub_name, count(*)
+from titles join publishers on publishers.pub_id = titles.pub_id
+group by pub_name
+order by count(*) desc, pub_name;
+")
+```
+
+### Question 39(b)
+
+```{r}
+# (2nd part of previous question)
+#
+# b.	This time make sure to also include publishers who have published zero books
+```
+
+```{r}
+#~~~~~~~~~~~~~~~~.
+# ANSWER
+#~~~~~~~~~~~~~~~~.
+
+sqldf("
+select pub_name, count(titles.title_id)
+from publishers left join titles on publishers.pub_id = titles.pub_id
+group by pub_name
+order by count(*) desc, pub_name;
+")
+
+
+# ANSWER - with a UNION - however the previous answer is shorter and more to the point
+
+sqldf("
+select pub_name , 0  as  NumTitles
+from publishers left join titles on publishers.pub_id = titles.pub_id
+where title_id is NULL 
+
+UNION
+
+select pub_name, count(*) as NumTitles
+from titles join publishers on publishers.pub_id = titles.pub_id
+group by pub_name;
+")
+```
+
+### Question 46
+
+```{r}
+#################.
+# QUESTION
+#################.
+
+# Show the names of the most prolific authors, i.e. the authors 
+# who have written the most books. Note that there could be
+# several different authors who are "tied" for the most number of books 
+# written. Sort the names in alphabetical order (last name, first name)
+# Also show the au_id and the number of titles that the author wrote.
+```
+
+```{r}
+#~~~~~~~~~~~~~~~~.
+# ANSWER
+#~~~~~~~~~~~~~~~~.
+
+# This is a rather complex answer.
+# This approach uses a subquery within a subquery.
+# There may be other approaches too.
+# There may be simpler answers too.
+# 
+# To explain we will show the subqueries and what they produce.
+# Then we will show the full query that includes the subquery.
+#
+# The following query is NOT the answer. It is simply a query that 
+# shows the number of books that were written by each author. This
+# will be used as a subquery in the answer shown below.
+sqldf("
+          select authors.au_id, count(*) as numTitles
+          from authors join title_authors on authors.au_id = title_authors.au_id
+          group by authors.au_id, au_fname, au_lname
+")
+
+# We'd like to get the max number of titles that an author wrote. 
+# This amounts to getting the highest number from the numTitles column
+# in the previous query. We can do that by using the above query 
+# as a subquery in the from clause.
+
+sqldf("
+          select max(numTitles2) 
+          from 
+               (select authors.au_id, count(*) as numTitles2
+                from authors join title_authors on authors.au_id = title_authors.au_id
+                group by authors.au_id, au_fname, au_lname)
+
+      ")
+
+# Finally we can put this all together to answer our question. 
+# The following is the FULL ANSWER to the original question.
+# It uses the above query as a subquery in the having clause (see 
+# the code below). Note that in the following code there is a
+# subquery inside of a subquery.
+#
+# FINAL ANSWER:
+
+sqldf("
+select authors.au_id, au_fname, au_lname, count(*) as numTitles
+from authors join title_authors on authors.au_id = title_authors.au_id
+group by authors.au_id, au_fname, au_lname
+having numTitles = 
+          (select max(numTitles2) 
+           from 
+               (select authors.au_id, count(*) as numTitles2
+                from authors join title_authors on authors.au_id = title_authors.au_id
+                group by authors.au_id, au_fname, au_lname))
+order by au_lname, au_fname
+")
+```
+
+
+<!--
+
+IGNORE THE REST OF THIS FILE
+
+```{r}
+#######################################################.
+# IGNORE THE REST OF THIS FILE
+#######################################################.
+
+
+# The following left join works to show all publishers that do not have any
+# titles in the database. 
+sqldf("
+select pub_name
+from publishers left join titles on publishers.pub_id = titles.pub_id
+where titles.type is null
+")
+
+# The where clause in the above query uses titles.type. This is not the
+# best column to use for this purpose since titles.type MIGHT be null (i.e. NA)
+# for a "regular row" of the titles table.
+# It is better to use a column such as titles.title_id since title_id cannot
+# normally be NULL since it is a primary key field.
+sqldf("
+select pub_name
+from publishers left join titles on publishers.pub_id = titles.pub_id
+where titles.title_id is null
+")
+
+
+# You can analyze what's going on a little better by showing ALL columns
+# from both tables.
+sqldf("
+select publishers.*, titles.*    
+from publishers left join titles on publishers.pub_id = titles.pub_id
+where titles.type is null
+")
+
+
+# If you take out the where clause you'll see all rows from the left join.
+# This includes all rows that would come from a "regular" (i.e. inner) join
+# PLUS any rows from the LEFT HAND table that DO NOT have corresponding rows
+# in the right hand table (in this case Tenterhooks press is the only such row.)
+sqldf("
+select publishers.*, titles.*
+from publishers left join titles on publishers.pub_id = titles.pub_id
+")
+
+# Add a title that does not have an associated publisher in the publishers table
+titles
+newRow = data.frame(title_id = "T14", title_name="Who ate my eggs?", type="children", pub_id="P99", pages=99, price=9.99, sales=100, pubdate='8/1/2020 0:00')
+newRow
+titles = rbind(titles, newRow)
+
+
+# now we can reverse the tables (i.e. move the titles table to the right and
+# publishers table to the left of the JOIN) and you'll see the rows from the titles table that
+# dont have associated rows in the publishers table
+# ( You dont have to change the order in the on clause).
+#
+# Let's start without the where clause
+sqldf("
+select publishers.*, titles.*    
+from titles left join publishers on publishers.pub_id = titles.pub_id
+")
+
+
+# If you want to see JUST the titles that don't have associated rows in the publishers
+# table you could add a where clause as shown below
+sqldf("
+select publishers.*, titles.*    
+from titles left join publishers on publishers.pub_id = titles.pub_id
+where publishers.pub_id is NULL
+")
+
+
+
+
+
+
+
+
+# The where clause in the above query uses titles.type. This is not the
+# best column to use for this purpose since titles.type MIGHT be null (i.e. NA)
+# for a "regular row" of the titles table.
+# It is better to use a column such as titles.title_id since title_id cannot
+# normally be NULL since it is a primary key field.
+sqldf("
+select publishers.*, titles.*
+from publishers left join titles on publishers.pub_id = titles.pub_id
+")
+
+
+# If you want to see JUST the titles that don't have associated rows in the publishers
+# table you could add a where clause as shown below
+sqldf("
+select publishers.*, titles.*    
+from titles left join publishers on publishers.pub_id = titles.pub_id
+")
+
+
+
+
+# the following simulates a full join
+sqldf("
+select publishers.*, titles.*
+from publishers left join titles on publishers.pub_id = titles.pub_id
+
+union
+
+select publishers.*, titles.*    
+from titles left join publishers on publishers.pub_id = titles.pub_id
+")
+
+
+sqldf("select title_name, price, rtrim(price,'0123456789') as 'whole number price', ltrim(price,'0123456789') as 'cents', trim(price,'0123456789') as 'a period'
+      from titles")
+
+
+
+sqldf("select title_name, price, rtrim(price,'0123456789') as 'whole number price', 
+                                 ltrim(price,'0123456789') as 'cents', 
+                                 trim(price,'0123456789') as 'a period',
+                                 rtrim(price,'.0123456789') as 'nothing left'
+      from titles")
+```
+
+-->

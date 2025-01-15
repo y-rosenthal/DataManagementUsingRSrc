@@ -1,0 +1,1505 @@
+# aggregate functions, group by, having
+
+```{r}
+#| echo: false
+#| output: false
+
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
+
+## The "books database"
+
+In this and other sections we will be referring to the "books database".
+
+Click below 
+to download a document that describes the books database
+and database technology in general. 
+This document also contains many questions/answers to test your knowledge
+of SQL.
+You can also download the CSV files
+that contain the data for the books database.
+
+
+## click to download the specified files
+
+- [booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v020.docx) 
+- [titles.csv](data/booksDatabase/titles.csv)
+- [authors.csv](data/booksDatabase/authors.csv)
+- [publishers.csv](data/booksDatabase/publishers.csv)
+- [title_authors.csv](data/booksDatabase/title_authors.csv)
+- [royalties.csv](data/booksDatabase/royalties.csv)
+
+
+
+```{r}
+# load the package we'll need
+if (!require(sqldf)) { install.packages("sqldf"); require(sqldf) }
+if (!require(readr)) { install.packages("readr"); require(readr) }
+
+# Read in the data for the books database - see the 
+titles = read_csv("data/booksDatabase/titles.csv", na="NULL", show_col_types=FALSE)
+authors = read_csv("data/booksDatabase/authors.csv", na="NULL", show_col_types=FALSE)
+publishers = read_csv("data/booksDatabase/publishers.csv", na="NULL", show_col_types=FALSE)
+title_authors = read_csv("data/booksDatabase/title_authors.csv", na="NULL", show_col_types=FALSE)
+royalties = read_csv("data/booksDatabase/royalties.csv", na="NULL", show_col_types=FALSE)
+```
+
+## "non-aggreate functions" vs "aggregate functions" 
+
+```{r}
+############################################################################
+# Intro to SQL functions:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   SQL contains two different types of functions
+#
+#   - non-aggregate functions - return a different value for every row
+#
+#   - aggregate functions - return a single value for multiple rows in the table
+#     These functions combine several data values in a single value. 
+#     For example the sum function will combine several values into a single sum.
+#     see below for more details
+#
+############################################################################
+```
+
+### The titles table
+
+```{r}
+# Let's remember what is in the titles table.
+sqldf("select * from titles")
+```
+
+### Example of a non-aggregate function - upper
+
+```{r}
+#................................................................
+# Example of non-aggregate function
+#
+# The upper function simply transforms its argument to UPPERCASE.
+#................................................................
+
+# we can get just the titles and the prices:
+sqldf("select title_name, price from titles")
+
+# The following uses the upper function to make each title UPPER CASE
+sqldf("select upper(title_name), price from titles")
+```
+
+### Example of an aggregate function - avg
+
+```{r}
+#................................................................
+# Example of an aggregate function
+#
+# The avg function takes the average of a set of a set of values.
+#................................................................
+
+# show all the prices
+sqldf("select price from titles")
+
+# show the average of the prices
+sqldf("select avg(price) from titles")
+```
+
+## Demonstrating non-aggreate functions with simple select statements
+
+```{r}
+##############################################################################
+# queries with JUST a select clause
+##############################################################################
+
+# It's not the most common thing to do but you can write a select statement
+# that does not actually retrieve any information from any table. 
+# 
+# The purpose is to use the SQL language to calculate values, similar to
+# how you can use R or a calculator to calculate sums, products, etc.
+#
+# This feature will help us demonstrate some of the sql functions below.
+# 
+# Example:
+
+# perform some calculations and display the results
+sqldf("select 3+2,   10*2,   23/5,   23.0/5")    # show the results of various calculations
+
+
+# We can include our own names for the columns.
+# When you change the name of a column, the new column name is known as a 'column alias'
+sqldf("select 3+2 as A,   10*2 as B,   23/5 as C,   23.0/5 as D")    
+
+# You don't need the "as" when creating column aliases
+# ... but some people do so anyway since it reads nicer with the "as"
+#
+# same results as above
+sqldf("select 3+2 A,   10*2 B,   23/5 C,   23.0/5 D")    
+
+# The following is not really doing anything useful but it
+# helps to demonstrate what the upper function does.
+# This technique is used on the sqlitetutorial.net website
+# to demonstrate how many of the SQLite functions work. 
+#
+# For example, click on the specific function names you find on the following
+# page for more info about the functions and examples of using the functions.
+#   https://www.sqlitetutorial.net/sqlite-string-functions/
+
+sqldf("select upper('abcde')")
+```
+
+## Non-aggreate functions in SQLite
+
+```{r}
+#----------------------------------------------------
+#
+# Non-aggregate functions in SQLite
+#
+#----------------------------------------------------
+
+
+# The non-aggregate functions are NOT defined as part of the ANSI SQL standard.
+# Every database management system software offers their own versions of 
+# non-aggregate functions.  For example, MySQL, Microsoft SQL Server, Postgres
+# and sqlite all have different non-aggregate functions that they make available.
+# To undertand how to use these function, you need to see the documentation
+# for your particular version of SQL. See the following webpage for
+# some functions in SQLite. We will first look at the 
+# "string functions" i.e. functions that work with "string" values
+# (i.e. character values):
+#
+#     https://www.sqlitetutorial.net/sqlite-string-functions/
+#
+# The string functions available in sqlite are the following.
+# See the website for more details:
+#
+#    substr, trim, rtrim, ltrim, length, replace, upper, lower, instr
+
+# first let's remember what is in the titles table
+sqldf("select * from titles")
+```
+
+### upper() and lower() functions
+
+```{r}
+#........................................................
+#
+# upper ( character_value ) - returns the UPPERCASE version of the character value
+#
+# lower ( character_value ) - returns the lowercase version of the character value
+# 
+#........................................................
+
+# show first 5 titles 
+sqldf("select title_name
+       from titles
+       limit 5")
+
+# show the first 5 titles in UPPERCASE
+sqldf("select upper(title_name)
+      from titles
+      limit 5")
+
+
+# Use a more friendly column name (i.e. a 'column alias').
+# i.e. display "title" at the top of the column instead of "upper(title_name)"
+sqldf("select upper(title_name) as title
+      from titles
+      limit 5")
+
+# show both the original title and the uppercase version in the same query
+sqldf("select title_name, upper(title_name) as TITLE_NAME
+      from titles
+      limit 5")
+
+# show the title in addition to other information
+sqldf("select upper(title_name) as TITLE_NAME, price
+      from titles
+      limit 5")
+
+# In SQLite, you can use the * along with other column names
+# but note that this is not standard.
+# Not every SQL will accept the * unless it is the only value in the select clause.
+#
+# Notice that the * stands in for ALL column names, including the title_name
+# even though you already displayed the title_name.
+
+sqldf("select upper(title_name) as TITLE_NAME, *
+       from titles
+       limit 5")
+```
+
+### ltrim() , rtrim() , trim()
+
+```{r}
+#.........................................................................
+#
+# ltrim ( string, [character] )
+# rtrim ( string, [character] )   
+# trim  ( string, [character] )
+#
+# ARGUMENTS
+#   - string - the value to be modified
+#
+#
+#   - [character] 
+#
+#     The [brackets] in the documenation indicate that this value is optional.
+#     If specified, this is expected to be a string (ie. a character value 
+#     enclosed in 'single quotes'). The characters in the string will be removed
+#     from the left (or right) hand side of the string:
+#        the l in ltrim stands for left
+#        the r in rtrim stands for right
+#.........................................................................
+
+# let's see the original data
+sqldf("select title_name, pubdate
+      from titles")
+
+# get rid of the time indicator from the end of the pubdate
+sqldf("select title_name, rtrim(pubdate, '0:') as publication_date
+      from titles")
+```
+
+### substr( string, start, length )
+
+```{r}
+#........................................................
+# substr ( string, start, length)
+# 
+# returns a "substring", i.e. a portion of the string (ie. charcter value).
+# ARGUMENTS:
+#    start - the position to start taking info from
+#    length - the number of characters to include
+#........................................................
+
+# get just the number from the title_id
+sqldf("select title_id, substr(title_id, 2, 2) as title_number from titles")
+
+
+# If length is too long the rest of the string is taken.
+sqldf("select title_id, substr(title_id, 2, 200) as title_number from titles")
+
+# abbreviate the title
+sqldf("select title_name, substr(title_name, 1, 20) as abbreviated_title from titles")
+
+# abbreviate the title (add on '...' at the end of every value - not just the ones that were shortened)
+sqldf("select title_name, substr(title_name, 1, 20) || ' ...' as abbreviated_title from titles")
+```
+
+## Practice
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# QUESTION
+# Write a select statement that retrieves all books that were published 
+# during a month with a single digit.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+sqldf("select *
+       from titles
+       where substr(pubdate, 2, 1) = '/'
+       order by title_name")
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Question
+# Write a select statement that lists the title_name, type and publication date
+# of those books that were published in October, November or December 
+# (i.e. months whose numeric value is 2 digits)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+# We could simply use != 
+
+sqldf("select title_name, type, pubdate
+       from titles
+       where substr(pubdate, 2, 1) != '/'
+       order by pubdate")
+
+
+# ANSWER
+
+# One way: Identify those rows that have a 2 digit month as those rows which
+# have a '/' in the 3rd position of the pubdate.
+#
+# Notice that the books with a 1 digit months in the pubdate
+# do not appear in the results.
+
+sqldf("select title_name, type, pubdate 
+       from titles
+       where substr(pubdate, 3, 1) = '/'")
+
+# Another way: Identify those rows for which the first 2 characters of the 
+# pubdate are '10', '11' or '12'
+
+sqldf("select title_name, type, pubdate 
+       from titles
+       where substr(pubdate, 1, 2) in ('10','11','12')
+      ")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Question
+# Write a select statement that lists the title_name and day of the month 
+# that each title was published.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+# To find the day of the month, let's first trim away the numbers from the 
+# left and the right. Then we'll trim away the /'s from the left and the right
+# to leave just the day of the month.
+
+
+# We'll start by just trimming away the numbers spaces and colons.
+sqldf("select title_name, trim(pubdate, '0123456789: ') 
+       from titles")
+
+# Now for the final answer we can also trim away the slashes
+sqldf("select title_name, trim(trim(pubdate, '0123456789: '),'/') as dayOfMonth
+       from titles")
+
+# NOTE - the following DOES NOT WORK - because it trims off EVERY
+sqldf("select title_name, trim(pubdate, '0123456789: /') as dayOfMonth
+       from titles")
+```
+
+### Other functions in SQLite
+
+```{r}
+#------------------------------------------------------------------
+#
+# see these webpages for examples of the other functions
+#    https://www.sqlitetutorial.net/sqlite-functions/sqlite-instr/
+#    https://www.techonthenet.com/sqlite/functions/index.php
+#------------------------------------------------------------------
+```
+
+## aggregate functions
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Aggregate functions
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Aggregate functions take a bunch of values as input and return a single value.
+# For example the avg function averages together several numbers and returns
+# a single number.
+#
+# The following are standard aggregate functions that are included with 
+# every version of SQL. These are part of the ANSI standard for SQL.
+# These are the aggregagte functions that we will focus on. 
+#
+#   sum, avg, count, min, max
+#
+# Different database management systems might include some other aggregate
+# functions in addition to these. See the documentation for your particular
+# database management system for more info about other aggregate functions.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Show the contents of the titles table
+sqldf("select * from titles")
+
+# show the average price, minimum (i.e. lowest) price and maximum (ie. highest price) 
+# of all the titles
+sqldf("select avg(price),  min(price) , max(price)
+      from titles")
+```
+
+## Don't mix aggregate functions with non-aggregated data
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# DO NO MIX AGGREGATE FUNCTIONS WITH NON-AGGREGATED DATA.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# IN MANY SQL DBMS's YOU WILL GET AN ERROR IF YOU TRY TO DO THIS.
+# sqlite does NOT report an error if you do this but the results will not 
+# make much sense. 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# The following shows that in sqlite when you mix aggregate functions 
+# with non-aggregated data the results are confusing. Don't do this!
+# Some DBMS's will return an ERROR for this query. sqlite does not return
+# an error but the results are very misleading.
+#
+# For example the following is the result of the code below:
+#
+#    > sqldf("select avg(price), sum(pages),  title_name, type
+#             from titles")
+# 
+#       avg(price) sum(pages) title_name    type
+#          18.3875       5107      1977! history
+# 
+# The avg function and the sum function return aggregagated data for all of
+# the rows in the titles table. Specically the average price of all the books
+# and the total number of pages from all the books. 
+# 
+# However, the title_name and type columns simply display
+# the name of a specific book. The title_name and type that is displayed
+# has nothing to do with the avg(price) and sum(pages). The exact book 
+# that is displayed is really not predictable.
+#
+# Bottom line - do NOT mix aggregrate functions, e.g. avg(price), sum(paes)
+# with non-aggregated data, e.g. title_name, type
+
+# DON'T DO THIS!!! - see the comment above.
+sqldf("select avg(price), sum(pages),  title_name, type
+      from titles")
+```
+
+## count function - three different versions
+
+```{r}
+#--------------------------------------------------------------------
+# count function - three different versions
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The count function counts the number of rows returned.
+# There are three different versions of the count function
+#
+#   count(SOME_COLUMN) 
+#
+#     This returns the number of rows for the column that are NOT NULL. 
+#     (Remember that in SQL NULL is basically the same as NA in R. 
+#      Since we are using sqldf to analyze R dataframes instead of actual 
+#      database tables, NA, is treated as NULL
+#      ie. when using sqldf, count(SOME_COLUMN) will return the number of 
+#          rows in that column that don't contain NA.
+#
+#   count(*) - returns the number of rows. This version counts all rows, including
+#              NULL values and non-distinct values
+#              Note that count is the ONLY aggregate function that can be used 
+#              in this way.
+#
+#   count(distinct SOME_COLUMN) - Returns the number of DISTINCT values
+#                                 (i.e. different unique values) in the column.
+#                                 Note that other aggregate functions MAY ALSO
+#                                 be used in this way, eg. avg(distinct price) 
+#                                 will average the distinct prices.
+#                                 
+#--------------------------------------------------------------------
+
+# show all of the data in the titles table
+sqldf("select * from titles")
+
+# show various aggregate function values for the titles column
+sqldf("select sum(price) , avg(price) , avg(DISTINCT price), count(*), count(price) , count(DISTINCT price), min(price) , max(price), count(type), count(DISTINCT type)
+      from titles")
+```
+
+## min and max also work with character columns.
+
+```{r}
+# min and max also work with character columns.
+#
+# min value of a character column is the value that would appear FIRST in alphabetical order.
+# max value of a character column is the value that would appear LAST  in alphabetical order.
+sqldf("select min(type), max(type), count(*), count(type), count(DISTINCT type)
+      from titles")
+
+# QUESTION
+# WRite a query to display the different types of books. 
+# Sort the results alphabetically.
+# Only include each type once.
+sqldf("select distinct type from titles order by type asc")
+```
+
+## two diffferent meanings of "distinct"
+
+```{r}
+#--------------------------------------------------------------------
+# two diffferent meanings of "distinct"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The word "distinct" means two toally different things based on 
+# where it appears in the select command.
+#
+# 1. select ... count (distinct SOME_COLUMN) ...
+#   
+#    see above
+#
+#
+# 2. select distinct COLUMN1, COLUMN2, ...
+#
+#    When "distinct" appears right after the word select, it 
+#    means that the output should not include rows that are 
+#    exact duplicates of each other - in that case only one of the 
+#    duplicates is returned.
+# 
+#--------------------------------------------------------------------
+
+# show all the different types of titles (do not show duplicates)
+sqldf("select DISTINCT type
+      from titles")
+
+# show just the entire contents of the type column
+sqldf("select type
+      from titles")
+
+#---------------------------------------------------------------------
+# "select distinct ..."  works on ENTIRE ROWS, not individual columns.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Compare the following two queries. Notice that distinct works on entire
+# rows of output to eliminate those rows that are duplicates. 
+#
+# Queries that contain more than one column  could still result with duplicate
+# values in each column even when DISTINCT is specified. DISTINCT only serves
+# to eliminate entire rows of data that are exact duplicates.
+#
+# compare the following 2 queries ...
+#---------------------------------------------------------------------
+
+# show the entire contents of the type and pub_id columns
+# sort the results by type and then by pub_id within each type
+#
+# notice in the output that some rows are exact duplicates of each other
+sqldf("select type, pub_id
+      from titles
+      order by type, pub_id")
+
+# Do the same thing but use "distinct" to eliminate the duplicate rows.
+# 
+# Notice in the output that even though "distinct" is specified, each column
+# in the result DOES have duplicate values. Hoewver, there are no rows in the
+# output that are exact duplicates of each other.
+
+sqldf("select distinct type, pub_id
+      from titles
+      order by type, pub_id")
+```
+
+## Using WERE in queries that contain aggregate functions 
+
+```{r}
+#-----------------------------------------------------------------------------
+# Using WERE in queries that contain aggregate functions
+#-----------------------------------------------------------------------------
+#
+# Aggregate functions work only on rows that are included by the WHERE clause.
+# 
+#-----------------------------------------------------------------------------
+
+# show the complete titles table
+sqldf ("select * from titles")
+
+# show the number of titles in the titles table
+# The highest price and the average price.
+sqldf( "select count(*), max(price), avg(price) 
+        from titles")
+
+# show the number of biographies,
+# the highest price for a biography and the average price for a biography
+# HINT: use the where clause
+sqldf( "select count(*), max(price), avg(price)
+        from titles
+        where type = 'biography'")
+```
+
+## Practice
+
+```{r}
+#-----------------------------------------------------------------------------
+# 
+# Practice Questions
+#
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+# Question:
+#-----------------------------------------------------------------------------
+# Write a query that shows the names of the authors who have written at least one book
+# for which they got 1.00 of the royalty share.
+# Display the author's names in alphabetical order.
+# Do not repeat the same author's name twice
+#
+# HINTS
+# 1. Which tables do you need to include in your query?
+#    Make sure to join all of those tables and any intervening tables
+# 
+# 2. Use DISTINCT at the front of your query to eliminate duplicate rows.
+#
+# 3. Use "order by" to display the author's names in alphabetical order. Remember
+#    that last name is more significant than first name when arranging names
+#    in alphabetical order.
+#-----------------------------------------------------------------------------
+
+# Answer:
+
+sqldf("select distinct au_fname, au_lname
+       from authors join title_authors on authors.au_id = title_authors.au_id
+       where royalty_shares = 1.0
+       order by au_lname asc, au_fname asc")
+
+
+# notice what will happen if you leave out the distinct
+sqldf("select au_fname, au_lname
+       from authors join title_authors on authors.au_id = title_authors.au_id
+       where royalty_shares = 1.0
+       order by au_lname asc, au_fname asc")
+
+
+
+#-----------------------------------------------------------------------------
+# Question
+#-----------------------------------------------------------------------------
+# Write a query that shows the names of the authors who have written at least one book
+# for which the book has a royalty_rate of at least .06
+# Display the author's names in alphabetical order.
+# Do not repeat the same author's name twice.
+
+# HINTS
+# 1. which tables do you need to include in your query?
+#    make sure to join all of those tables and any intervening tables
+# 
+# 2. Use DISTINCT at the front of your query to eliminate duplicate rows.
+#
+# 3. Use "order by" to display the author's names in alphabetical order. Remember
+#    that last name is more significant than first name when arranging names
+#    in alphabetical order.
+#-----------------------------------------------------------------------------
+
+
+# First attempt ...
+# Not the answer yet ...
+# Let's start out by including the royalty_rate in the select clause. This lets
+# us see that we indeed are only getting authors who contributed to a book 
+# whose royalty rate was at least .06. 
+#
+# The problem with the following is that because we are including the royalty_rate
+# in the output we will get some authors more than once since the royalty_rate
+# may be different for different books that they worked on.
+
+sqldf(" select distinct au_fname, au_lname, royalty_rate
+        from authors join title_authors on authors.au_id = title_authors.au_id
+                     join titles        on title_authors.title_id = titles.title_id
+                     join royalties     on titles.title_id = royalties.title_id
+        where royalty_rate > .05
+        order by au_lname, au_fname
+      ")
+
+# Final answer
+# Let's now take out the royalty_rate from the select clause. This will serve
+# to have every author only be displayed once since the distinct will eliminate
+# rows that are duplicates of each other.
+sqldf(" select distinct au_fname, au_lname
+        from authors join title_authors on authors.au_id = title_authors.au_id
+                     join titles        on title_authors.title_id = titles.title_id
+                     join royalties     on titles.title_id = royalties.title_id
+        where royalty_rate > .06
+        order by au_lname, au_fname
+      ")
+```
+
+## Reminder about how multiple joins work
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Reminder about how multiple joins work
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Remember that every INNER JOIN (which contains an ON clause)
+# is the same as doing a cross join followed by removing the rows from the
+# cross join that don't match the on clause of the inner join.
+# The condition in the ON clause would work the same way if instead it 
+# were part of the WHERE clause.
+#
+# Also remember that when you join multiple tables, the first two tables 
+# are joined (as described in the previous paragraph). Then the rows and
+# columns that resulted from the first join are joined to the next table in the
+# same way (i.e a cross join of rows from the result with the rows from the
+# 2nd table followed by removing the rows that don't match the corresponding
+# on clause). This keeps happening for all the tables. The entire process
+# happens automatically when you specify the inner joins correctly.
+#
+# For example, if you run the following query, you will get the output shown
+# below.
+#
+#   QUERY:
+#
+#       sqldf(" select distinct au_fname, au_lname
+#               from authors join title_authors on authors.au_id = title_authors.au_id
+#                            join titles        on title_authors.title_id = titles.title_id
+#                            join royalties     on titles.title_id = royalties.title_id
+#               where royalty_rate > .06
+#               order by au_lname, au_fname
+#             ")
+#
+#   OUTPUT:
+#
+#           au_fname     au_lname
+#              Wendy    Heydemark
+#             Hallie         Hull
+#               Klee         Hull
+#          Christian        Kells
+#             Harvey      Kellsey      
+#
+#
+# The output looks very short and simple. It has five rows and two columns.
+# However, in order to arrive at this output, the database must go through
+# several steps to process the SQL query. At each step of the internal
+# processing there is an "intermediate result" that you normally would not see. 
+#
+# Below, we demonstrate step by step what actually happens internally when
+# the database performs the query. I recommend that you look at
+# the output of each step to better understand the process:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# 1st step - 
+#
+# The following part of the "from clause" in the above query is done first:
+#
+#    select ...                             (SELECT CLAUSE IS DONE LATER)
+#    from authors join title_authors ...    (ON CLAUSE IS DONE LATER)
+#                 ...                       (OTHER JOINS ARE DONE LATER)
+#    where ...                              (WHERE CLAUSE IS DONE LATER)
+#    order by ...                           (ORDER BY CLAUSE IS DONE LATER)
+#
+# Notice that this query does an "inner join" (or in other words, a plain
+# "join"). However, what actually happens behind the scenes is that these
+# two tables are really CROSS JOINED and then the extra rows from the 
+# "cross join" that don't satisfy the on clause of the inner join are
+# removed..
+#
+# At this point, the "select clause" has not executed yet so all columns from 
+# both tables are still part of this intermediate result. In the output 
+# of the following command every row contains 12 columns. The first 8 columns,
+# come from authors table and the last 4 come from the title_authors table.
+# 
+#   The columns from the authors table are: 
+#
+#     au_id, au_fname, au_lname, phone, address, city, state, zip
+# 
+#   and the columns from the title_authors table are:
+#
+#     title_id, au_id, au_order, royalty_share
+#
+# Notice that in a single row of this intermediate output, the value of the
+# au_id from the authors table and the value of the au_id from the title_authors
+# table do NOT necessarily match
+
+sqldf("select authors.*, title_authors.* 
+      from authors CROSS JOIN title_authors")
+
+# 2nd step - 
+#
+# The on clause is applied to the results from the previous step 1 to eliminate
+# those rows from the cross join that don't match the on clause specified
+# in the query. Notice that in the results of the following command the 
+# first au_id and the second au_id 
+
+sqldf("select authors.*, title_authors.*
+      from authors join title_authors on authors.au_id = title_authors.au_id")
+
+# 3rd step - 
+
+sqldf("select authors.*, title_authors.*, titles.*
+      from authors join title_authors on authors.au_id = title_authors.au_id
+                   join titles        on title_authors.title_id = titles.title_id")
+
+# 4th step - join royalties on titles.title_id = royalties.title_id
+
+sqldf("select authors.*, title_authors.*, titles.*, royalties.*
+      from authors join title_authors on authors.au_id = title_authors.au_id
+                   join titles        on title_authors.title_id = titles.title_id
+                   join royalties     on titles.title_id = royalties.title_id")
+
+# 5th step - where
+
+sqldf("select authors.*, title_authors.*, titles.*, royalties.*
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+             ")
+
+# 6th step - order by 
+       
+sqldf("select authors.*, title_authors.*, titles.*, royalties.*
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+               order by au_lname, au_fname
+             ")
+
+
+# 7th step - select
+
+sqldf("select au_fname, au_lname
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+               order by au_lname, au_fname
+             ")
+
+
+
+# 6th step - select distinct
+
+sqldf("select DISTINCT au_fname, au_lname
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+               order by au_lname, au_fname
+             ")
+```
+
+## WARNING - If where clause removes all rows then avg,sum,max,min return NULL
+
+```{r}    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# WARNING : If no rows are returned by the where clause, then the 
+#           aggregate functions (except for count) all return NULL
+#  
+#           Note that since we are using R dataframes instead
+#           of tables, NULL will be displayed as NA
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# No rows match the where - result of all aggregate functions, except count 
+# is NULL (i.e. NA in R)
+
+sqldf("select count(*), sum(pages), avg(pages), min(pages), max(pages)
+      from titles
+      where type = 'this type does not exist' ")
+```
+
+## Practice
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# show the total number of cookbooks (i.e. type = 'cookbook')
+#          total number of pages in all the cookbooks
+#          and the average number of pages in cookbooks
+#
+# NOTE that since there are currently no cookbooks in the table
+# there will be no rows returned by the where clause. Therefore
+# the sum and the avg will be NULL (i.e. NA in R)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select count(*), sum(pages), avg(pages)
+      from titles
+      where type = 'cookbook'")
+```
+
+## DON'T use aggregate functions & non-aggregated values in same select clause
+
+```{r}
+##################################################################
+#
+# WARNING : 
+#
+# DO NOT include both aggregate function and non-aggregated values
+# in the same select clause
+#
+#    (NOTE - it may help to look at the example below before reading further)
+#
+# BECAUSE ...    
+#
+# The aggregate function will return fewer rows than the 
+# non-aggregated data. This presents a problem for SQL because
+# there is a contradiction as to how many rows should be shown!
+#
+# In many many versions of SQL, such queries would generate an ERROR!
+#
+# In SQLite, this query doesn't generate an error. Rather, the query 
+# will only return one row. The values of the non-aggregate column
+# will be the first value that would have appeared for that non-aggregate
+# column if the aggregate function was not present.
+#
+# See this page for an in-depth analysis of this issue: 
+#   https://www.dataquest.io/blog/sql-tutorial-selecting-ungrouped-columns-without-aggregate-functions/
+##################################################################
+
+
+# The output of the following produces ONE row
+sqldf("select avg(price) from titles")
+
+# The output of the following produces MORE THAN ONE row
+sqldf("select title_name from titles")
+
+
+# The following will generate an ERROR in MANY MANY versions of SQL.
+# since avg(price) should return ONE number, but there are many different
+# values for title_name.
+#
+# SQLite allows this type of query but the results are confusing.
+# Since the avg generates only a single number, the following results in
+# only a single row with only one particular title even though there are
+# many different title_names.
+
+# DON'T DO THIS!!! (see the comment above)
+sqldf("select avg(price) , title_name from titles")
+```
+
+## ORDER OF CLAUSES: select, from, where, group by, having, order by, limit
+```{r}
+# REMEMBER
+#    While select statements don't always need to use every clause, 
+#    the clauses that are in a statement must appear in the following order:
+#
+# select ...
+# from ...
+# where ...
+# group by ...
+# having ...
+# order by ...
+# limit ... 
+```
+
+## GROUP BY affects how aggregate functions work
+
+```{r}
+#################################################################
+# group by COLUMN1, COLUMN2, ...
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The "group by" clause has a direct effect on how aggregate functions work.
+#
+# As we've seen above, when a query contains an
+# aggregate function 
+#   (and does not contain a group by clause -
+#    remember we didn't start discussing "group by" until just now),
+# the query will return a single row. The single row
+# of output would contain the result of applying the aggregate function(s)
+# to all of the rows from the table that satisfied the where clause.
+#
+# By contrast, a query that contains aggregate functions, and also contains
+# a group by clause, could return more than one row of output, i.e. one row of
+# output for each "group" of rows from the original table(s) [... keep reading ...] 
+#
+# The group by clause specifies one or more columns. The rows from the table(s)
+# that contain the same values for these columns constitute a logical "group" of
+# rows. For example the following shows the format of a query that gets info
+# from the titles table. A lot of the query was left out because for now 
+# I want to focus just on "from titles" and "group by type"
+#
+#     select ... (specify what you want to select)
+#     from titles
+#     ... (more stuff from the qeury)
+#     group by type
+#
+# This query segments the rows from the titles table into
+# different "groups". 
+#   There will be one     "group" that contains all rows with type='biography'.
+#   There will be another "group" that contains all rows with type='childrens'.
+#   There will be another "group" that contains all rows with type='computer'.
+#   etc. 
+#
+# If the query were to include aggregate functions, the output would indlude
+# one row for each "group" of rows from the original table. This is 
+# best explained with an example:
+#################################################################
+```
+
+## Practice
+
+```{r}
+# First let's look at all of the types and prices in order
+sqldf("select type, price 
+      from titles 
+      order by type, price")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a query that returns the following for each 
+# type of book (i.e. "childrens", "computer", etc)
+#
+#     the number of copies of each type 
+#     the average price of all books of that type
+#     the max price of all books of that type
+#     the min price of all books of that type
+#
+# HINT: use group by to create different groups of rows from the original table
+#       All the rows with the same value for type will be part of the same group.
+#       Then use the avg(price) function to get the average price for each type.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqldf("select type, count(*), avg(price), max(price), min(price)
+      from titles
+      group by type
+      order by type")
+
+# To make the output easier to read, change the code to display "#copies"
+# instead of count(*) at the top of that column in the output.
+
+sqldf("select type, count(*) as '#copies', avg(price), max(price), min(price)
+      from titles
+      group by type
+      order by type")
+
+
+sqldf("select count(*) as '#copies', avg(price), max(price), min(price)
+      from titles")
+```
+
+## GROUP BY more than one column
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# GROUP BY more than one column
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The GROUP BY may contain more than one column. 
+# This in effect creates a group from all rows that have the same value
+# for all of the specified columns.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# First let's look at the types, pub_id's, titles and prices of all books in order
+sqldf("select type, pub_id, price, title_name
+       from titles
+       order by type, pub_id, price")
+
+
+# Now let's create groups and show how many titles in each group.
+sqldf("select type, pub_id, count(*)
+       from titles
+       group by type, pub_id
+       order by type, pub_id")
+```
+
+## Practice
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a query that returns the average price, max price and min price of each
+# type of book (i.e. "childrens", "computer", etc) that is published by each 
+# publisher.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# IMPORTANT - REMEMBER ... 
+# Clauses in a SELECT statement must appear in the following order:
+# All of the clauses are optional except for the "select" clause.
+#
+#   select ...
+#   from ...
+#   where ...
+#   group by  ...
+#   having ...
+#   order by ...
+#   limit ...       (limit is not part of the SQL standard but is part of many versions of SQL)
+
+
+# ANSWER
+#
+# In the output of the following command, note that only one row is
+# shown for each type/pub_id combination
+
+sqldf("select type, pub_id, count(*) as '#copies', avg(price), min(price), max(price)
+      from titles
+      group by type, pub_id
+      order by type")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# rewrite the order by of the previous query so that all books by the same publisher
+# appear together in consecutive rows (i.e. rows that are "one after the other" for 
+# the same publisher)
+#
+# Note it makes no difference which column is listed first in the group by 
+#      it DOES make a difference which column is listed first in the order by
+
+# ANSWER
+
+sqldf("select type, pub_id, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type, pub_id   
+      order by pub_id, type")
+
+# Change the order of the pub_id and the type in the select so that the output is easier to read.
+
+sqldf("select pub_id, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type, pub_id
+      order by pub_id, type")
+
+# WARNING - THE FOLLOWING QUERY IS WRONG SINCE title_name IS NOT AN AGGREGATE
+# FUNCTION AND IS ALSO NOT IN THE GROUP BY CLAUSE.
+# 
+# SOME Database Management Systems (DBMS) WILL RETURN AN ERROR FOR THE 
+# FOLLOWING QUERY, WHEREAS SQLITE, the database that R sqldf uses by default,
+# DOESN'T REUTRN AN ERROR BUT RATHER RETURNS CONFUSING RESULTS. -- DON'T DO THIS!
+
+sqldf("select pub_id, type, title_name, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type, pub_id
+      order by pub_id, type")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Rewrite the previous query to show the publisher's name instead of the publisher's id
+# 
+# HINTS
+# - you must join the appropriate tables
+#
+# - since the query has a group by, the select clause should only refer to 
+#   aggregate functions and to columns that appear in the group by.
+#
+#   The select clause should NOT refer to columns that do not appear in the group by.
+#   Since we want to display the publisher's name we should also group by 
+#   the publisher's name instead of the pub_id.
+#   
+#   NOTE - that this is reasonable to do since for all rows with the same
+#          pub_id, the publisher's name is guaranteed to be the same 
+#          (think about it)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# show one row for each title.
+#
+# Show the info from the title table and the associated info
+# from the publisher's table in the single row of output for each title.
+
+sqldf("select titles.*, publishers.*
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      order by pub_name, type")
+
+# Show the pub_name in the output (not just the pub_id)
+# along with aggregate info for that publisher and type of book.
+#
+# In ANSI standard SQL and in most DBMS software (e.g. oracle, MySql, Postgres)
+# We need to include pub_name in the group by if we will include it in the 
+# output. 
+
+sqldf("select pub_name, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by type, pub_name
+      order by pub_name, type")
+
+
+# SQLite will allow the pub_name in the select clause even if it isn't
+# in the group by. However, you should avoid this - it isn't standard ANSI SQL.
+
+sqldf("select pub_name, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by type, publishers.pub_id
+      order by pub_name, type")
+
+
+
+# Rewrite the previous query to only group by the pub_name and not by the type.
+#
+# HINTS - because the type is not part of the group by it should also be eliminated
+#         from the select clause and the order by clause
+
+sqldf("select pub_name, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by pub_name
+      order by pub_name")
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````
+# SQLite doesn't follow the standard exactly ..
+#``````````````````````````````````````````````````````````````````````````````
+# Note that the SQL standard does not allow for column names in the select and order by 
+# clauses that are not also part of the group by.
+# However, SQLite, does not report an error in these cases and the output could be
+# confusing. The following output shows a type, but the avg and other aggregate functions
+# include ALL types, not just the one shown.
+#
+
+# See these page for a description of the issue and suggestions for workarounds:
+#
+#   https://www.dataquest.io/blog/sql-tutorial-selecting-ungrouped-columns-without-aggregate-functions/
+#
+#   https://learnsql.com/blog/not-a-group-by-expression-error/
+#
+#
+# See this page for the official SQLite documentation 
+# Below is an excerpt of the relevant info from this page.
+#   
+#   https://www.sqlite.org/lang_select.html#bareagg
+
+        # 2.5. Bare columns in an aggregate query The usual case is that all column
+        # names in an aggregate query are either arguments to aggregate functions or
+        # else appear in the GROUP BY clause. A result column which contains a column
+        # name that is not within an aggregate function and that does not appear in the
+        # GROUP BY clause (if one exists) is called a "bare" column. Example:
+        #
+        # SELECT a, b, sum(c) FROM tab1 GROUP BY a; In the query above, the "a" column
+        # is part of the GROUP BY clause and so each row of the output contains one of
+        # the distinct values for "a". The "c" column is contained within the sum()
+        # aggregate function and so that output column is the sum of all "c" values in
+        # rows that have the same value for "a". But what is the result of the bare
+        # column "b"? The answer is that the "b" result will be the value for "b" in one
+        # of the input rows that form the aggregate. The problem is that you usually do
+        # not know which input row is used to compute "b", and so in many cases the
+        # value for "b" is undefined.
+        #
+        # Special processing occurs when the aggregate function is either min() or
+        # max(). Example:
+        #
+        # SELECT a, b, max(c) FROM tab1 GROUP BY a; If there is exactly one min() or
+        # max() aggregate in the query, then all bare columns in the result set take
+        # values from an input row which also contains the minimum or maximum. So in the
+        # query above, the value of the "b" column in the output will be the value of
+        # the "b" column in the input row that has the largest "c" value. There are
+        # limitations on this special behavior of min() and max():
+        #
+        # If the same minimum or maximum value occurs on two or more rows, then bare
+        # values might be selected from any of those rows. The choice is arbitrary.
+        # There is no way to predict from which row the bare values will be choosen. The
+        # choice might be different for different bare columns within the same query.
+        #
+        # If there are two or more min() or max() aggregates in the query, then bare
+        # column values will be taken from one of the rows on which one of the
+        # aggregates has their minimum or maximum value. The choice of which min() or
+        # max() aggregate determines the selection of bare column values is arbitrary.
+        # The choice might be different for different bare columns within the same
+        # query.
+        #
+        # This special processing for min() or max() aggregates only works for the
+        # built-in implementation of those aggregates. If an application overrides the
+        # built-in min() or max() aggregates with application-defined alternatives, then
+        # the values selected for bare columns will be taken from an arbitrary row.
+        #
+        # Most other SQL database engines disallow bare columns. If you include a bare
+        # column in a query, other database engines will usually raise an error. The
+        # ability to include bare columns in a query is an SQLite-specific extension.
+#
+#
+#``````````````````````````````````````````````````````````````````````````````
+
+sqldf("select pub_name, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by pub_name
+      order by pub_name")
+```
+
+## HAVING clause
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# HAVING 
+#
+#    group by COLUMN1, COLUMN2, ...
+#    having SOME_LOGICAL_EXPRESSION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Select statements that contain a "group by" MAY ALSO contain an optional "having clause".
+# Select statements that do not contain a "group by" may NOT contain "having"
+#
+# Both "where" and "having" clauses contain logical expression. 
+#
+# Where an having clauses differ in the following ways:
+# 
+# 1. "where"  eliminates individual rows from the original table that do not meet the conditions.
+#    "having" eliminates entire groups of rows that do not meet its conditions.
+#
+# 2. "where" may refer to any columns in the original tables, but may NOT refer to aggregate functions.
+#    "having" may ONLY refer to aggregate functions and column names that appear in the group by clause.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# Example
+
+# show all the data from the titles table
+sqldf("select * 
+       from titles
+       order by type")
+
+# Without having
+sqldf("select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      order by type")
+
+# same query WITH THE ADDITION of "having" (note that having must come before "order by")
+#
+# Notice that the rows for groups that don't satisfy the having conditions 
+# are eliminated from the output.
+sqldf("select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      having count(*) >=3 
+      order by type")
+
+
+# We can see the effect of the having in the above query by running
+# the same query WITHOUT the having
+sqldf("select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      order by type")
+
+# The having clause's logical expression can be as complex as you want.
+#
+# Modify the previous select to show only types of books for which
+# - there are at least 3 books of that type
+#        and also 
+# - the avg price is at least $20 or is less than or equal to  $10
+
+sqldf("select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      having count(*) >=3 and (avg(price) >= 20 or avg(price) <= 10)
+      order by type")
+```
+
+## using where and having in the same query - a detailed analysis
+
+```{r}
+#############################################################################
+# using where and having in the same query
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# When a query runs the processing of the raw data in to the
+# final output happens in the following logical order
+#
+#   - FROM: all of the data from the tables is retrieved and joined into 
+#           a single "mega-table" (mega-table is NOT a standard word). 
+#
+#   - WHERE: the where clause eliminates rows from this "mega-table" that
+#            do not satisfy the where's logical expression
+#
+#   - GROUP BY: the remaining rows a "grouped" by the group by clause
+#
+#   - HAINVG:   the having clause works to eliminate groups that don't 
+#               satisfy the having clause's logical expression
+#    
+#   - SELECT:   the select clause is used to generate the output of the 
+#               aggregate functions 
+#
+#   - ORDER BY: the resulting rows are ordered according to the "order by" clause
+#
+#   - LIMIT:    only the rows specified by the limit clause are shown
+#
+# To help you remember this, the clauses in a select statement must be specified
+# in the above order - EXCEPT that the select clause must be listed first. The designers
+# of SQL thought that since the select clause specifies which column appear in the 
+# output it is important to see it first ...
+#
+# Notice that the where clause eliminates rows from the original tables
+# BEFORE the having clause eliminates groups. This can have an effect on the output
+# of queries that use both the where and having clauses.
+#
+##################################################################################
+
+
+#----------------------------------------------------
+# compare the following queries WITHOUT having
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The numbers are different in the 2nd query since 
+# the where clause eliminated specific rows.
+# 
+# After the where clause runs there are no childrens books
+# left and there are fewer biograph, history and psychology books.
+# The min and max page counts also are different to match the 
+# books that are left after the where ran.
+# The only group that wasn't affected by the where was the
+# computer books.
+#  
+#----------------------------------------------------
+
+# group by ..
+
+sqldf("select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       GROUP BY TYPE
+       order by type")
+
+
+# where ...
+# group by ..
+
+sqldf("select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       WHERE PAGES > 350
+       GROUP BY TYPE
+       order by type")
+
+#------------------------------------------------------------------
+# Let's see the actual rows that were affected by the where clause.
+# We'll do so by running a similar query WIHTOUT the GROUP BY.
+# We will display the actual data for each row.
+#-----------------------------------------------------------------
+
+# See the rows that were processed by the 1st query above.
+
+sqldf("select type, pages, title_name
+       from titles
+       order by type, pages, title_name
+      ")
+
+# Now let's add in the where clause to see the rows that were
+# processed by the 2nd query above.
+
+sqldf("select type, pages, title_name
+       from titles
+       WHERE PAGES > 350
+       order by type, pages, title_name
+      ")
+
+# We can now see why we got the results we did when we 
+# ran the versions of the queries with the GROUP BY and 
+# the aggregate functions.
+
+
+#--------------------------------------------------------
+# If you use
+#     a where clause 
+#     and a group by 
+#     and a having
+#
+# The where clause runs then 
+# the group by clause runs then
+# the having clause runs
+#--------------------------------------------------------
+
+# group by ...   (same as the 1st query above)
+
+sqldf("select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       GROUP BY TYPE
+       order by type")
+
+# group by ...
+# having ...
+
+# having gets rid of groups that don't meet it's criteria
+sqldf("select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       group by type
+       having count(*) > 1
+       order by type")
+
+
+# ADDING IN A WHERE CHANGES THINGS
+# 
+# In the following we simply added the line: where pages > 350
+# 
+# This does two things
+#   (a) childrens books don't show up at all - because none are longer than 350 pages
+#   (b) only 1 history book shows up - the other 2 history books were shorter then 350 pages
+
+
+# where ...
+# group by ...
+
+sqldf("select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       where pages > 350
+       group by type
+       order by type")
+
+# NOW - since the where clause was added, the having clause will now
+# also eliminate the history group in addition to the computer group
+# since now the history group also only has 1 title.
+#
+# As a result we are only left with biography and psychology groups.
+
+
+# where ...
+# group by ...
+# having ...
+
+sqldf("select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       where pages > 350
+       group by type
+       having count(*) > 1
+       order by type")
+```

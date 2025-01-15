@@ -1,0 +1,181 @@
+## "databases" and "database management systems"
+
+"A database" is a collection of data that can be accessed by a computer 
+programs in an accurate and efficient way. 
+
+A "Database Management System (DBMS)" is the software that is used to enable
+the storage and retrieval of the data in a database. 
+
+## Different categories of databases
+
+### Relational Databases
+
+```{r}
+# Different categories of databases exist. Databases in use
+# today in business can be broken down into two different categories:
+#
+# 1. Relational Databases
+#    
+#    o These types of databases store information in "tables" that have rows
+#      and columns of information - very similar to the way the data is
+#      arranged in an R dataframe.
+# 
+#      - Each column of a relational database table
+#        (a) has a name
+#        (b) has a datatype (e.g. numeric, logical, character, etc)
+#     
+#      - Relational database tables use the term NULL in the same way that 
+#        R uses the term NA - we'll see examples of this later.
+#
+#    o There are MANY different relational database products in use today.
+#      Some very popular ones are:
+#
+#      - Microsoft SQL Server
+#      - Oracle Relational Database Management System
+#      - MySql
+#      - Postgres
+#      - MariaDb
+#      - many, many others
+#
+#    o All Relational database software uses the SQL language to manipulate the 
+#      contents of the database. (there may be a rare exception I don't know about)
+#
+#      Each relational database software product has its own "flavor"
+#      of the SQL language. You can think of this as different "dialects"
+#      of the same language. For example the difference between English 
+#      as it's used in the USA vs as it is used in England.
+#
+#      There exists a SQL standard that is recognized by all relational database
+#      software programs
+#      (see https://blog.ansi.org/2018/10/sql-standard-iso-iec-9075-2016-ansi-x3-135/#gref).
+#      However, most relational database products add additional 
+#      capabilities and commands to its version of SQL to differentiate it
+#      from other relational database products in the market.
+#
+#      In this class we will be focusing primarily on the SQL standard
+#      features that are included in all relational database products
+#      and not on the extensions that are provided by the various products.
+```
+
+### Non-Relational Databases (AKA NoSQL databases)
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2. Non-Relational Databases (also known as NoSQL databases)
+# 
+#    We will mention more about these types of databases towards the end of 
+#    the semester.
+#
+#    These types of databases organize information in formats other than rows
+#    and columns. 
+#
+#    SOME NoSql databases actually CAN be manipulated with the SQL language.
+#    However, the term NoSql has come to include any database that stores
+#    information in a form other than in strict rows and columns.
+#
+#    Some examples are shown below.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### Graph databases - e.g. Neo4J
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#    (a) Neo4J is an example of a "graph database". These types of databases
+#        organize their information in a structure that looks like a "web"
+#        of information.
+# 
+#        For example see the diagram below
+#        (For a better version of this diagram see the picture at the top of
+#         the following webpage: https://aws.amazon.com/nosql/graph/
+#         or see the file "graph-of-friends.png" file in the files for this lesson.)
+#
+#                           (friend)
+#                    Sam <------------ Annie
+#                                        ^
+#                                        |
+#                                        |(friend)
+#                                        |
+#                                        |
+#                           (friend)     |        (friend)
+#                   Mac <-------------- Jack ---------------> Doug
+#                                       | ^
+#                                       | |
+#                              (friend) | | 
+#                                       | | (friend)                
+#                                       v |         
+#                                   Harry Howard
+#
+#        This example shows a set of people and who is friends with whom.
+#        There is a different icon for each person. "Friend arrows" indicate 
+#        who is friends with whom. In this example the arrows have a direction.
+#        For example:
+#                            (friends)
+#                     Jack ------------->  Doug   
+#        
+#        can mean that Jack is friends with Doug but Doug is not friends with Jack.
+#        However, graph databases also have the option to assume that a one-way 
+#        arrow actually implies a two way relationship such that
+#        Jack ---> Doug also implies that Doug is friends with Jack. In any
+#        case, this lesson is not focusing on the details of graph databases.
+#
+#        For many types of information a diagram as shown above is much more
+#        intuitive and understandable than a table of information. This is
+#        just one reason why graph databases are popular.
+#
+#        However, this same information could be converted to the following
+#        table and stored in a relational database.
+#
+#            name      is_friends_with
+#            ----      ---------------
+#            annie     sam
+#            jack      annie
+#            jack      mac
+#            jack      doug
+#            jack      harry
+#            howard    jack
+```
+
+### Document databases - e.g. MongoDB
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     (b) MongoDb is an example of Database Management software that stores information
+#         in "JSON" notation. We will explore more about JSON later in the semester.
+#         However as an example, the above information could be represented in a JSON
+#          file as shown below:
+#
+#           [
+#             {
+#               "name" : "annie",
+#               "friends" : [ "sam" ]
+#             },
+#             {
+#               "name" : "jack",
+#               "friends" : [ "annie" , "mac" , "doug" , "harry" ]
+#             },
+#             {
+#               "name" : "howard",
+#               "friends" : [ "jack" ]
+#             },
+#             {
+#               "name" : "sam",
+#               "friends" : [ ]
+#             },
+#             {
+#               "name" : "mac",
+#               "friends" : [ ]
+#             },
+#             {
+#               "name" : "harry",
+#               "friends" : [ ]
+#             },
+#             {
+#               "name" : "doug",
+#               "friends" : [ ]
+#             }
+#           ]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+

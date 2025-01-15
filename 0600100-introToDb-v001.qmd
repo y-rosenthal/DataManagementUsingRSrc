@@ -1,0 +1,474 @@
+# What is a Database?
+
+A Database is an organized collection of data that is designed to be
+accessed and manipulated by computer programs.
+
+A Database Management System (DBMS) is the **software**
+that is used to add, remove and manage the data in a database.
+While a **database** is the term we use to refer to the 
+actual data.
+
+You can think of a database and a DBMS similar to the way you think
+about the Excel software program VS an Excel file. The
+DBMS is similar to the Excel software
+program, while
+a database is similar to an Excel file.
+
+A single "Database Management System" (i.e. the software)
+is used to control many different "databases".
+
+## 
+
+• Individual databases contain information about a particular topic.
+
+• EXAMPLE: A telephone company may have the following **[different
+databases]{.underline}** (as well as many others). These different
+databases can all be controlled through **[one DBMS]{.underline}**
+program:
+
+-- Human Resources Database: contains information about employee name,
+titles, hire dates, salaries, pension and benefit information, 401K
+data, etc
+
+-- Customer and billing database: information about customer names and
+addresses, billing information, calling patterns, etc
+
+-- Assets database: information about real estate that the company owns
+and leases, cell phone towers and leased lines, etc.
+
+-- Marketing database: information about marketing campaigns,
+advertising rates, locations of billboards that are being used,
+times/stations and rates for radio and TV ad spots, data from focus
+groups, etc.
+
+-- etc.
+
+People who use databases
+
+• Technical IT Professionals (e.g. programmers, database administrators)
+
+-- IT Professional such as programmers and database administrators need
+to understand the in-depth issues about databases. These professionals
+create and maintain the program that store their information in
+databases.
+
+• End Users
+
+-- Most business people do not usually use a database ***directly***.
+Rather, business people use programs geared to their specific business
+needs. "Behind the scenes" those programs store or retrieve data from a
+database in response to the user's actions.
+
+-- It is sometimes very helpful for business professionals to be able to
+access information in databases directly as an IT professional would.
+This requires some basic knowledge of the SQL language.
+
+• Business Analysts (BA)
+
+-- When a new program needs to be created, the business analysts work
+with both the "end users" and the "technical IT professionals" to design
+the programs. The BAs don't actually create the computer program code.
+Rather, the BAs work on the design of what the software should do. BAs
+must also understand database concepts.
+
+• (See architecture diagram later in this presentation ...)
+
+**Features of Databases**
+
+Database vs. Excel
+
+• Medium to large sized companies typically have many different
+databases that are used to track the many types of data that their
+business depends on.
+
+• It is arguably more complicated to implement a database solution than
+an Excel spreadsheet.
+
+• Many students wonder what advantages a database has over an Excel file
+for storing data.
+
+• The following slides list some features of modern databases that
+cannot be easily accomplished with a program such as Excel
+
+• The combination of these reasons makes Excel a poor choice for many
+types of applications. The complexity and expense of implementing a
+database solution is more than justified for many business scenarios.
+
+Features of Modern Databases
+
+• ***Access to the data by computer programs (not just people)***
+
+• ***Databases are designed for automated*** storage, retrieval and
+manipulation of the data. ***Computer programs*** can be designed to
+access the data, not just people. Websites, apps and desktop programs
+can be built that insert, retrieve and update information from the
+database.
+
+• Excel was not designed to be used in this way.
+
+• **Simultaneous access to the data by multiple users.**
+
+• Databases are designed so that the data can be accessed over the
+Internet or a local computer network by several users/programs at the
+same time.
+
+• Excel was not designed for this. Newer versions of Excel have limited
+capabilities for "sharing" workbooks but this feature is limited to a
+few users and doesn't scale to Internet style access.
+
+• ***Able to process HUGE amounts of data.***
+
+• Generally, the amount of data that can be stored in a database is
+limited only by the amount of disk space on the computer.
+
+• Excel is limited to about 1million rows per sheet and 16 thousand
+columns. This may sound like a lot of data but (a) Excel can get very
+slow when that much data is in a spreadsheet and (b) that is NOT enough
+data for truly large scale applications, such as storing data for
+Amazon.com or the New York Stock Exchange.
+
+• ***Efficient*** (i.e. fast) storage, retrieval and manipulation of the
+data.
+
+• Databases can be designed to store and retrieve vast amounts of
+information extremely quickly.
+
+• Excel works well when an individual user manipulates the data in a
+spreadsheet one cell at a time. However, Excel does not scale to
+hundreds or thousands of changes a minute.
+
+• ***Flexible querying capability*** --
+
+• Using a language such as SQL the information in a database can quickly
+be summarized, combined and reorganized in an unlimited number of ways.
+
+• Excel has limited capabilities for summarizing and reorganizing data
+(e.g. subtotals, pivot tables, etc). However, the flexibility offered by
+databases far surpass the features that are offered by Excel.
+
+Features of Modern Databases (continued)
+
+• **Durable data. **
+
+• Databases have features to ensure that data will remain valid and
+uncorrupted even in the face of catastrophic errors such as a power
+outage or a hard-drive-crash. For example, in the wake of a power
+outage, data that is stored in a bank's databases are guaranteed to be
+retrievable.
+
+• Excel does not have guarantees which prevent corruption of the data in
+the wake of power outages, hard drive crashes or similar catastrophic
+events.
+
+• **Validation features. **
+
+• Databases have features for preventing "bad data" from being entered
+into the database (e.g. typos or illogical information such as a
+person's age being recorded as 237, or as a word such as "blue", etc).
+Databases can be setup with rules to describe what is considered valid
+data. Invalid data will not be accepted into the database.
+
+• Excel has some limited ability to control what can be entered into
+specific cells. However, many would argue that these features are
+difficult to use efficiently. Most Excel users don't even know that
+these features exist and don't use them.
+
+• **Security. **
+
+• Databases have abilities to allow some users to access specific data
+but not other users.\
+\
+"***Authentication***" means that before accessing the data, a user must
+"login" or otherwise identify who they are. If a user has already logged
+into the operating system (e.g. windows) then many databases can
+identify the user based on the information he used to log into the
+operating system.\
+\
+Authentication is necessary to allow the DBMS to enforce security of the
+data. The database can be setup with rules to indicate which users can
+access which data. For example a database might store information about
+employees in a company. The names and telephone numbers might be
+available to every employee in the company. However, salary data might
+only be available to employees in the human resources department.
+
+• Excel has very limited capability to restrict a user from accessing
+specific cells, unless that user has the password for the spreadsheet.
+However, Excel's security feature is dwarfed by the vast number of
+security features of a modern database system.
+
+**Relational Databases**\
+**vs Other types of Databases**
+
+**[Relational Databases]{.underline}** vs other types of databases
+
+• Database management systems (and databases) are categorized by the
+formats in which they organize information.
+
+• A "**[Relational database management system]{.underline}**" (RDBMS) is
+software that is used to manage a "relational database". These types of
+databases organize their information in rows and columns similar to how
+information is organized in an Excel document.
+
+-- Relational databases are sometimes known as SQL databases since the
+creation and manipulation of data in a relational database is done using
+the SQL computer language. (more on this later ...)
+
+-- Relational databases are very popular and have been around since the
+1970s.
+
+• Other categories of databases include different types of "NoSQL"
+databases. NoSQL databases generally do NOT store their information in
+rows and columns, but in other structures. Some types of NoSQL databases
+include
+
+-- Document databases (e.g. "MongoDB")
+
+-- Graph databases (used to store "graphs" such as Facebook's "friends
+graph")
+
+-- Key-Value databases (stores values that can be looked up with a "key
+value" -- e.g. key=SSN, value=person's name)
+
+• The remainder of this presentation will focus primarily on "Relational
+Databases".
+
+**Relational DBMS Products**
+
+Current Relational DBMS Products
+
+• Some of the currently used RDBMS products:
+
+-- **[MySql]{.underline}**: "open source" DBMS. Can be downloaded and
+used for free. Powerful. Companies can purchase a technical support
+license from MySql, inc. Many many of the websites on the Internet use
+MySql to store information.
+
+-- **[PostgreSQL]{.underline}** -- another "open source" DBMS, similar
+to MySql
+
+-- **[Microsoft SQL Server]{.underline}** -- Microsoft's "high-end"
+DBMS. More powerful than Access (i.e. faster, can handle more data, more
+users, better security features, etc).
+
+-- **[Microsoft Access]{.underline}** -- Microsoft's "low-end" DBMS.
+Used for smaller applications. Cheaper than SQL Server to buy/license.
+Includes built in features for building apps. Not really used for large
+applications.
+
+-- **[Oracle]{.underline}** -- first commercially successful Relational
+DBMS. Very powerful. Popular for large DB applications in fortune 500
+companies.
+
+-- **[IBM Informix]{.underline}**
+
+-- many others ...
+
+**Database Client Server Architecture**
+
+Database Diagram
+
+• See the diagram on the next slide. It will be discussed throughout
+this section.
+
+• Don't worry if you don't understand the diagram at first. The rest of
+the slides in this section will explain the details of the diagram.
+
+• see diagram on next slide ...
+
+Architecture Diagram
+
+Database Architecture Diagram
+
+• The diagram on the previous slide shows the organization of a typical
+database system.
+
+• Two computers in the diagram:
+
+-- The two computers on the diagram communicate with each other.
+
+-- The computer on the left is running an "**application program**".
+
+-- The application program in this picture is used to look up telephone
+numbers for specific people.
+
+-- The telephone numbers are actually stored on the other computer. The
+telephone number lookup program will communicate with the computer on
+the right to get the telephone numbers.
+
+-- Programs that get information from other programs are known as
+"***client programs**"**.***
+
+-- The computer on the right is running a DataBase Management Server
+program (DBMS).
+
+-- The DBMS maintains the database that stores the telephone numbers.
+
+-- This computer is shown without a screen because the human user
+doesn't use this computer directly.
+
+-- Rather this computer is accessed indirectly by the telephone number
+lookup program.
+
+-- A computer that runs software that is used by other programs is known
+as a "**server *computer***". The program that it runs is known as a
+"**server *program***".
+
+• See next slide ...
+
+About the Diagram: The database
+
+• The actual database is shown on the diagram inside the cylinder shape,
+below the server computer (i.e. the computer on the right).
+
+• The cylinder that surrounds the data on the diagram represents the
+server computer's hard drive. Even though the hard drive is usually
+"inside" the server computer, it is often shown on such diagrams
+separately.
+
+Complete Explanation of Architecture Diagram
+
+• Complete Explanation of Architecture Diagram
+
+-- Step 1: The user runs an application program that allows him to look
+up people's telephone numbers. The user types in a name to lookup and
+then clicks the "Lookup" button.
+
+-- Step 2: The application needs to get the information so the
+application program sends a request to the DBMS program over the
+computer network to lookup the information in the database. (This
+request is actually expressed using the SQL programming language. SQL is
+discussed later in this presentation)
+
+-- Step 3: The DBMS looks up the telephone number in the database.
+
+-- Step 4: The DBMS sends the information back to the client application
+program.
+
+-- Step 5: The application program displays the answer to the user (not
+shown in the diagram). It appears to the user that the application
+program "knows" the telephone number. However, really, the application
+program just asked for this information from the database management
+system.
+
+Client and Server programs can run on the same computer or on different
+computers
+
+• Note that it is *possible* to have the application program (AKA
+"client program") and the DBMS program (AKA "server program") on the
+*same computer.*
+
+• However for large database applications used by businesses, the DBMS
+is usually on a different computer than the application program is
+running on.
+
+Other Types of Database Clients
+
+• The following are different type of systems that interact with
+databases
+
+-- **[mobile apps that access data]{.underline}** -- most iOS or Android
+apps that accesses data are actually communicating over the Internet to
+a server program that uses a database to store and retrieve data.
+
+-- **[websites that access a lot of data]{.underline}** -- e.g.
+facebook, amazon, google -- all of these websites use databases to store
+and retrieve the information that you see. For example, your list of
+facebook friends and the data on your facebook wall are stored in
+databases, all product information on amazon is stored in a database,
+the lists of websites on the internet and what information they store is
+stored in databases maintained by google. When you browse those websites
+the "web server" program that you communicate with in turn uses a
+"database server" program to store and retrieve the information that you
+see.
+
+-- **[ATM machine ]{.underline}**-- data is stored on the bank's
+database. The data is accessible from any ATM machine.
+
+-- **[Point of Sale]{.underline}** -- when you buy items in a
+supermarket and the cashier "scans" the item -- the scanner and the
+checkout system acts as a client to the database server. The database
+sends product and pricing information back to the checkout system to
+produce the bill. The database server also updates its inventory records
+to reflect the fact that the items have been purchased.
+
+-- **["]{.underline}[EZ-Pass]{.underline}["]{.underline}** -- when a car
+passes through an "ez-pass" toll booth, the information about the car is
+recorded in a database which is then used to generate billing
+information.
+
+-- etc.
+
+Structured Query Language (SQL)
+
+• The application program uses a special computer language, called
+**Structured Query Language (SQL)**, to communicate with the DBMS
+program.
+
+• SQL is often pronounced as "sequel"
+
+• Users of the application program do NOT need to understand SQL. It is
+the computer programmers who create application programs who must
+understand how to write SQL.
+
+SQL : Inserts, Updates, Deletes, Queries, ...
+
+• The most common types of SQL requests are:
+
+-- **[Inserts]{.underline}**: Requests from the application program to
+add information to the database (DB).
+
+-- **[Deletes]{.underline}**: Requests from the application program to
+remove information from the DB.
+
+-- **[Updates]{.underline}**: Requests from the application program to
+modify some information that already exists in the DB.
+
+-- **[Queries]{.underline}**: *(these are also known as "selects")*
+Requests from the application program to retrieve specific information
+from the DB.\
+\
+The diagram above shows the application asking the DMBS for Joe Smiths
+telephone number. This is a simple query that returns a single piece of
+information. Queries can be much more complex and return a lot of
+information.\
+\
+An example of a more complex query might be -- find the list of names
+and telephone numbers for those people whose last name begins with "S"
+and whose telephone number is in the 917 area code.
+
+Many Clients at the Same Time
+
+• The diagram above only shows a single client computer. In reality it
+is very common for many different client computers to run application
+programs at the same time.
+
+• For example, it is likely that there are many different people each
+running a separate copy of the telephone number lookup program on their
+own computer. In this case there would be many different telephone
+number **client** computers all communicating with the one DataBase
+Management System **server** program.
+
+Different types of client application programs.
+
+• The diagram above only showed one type of client application program,
+i.e. the telephone number lookup program. However, it is common for
+information contained in a single database to be used by different types
+of application programs simultaneously.
+
+• Example: A database that tracks information about planes and flights
+for an airline might be accessed by all of the following different types
+of application programs simultaneously:
+
+-- A program used by ticketing agents to sell tickets for the flights
+
+-- A different program used by the airplane maintenance staff to
+determine which planes need to be maintained based on how many miles
+they have flown so far
+
+-- A third program used by the payroll department to calculate paychecks
+based on the number of hours and miles flown by the crew.
+
+-- Another program may run on mobile phones to allow customers to look
+up flight delay information.
+
+-- etc.

@@ -1,0 +1,18 @@
+# Practice with Regular Expressions
+
+Please refer to the following websites for some practice with creating Regular
+Expressions (regex). 
+Solutions are available online if you get stuck.
+
+- The following website has a tutorial and practice problems as you
+  work through the tutorial: <https://regexone.com/>   ( also see:
+  <https://umar-yusuf.blogspot.com/2021/03/regexonecom-alternative-solution.html> )
+
+- The following is another website with a short tutorial and practice problems:
+  <http://regextutorials.com/>
+
+- The following website encourages you to practice regex concepts through 
+  puzzles that are very similar to typical "crossword" puzzles. Make sure 
+  to read "how to play". There is a website and an app for your phone. 
+  They are both good (the phone app is much easier for using on a phone 
+  than the website): <https://regexcrossword.com/> 

@@ -1,0 +1,122 @@
+# Where to find datasets
+
+***Note that the following was compiled circa `r format(Sys.Date(), "%b %d, %Y")`.***
+
+There are many many sources of data that can be found online. These 
+resources are constantly being updated and new ones are constantly 
+becoming available. The following are just some ideas to get started with
+your search for data. 
+
+
+## Datasets in R packages
+
+There are many R packages that come with datasets.
+By "dataset" I mean any data that is referenced in an R variable. 
+This can be a dataframe, a vector, a list, etc. etc. etc.
+Below are just a few example R packages that contain datasets. 
+There are many, many others. Also make sure to see the section below about
+R pacakges that offer access to APIs.
+
+| Package name | Description |
+|--------------|-------------|
+| nycflights13 | data about all flights coming into or out of NYC in 2013. |
+| Lahman | Extensive data about baseball teams, players, etc. |
+| babynames | data provided by USA Social Security administration about births from 1880 through 2017 |
+| stringr | Contains vectors fruits,sentences,words that the help uses in examples. |
+| etc ... | ... |
+
+
+To use the data in a package you should
+first install the package. As an example we'll use the 
+"nycflights13" package which 
+contains data about all airline flights that came into or out of 
+New York City in 2013. 
+
+```{r}
+#| warning: false
+
+if(!require("nycflights13")){install.packages("nycflights13");require("nycflights13");}
+```
+
+We can now view which datasets are in the package with the following command:
+
+```{r}
+data(package="nycflights13")
+```
+
+To see the list of datasets in ALL packages that you have installed, you 
+can use the following command
+
+```{r}
+data(package=rownames(installed.packages()))
+```
+
+To access the data you can use the syntax
+PACKAGE_NAME::VARIABLE_NAME. Alternatively you can load the package
+by using the library or require functions and then access the data
+by just using the variable name.
+
+```{r}
+# This will work after you've installed the nycflights13 package
+# even before you've loaded it.
+
+head(nycflights13::flights)   # show the first few rows
+
+
+# Alternatively if you have already loaded the package with the 
+# library or require functions (which we did above) you can access
+# the flights variable without specifying nycflights::
+
+head(flights)   # show the first few rows
+```
+
+- nycflights13 package
+  
+  * install.packages("nycflights13")  # install the package
+    library(nycflights13)             # load the package
+      
+    help(package="nycflights13")    # see what is included in the package
+    
+
+
+    
+## Project Gutenberg
+
+<https://www.gutenberg.org/>
+
+This website hosts complete text of many many books whose copyright has expired.
+If you are planning to work with "text" files, then you should search 
+for the "UTF-8" or "ASCII" or "Plain Text" versions.
+
+## Search for "Open Data"
+
+<https://www.google.com/search?q=open+data>
+
+Search for "open data" and MANY websites, especially government
+based websites will come up. For example:
+  
+  * <https://data.gov/> - US Government Open Data
+  
+  * <https://data.ny.gov/> - New York ***State***
+  
+  * <https://opendata.cityofnewyork.us/> - New York ***City***
+  
+  * <https://data.nasa.gov/>
+
+  * many, many others ...
+
+## Google dataset search
+
+Google search engine for datasets: <https://datasetsearch.research.google.com/>  
+
+## Kaggle
+
+<https://www.kaggle.com/datasets>  
+
+This is a popular website for machine learning and data science 
+competitions, projects and tutorials. There are many datasets hosted
+on this platform
+
+
+
+

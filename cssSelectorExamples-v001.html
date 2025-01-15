@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSS Selector Example</title>
+  <style>
+    /* Element Selector */
+    p {
+      color: blue;
+    }
+
+    /* Class Selector */
+    .highlight {
+      background-color: yellow;
+    }
+
+    /* ID Selector */
+    #header {
+      font-size: 24px;
+    }
+
+    /* Descendant Selector */
+    div p {
+      font-style: italic;
+    }
+
+    /* Child Selector */
+    div > p {
+      font-weight: bold;
+    }
+
+    /* Adjacent Sibling Selector */
+    h2 + p {
+      text-decoration: underline;
+    }
+
+    /* General Sibling Selector */
+    h3 ~ p {
+      border: 1px solid black;
+    }
+
+    /* Attribute Selector */
+    a[target="_blank"] {
+      color: red;
+    }
+
+    /* Pseudo-class Selector */
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Pseudo-element Selector */
+    p::first-letter {
+      font-size: 36px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="header">CSS Selector Example</h1>
+  <div class="highlight">
+    <p>This is a paragraph of text.</p>
+    <p class="highlight">This paragraph has a yellow background.</p>
+    <ul>
+      <li><a href="#">Link 1</a></li>
+      <li><a href="#" target="_blank">Link 2 (opens in new tab)</a></li>
+      <li><a href="#">Link 3</a></li>
+    </ul>
+  </div>
+  <div>
+    <p>This paragraph has italic text.</p>
+    <p>This paragraph has <span>bold</span> text.</p>
+  </div>
+  <h2>Heading 2</h2>
+  <p>This paragraph has underlined text.</p>
+  <h3>Heading 3</h3>
+  <p>This paragraph has a border.</p>
+</body>
+</html>

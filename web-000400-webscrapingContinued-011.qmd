@@ -1,0 +1,922 @@
+##################################################################
+##################################################################
+##
+## In this file:
+##
+## - Using the rvest package to scrape information from a
+##   basic HTML website
+##
+## - Packaging up the code to scrape a page into a function
+##
+## - Using a loop to scrape several pages of information
+##   whose URLs differ in a predictable way.
+##
+## - Fixing fragile CSS selectors
+## 
+## - Intro to regular expressions (regex)
+#################################################################
+#################################################################
+
+# Intro to the magrittr package
+
+# Install (if necessary) and load the rvest package
+
+# The following two lines will install and load the rvest package.
+# I commented out these lines in favor of the one line below
+#
+#install.packages("magrittr")    # installs it on your machine (only need to do this once on your machine)
+#library(magrittr)              # do this everytime your start RStudio  (also require(rvest) works)
+
+# This one line will accomplish what the two lines above do. However,
+# this one line will not install the package if it's not necessary.
+if(!require(magrittr)) install.packages("magrittr")
+help(package="magrittr")
+# The magrittr package introduces the %>% operator
+# 
+
+seq(4, 6) %>%
+  rep(3)
+
+# same as
+seq(4, 6) %>% rep(3)
+
+# same as
+x = seq(4,6)
+rep(x, 3)
+
+
+
+
+# We can extend this further
+seq(4, 6) %>%
+  rep(3) %>%
+  sum()
+
+# same as 
+seq(4, 6) %>% rep(3) %>% sum()
+
+# same as
+x = seq(4,6)
+y = rep(x, 3)
+sum(y)
+
+
+#-------------------------------------------------------------------------------
+# Some online resources
+#
+# video demonstrating basics of web scraping in R
+# - https://www.youtube.com/watch?v=v8Yh_4oE-Fs&t=275s
+#
+# Tips for editing HTML in VSCode
+# - https://code.visualstudio.com/docs/languages/html
+#
+# Tips on how to use VSCode in general:
+#   https://code.visualstudio.com/docs/getstarted/tips-and-tricks
+#
+# timing R code
+# - https://www.r-bloggers.com/2017/05/5-ways-to-measure-running-time-of-r-code/
+#
+# video - using RSelenium to scrape dynamic (ie. javascript) webpage
+# - https://www.youtube.com/watch?v=CN989KER4pA
+#
+# CSS selector rules
+# - https://flukeout.github.io/ 
+# - answers to the "game": https://gist.github.com/humbertodias/b878772e823fd9863a1e4c2415a3f7b6
+#
+# Intro to regular expressions
+# - https://ryanstutorials.net/regular-expressions-tutorial/
+#-------------------------------------------------------------------------------
+
+# Install (if necessary) and load the rvest package
+
+# The following two lines will install and load the rvest package.
+# I commented out these lines in favor of the one line below
+#
+#install.packages("rvest")    # installs it on your machine (only need to do this once on your machine)
+#library(rvest)              # do this everytime your start RStudio  (also require(rvest) works)
+
+# This one line will accomplish what the two lines above do. However,
+# this one line will not install the package if it's not necessary.
+if(!require(rvest)) install.packages("rvest")   # this automatically also loads the "xml2" package
+help(package="rvest")
+help(package="xml2")
+###########################################################################
+#
+# Code to download high/low temperature data from the following website
+#
+###########################################################################
+
+url = "https://forecast.weather.gov/MapClick.php?lat=37.7771&lon=-122.4196#.Xl0j6BNKhTY"
+
+
+#seven-day-forecast-list > li:nth-child(1) > div > p.temp.temp-high
+
+
+
+
+cssSelector = ".temp"
+
+forecasts <- read_html(url) %>%
+  html_nodes( cssSelector ) %>%
+  html_text()
+
+forecasts
+
+x = read_html(url)
+x
+y = html_nodes(x, cssSelector )
+y
+z = html_text(y)
+z
+
+# What is the structure of x?
+str(x)
+
+###########################################################################
+#
+# Get the country names off the following website
+#
+###########################################################################
+
+url = "https://scrapethissite.com/pages/simple/"
+cssSelector = ".country-name"
+
+countries <- read_html(url) %>%
+  html_nodes( cssSelector ) %>%
+  html_text()
+
+x = read_html(url)
+x
+y = html_nodes(x, cssSelector)
+y
+z = html_text(y)
+z
+
+#..............................................................................
+# Let's examine the results.
+# 
+# Notice that the results includes the newlines (\n) and blanks from the .html
+# file. This is because we picked up EVERYTHING that appears between the
+# start tag and end tag in the HTML.
+#
+# Below, we will see how to fix up the results below by using the gsub function.
+#..............................................................................
+
+countries  
+
+###########################################################################
+#
+# same thing a slightly different way (without magrittr pipes)
+#
+###########################################################################
+
+url = "https://scrapethissite.com/pages/simple/"
+cssSelector = ".country-name"
+
+whole_html_page = read_html(url)
+country_name_html =  html_nodes( whole_html_page, cssSelector )
+just_the_text =   html_text(country_name_html)
+
+#...........................
+# Let's examine each part 
+#...........................
+
+# the contents of the entire HTML page
+whole_html_page      
+
+# just the HTML tags that we targeted with the cssSelector
+country_name_html    
+
+# remove the actual start and end tags ... leaving just the text.
+# again ... notice that this picked up the newlines (\n) and blanks from the .html file
+just_the_text  
+
+
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# Let's look a little closer at the contents of what is returned by read_html
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# We already had this above, just reviewing it again ...
+url = "https://scrapethissite.com/pages/simple/"
+whole_html_page = read_html(url)
+country_name_html =  html_nodes( whole_html_page, cssSelector )
+just_the_text =   html_text(country_name_html)
+
+# What is the structure of this data?
+str(whole_html_page) # list of 2 externalptr objects (see below)
+
+# What is the class of this data? 
+class(whole_html_page)   # "xml_document" "xml_node"
+methods(print)    # ... print.xml_document* ... print.xml_node*
+attributes(whole_html_page)
+
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# An externalptr cannot be accessed directly via R code. It is a "blob"
+# (a "binary large object") i.e. a piece of data that is only accessible
+# via C language (not R) code that is used to build some of the packages
+# that are used to extend R's functionality. You must use the built in
+# functions in the xml2 and the rvest packages to access this data.
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+##########################################################################
+#
+# gsub  -  "substitutes" (i.e. replaces) some text with other text
+#
+#########################################################################
+
+#..............................................................
+# Example:   substitute p's with x's 
+#..............................................................
+
+fruit = c("apple", "pear", "pineapple")
+fruit
+
+newFruit = gsub("p", "x", fruit) # axxle  xear xineaxxle
+newFruit
+
+fruit    # as with all other R functions, the orignal variable doesn't change
+
+#.....................
+# other gsub examples
+#.....................
+
+fruit
+
+# substitute p's with "" (i.e. the empty string - i.e. remove all p's)
+
+gsub("p", "", fruit)   
+
+fruit
+
+# substitute "apple" with "COMQUAT"
+gsub("apple", "COMQUAT", fruit)   
+
+
+#.....................................................................
+#
+# Getting back to web scraping ...
+#
+# we can eliminate extra newlines and the blanks with the gsub function
+# 
+#.....................................................................
+
+?gsub   # see the documentation
+
+without_backslash_n = gsub("\\n", "", just_the_text)    
+without_backslash_n
+
+# The following has a bug in that it removes ALL spaces.
+# countries = gsub(" " , "" , without_backslash_n)
+
+# Just remove the spaces that appear BEFORE the country name
+countries1 = gsub("^ *", "", without_backslash_n)
+countries2 = gsub(" *$", "", countries1)
+
+countries = countries2
+
+# alternatively, you can eliminate spaces and \n characters 
+# before and after the text all in one shot
+countries3 = gsub("(^[ \\n]*)|([ \\n]*$)", "", without_backslash_n)
+countries3
+
+########################################################
+#
+# Now that we understand the basics we can get
+# all of the country data and put it in a dataframe
+#
+########################################################
+
+url = "https://scrapethissite.com/pages/simple/"
+
+the_full_html = read_html(url)
+
+countries = the_full_html %>%
+              html_nodes( ".country-name" ) %>%
+              html_text()
+
+capitals = the_full_html %>%
+              html_nodes( ".country-capital" ) %>%
+              html_text()
+
+population = the_full_html %>%
+  html_nodes( ".country-population" ) %>%
+  html_text()
+
+area = the_full_html %>%
+  html_nodes( ".country-area" ) %>%
+  html_text()
+
+
+countries
+
+# remove the spaces and newline characters from countries
+countries= gsub("\\n", "", countries)
+countries= gsub("(^ *)|( *$)", "" , countries)
+countries
+
+head(countries,5)  # the United Arab Emirates has no spaces! Let's fix that ...
+
+countries = the_full_html %>%
+  html_nodes( ".country-name" ) %>%
+  html_text()
+
+# remove the spaces and newline characters from countries
+# Do not remove spaces between words
+countries= gsub("\\n", "", countries)
+countries= gsub("^ *", "" , countries)  # get rid of spaces before the text
+countries= gsub(" *$", "" , countries)  # get rid of spaces after the text
+countries
+
+
+capitals
+
+population
+
+area
+
+
+df = data.frame ( country=countries,
+                  capital = capitals,
+                  pop = population,
+                  area = area,
+                  stringsAsFactors = FALSE
+                  )
+
+
+
+
+head(df, 5)
+nrow(df)
+
+#####################################################
+#
+# Package up the technique into a function
+#
+#####################################################
+
+getCountryData <- function() {
+ 
+  
+  # Get all of the country data and put it in a dataframe
+  
+  url = "https://scrapethissite.com/pages/simple/"
+  
+  the_full_html = read_html(url)
+  
+  countries = the_full_html %>%
+    html_nodes( ".country-name" ) %>%
+    html_text()
+  
+  capitals = the_full_html %>%
+    html_nodes( ".country-capital" ) %>%
+    html_text()
+  
+  population = the_full_html %>%
+    html_nodes( ".country-population" ) %>%
+    html_text()
+  
+  area = the_full_html %>%
+    html_nodes( ".country-area" ) %>%
+    html_text()
+
+  # remove the spaces and newline characters from countries
+  countries= gsub("\\n", "", countries)
+  countries= gsub(" ", "" , countries)
+
+  df = data.frame ( country=countries,
+                    capital = capitals,
+                    pop = population,
+                    area = area,
+                    stringsAsFactors = FALSE
+  )
+  
+  return (df)
+}
+
+
+# Data on websites can change. We can now call this function whenever
+# we want to get the latest versions of the data from the website.
+
+mydata = getCountryData()
+head(mydata)
+
+
+
+
+######################################################
+#
+# Getting data from multiple web pages in a loop.
+#
+######################################################
+
+
+# The data on the following page is only one page of multiple pages of similar
+# data. 
+#
+#   https://scrapethissite.com/pages/forms/?page_num=1
+#
+# The links to the other pages appear on the bottom of the page. Clicking on 
+# the the link for the 2nd page, reveals that the 2nd page of data is at 
+# the following URL:
+#
+#   https://scrapethissite.com/pages/forms/?page_num=2
+#
+# These URLs differ ONLY in the page number. This allows us to scrape
+# ALL of the pages by reconstructing the URL for the page we want by
+# inserting the correct page number. 
+
+
+#-----------------------------------------------
+# Let's see if we can get the first page of data
+#-----------------------------------------------
+
+# The following function will be useful to get rid of extra "whitespace"
+# if necessary.
+
+removeWhitespace = function(text){
+  text = gsub("\\n","", text)
+  text = gsub("\\t","", text )
+  
+  return ( gsub(" ", "", text))
+}
+  
+x = "    this is some info \n\nanother line\nanother line\tafter a tab"
+cat(x)
+removeWhitespace(x)
+
+# Create a function to scrape the hocky data from one of the 
+# pages as specified in the url argument.
+getHockeyData <- function(url) {
+
+  the_full_html = read_html(url)
+  
+  teamNames = the_full_html %>%
+    # Analyze the HTML from one of the pages to figure out which CSS selector
+    # is best to use. We did so and figured out that the hockey team names
+    # were surrounded with an HTML that had class="name". Therefore the
+    # best css slector to use was ".name"
+    html_nodes( ".name" ) %>%     
+    html_text()
+  
+  teamNames = removeWhitespace(teamNames)   # the team names seem to be surrounded by whitespace
+
+  wins = the_full_html %>%
+    # Analyze the HTML from one of the pages to figure out which CSS selector
+    # is best to use. We did so and figured out that the number of wins
+    # were surrounded with an HTML that had class="wins". Therefore the
+    # best css slector to use was ".wins"
+    html_nodes( ".wins" ) %>%   # analyze the HTML to find the appropriate css selector
+    html_text()
+  
+  wins = removeWhitespace(wins)
+
+  # ... we can keep doing this to get all the other data on the page 
+  # for each team ... We didn't do that here but feel free to fill in 
+  # the missing code to scrape the rest of the data from the webpages.
+  
+  return(data.frame(team=teamNames, wins=wins, stringsAsFactors=FALSE))  
+}
+
+page1Url = "https://scrapethissite.com/pages/forms/?page_num=20"
+getHockeyData(page1Url)
+#--------------------------------------------------------------------
+# Let's figure out how to write a loop to get multiple pages of data
+#--------------------------------------------------------------------
+
+# The following is the url without the page number
+baseurl = "https://scrapethissite.com/pages/forms/?page_num="
+
+# get data for the first page
+pageNum = "1"
+url = paste0(baseurl, pageNum)
+getHockeyData (url)
+
+# get data for the 2nd page
+url=paste0(baseurl, "2")
+getHockeyData(url)
+
+# We can now write a function to get the data from multiple pages of the hockey data.
+# The pages argument is expected to be a vector with the numbers of 
+# the pages you want to retrieve.
+
+getMultiplePages <- function(pages = 1:10){
+  # This is the URL without the page number
+  baseurl = "https://scrapethissite.com/pages/forms/?page_num="
+
+  #   baseurl = "https://scrapethissite.com/pages/forms/?page_num=THE_PAGE_NUMBER&league=american
+  
+  
+  # baseurl = "https://finance.yahoo.com/quote/<<<TICKER>>>?p=<<<TICKER>>>&.tsrc=fin-srch"
+  
+  allData = NA
+  
+  # Loop through all the pages
+  for ( page in pages ){
+    # Create the URL for the current page
+    url = paste0(baseurl, page)
+    
+    # Get the data for the current page
+    hd = getHockeyData(url)
+    
+    # Combine the data for the current page with all of the data
+    # from the pages we have already retreived.
+    
+    if (!is.data.frame(allData)){
+      # This will only happen for the first page of retrieved data.
+      allData = hd
+    } else {
+      # This will happen for all pages other than the first page retrieved.
+      # rbind will only work if allData is already a dataframe. Therefore
+      # we cannot use rbind for the first page of retrieved data. 
+      allData = rbind(allData, hd)
+    }
+    # We don't want to overwhelm the web server with too many requests
+    # so we will pause (i.e. sleep) for 1 second after every time we
+    # retrieve a page before getting the next page of data.
+    Sys.sleep(1)
+  }
+  return(allData)
+}
+
+debugonce(getMultiplePages)
+
+getMultiplePages(4:6)
+
+allPages = getMultiplePages(1:24)
+
+
+#######################################################
+# BEREN - UP TO HERE AFTER CLASS 16
+#######################################################
+
+# Javascript in a webpage ####
+#
+# see the file javascriptExample-v001.html
+# on Canvas
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# DEFINITION: root directory (or root folder) ####
+# 
+# The "root" folder is the top level folder
+# on a computer harddrive or on a website.
+# It is named "/" on Mac and "\" on Windows.
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# EXAMPLE
+dir("/")   # show the files and folders in the root of the harddrive
+
+
+# robots.txt ####
+# 
+# Websites may place a file named robots.txt
+# at the very top of their website.
+#
+# Examples
+#   https://finance.yahoo.com/robots.txt    # pretty simple
+#   https://www.amazon.com/robots.txt       # very complex
+#   https://www.gutenberg.org/robots.txt    # pretty typical
+#
+#
+# Example entries in robots.txt
+#     Disallow all robots to scrape the entire site
+#     Since Disallow specifies the "root" or top level folder
+#
+#        User-agent: *
+#        Disallow: /
+#
+#     Allow all robots to scrape the entire site
+#     since "Disallow: " specifies no path
+#
+#        User-agent: *
+#        Disallow: 
+#
+#     Sleep 10 seconds between each page request
+#
+#        crawl-delay: 10
+#
+# More info about robots.txt
+#
+#    Quick overview and a "test tool"
+#      https://en.ryte.com/free-tools/robots-txt/
+#
+#    Ultimate robots.txt guide
+#      https://yoast.com/ultimate-guide-robots-txt/
+#
+#    Another test tool
+#      https://technicalseo.com/tools/robots-txt/
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+# css selector to find the last page 
+#     #hockey > div > div.row.pagination-area > div.col-md-10.text-center > ul > li:nth-child(24) > a
+
+############################################################################
+#
+# Write code to "scrape" the total number of pages.
+#
+# Find out how many pages there are (since the website may change, 
+# we can't assume that there will always be the same number of pages)
+#
+###########################################################################
+
+#..................................................................
+# Find the CSS selector that pinpoints the number of the last page
+#..................................................................
+
+# Modern browsers have "web developer tools" built into them.
+# These tools can help you to find the css selector that you need.
+# Different browsers have slightly different tools. 
+# For the following we will be using Chrome.
+#
+# Navigate to the first page ( https://scrapethissite.com/pages/forms/?page_num=1 )
+#
+# Right click on the last page number and choose "inspect". This will
+# reveal a new window that shows the HTML for the page. The part of the HTML
+# that corresponds to the page number is revealed. Make sure the page number
+# is there ...
+#
+# Right click on the highlighted HTML and choose the menu choices :
+# "Copy | copy selector". This will copy into the computer's clipboard 
+# a CSS selector that will pinpoint that piece of info.
+# 
+# Paste the CSS selector into your R code. The following is the 
+# css selector that I got when I did this:
+#
+#   #hockey > div > div.row.pagination-area > div.col-md-10.text-center > ul > li:nth-child(24) > a
+#
+# Note that this css selector is "fragile" - i.e. it is likely not to work
+# in the future if more data is added to the stie. Therefore it is NOT a very 
+# good CSS selector to use. We will examine this issue below. For now, let's 
+# just use this selector and revisit this issue later.
+
+url = "https://scrapethissite.com/pages/forms/?page_num=1"
+cssSelector = "#hockey > div > div.row.pagination-area > div.col-md-10.text-center > ul > li:nth-child(24) > a"
+
+# save the html for the page in a variable so we can use it 
+# again later without needing to pull it down again from the website.
+full_page = read_html(url)          
+
+# Get last page number by searching the full_page html for the tags
+# identified by the cssSelector and stripping out the tags
+last_page_number <- full_page %>%
+  html_nodes( cssSelector ) %>%
+  html_text()
+
+last_page_number
+
+# Strip out the whitespace 
+last_page_number = removeWhitespace(last_page_number)
+last_page_number
+
+# Convert the page nubmer to a numeric value
+last_page_number = as.numeric(last_page_number)
+last_page_number
+
+
+# Now that it works, let's create a function that packages up this functionality.
+# It's always a good idea to create a function that neatly packages up your
+# working functionality.
+#
+# The function will take the "parsed" html code as an argument.
+
+getLastPageNumber <- function(theFullHtml) {
+  cssSelector = 
+    "#hockey > div > div.row.pagination-area > div.col-md-10.text-center > ul > li:nth-child(24) > a"
+  
+  # remember that a function that does not have a return statement
+  # will return the last value that is calculated.
+  theFullHtml %>%
+    html_nodes( cssSelector ) %>%
+    html_text() %>%
+    removeWhitespace() %>%
+    as.numeric()
+}
+
+last_page_number = getLastPageNumber(full_page)
+last_page_number
+
+# Now that we have the total nubmer of pages, we can get ALL of the data
+# for all the pages as follows.
+#
+# NOTE that this may take a while to run.
+# We can figure out how much time by running all of the following commands
+# together. 
+
+Sys.time()    # shows the time on your computer
+
+start = Sys.time()
+# put some r code here
+end = Sys.time()
+end - start
+
+
+start_time = Sys.time() # get the time before we start
+
+dataFromAllPages = getMultiplePages(1:last_page_number)   # get all the pages
+
+end_time = Sys.time()   # get the time when it ended
+
+end_time - start_time   # show how long it took
+
+# Let's examine the results ...
+nrow(dataFromAllPages)  # how many rows?
+head(dataFromAllPages, 4)  # first few rows ...
+tail(dataFromAllPages, 4)  # last few rows ...
+
+
+  
+
+#######################################################################
+#
+# Finding css selectors that aren't "fragile"
+#
+#######################################################################
+
+#--------------------------------------------
+# Quick review of CSS selector rules. 
+#--------------------------------------------
+
+# To review the CSS selector rules see the website 
+#   https://flukeout.github.io/ 
+#
+# Read the tutorial information as well as try to solve the different 
+# levels of the game. 
+# The answers to the "game" on the above website can be found here:
+#   https://gist.github.com/humbertodias/b878772e823fd9863a1e4c2415a3f7b6
+#
+
+
+#-----------------------------------------------
+# Analyzing the CSS Selector we got from Chrome
+# (There is an issue with it. 
+#  We will address the issue and fix it.) 
+#------------------------------------------------
+
+# The following was the selector that we got from Chrome 
+# to find the last page number:
+#
+#   #hockey > div > div.row.pagination-area > div.col-md-10.text-center > ul > li:nth-child(24) > a
+#
+# This selector is "fragile". It will work for now but might not work in the future. 
+# This website has data for several years up until the present time. We 
+# anticipate that in the future there will be additional pages of data.
+# The CSS selector that we found will work to find the 24th page number
+# (which is currently the last page). However, in the future if there are 
+# more pages, the selector will continue to return the number 24. 
+# To understand exactly why, let's analyze this selector:
+# For a review of the rules for how selectors are built see the following 
+# page: https://flukeout.github.io/
+#
+
+<div>                # div is the parent of h1 and ul
+  <h1>My stuff</h1>  # h1 is the child of div and the sibling of ul
+  <ul>               # ul is the parent of 3 <li>s, the 2nd child of div and a sibling of h1
+    <li>             # 
+      <strong>       
+        Table
+      </strong></li>
+    <li>Chairs</li>
+    <li>Fork</li>
+  </ul>
+</div>
+
+
+# The following breaks down the selector that Chrome figured out into its 
+# different parts:
+#
+#   #hockey                   # find the HTML start tag whose id has a value id="hockey" 
+#   >                         # directly inside of that element
+#   div                       # there is a <div> tag
+#   >                         # directly inside of that div tag
+#   div.row.pagination-area   # there is a <div> tag that has row and pagination-area classes, i.e. <div class="row pagination-area">
+#   >                         # directly inside of that
+#   div.col-md-10.text-center # there is div tag with classes "col-md-10" and "text-center", i.e. <div class="col-md-10 text-center">
+#   >                         # directly inside of that 
+#   ul                        # there is a ul tag
+#   >                         # directly inside that there is
+#   li:nth-child(24)          # an <li> tag that is the 24th tag inside of the enclosing <ul> tag
+#   >                         # directly inside that there is 
+#   a                         # an "a" tag
+#
+# You should take the time to convince yourself that the css selector is 
+# accurate today by looking carefully at the HTML code and noting exactly where the 
+# last page number is in the context of the other tags and attributes on the page. 
+
+
+#................................................
+# Using VSCode to analyze the HTML
+#................................................
+
+# It's much easier to navigate around the HTML code by analyzing the HTML in an HTML editor. 
+# VSCode works well for this. To get the full HTML, right click on the page
+# and choose "View page source" (in Chrome or a similar link in other browsers).
+# Then copy all the code (ctrl-a on windows or cmd-a on Mac) and paste
+# it into a new VSCode file. Then save the file with a .html extension
+# to ensure that VSCode knows how to navigate around the file. 
+# In VSCode you can now point to the left margin and press the arrows that appear
+# to "collapse" or "expand" the HTML tags. Doing so helps a lot in trying to 
+# understand how the HTML file is organized.
+#
+# Other useful features in VSCode to help with editing HTML:
+#
+# - alt-shift-F   
+#    
+#     Remember that HTML does not require proper indentation to work in the webpage.
+#     However, without proper indentation, it is hard to read the HTML. Pressing
+#     shift-alt-F will automatically "format" the entire HTML file so that it 
+#     is indented properly and is easier to read.
+#
+# - As noted above - point to left margin to see arrows to 
+#   collapse or expand HTML elements.
+#
+# - ctrl-shift-P
+#
+#     VSCode has many features that are not directly available through the
+#     menus. ctrl-shift-P (Windows) or cmd-shift-P (mac) reveals the
+#     "command palette". This is a quick way to search for commands
+#     in VSCode which you might not otherwise know about. Try it. 
+#     For example,
+#
+#     * press ctrl-shift-P and type "comment" (without the quotes). Then choose
+#       "Add line comment" to automatically insert <!--   --> into your HTML file.
+#       You can add comments to the HTML file as you are examining it. This may
+#       help you when you are trying to figure out the structure of a 
+#       complex HTML file and how to 
+#    
+#
+#     * Highlight some text, press ctrl-shift-P. 
+#       Then type "case" (without the quotes). You will see options to transform 
+#       the selected text upper or lowercase. 
+#
+# - For more tips on how to use VSCode to edit HTML files: 
+#   https://code.visualstudio.com/docs/languages/html
+#
+# - For more tips on how to use VSCode in general:
+#   https://code.visualstudio.com/docs/getstarted/tips-and-tricks
+
+
+#................................................
+# ... back to analyzing the CSS selector
+#................................................
+
+# From analyzing this HTML, we determine that each page number is in an <li>
+# element. Since there are 24 pages of data there are 24 <li> tags (each contains
+# a link to one of the page numbers). There is also one more <li> tag that
+# contains the "next page" button.     
+#
+# In the CSS Selector tha we got from Chrome "li:nth-child(24)" is specifically
+# targeting the 24th <li> tag. That is the last tag today. However, 
+# if in the future more pages of data are added to the website, this selector
+# will still retrieve the 24th <li> tag and not the 2nd to last <li> tag
+# (remember, the last <li> tag is for the "next page" button).
+#
+# (NOTE: the "next page" link appears in the HTML code
+# as "next page" but is rendered in the browser as ">>". Replacing the
+# words "next page" in the HTML with ">>" on the rendered page
+# is accomplished through CSS rules - but this has no effect on  
+# what we're trying to accomplish. When scraping a page, you work with what's 
+# in the HTML file, not what is rendered in the browser.)
+#
+# Therefore it is important to analyze the HTML and try 
+# to find a "less fragile" css selector the LAST page number the same information.
+# After looking at the HTML code carefully, it seems like the <ul> tag
+# referenced in the CSS selector that we found has a class="pagination" attribute, 
+# ie. <ul class="pagination">. We can target that directly with ".pagination".
+#
+# The li that points to the last page happens to be the 2nd to last 
+# <li> tag that is directly inside this ul tag, i.e. 
+#
+#    <ul class="pagination">
+#       <li> info about page 1 </li>
+#       <li> info about page 2 </li>
+#         etc ...
+#       <li> info about the last page </li>         # THIS IS THE <li> WE WANT
+#       <li> info about the "next" button </li>
+#    </ul>
+#
+# Our css selector therefore becomes :    ".pagination > li:nth-last-child(2)"
+# Let's see if our code works with the new CSS selector
+
+getLastPageNumber <- function(theFullHtml) {
+  
+  # Selector specfies the 
+  # 2nd to last li inside the a tag that contains class="pagination"
+  selector = ".pagination > li:nth-last-child(2)"    
+  
+  # remember that a function that does not have a return statement
+  # will return the last value that is calculated.
+  theFullHtml %>%
+    html_nodes( selector ) %>%
+    html_text() %>%
+    removeWhitespace() %>%
+    as.numeric()
+}
+
+full_page = read_html("https://scrapethissite.com/pages/forms/?page_num=1")
+
+getLastPageNumber(full_page)  # test the new version
+
+

@@ -1,0 +1,59 @@
+project:
+  type: book
+
+book:
+  title: "Data Management With R"
+  author: "Y. Rosenthal"
+#  date: "1/21/2024"
+  chapters:
+    - index.qmd
+#    - part: 0000007-partIntro-v001.qmd
+#      chapters:
+#        - 0000051-filenames-v001.qmd
+#        - 0000300-datasets-v001.qmd
+#    - part: 0000010-partMain-v001.qmd
+#      chapters:
+    - 0000017-introToQuarto-v001.qmd
+    - 0000022-InstallingRPackages-v003.qmd
+    - 0000013-IntroToTheBashCli-v009.qmd
+    - 000013-IntroToTheBashShellCli-v009.qmd
+    - 000025-introToCliCommands-v005.qmd
+    - 0200200-stringr-tutorials-v003.qmd
+    - 0200200-introToRegularExpressions-v036.qmd
+    - 000260-PracticeWithRegulaExpressions-v003.qmd
+    - 0200100-tdyvrsDplyr-v0001.qmd
+    - 0300100-excelAndR-v001.qmd
+#        - 83spr23/sqlNotes/sql0010-introToSql-v023.qmd
+#        - 0000013-IntroToTheBashCLI-v009.qmd
+    - part: 0990000-partQuestions-v001.qmd
+      chapters:
+        - 0990100-cleaningData-v001.qmd
+    - part: 0999000-appendices-v001.qmd
+      chapters:
+        - 0000100-topics-v001.qmd
+        - 0000200-bibliography-v001.qmd
+      
+#    - intro.qmd
+#    - summary.qmd
+#    - references.qmd
+#
+# bibliography: references.bib
+
+execute:
+  error: true
+  warning: true
+
+format:
+  html:
+    theme: cosmo
+    toc-expand: true
+    fontsize: 80%
+    number-depth: 2
+    link-external-newwindow: true
+    include-in-header: yrNocacheHeaders-v001.html
+#  pdf:
+#    documentclass: scrreprt
+#    fontsize: 9px
+  docx: default
+editor: source
+

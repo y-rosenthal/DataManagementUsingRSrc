@@ -1,0 +1,96 @@
+## Ignore this section {.unnumbered}
+
+**You should ignore this section.**
+
+If you are curious why it's here ... I am creating this website by 
+adapting materials that I've used in my course over past semesters. 
+The following are files that I am in the midst of adapting to the 
+new format.
+I am using this page to keep track of the materials as I work through 
+adapting them to the new format. Again - you should ignore this page.
+
+-Prof. Rosenthal
+
+
+- 000000-yrNotes-teachingDataMgmt-v001.R
+- 000013-IntroToTheBashShellCLI-v007.docx
+- 000017-ViewingFilesAndFoldersFromBash-v002.docx
+d 000025-introToCliCommands-v003
+- 000025-introToCliCommands-v003.zip
+- 000037-Bash-R-NavigatingTheFilesSystemAndProcessingText-v002.docx
+- 000050-readingFiles_packages_regex_etc-v009.R
+- 000050-readingFiles_spr23-v004-afterWilf.R
+- 000050-readingFiles_spr23-v004.R
+- 000050-readingFiles_spr23-v005.R
+- 000100-readingFiles_etc_continued-v008-beren.R
+- 000100-readingFiles_etc_continued-v009.R
+- 000120-morePractice-files-directories-paths-etc-v001.R
+- 000150-assignment-readingAndWritingFiles-v002.R
+- 000175-rPackages-v001.R
+- 000200-introToRegularExpressions-v031-a-beforeWilf.R
+- 000200-introToRegularExpressions-v031-verB-afterWilf.R
+- 000200-introToRegularExpressions-v031.R
+- 000200-introToRegularExpressions-v032.R
+- 000210-regex-summary-of-metacharacters-v001.md
+- 000210-regex-summary-of-metacharacters-v001.txt
+- 000240-regexPracticeProblems-v005.R
+- 000240-regexPracticeProblems-v006.Rmd
+- 000240-regexPracticeProblems-v006.html
+- 000240-regexPracticeProblems-v007-changeToDataframe.Rmd
+- 000250-regexQuestions-customFunctions-v001.Rmd
+- 000250-regexQuestions-customFunctions-v001.html
+- 000260-PracticeWithRegulaExpressions-v001.docx
+- 000260-PracticeWithRegulaExpressions-v002.docx
+- 000290-advancedRegex-v002.R
+- 000290-advancedRegex-v003-b.R
+- 000290-advancedRegex-v003.R
+- 000290-advancedRegex_dplyr_sql-v001.R
+- 000292-usingRRawStringsWithRegex-v001.R
+- 000294-introToDplyrAndSQL-v001.R
+- 000300-WebScraping-v009.R
+- 000400-webscrapingContinued-010.R
+- 000420-dynamicJavascriptExample-v001.html
+d 000450-WebAPIs
+- 000450-beyondCharacterLogicalAndNumeric-v007-utf8.R
+d 000600-WebScraping
+- 001000-newStuff-r4ds-v001.R
+- Beren-class03-v01.docx
+- Git-2.39.1-64-bit.exe
+d HW1-SqlQuestions
+d HW2-SQL-morequestions
+- HowToInstallBashOnWindows-v001.docx
+- HowToUseDiffChecker-v001.com
+- RMarkdownPipeline.docx
+- Wilf-class03-v01.docx
+- assignment-countFilesBasedOnDatesInFilenames-v001.R
+- boysNames.txt
+- drawErd-v001.html
+- drawErd-v002.html
+- drawErd-v003.html
+d emails
+- filesystemHierarchy-v001.docx
+d final
+d hw3-assignment-omdbapi-database
+- jsonStuff-v000.rtf
+- jsonStuff.rtf
+d midtertm
+d oldFiles
+d r4ds-main
+- r4ds-main.zip
+- rename_multiple_files-v001.R
+d sqlNotes
+- sqlResources-v001.txt
+d student-cheat-sheets
+d syllabus-and-referenceMaterial-v005
+- syllabus-and-referenceMaterial-v005.zip
+d tmp-studentQuestions
+- tmp.txt
+d todo
+- webScrapingQuestions-v001.html
+- webScrapingQuestions-v001.qmd
+d yrData
+
+# Other resources for use to build this book
+
+<https://yihui.org/knitr/options/>
+

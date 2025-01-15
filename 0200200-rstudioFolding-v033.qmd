@@ -1,0 +1,42 @@
+```{r}
+# How to hide/show portions of code in RStudio (i.e. "code folding") ####
+
+#### How to hide/show portions of code in RStudio (i.e. "code folding") ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Using RStudio's editor, you can hide/show certain portions of code.
+# This makes it is easier to navigate through long code files.
+# Hiding code in the editor in this way is called "code folding".
+#
+# To fold code you can
+# click on the triangles   ####
+# that appear in RStudio's margin, next to the line numbers.
+# These triangles appear in the following places:
+#
+#   1. Next to the first line of a function                        ####
+#   2. Next to the line that contains a opening "{"                ####
+#   3. on a line with a comment that ends with 4 pound signs, i.e. ####
+#   4. on a line with a comment that ends with 4 equal signs, i.e. ====
+#   5. on a line with a comment that ends with 4 dashes, i.e.      ----
+#
+# 
+# #### Hot Keys and Menu choices ####
+# 
+# You can fold a particular section of code or all sections with the 
+# menu choices found under "Edit | Folding" menu. These choices have the
+# following corresponding hotkeys.
+#
+#   - collapse a single section   (Windows: alt+L)        ####
+#   - expand a single section     (Windows: alt+shift+L)  ####
+#   - collapse ALL sections       (Windows: alt+O)        ####
+#   - expand ALL sections         (Windows: alt+shift+O)  ####
+#
+# See the following for more info about "code folding" within R Studio
+#
+#   https://support.rstudio.com/hc/en-us/articles/200484568-Code-Folding-and-Sections-in-the-RStudio-IDE ####
+#
+#   https://stackoverflow.com/questions/36992873/r-studio-organize-code-in-section-that-can-be-hidden ####
+#
+#
+# click the dropdown at the bottom left hand of the script window ####
+# to select the section of code that you'd like to jump to.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

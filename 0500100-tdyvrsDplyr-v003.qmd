@@ -1,0 +1,745 @@
+# Intro to dplyr
+
+## Intro to dplyr
+
+The dplyr R package is part of the tidyverse family of packages.
+It is used to "slice and dice" tibbles to get exactly the 
+data you want, in the form that you want it.
+
+The dplyr R package  performs the same kinds of tasks that the 
+"SQL select statement" performs. We'll learn more about SQL later.
+
+Sources for info about the dplyr package:
+
+- The book "R for Data Science, second edition" is available online and in 
+  print. The online version is here: <https://r4ds.hadley.nz/>
+  The intro to dplyr appears here: <https://r4ds.hadley.nz/data-transform>
+
+- The official tidyverse website,<https://www.tidyverse.org/>, is a
+  great place to start when you're looking for information about any of 
+  the tidyverse packages. The dplyr webpage is <https://dplyr.tidyverse.org/>
+  
+- You can also look at the official CRAN page for dplyr, 
+  <https://cloud.r-project.org/web/packages/dplyr/index.html>
+  See the vignettes on this page for good tutorial material.
+  
+## Download the data
+
+## Load the packages we'll neeed
+
+```{r}
+#| warning: false
+
+if(!require(tibble)){install.packages("tibble");require(tibble);}
+if(!require(dplyr)){install.packages("dplyr");require(dplyr);}
+if(!require(readr)){install.packages("readr");require(readr);}
+```
+
+## Get the data
+
+The data we are using in this section is contained in a csv file.
+If you'd like to follow along with this tutorial on your own computer
+you can
+
+- download the .csv file we are using by clicking 
+[here](data/salespeople-v001.csv). 
+
+- Put the file in a folder named "data".
+  Make sure that the folder is a subfolder
+  of your "working directory". You can find your "working directory"
+  with the R function `getwd()`. Alternatively, you can change the 
+  read_csv function below to reflect the location where 
+  you put the file.
+
+The data 
+contains information about salespeople who are employees of a company.
+Each row of the data contains info about one salesperson. They get paid
+as a combination of their "base pay" and a commission that is a percentage of
+the total dollar amount of sales they make.
+
+### Download the data if you like
+
+### Read in the data into a tibble
+
+```{r}
+# Read in the data into a tibble
+#
+# Note that the following code uses the readr::read_csv function from the readr
+# package which is part of the tidyverse collection of packages. 
+# This function is similar to the base-R read.csv function.
+# 
+# read_csv returns a tibble, which is the data structure that the 
+# tidyverse packages use in lieu of dataframes. A tibble is basically
+# a dataframe with extra features.
+# By contrast, the base-r read.csv function returns a dataframe.
+ 
+sales = read_csv("data/salespeople-v001.csv")
+```
+
+## Display the data
+
+Since the data is in a tibble, by default, only the first 10 rows are
+displayed. In addition, only the columns that fit on the screen will be 
+displayed.
+If the rows are too wide for the screen, then 
+some columns may not be displayed and/or the contents of some columns may be shortened.
+
+```{r}
+# Display the first few rows and columns of the sales data
+sales
+```
+
+
+## Display more rows/columns of the tibble
+
+### print( SOME_TIBBLE, n=NUMBER_OF_ROWS)
+
+```{r}
+# Use the print function to modify the output. Use the following arguments:
+#    n - number of rows to display (Inf, i.e. infinity, for all rows)
+#    width - maximum width of a row to display (might wrap if it's too long for your screen)
+print(sales, n=3)
+```
+
+### print( SOME_TIBBLE, width=WIDTH_OF_DATA)
+
+```
+# Display all rows and all columns
+print(sales, n=Inf, width=Inf)
+```
+
+### Other ways of viewing the data
+
+```
+# To see the entire tibble in a separate tab in RStudio
+# you can use the following command
+#
+#View(sales)
+
+# Show all column names and datatypes plus some actual data
+glimpse(sales)
+
+# Show just the column names (could be useful for a quick reminder when you need it)
+colnames(sales)
+```
+
+## Convert between tibbles and dataframes
+
+The majority of the dplyr functions work with tibbles or dataframes.
+However, the tidyverse in general and dplyr specifically is designed to work
+better with tibbles. 
+
+If you need to, you can always convert a tibble to a dataframe or a dataframe 
+to a tibble.
+
+```{r}
+#| error: true
+
+# Convert the tibble to a data.frame
+dfSales = as.data.frame(sales)
+
+# Convert a dataframe to a tibble
+tblSales = as_tibble(dfSales)
+
+# A tibble is also a dataframe.
+# This is similar to how a square is also a rectangle.
+# You can see that from the class of the variable. 
+# The class of a tibble contains "tbl_df" "tbl" as well as "data.frame"
+class(tblSales)
+
+# However, a dataframe is not necessarily a tibble.
+# This is similar ot how a rectangle is not necessarily a square.
+# Notice how the class of dfSales is only "data.frame"
+class(dfSales)
+
+# The head function is designed to work with dataframes
+head(dfSales, 3)
+
+# Therefore the head function also works with tibbles
+head(tblSales, 3)
+```
+
+```{r}
+#######################################################################
+# However, features of some functions that are designed to
+# work with tibbles might not work with data.frames.
+#######################################################################
+```
+
+```{r}
+#| error: true
+
+# This works fine - display the first 3 rows of the tibble.
+print(tblSales, n=3) 
+
+# ERROR - n argument is not designed to work with dataframes that aren't tibbles
+print(dfSales, n=3) 
+```
+
+
+## select
+
+Use the select function to get just the specified columns.
+
+The first argument to the select function is named .data (notice the 
+period before .data). It is used to specify which tibble or 
+dataframe you are working with. The other arguments are used to specify
+which columns you'd like to see from the dataframe/tibble. 
+Note that there are NO quotes around the column names (this differs from
+the base-r way of specifying column names in a dataframe).
+
+```{r}
+# Show just the specified columns from the sales tibble
+select(.data=sales, first, last, salesInThousands)
+```
+
+The columns appear in whatever order you specified in the select function.
+If you want to bring a few columns to the front followed by the rest
+of the columns, you can use the everything() function.
+
+```{r}
+# Show the specified columns first, followed by the other columns.
+select(.data=sales, first, last, everything())
+```
+
+## filter
+
+The filter function is used to retrieve the rows from a tibble that match a condition.
+
+- The first argument of the filter function is also .data. Just as with the
+  select function this argument for the filter function 
+  is expected to be a tibble or a dataframe.
+
+- The next argument to filter is a logical expression. You can use the names
+  of the columns of the tibble/dataframe in the expression. filter will 
+  examine each row of the tibble/dataframe and only return those rows
+  whose values match the stated condition. 
+
+
+The following code displays only those rows whose salesInThousands is less than 100.
+
+```{r}
+filter(.data=sales, salesInThousands < 100)
+```
+
+## Using the dplyr functions in a "pipeline"
+
+The tidyverse functions are designed so that you can be apply them one after 
+the other. The clearest way to do that is to "pipe" the output of one 
+function into the input of another. 
+
+The following pipeline first applies select to generate
+a new tibble that only contains the specified columns. Then the
+filter function then chooses only 
+those rows that meet the specified condition.
+
+```{r}
+sales |> 
+  select(first, last, salesInThousands) |>
+  filter(salesInThousands < 100)
+
+# In this example we could apply the filter before select.
+# It technically doesn't matter which order you apply the functions in 
+# as long as you realize that the output of one function is fed into 
+# the input of the next function.
+
+sales |> 
+  filter(salesInThousands < 100) |>
+  select(first, last, salesInThousands) 
+```
+
+The dplyr functions listed in the next section all take a tibble/dataframe as their
+first argument and return a modified tibble/dataframe. 
+Therefore each of these functions can be called as part of  a pipeline.
+This allows us to start with some raw data in a tibble/dataframe and
+manipulate it in numerous ways.
+
+## Important dplyr functions for manipulating tibbles
+
+- select - choose the columns you want (described above)
+
+- filter - choose the rows based on a condition (also described above)
+
+- arrange - reorder the rows based on the specified sorting rules
+
+- mutate - adds additional columns to the tibble/dataframe
+
+- group_by - identify which rows will be aggregated by a subsequent summarize function (see below)
+  (This isn't too useful unless it is followed by a subsequent call to summarize).
+
+- summarize - aggregrate several rows of data into a single row of data by using
+  "aggregate functions" such as max(), min(), etc
+
+See more details below in the subsequent sectoins. 
+The dplyr package contains many, many functions. 
+The functions listed above are of the most important functions in dplyr and 
+by combining them in pipelines you can retrieve data from a tibble in many 
+different ways. The documentation sometimes refers to these functions as 
+"dplyr verbs" since each of them "do something" to the data.
+
+## arrange
+
+The arrange function reorders the rows based on specified sorting rules.
+
+```{r}
+# Arrange all of the rows based on salesInThousands. 
+sales |> 
+  arrange(salesInThousands)
+
+
+# Select the first, last names and salesInThousands
+# for only those rows for which salesInThousands is less than 100.
+# Arrange the rows so that they appear in order of the salesInThousands.
+sales |> 
+  select(first, last, salesInThousands) |>
+  filter(salesInThousands < 100) |>
+  arrange(salesInThousands)
+```
+
+### arrange by more than one column
+
+If you pass more than one column name to the arrange function 
+
+- the rows are arranged by the first specified column
+
+- all rows that have the same value of the first column passed to arrange
+  are further arranged within that cluster of rows by the 2nd column name
+  that was passed to arrange
+  
+- You can specify as many column names as you like in the arrange function.
+  Column names that appear later in the call to arrange only effect
+  the final order for those rows that share the same value for the 
+  earlier column names in the arrange function.
+  
+See the examples below.
+
+```{r}
+# show the rows in alphabetical order based on the names of the salespeople.
+sales |>
+  arrange(last,first) |>
+  print(n=Inf)
+
+# Arrange by title, then by last names and finally by first names
+sales |>
+  arrange(title, last, first) |>
+  print(n=Inf)
+
+# It might help to read if you display the columns you are sorting by first.
+# To do so, simply add a select to the pipeline. 
+#
+# In this example, it makes no difference
+# if the select appears before or after the arrange function.
+#
+# Notice that the names are alphabetically arranged only with a group of
+# rows that all have the same title.
+
+sales |>
+  select(title, last, first, everything()) |>
+  arrange(title, last, first) |>
+  print(n=Inf)
+
+# We can get even more fine grained. This time we will arrange
+# by title, then by region, then by last names and finally by first names.
+#
+# Notice that the names are alphabetically arranged only with a group of
+# rows that all have the same title and region.
+
+sales |>
+  select(title, region, last, first, everything()) |>
+  arrange(title, region, last, first) |>
+  print(n=Inf)
+
+
+```
+
+### desc(SOME_COLUMN) - arrange in descending order
+
+Use the desc function to specify "descending" order.
+See the examples.
+
+```{r}
+# In the following, the rows with the highest values
+# of salesInThousands are at the top.
+
+sales |> 
+  filter(salesInThousands < 100) |>
+  select(first, last, salesInThousands) |>
+  arrange(desc(salesInThousands))  |>
+  print(n=Inf)
+
+# Arrange alphabetically by the region.
+# Within each region, show the sales in decreasing order.
+sales |>
+  select(region, baseInThousands, everything()) |>
+  arrange(region,  desc(baseInThousands)) |>
+  print(n=Inf)
+
+```
+
+```{r}
+#| error: true
+
+# Show the names, titles and salesInThousands for
+# people who sell to the usa and for people who sell to europe.
+#
+# Arrange the results so that all titles are grouped together.
+# Within the rows of a particular title sort the results in 
+# descending order based on the salesInThousands so that the 
+# rows with greater salesInThousands appear earlier.
+#
+# Only show salespeople for the usa and europe
+
+sales |>
+  select(first, last, title, salesInThousands, region) |>
+  filter(region %in% c("usa", "europe")) |>
+  arrange(title, desc(salesInThousands))
+
+# Careful - if you do not include region in the select , it won't work
+
+sales |>
+  select(first, last, title, salesInThousands) |>  # region is missing here
+  filter(region %in% c("usa", "europe")) |>        # but you need it here
+  arrange(title, desc(salesInThousands))
+
+# Rearrange the order of the function calls to get it to work
+
+sales |>
+  arrange(title, desc(salesInThousands)) |>   
+  filter(region %in% c("usa", "europe")) |>       # we use region here
+  select(first, last, title, salesInThousands)    # we can now exclude region
+```
+
+## mutate - add new columns
+
+Use the mutate function to add new columns. These new columns can be based 
+on existing data. See the examples below.
+
+```{r}
+# All salespeople get a commission equal to 10% of their sales.
+# Create a new column with the name commission that shows the value of their commission.
+
+# The following code creates the new column as the last column in the tibble.
+sales |>
+  mutate(commission=0.10*salesInThousands, takeHome=baseInThousands + 0.10*salesInThousands ) |>
+  print(width=Inf)
+```
+
+### .before and .after
+
+Use the .before and .after argument to mutate to specify where the 
+new columns should appear in the tibble. See the examples below.
+
+```{r}
+# Place the newly created column at the beginning of the tibble,
+# i.e. .before the 1st column.
+
+sales |>
+  mutate(commission=0.10*salesInThousands, .before=1)
+
+
+# Place the newly created column as the 3rd column
+# i.e. .after the 2nd column.
+# (.before=4 would also work)
+
+sales |>
+  mutate(commission=0.10*salesInThousands, .after=2)
+
+
+# .before and .after can also refer to specific columns
+# For example the following also places the commission after the last name column
+sales |>
+  mutate(commission=0.10*salesInThousands, .after=last)
+
+```
+
+
+### a new column that depends on other new columns
+
+The following code creates two new columns.
+
+The commission column is created as in the last example.
+
+The takeHome column is the total take home pay for the salesperson, i.e. 
+their baseInThousands plus the commission. 
+
+If you create both columns in a single call to mutate, you will need
+to repeat the calculation for the commission twice (see examples below).
+An alternative is to call the mutate function twice. For tibbles with many
+rows this can take longer to process but is less error prone when you write
+the code.
+
+```{r}
+# All salespeople get a commission equal to 10% of their sales.
+# Create a new column with the name commission that shows the value of their commission.
+# Create another column called takeHome which has their total takehome pay.
+
+# We can do it all in one call to mutate.
+# However, that require repeating the code for calculating for the commission.
+sales |>
+  mutate(commission=0.10*salesInThousands, takeHome=baseInThousands + 0.10*salesInThousands, .before=1 ) |>
+  print(width=Inf)
+
+# By separating the code into two calls to mutate, we can refer to the 
+# newly created "commission" column when calculating the takeHome column.
+# Note that the 2nd call to mutate below receives a tibble that already has a
+# commission column as the first column. That is why .before=2 (and not .before=1)
+sales |>
+  mutate(commission=0.10*salesInThousands, .before=1) |>
+  mutate(takeHome=baseInThousands + commission, .before=2) |>
+  print(width=Inf)
+
+```
+
+## distinct()
+
+The distinct function eliminates any duplicate rows from a tibble.
+See the examples.
+
+```{r}
+# Show the just the region for each row in the tibble
+sales |>
+  select (region) |>
+  print(n=Inf)
+
+# Same thing using distinct()
+# Show just the distinct (ie. different) regions
+sales |>
+  select (region) |>
+  distinct() |>       # show just the distinct rows
+  print(n=Inf)
+
+###############################################################
+# NOTE - all values in the row must be exactly the same
+# for the distinct() function to eliminate the duplicate rows.
+###############################################################
+
+# Show the region and title for rows 
+# whose region is either europe or asia.
+# Arrange the output so they come up sorted.
+
+sales |>
+  select(region, title) |>
+  filter(region %in% c('europe', 'asia')) |>
+  arrange(region, title) |>
+  print(n=Inf)
+
+# Same thing using distinct()
+# Show just the distinct rows from the previous command
+
+sales |>
+  select(region, title) |>
+  filter(region %in% c('europe', 'asia')) |>
+  distinct() |>                                 # eliminate duplicate rows
+  arrange(region, title) |>
+  print(n=Inf)
+
+# Notice that in the previous output, there were multiple
+# rows that contained "europe", multiple rows that contained "asia"
+# as well as multiple rows that contained each of the different titles.
+# However - there were NO rows that contained exact duplicates of both
+# the region and the title.
+#
+# The moral of the story is that distinct() will only elminate rows 
+# that are EXACT duplicates in EVERY column.
+
+```
+
+
+```{r}
+sales |>
+  select(region, title, everything()) |>
+  arrange(region, title)
+
+sales |>
+  select(region, title) |>
+  arrange(region, title)
+
+sales |>
+  select(region,title) |>
+  arrange(region, title) |>
+  distinct()
+
+
+```
+
+## summarize and group_by
+
+The summarize() and group_by() functions work together. We'll explain 
+exactly how below ...
+
+### aggregate functions
+
+The summarize function is used to condense the contents of several rows
+of data into a single row of data. It does this by using functions such as
+min(), max(), mean(), etc. These functions can take several values and 
+return a single value. Such functions are known as **aggregate functions**.
+
+### summarize (without group_by)
+
+The summarize function is often preceded by a call to the group_by()
+function (which we will cover in the next section). group_by() is used 
+to contol which rows of data will be affected by a subsequent call to 
+the summarize() function. This will be explained in more detail below.
+For now, we will just focus on how summarize() works when it is NOT
+preceded by a call to group_by().
+
+When summarize() is NOT preceded by a call to group_by()
+then the job of the summarize() function is to return a single row
+of summary by applying aggregate functions (such as min, max, mean, etc) to
+columns of the tibble.
+
+See the examples below.
+
+```{r}
+# mean salesInThousands (for all rows)
+# Note that this returns a tibble with exactly one row and one column.
+sales |>
+ summarize(mean(salesInThousands))
+
+# We can change the column name as shown below
+sales |>
+ summarize(averageSales = mean(salesInThousands))
+
+# We can filter the rows before calculating the mean results (or use any other of the dplyr functions)
+#
+# Show the mean sales for just the USA.
+sales |>
+  filter(region == "usa") |>
+  summarize(usaSales = mean(salesInThousands))
+
+# We can get more than one column in our summary tibble
+sales |>
+  summarize(meanSales = mean(salesInThousands), maxSales=max(salesInThousands), minSales=min(salesInThousands),
+            maxBase = max(baseInThousands), minBase=min(baseInThousands))
+
+```
+
+### some other aggregate functions
+
+An "aggregate function" is a function that can take several
+values as input but returns a single value.
+For example, the functions **mean, max and min** are all "aggregate functions".
+The functions that are used in summarize are all "aggregate functions".
+
+The following are some other commonly used aggregate functions that can be used in 
+summarize. There are many, many others.
+
+- Statistics: mean(), median(), sd(), IQR(), mad()
+
+- Range: min(), max(),
+
+- Position: first(), last(), nth(),
+
+- Counting: n(), n_distinct()
+
+- Logical: any(), all()
+
+
+### The n() function
+
+The n() function returns the number of rows.
+
+The n_distinct() function returns the number of rows that have distinct 
+(i.e. different) values.
+
+```{r}
+# Get the number of rows in the tibble
+sales |>
+  summarize(numberOfRows = n())
+
+# This shows the number of different rows 
+sales |>
+  summarize(numberOfRows = n())
+
+```
+## group_by and summarize (or summarise)
+
+The examples above for summarize all return a single row of data.
+This is because they are summarizing all of the rows for the tibble.
+Note that this is true even if the rows have been filtered first.
+For example:
+
+```{r}
+# The following returns just one row.
+# The summarize function is summarizing ALL of the rows 
+# for the tibble that it was given.
+
+sales %>% 
+  filter(region == "usa") |>
+  summarize(maxUsaSales = max(salesInThousands), minUsaSales=min(salesInThousands))
+```
+
+The functions, group_by and summarize functions are designed 
+to work together.  The job of the group_by function is to separate the rows of data into
+different "groups" that will later be processed separately by the 
+summarize function. 
+
+If you use a group_by function it should always be followed
+by a summarize function call.
+
+See the examples below
+
+
+```{r}
+# Show summary information for each of the different titles.
+# Each row in the output corresponds only to the rows for the title shown on that row of output.
+sales |> 
+  group_by(title) |>    # create a different group for each title
+  summarize(n(), mean(baseInThousands), mean(salesInThousands))
+```
+
+### group_by doesn't appear to do anything on it's own
+
+Note that on its own, the group_by function doesn't appear to do 
+anything. It only has an effect when a summarize function is called 
+after the group_by function
+
+```{r}
+# group_by without a subsequent call to summarize doesn't appear to do anything
+sales |> 
+  group_by(title)   
+```
+
+### group_by more than one column
+
+A call to group_by that has more than one column creates a separate
+group for the rows that have the same values for all of the specified
+columns. 
+
+To better understand the examples below, it would be helpful to see
+all of the data arranged by the title and region.
+
+```{r}
+sales |>
+  select(title, region, everything()) |>
+  arrange(title, region) |>
+  print(n=Inf)
+```
+
+We can now see how the group_by function separates the data
+into multiple groups.
+
+
+
+```{r}
+# group_by without a subsequent call to summarize doesn't appear to do anything
+sales |> 
+  group_by(title) |>
+  summarize(n(), mean(baseInThousands))
+```
+
+
+```{r}
+# group_by without a subsequent call to summarize doesn't appear to do anything
+sales |> 
+  group_by(title, region) |>
+  summarize(n(), mean(baseInThousands))
+```
+
+
+## other resources
+
+### Videos
+
+across function  
+<https://www.youtube.com/watch?v=6fEowYTlNT8>

@@ -1,0 +1,160 @@
+# Topics
+
+The following are many of the topics that this course will covers.
+This is just an overview. See the main section
+of the text for more info on each topic. This list of topics may change. 
+
+
+## Quarto (newer version of RMarkdown)
+
+## More practice with "base" R
+
+  Throughout the course you will be working with R. You must understand all 
+  of the basics that were covered in the R programming course. This includes
+  but is no limited to lists,dataframes,user defined functions, if/else/else if,
+  while loop, for loop, etc. etc. etc.
+  
+  **Resources**
+  
+  * <http://yrosenthal.com/rnotes>
+
+
+## R Packages
+
+* install.packages
+
+* library vs require
+
+* CRAN
+
+* tidyverse packages - <https://www.tidyverse.org/packages/>
+  - ggplot2
+  - dplyr 
+    * <https://dplyr.tidyverse.org/>
+    * https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html
+  - tidyr <https://tidyr.tidyverse.org/>
+  - readr <https://readr.tidyverse.org/>
+      * read_csv(): comma-separated values (CSV)
+      * read_tsv(): tab-separated values (TSV)
+      * read_csv2(): semicolon-separated values with , as the decimal mark
+      * read_delim(): delimited files (CSV and TSV are important special cases)
+      * read_fwf(): fixed-width files
+      * read_table(): whitespace-separated files
+      * read_log(): web log files
+  - purr
+  - tibble <https://tibble.tidyverse.org/>
+  - stringr
+  - forcats
+
+  - Other tidyverse packages
+  
+    - magrittr
+    - glue
+    - lubridate
+    - hms
+    - blob
+    - dtplyr
+    
+    
+# Working with different types of files
+
+  - install.packages("fs")  
+    library(fs)  
+    dir_tree()
+    
+  - CSV files
+
+  - JSON files
+
+    * jsonlite package
+
+  - XML and HTML files
+
+    * packages: xml2, httr
+
+  - Excel files
+  
+    * package: readxl (part of the "tidyverse" set of packages)
+
+
+
+
+
+
+
+
+## Command Line Interfaces
+
+  - what is a command line interface (CLI)
+  
+  - Windows (CMD, Powershell)
+  
+  - Unix, Linux and Mac Terminal (Bash and others)
+  
+  - Bash
+
+    * Terminal tab in RStudio
+    
+    * working with the file system
+  
+      - pwd
+      - ls -a -l -r -t
+      - wildcards: * [abc] [!abc] [a-cw-z] [!0-9] \\    
+        <https://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm>
+      * cd
+      - .. and .
+      - .hiddenFiles
+      - $HOME
+      * echo
+      * $HOME
+      * mkdir
+      * rm
+      * rmdir
+      * tree
+    
+    * editing files
+  
+      - nano
+      - vim <https://www.openvim.com/>
+      - touch
+
+    * working with text  
+  
+      - cut
+      * grep
+    
+    * redirection
+      - command > filename
+      - command < filename
+      - command | command2 | command3 
+
+    * script files
+      - chmod command
+      - $PATH
+      - basic script files
+      - $env
+      - variable=value # no spaces
+      - # comments
+
+## Regular Expressions
+
+- http://regextutorials.com/
+  Good examples with practice questions.
+  Need to explain about /g and other forward slash options.
+
+-  https://regexcrossword.com/
+
+## Web scraping
+
+- <https://www.zenrows.com/blog/web-scraping-r#prerequisites>
+
+---
+
+## Other topics (beyond the scope of the course)
+
+* Working with large data
+
+  - data.table package - <https://rdatatable.gitlab.io/data.table/>
+
+
+

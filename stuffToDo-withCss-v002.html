@@ -1,0 +1,224 @@
+<html>
+  <head> 
+    <title>Stuff To Do</title>
+    
+    <style>
+      /* We will now study CSS - 
+         see these pages for more info:
+         
+         https://www.w3schools.com/cssref/index.php
+         
+         https://flukeout.github.io/
+      */
+      
+      
+      /* The code that appears in the HTML style element is actually a 
+         different language (i.e. not HTML). This language is known as
+         Cascading Style Sheets (CSS). CSS is used
+         to describe formatting (e.g. colors, fonts, placement, etc) 
+         of different items that appear in the webpage. 
+         As with HTML, there are many, many details to CSS. We will be covering
+         very few of them. 
+         
+         In CSS comments appear between slash* and *slash (where slash is /).
+         This is a CSS comment.
+         
+         Some people are surprised that a single .html file could 
+         contain more than one language. This is similar to an English
+         file that contains some quotes in Hebrew, Chinese, or any 
+         other language. 
+
+         CSS consists of rules that describe which parts of the HTML document
+         should be "styled" in a specific ways. Each rule is in the form
+            selectors { property:value; anotherProperty:value; etc ... }
+            
+         The selectors define which parts of the HTML are affected by the 
+         rule. Each property:value describes a particular styling that should
+         be applied. See the examples below.
+      */
+
+         
+      /* SOME SAMPLE CSS RULES */
+      
+      /* all li tags should be blue */
+      li { color: blue;}                  
+      
+      /* li tags that are inside ul tags should have a yellow background */
+      ul li { background-color: yellow; }  
+      
+      /* both h1 and h2 tags should be green */
+      h1, h2 { color: green; }   
+      
+      /* Text in h2 tags should be centered */
+      h2 { text-align: center; } 
+      
+      /* strong tags should be red and italicized */
+      strong { color: red ; font-style: italic;}
+
+
+      /* The .class and #id CSS selectors are used to apply CSS rules
+         to two very specify situations.
+         
+         #something   is used to apply the rule to any HTML element that has
+         an attribute of id="something". For example the CSS rule
+         
+             #copyright { font-size: 75%; }
+         
+         would be applied to the HTML
+         <p id="copyright"> &copy; 2023 </p>
+         
+         
+         .something   is used to apply the rule to any HTML element that has
+         an attribute of class="something" or class="abc def something etc".
+         For example the CSS rule 
+             .important { font-size: 200%; }
+         would be applied to any of the following:
+         
+           <p class="important"> ...</p>
+           <li class="work important finance"> ... </li>
+           etc.
+           
+           The difference between the id attribute and the class attribute
+           is that an id should only appear once in an entire html page.
+           id is used for example for copyright notices, navigation sections
+           etc.
+           
+           The same class can appear multiple times on a page.
+           
+           Both the id and the class attributes may appear in ANY html tag.
+      */
+      
+      
+      /* <div>...</div>    and    <span>...</span>
+      
+         The <div>...</div> and <span>...</span> HTML elements are used
+         to apply CSS to portions of a document that don't otherwise
+         contain other HTML tags. To understand these HTML elements you 
+         need to understand that there are two general types of HTML tags:
+         
+         * "block HTML elements" (e.g. h1, h2, ul, ol, table, etc)
+           create the general structure of the HTML. 
+           When these tags are displayed (i.e. "rendered") in the browser, by
+           default there the next content appears on a new line.
+         
+         * "inline HTML elements" (e.g. strong, em, a, img, etc) do specific
+           things, but don't layout the general structure of the page. Therefore
+           by default there is no automatic newline after these elements. 
+         
+             <span class="someClass"> ... </span>
+         
+           is used to surround other "inline" HTML tags. 
+      */
+         
+         
+         
+      /* CSS RULES FOR #id and .class SELECTORS */
+      
+      /* tags that have an attribute    class="person"   
+         should have its font twice as large as normal */
+      .person { border: 3px dashed black; }
+      
+      /*.weekend { font-family: "Comic Sans MS", "Comic Sans", cursive; }*/
+      /* Use a "fun" cursive font for the weekends */
+      .weekend { font-family: cursive; }
+      
+      .important { font-size: 200%; }
+      
+      /* tags that have an attribute    id="navigationLinks"   
+         should have a blue border with 10px of padding around it and 
+         the text should be centered */
+      #navigationLinks { border: 10px solid blue; padding:10px; text-align: center;}
+      
+      /* make the one element on the page whose start tag contains the 
+         attribute, id="copyright", 75% of it's normal text font size */
+      #copyright { font-size: 75%; }
+      
+      
+      /* SOME CSS SELECTORS ARE STYLED WITH selector:something
+         FOR EXAMPLE */
+         
+         
+      /* add the text ".......... and that's ALL!!!" after the last li tag
+         inside a parent tag */
+      li:last-child::after { content: " ........ and that's ALL!!!"; }
+      
+      
+      
+    </style>
+  </head>
+  <body>
+    <h1>Stuff todo</h1><p>this is a new paragraph</p>
+
+    <!-- This is a comment. 
+         In HTML, comments start with "less-than sign, --!""
+         and end with "--, greater than sign". The comments
+         do NOT affect the way a webpage looks in the browser. 
+         They are notes to the web developers about the code.
+    -->
+
+    <p>I should probably 
+    <a class="important" href="https://aimlief.com/organize-your-life">Read this</a>
+    as soon as possible.
+    </p>
+    
+    <div class="weekend">
+      <h2>Saturday</h2>
+      <ul>
+        <li>Read a good book</li>
+      </ul>
+      
+      <h2>Sunday</h2>
+      <ul>
+        <li class="person">Wash the car</li>
+        <li>Take out the garbage</li>
+      </ul>
+    </div>
+    
+    
+    <h2>Monday</h2>
+    <ul>
+      <li class="important">Study for Tuesday's test</li>
+      <li class="important">Don't forget: <strong>Pay electric bill</strong></li>
+      <li>Call <span class="person">Joe</span> to say hi</li>
+    </ul>
+
+    <!-- hr is an "empty tag", i.e. it doesn't have an end tag.
+         The slash after the hr indicates that it is an empty tag.
+         The slash is preferred by some but is not strictly required -->
+    <hr />
+
+    <!-- Some HTML tags contain attributes. They appear
+         inside either a start tag or an empty tag. 
+         End tags never contain attributes.
+         
+         Attributes specify options for the tag. 
+         For example, the following horizontal line will 
+         only be 50% of the browser's page width. -->
+    <hr width="50%" />
+
+    <h2>Tuesday</h2>
+    <ol>
+      <li>
+        Buy an umbrella
+        <img
+          src="yellowUmbrella.png"
+          width="50"
+          alt="a picture of an umbrella"
+        /> I think it's going to rain today.
+      </li>
+      <li>Take the test</li>
+      <li>Bake a cake for <strong><span class="person">Sue's</span> birthday.</strong></li>
+      <li>Make vacation plans</li>
+      <li>relax after a full night of studying</li>
+    </ol>
+  </body>
+
+  <div id="footer">
+    <p id="navigationLinks">
+      <a href="https://google.com">My favorite search engine</a>
+      <a href="https://amazon.com">A good place to buy stuff</a>
+    </p>
+    
+    <p id="copyright">&copy; 2023 Y. Rosenthal</p>
+  </div>
+</html>
