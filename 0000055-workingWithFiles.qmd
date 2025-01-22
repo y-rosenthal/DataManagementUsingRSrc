@@ -1,0 +1,359 @@
+# Working with files
+
+## Download files to work with.
+
+Use this link to [download a set of files in a ZIP file](myFiles.zip) for
+use with these lessons.
+
+
+## A "directory" means the same thing as a "folder"
+
+The terms "directory" and "folder" mean exactly the same thing - they're just two different words for places where we store files on a computer. The word "directory" came first, used in early computer systems in the 1960s. It comes from the word's original meaning of an organized listing or index, like a phone directory. In the 1980s, when computers started using visual interfaces with icons, Apple introduced the word "folder" because it was more intuitive for regular users - it referenced something familiar that people used to organize paper documents. Today, both terms are used interchangeably, with "folder" being more common in everyday use and "directory" often preferred in technical contexts.
+
+## What is a full path?
+
+A full path is the complete "address" of a file on your computer. 
+Just like two people named Sarah Johnson can live at different addresses 
+(one in Chicago, one in New York), you can have two files with the same name 
+in different directories (i.e. folders). 
+
+For example, the following are the "full paths" for 
+two different files with the same name, "budget.xlsx".
+The full path helps you tell the two files apart by showing exactly where each 
+file is located. Each name between the forward slashes is a folder. 
+
+* Full path 1: /home/Joe/work/budget.xlsx
+
+  This file is named "budget.xlsx". 
+  It is in the "work" folder, which is in the
+  folder named "Joe" which is in the "home" folder.
+
+* Full path 2: /home/Sue/personal/budget.xlsx
+
+  This file is also named "budget.xlsx". It is in the "personal" folder, which is in the
+  folder named "Sue" which is in the "home" folder, which is in the folder at 
+  the very top of the folder hierarchy on the computer. 
+
+## "relative paths" vs "full paths"
+
+Another way to describe which folder a file is in is to use what's known as a 
+"relative path". We will describe "relative paths" in detail later.
+For now, we will stick to use "full paths" as described above. 
+However, one thing should be made absolutely clear now:
+
+Difference between a "full path" and a "relative path"
+
+***A "full path" always starts with a "/".***
+***A "full path" always starts with a "/".***
+
+IMPORTANT: MAKE SURE THAT YOU KNOW THIS ...
+
+Later, we will study another type of file path called a ***relative path***.
+A realtive path is simiilar to a "full path" but a relative path does NOT start
+with a "/". We'll learn more about relative paths later and how they differ
+from full paths.
+
+
+### Mac and Linux style paths VS Windows style paths
+
+Mac and Linux systems use forward slashes (/) as path separators - i.e. 
+see the paths above, eg. /home/Joe/work/budget.xlsx
+
+Windows traditionally uses backslashes (\\) as separators, like this:
+
+\\\\Users\\\\Joe\\\\work\\\\budget.xlsx
+
+Note that R understands the Linux/Mac style paths (with forward slashes) even on Windows. 
+It is recommended therefore to always use Linux/Mac style paths in R code
+so that the code will work on both Linux/Mac and on Windows.
+
+However, since backslashes have a special meaning in R
+if you need to use Windows-style paths in R, you must use double backslashes (\\),
+e.g.
+
+```
+dir_tree("\\Users\\Joe\\work")
+```
+
+### Windows drive letters
+
+Windows systems use letters (like C:, D:) at the start of paths to represent different drives or storage devices. The C: drive is typically your main hard drive where Windows is installed. Other letters might be additional hard drives, USB drives, or network drives.
+
+For example:
+
+```
+C:\Users\username\Documents\file.txt (your main hard drive)
+D:\Backups\file.txt (maybe an external drive)
+E:\Photos\vacation.jpg (could be a USB drive)
+```
+
+Mac and Linux systems don't use drive letters. Instead, all hard drives are "mounted"
+as folders within the single root directory (/). For example, a USB drive might appear at /media/username/USB_DRIVE/.
+When working in R on Windows, you still need to include the drive letter at the start of full paths, like:
+"C:/Users/username/Documents/file.txt" (using forward slashes)
+or
+`"C:\Users\username\Documents\file.txt"` (using double backslashes)
+
+## getwd() and setwd()
+
+getwd() shows you your current working directory (the folder R is currently working in). Think of it as asking R "where am I right now?" When you try to read or write files without specifying a full path, R will look in this directory.
+For example, if you run getwd(), it might show something like:
+"/home/username/projects" (on Mac/Linux)
+or
+"C:/Users/username/Documents" (on Windows)
+
+
+setwd() changes your current working directory to a new location. Think of it as telling R "go to this folder." You need to give it the path of the directory you want to switch to.
+For example:
+
+```
+setwd("/home/username/projects")  # Mac/Linux style
+setwd("C:/Users/username/Documents")  # Windows style with forward slashes
+```
+
+If you give it an invalid path, it will give you an error message.
+
+## list.files() and dir()
+
+There are two main functions to list files and directories in R:
+list.files() shows you all files (and folders) in a directory. If you don't specify a path, it shows the contents of your current working directory.
+dir() does exactly the same thing as list.files() - they're just two names for the same function. Some people prefer dir() because it's shorter to type.
+Basic usage:
+
+```
+list.files()  # list everything in current directory
+list.files("/home/username/data")  # list everything in a specific directory
+list.files(pattern = ".csv")  # list only files ending in .csv
+```
+
+You can also use these functions with additional options to get more information or filter the results.
+
+
+## Finding a full path to a specific file
+
+You can do this with the built in Windows or Mac tools or by using R functions.
+
+### Using "File Explorer" (win) or "Finder" (mac)
+
+To find the full path for a file, navigate to it using the "Finder" app on Mac
+or the "File Explorer" app on Windows. Each of these tools have a way to 
+show you the full path to the file. These features keep changing with different
+releases of each operating system. Therefore you should search online for 
+how to find the full path of a file using your specific operating system version.
+The following are some videos that *might* work for your operating system. 
+If they don't please search online for specific instructions for your 
+operating system.
+
+* Windows 10 - <https://www.youtube.com/watch?v=QZUpzuQ0X5I>
+
+* Mac - <https://www.youtube.com/watch?v=Z70-MqAd8oU>
+
+### Using the file.choose() or choose.files() R functions
+
+See the R documentation for `?file.choose` and `?choose.files`.
+
+These commands open up a window that allows you to choose a file (or files). 
+When you finally select the file (or files) the full path is 
+returned to R.
+
+**IMPORTANT*** - The window that opens in response to calling 
+file.choose() or choose.files() can sometimes open up "in back of" RStudio
+or other programs.
+This seems to be a bug. If you don't see the window for choosing the files
+try minimizing the RStudio window (and possibly other windows) 
+and see if there is a file chooser window
+in back of RStudio (or other programs).
+
+
+### Finding a full path to a "Special folder"
+
+To find the full path for a file, navigate to it using the "Finder" app on Mac
+or the "File Explorer" app on Windows. Each of these tools have a way to 
+show you the full path to the file. 
+
+
+
+## fs package
+
+The fs package provides modern file system operations in R. It makes working with files and folders more consistent across operating systems (Windows, Mac, Linux) and safer than base R functions. Think of it as a toolkit for handling files - copying, moving, creating directories, checking paths, and viewing directory structures. All functions start with clear prefixes like file_ or dir_ which makes them easy to remember and use.
+Install it with: install.packages("fs")
+
+### dir_ls() function
+
+### dir_tree
+
+dir_tree() from the fs package displays a directory structure in a visual tree format, similar to how you might see folders indented in a file explorer. It shows the hierarchy of files and folders using lines and indentation.
+For example, if you run:
+
+```
+fs::dir_tree("my_project")
+```
+
+It might show something like:
+
+```
+my_project
+├── data
+│   ├── raw.csv
+│   └── clean.csv
+├── scripts
+│   ├── analysis.R
+│   └── cleaning.R
+└── README.md
+```
+
+This makes it easy to visualize how your files and folders are organized. The vertical and horizontal lines show how everything connects, and each level of folders is indented further to the right.
+
+### Other functions in the fs package
+
+The fs package provides modern, user-friendly functions for working with files. Here are some commonly used ones:
+
+fs::dir_ls() - Lists directory contents (similar to list.files() but with better defaults)
+
+fs::dir_create() - Creates directories, can create multiple levels at once
+
+fs::file_copy() - Copies files from one location to another
+
+fs::file_move() - Moves files from one location to another
+
+fs::file_delete() - Deletes files
+
+fs::file_exists() - Checks if files exist
+
+fs::path() - Builds file paths in a safe, platform-independent way. For example:
+
+fs::path("data", "raw", "myfile.csv")  # builds "data/raw/myfile.csv"
+
+Note: You need to install and load the fs package to use these (install.packages("fs") and library(fs)). The fs package makes working with files more consistent across operating systems and helps avoid common errors.
+
+
+
+## read_csv and write_csv
+
+
+read_csv() and write_csv() from the readr package are the standard functions for working with CSV files in modern R:
+read_csv() loads a CSV file into R as a data frame:
+
+```
+data <- read_csv("myfile.csv")
+```
+
+write_csv() saves a data frame to a CSV file:
+
+```
+write_csv(data, "output.csv")
+```
+
+These functions are faster and have better defaults than the older read.csv() and write.csv() functions from base R. They automatically handle common issues like string encoding and they don't add row numbers to your output files.
+
+You'll need the readr package installed and loaded to use them: library(readr) (though readr is automatically loaded if you use the tidyverse).
+
+## Read/Write Excel files
+
+To work with Excel files in R, you'll need either the readxl package (for reading) or the writexl package (for writing):
+Reading Excel files:
+
+```
+library(readxl)
+data <- read_excel("myfile.xlsx")
+
+# For specific sheet: 
+data <- read_excel("myfile.xlsx", sheet = "Sheet2")
+```
+
+Writing Excel files:
+
+```
+library(writexl)
+write_xlsx(data, "output.xlsx")
+```
+
+Note that readxl comes with the tidyverse, but writexl needs to be installed separately. These functions work with both newer .xlsx and older .xls files.
+
+## Reading fixed width field files
+
+Use read_fwf() from the readr package (part of tidyverse) to read fixed-width 
+files where each column takes up a specific number of characters. You specify the width of each field:
+
+```
+library(readr)
+
+# Define the widths of each column
+data <- read_fwf("myfile.txt", 
+                 fwf_widths(c(5, 10, 15),  # each number is the width of a column
+                           col_names = c("id", "name", "address")))
+
+# Or specify exact positions
+data <- read_fwf("myfile.txt",
+                 fwf_positions(start = c(1, 6, 16),  # where each column starts
+                             end = c(5, 15, 30),     # where each column ends
+                             col_names = c("id", "name", "address")))
+```
+
+Here's a simple example. Imagine you have a file named employees.txt that looks like this:
+
+```
+12345John Smith           123 Main St          
+98765Mary Johnson         456 Oak Ave          
+54321Bob Wilson          789 Pine Rd
+```
+
+Each line represents an employee record where:
+
+* Employee ID takes exactly 5 characters
+* Name takes exactly 20 characters (including spaces)
+* Address takes exactly 20 characters
+
+Here's how to read it:
+
+```
+rCopylibrary(readr)
+
+employees <- read_fwf("employees.txt",
+                     fwf_widths(c(5, 20, 20),  # width of each column
+                               col_names = c("id", "name", "address")))
+```
+
+The fwf_widths(c(5, 20, 20)) tells R:
+
+Read first 5 characters as 'id'
+Read next 20 characters as 'name'
+Read next 20 characters as 'address'
+
+The resulting data frame would look like this:
+
+```
+# A tibble:
+#      id  name                address            
+#   <chr>  <chr>              <chr>              
+# 1 12345  John Smith         123 Main St        
+# 2 98765  Mary Johnson       456 Oak Ave        
+# 3 54321  Bob Wilson         789 Pine Rd
+```
+
+
+
+## Capture output of R commands
+
+### capture.output(someCommand, file="someFile.txt") 
+
+To save or "capture" the output from an R command, you can use the capture.output() function. 
+It lets you store text output in a file or in a character vector:
+
+```
+# Save to a file:
+capture.output(summary(mydata), file = "output.txt")
+
+# Save to a variable:
+my_output <- capture.output(summary(mydata))
+```
+
+## sink("someFile"), sink()
+
+The sink() function is another option - it redirects all output to a file until you turn it off:
+
+```
+sink("output.txt")
+print(summary(mydata))
+sink()  # turns off the redirection
+```

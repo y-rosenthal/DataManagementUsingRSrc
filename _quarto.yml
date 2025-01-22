@@ -9,9 +9,33 @@ book:
     - index.qmd
 #    - 00000-tmpMermaid.qmd
 #        - 0000051-filenames-v001.qmd
-    - 0000017-introToQuarto-v001.qmd
-    - 0000022-InstallingRPackages-v003.qmd
-#    - part: 0200001-part-bash-v001.qmd
+
+    - part: Some computer basics
+      chapters:
+      - intro00100-operatingSystems.qmd
+      - intro00120-files.qmd
+      - intro00130-chromeExtensions.qmd
+
+    - part: Intro to R packages
+      chapters:
+      - 0000022-InstallingRPackages-v003.qmd
+      
+      
+    - part: Intro to Quarto
+      chapters:
+      - 0000017-introToQuarto-v001.qmd
+      
+    - part: Working with files
+      chapters:
+      - 0000055-workingWithFiles.qmd
+      
+    - part: JSON data
+      chapters:
+      - 0000075-whatIsJsonData.qmd
+      - 0000080-editingAndValidatingJsonFiles.qmd
+      - 0000085-jsonDataTypes.qmd
+      - 0000090-usingJsonInR.qmd
+      
     - part: Bash
       chapters:
       #- 0000013-IntroToTheBashCli-v009.qmd
@@ -19,13 +43,11 @@ book:
       - 0000013-HowToRunTheBashShellCli-v011.qmd
       - 0000025-introToBash-v007.qmd
       
-#    - part: 0300005-part-regex-v001.qmd
     - part: Regular Expressions
       chapters:
       - 0200200-introToRegularExpressions-v036.qmd
       - 000260-PracticeWithRegulaExpressions-v003.qmd
 
-#    - part: part-dplyrAndSql-v001.qmd
     - part: Intro to tidyverse
       chapters:
       - 0400050-whatIsTidyverse-v001.qmd

@@ -1,0 +1,163 @@
+# Intro to JSON data 
+
+## What is JSON? 
+
+JSON is pronounced like the name "Jason" or as "j sahn" - either is Acceptable. JSON is a "text" format for storing and distributing data. The following small example shows information about the USA Postal Code
+(“i.e. zip code”) 60527. Many more examples appear throughout this document. 
+
+
+```json
+{
+	"post code": "60527",
+	"country": "United States",
+	"places": [{
+			"place name": "Willowbrook",
+			"latitude": "41.7447",
+			"longitude": "-87.9334",
+			"state": "Illinois"
+		},
+		{
+			"place name": "Hinsdale",
+			"latitude": "41.7447",
+			"longitude": "-87.9334",
+			"state": "Illinois"
+		}
+	]
+}
+```
+
+A "text" format means that it is written all in ASCII or Unicode. ASCII and Unicode are standard technologies; every computer system has built in tools for working with ASCII and Unicode data. Therefore, JSON can be read and used on any computer system with a simple text editor without the need to install
+special software to read it. CSV formats are similar in this respect. However, while CSV is suited specifically to storing information that can be arranged into "rows and columns", the JSON data format is much more flexible in how the data is arranged.
+ 
+JSON was originally developed for the JavaScript language. However, today it has become a popular format that is used in many areas of technology. You can process JSON data with R or any other programming language. The name JSON stands for "JavaScript Object Notation:" - but seriously – you do NOT need to know ANY JavaScript to make use of JSON data.  Unfortunately, many resources for learning JSON assume knowledge of JavaScript. 
+That really isn’t necessary if you are using JSON in another language. This document describes JSON for people who DO NOT know JavaScript. 
+
+## Some Examples of JSON Data
+
+The full rules of how to create a JSON file are listed later. For now, it may help to see some typical examples of what JSON data looks like. The exact explanations of how to format a JSON file appear below the examples.
+
+### EXAMPLE 1 - storing the contents of a company "org chart" in JSON format:
+
+The following is an "organization chart" for a company. This is NOT in JSON format. One possible JSON format of the data appears below. The chart shows that Sue is the CEO. Frank and Anne report to Sue. Bob, Lisa
+and Joe report to Frank. etc. 
+ 
+```
+         Widgets R Us (founded 2022)
+ 
+                 ---------------Sue (CEO) ------------
+                 |                                   |
+                 |                                   |
+         --Frank (Dir of Operations)---         -----Anne (CFO)-----
+         |             |              |         |                  |
+         |             |              |         |                  |
+         Bob          Lisa          Joe        Pat (CPA)         Pete
+                       |
+                      Larry
+```
+
+
+#### ONE POSSIBLE JSON ARRANGEMENT OF THIS DATA IN JSON FORMAT
+
+Note that the JSON shown below repeats some data (i.e. the employee names are
+repeated in both the particular section for that employee and in the list of
+"direct reports" for that employee's mananger). There are other JSON
+organizations of this data that would not require repeating any data. However,
+the goal now is not to debate different alternative JSON representations, but
+rather to give you a flavor of what JSON looks like in general.
+ 
+```json
+         {
+             "company name": "Widgets R Us",
+             "founded": 2022,
+             "employees": [
+                 {
+                     "name": "Sue",
+                     "title": "CEO",
+                     "directReports": ["Frank", "Anne"]
+                 },
+                 {
+                     "name": "Frank",
+                     "title": "Director of Operations",
+                     "directReports": ["Bob","Lisa","Joe"]
+                 },
+                 {
+                     "name": "Anne",
+                     "title": "CFO",
+                     "directReports": ["Pat","Pete"]
+                 },
+                 {
+                     "name": "Bob"
+                 },
+                 {
+                     "name": "Lisa",
+                     "directReports": ["Larry"]
+                 },
+                 {
+                     "name": "Joe"
+                 },
+                 {
+                     "name": "Larry"
+                 },
+                 {
+                     "name": "Pat",
+                     "title": "accountant",
+                     "certified": true
+                 },
+                 {
+                     "name": "Pete",
+                     "title": "accountant",
+                     "certified": false
+                 }
+             ]
+         }
+ ```
+ 
+### EXAMPLE 2 - JSON data - books for sale on a website
+
+The following example shows a JSON file that contains information about some books.
+
+```json
+     [
+       {
+         "hardcover": false,
+         "title": "How to program in R",
+         "copyright": 2017,
+         "publisher": {
+           "pubName": "Books R Us",
+           "pubWebsite": "https://booksrus.com/"
+         },
+         "categories": ["R","technology","statistics"],
+         "author" : 
+           {
+             "first": "Robert",
+             "last": "Rosen"
+           }
+       },
+       {
+         "hardcover": false,
+         "title": "Python For Perfectionists",
+         "copyright": 2018,
+         "categories": ["Python", "technology"],
+         "author" : 
+           {
+             "title": "Dr.",
+             "first": "Sue",
+             "last": "Smith"
+           }
+       },
+       {
+         "hardcover": true,
+         "title": "Cooking For Programmers",
+         "copyright": 2018,
+         "categories": ["cooking"],
+         "author" : 
+           {
+             "first": "Joe",
+             "middle": "J",
+             "last": "Johnson"
+           }
+       }
+     ]
+``` 
+
+

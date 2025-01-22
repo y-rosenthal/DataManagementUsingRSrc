@@ -1,0 +1,84 @@
+# What is an "operating system"
+
+## Operating Systems (Mac, Windows, Linux)
+
+Before going into detail about how to work with files in R it is helpful
+to have some background regarding operating systmes (keep reading).
+
+### An Operating System (OS) is the software that controls a computer
+
+An <yrDef>operating system</yrDef> (OS for short) is the software that controls how a 
+computer operates. Windows and Mac OS (i.e. Mac Operating System) are two very popular operating systems
+for personal computers.
+
+Another operating system is Linux. This OS is often used to run 
+<yrDef>backoffice computer systems</yrDef>, i.e. the computer systems 
+that keep many critical business operations working - e.g. that 
+keep websites working. Linux is also a popular option with many technical users
+for their own personal computers.
+
+WHile all operating systems allow you to control a computer, there are 
+differences between operating systems  when it comes to the exact ways to
+accomplish some tasks.
+
+### Smartphones have operating systems too
+
+Smartphones are basically small computers. Therefore smartphones have 
+operating systmes too. The very popular ones today are Android  and 
+Apple iOS (this is the operating system found on Apple iPhones).
+
+### Mac and Linux are similar in a lot of ways
+
+Both Mac and Linux were derived from an older operating system known as Unix.
+(Unix still exists but has largely been replaced by Linux). For this reason,
+Mac OS and Linux often do things the same way, while Microsoft Windows might
+be a little different from both of them. Keep this in mind as we go through
+this course. It is often the case that what will work on Mac also works 
+on Linux and vice versa.
+
+### Flavors of Linux
+
+Linux is "open source" software. That means that no one company owns Linux.
+The product is freely available for anyone to modify and release their own
+version. Therefore there are many different "flavors" of Linux. The different flavors of Linux
+share many similarities but are all different in one way or another. This is 
+similar to how each car company has their own "flavor" of SUV. If you know how
+to drive one SUV, you can probably drive any SUV. However, the different car
+companies differentiate themselves with different slight details in the 
+products. 
+
+As of today (Jan 2025) some of the popular flavors of Linux include:
+
+* Ubuntu
+* Debian
+* Red Hat Linux
+* Centos
+* there are many, many, many other flavors of Linux with more coming out
+  all the time. 
+
+### Know your OS version number
+
+Operating systems are constantly being updated and improved. When looking 
+online for info about your computer or phone it often helps *a lot* to
+include the version number for your operating system. For example, 
+
+* If you're looking for info about how to start the "File Manager"
+  program (see below) on Windows, don't just search for
+  "How do I start the file manager program", rather search for 
+  "how do I start the file manager program on WINDOWS 11" (or Windows 10, etc.)
+
+* Similarly, if you're looking for info about how to start the "Finder"
+  program (see below) on Mac, don't just search for
+  "How do I start the finder program", rather search for 
+  "how do I start the finder program on Mac OS Sequoia"
+
+* If you don't know how to find your OS version number, I recommend that 
+  you search for that on your favorite search engine (e.g. google) or on 
+  your favorite AI tool (e.g. chatgpt). For example, "how do I find out
+  exactly what version number of Mac OS I have"? 
+  
+  *NOTE: (as of today, to find the OS version on Mac, click the "apple button"*
+  *at the top left of your menus and choose "About This Mac".*
+
+
+

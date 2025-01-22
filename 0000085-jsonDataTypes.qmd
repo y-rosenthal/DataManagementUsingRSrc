@@ -1,0 +1,347 @@
+# DATA TYPES IN JSON
+
+Individual pieces of data in a JSON file must be one of the following simple
+data types: string, number, boolean and null (these are described in the
+following section). In addition, multiple data values can be arranged into
+more complex structures, i.e. objects and arrays (see below).
+
+
+## "PRIMATIVE" (or SIMPLE) JSON DATATYPES (string, number, boolean, null)
+
+```
+Each individual piece of data in a JSON file must be one of the following data types: string, number, boolean, null. Technically a file is a valid JSON file if it contains just a single number, a single string, a single true or false or a single null. Practically speaking though, most JSON files arrange multiple pieces of data into objects and arrays as described in the next section.
+
+The simple (or primative) datatypes are:
+ 
+   - "string": string is just another way of saying "character" data.
+               Strings in JSON must be enclosed in "double quotes" (i.e. quotation marks).
+               You may NOT use 'single quotes' (i.e. apostrophes) to enclose strings.
+               Strings may contain the following "backslash escape sequences", i.e.
+               characters preceded by a backslash:
+ 
+               \"  -  Double quote                \\  -  Backslash
+               \/  -  Forward slash               \b  -  Backspace
+               \f  -  Form feed                   \n  -  Newline
+               \r  -  Carriage return             \t  -  Tab
+
+               \u  - followed by four hexadecimal digits indicates the
+                     Unicode character with the specified "code point". For
+                     example, \u05D0 represents a Hebrew letter Aleph. Here are
+                     all codepoints for the Hebrew alphabet:
+                     https://unicodeplus.com/block/0590 (for more info see:
+                     https://developer.mozilla.org/en-US/docs/Glossary/Code_point)
+ 
+   - number: 123 and 123.45 are both valid numbers. Do not put quotes around
+             numbers. A number with quotes around it is considered a "string". Software
+             that processes the JSON will not associate a numeric value with numbers that
+             have "quotes" around them.
+
+   - boolean: boolean is just another way of saying "logical" data. A boolean
+              value can be either true or false. The words true/false must be lowercase.
+              Do not enclose the true and false in quotes. A true or false with quotes around
+              it is considered a "string".
+
+   - null: A value that is null is considered non-existant. For example, the
+           following JSON is used to represent some data about the ACME Shipping
+           Company. Notice that some employees have a middle name and some don't. The
+           ones who don't have a middle name have a value of null for the middle name.
+
+               {
+                 "company": "ACME Shipping Company",
+                 "employees": [ {"first": "Joe",     "middle": null,     "last": "Smith"},
+                                {"first": "Sheila",  "middle": null,     "last": "Cohen"},
+                                {"first": "Jack",    "middle": "Edgar",  "last": "Jones"} ]
+               }
+
+           Note that another way to indicate that an employee doesn't have a
+           middle name is just to leave out the middle name for that employee.
+           For example, the following is also valid JSON:
+
+               {
+                 "company": "ACME Shipping Company",
+                 "employees": [ {"first": "Joe",                          "last": "Smith"},
+                                {"first": "Sheila",                       "last": "Cohen"},
+                                {"first": "Jack",     "middle": "Edgar",  "last": "Jones"} ]
+               }
+
+           The choice of whether to use null or to simply leave out the data is
+           a choice made by the people who design the data format. Either are
+           valid choices. As mentioned above, the exact "spacing" of the data does
+           not affect the validity of the JSON file. The spacing is very useful
+           though to make the file easier to read.
+```
+
+## COMPLEX DATA TYPES  -  "OBJECTS" and "ARRAYS"
+
+"Objects" and "arrays" are two different "complex data types" that allow you
+to organize multiple data values in different ways.
+
+### OBJECTS
+
+A JSON "object" is surrounded by a single set of {curly braces}. Inside the curly braces are zero or more "name":value pairs (also known as "key":value pairs).
+ 
+For example, the following is a valid JSON object:
+
+```json 
+                 {
+                     "recipeName": "Midnight Chocolate Cake",
+                     "submittedBy": "Jack Sep 1, 2022 9:00am",
+                     "caloriesPerServing": 450,
+                     "dietMenu": false,
+                     "prepTime": "2 hours 45 minutes"
+                 }
+```
+ 
+ Notice a few things about this example:
+ 
+ 1. The data for the "object" is surrounded by { curly braces }.
+ 
+ 2. Each line inside the {curly braces} contains a "name":value pair  (AKA "key":value pair).
+ 
+    Note that it is NOT required that each "name":value pair be on a separate line
+    but it is considered good practice to make the files more readable.
+ 
+ 3. The "name" in each "name":value pair (AKA the "key" in each "key":value pair) is enclosed in      quotes.
+ 
+    It's not uncommon to see JSON files that incorrectly leave out the quotes around the names.       This is
+    wrong. While these files may sometimes still be able to be processed correctly by software that accounts
+    for this mistake, you should always make sure to include the "quotes" around the "names" in JSON files
+    that you create yourself.
+ 
+    Note that technically the "name" (AKA "key") in a name value pair may contain spaces. However, including
+    spaces in names can sometimes cause problems when using software to process a JSON file. Therefore it is
+    recommended not to use spaces in names. The example above uses "camelCase" for the names to clearly
+    identify each word in a multiWord name.
+ 
+ 4. The value in each "name":value pair may be any valid JSON datatype. The different "name":value pairs in
+    the example above use different data types. For example "Midnight Chocolate Cake" is a string, 450 is a
+    number and false is a boolean value. Note that "45 minutes" is a string and not a number.
+ 
+ 5. The "name":value pairs are separated from each other with commas. Note that there is NO comma after the
+    last "name":value pair in the object (i.e. no comma after "dietMenu": false). Extra commas and missing 
+    commas are a common source of errors that can be hard to find.
+ 
+ 6. The same "name" may not appear twice in a single object. For example, the following is NOT valid!
+ 
+       { "thing": "ball", "thing": "cookie" }        # THIS IS NOT VALID - DUPLICATE NAMES
+ 
+ 
+
+## NESTED OBJECTS
+
+ The values in "name":value pairs (AKA "key":value pairs) may be objects.
+ Below, is a modified version of the recipe example shown above. Notice
+ that in the following version of the JSON, the value for "prepTime" is now
+ itself an object. An object inside an object is known as a "nested object".
+
+```json
+                 {
+                     "recipeName": "Midnight Chocolate Cake",
+                     "submittedBy": "Jack Sep 1, 2022 9:00am",
+                     "caloriesPerServing": 450,
+                     "dietMenu": false,
+                     "prepTime": {
+                         "hours": 2,
+                         "minutes": 45
+                     }
+                 }
+``` 
+ 
+ Continuing with the same example ... we added another "name":value pair whose
+ name is "submittedBy". The value of "submittedBy" is itself a nested object.
+ 
+ ```json
+                 {
+                     "recipeName": "Midnight Chocolate Cake",
+                     "submittedBy": {
+                         "userName": "Jack",
+                         "when": {
+                             "date": "Sep 1, 2022",
+                             "time": "9:00 am"
+                         }
+                     },
+                     "caloriesPerServing": 450,
+                     "dietMenu": false,
+                     "prepTime": {
+                         "hours": 2,
+                         "minutes": 45
+                     }
+                 }
+```
+
+ Continuing once again with the same example ... we can also make the values for 
+ "date" and "time" into nested objects:
+
+```json
+                 {
+                     "recipeName": "Midnight Chocolate Cake",
+                     "submittedBy": {
+                         "userName": "Jack",
+                         "when": {
+                             "date": {
+                                 "month": "Sep",
+                                 "day":  1, 
+                                 "year": 2022
+                             },
+                             "time": {
+                               "hour": 9,
+                               "minute": 0,
+                               "am": true
+                             }
+                         }
+                     },
+                     "caloriesPerServing": 450,
+                     "dietMenu": false,
+                     "prepTime": {
+                         "hours": 2,
+                         "minutes": 45
+                     }
+                 }
+```
+
+Objects may be nested for many levels. Without proper indentation, nested
+objects (and arrays - see below) can become very difficult to read. Make sure
+that your JSON objects are indented properly. (Note that the value in a
+"name":value pair may also be an array as explained in the next section).
+ARRAYS
+
+JSON arrays combine a sequence of values between [square brackets]. The values
+in an array are separated from each other using commas. There is no comma
+after the last value. For example, the following is a valid JSON array that
+contains several strings:
+ 
+```json
+                 ["apple", "pear", "plum"]
+```
+
+Note that the values in an array are not "named" as they are in objects (see
+above). The following JSON array contains numbers:
+ 
+```json
+                 [3.14159, 2.7182, 1.6180, 186282]
+```
+
+There is technically no requirement that all values in a JSON array must be
+the same datatype (i.e. a "homogeneous array"). JSON does allow
+for "heterogeneous arrays", or arrays that contain values of different data
+types. These are not as common as homogenous arrays, however they are still
+considered valid JSON. For example, the following is a JSON array that
+contains values of different data types.
+ 
+```json
+                 [ "apple" , 3.14159 , true , null , false , true, 92 , "abc"]
+```
+
+## Nested Arrays
+
+In addition to the simple data types (string, number, boolean, null), JSON
+arrays may also contain nested arrays as well as objects. For example, the
+following is an array that contains nested arrays.
+ 
+```json
+   [ [92, 80, 70, 83, 98, 77, 86, 99, 25] , [ 96, 72 , 26, 100, 92] , [ 93, 82, 92, 85] ]
+``` 
+
+The above example contains three different nested arrays. Often such arrays
+are arranged with each "inner" array (that is contained in the "outer"
+array) on a different line. For example, the above JSON is equivalent to the
+following:
+ 
+```json
+         [
+             [92, 80, 70, 83, 98, 77, 86, 99, 25],
+             [96, 72, 26, 100, 92],
+             [93, 82, 92, 85]
+         ]
+```json
+ 
+## Arrays that contain objects
+
+Arrays may also contain objects. For example, the following shows an array that
+contains 3 objects. Notice how the indentation is arranged to clearly show the
+structure of the array and the objects.
+ 
+```json
+             [
+                 {
+                     "first": "Sue",
+                     "last": "Smith"
+                 },
+                 {
+                     "first": "Frank",
+                     "last": "Jones"
+                 },
+                 {
+                     "name": "Anne",
+                     "title": "Applebaum"
+                 }
+             ]
+```
+
+## Objects that contain arrays
+
+Just as arrays can contain objects, objects can contain arrays. The value of a "name":value pair in an object may be an array (as well as an object).  For example, the following is a JSON object that describes a company. Below, the array of objects from the last example is used as the value for the "employees" key in the outermost object.
+ 
+```json
+{
+     "companyName": "Widgets R Us",
+     "founded": 2022,
+     "employees":
+             [
+                 {
+                     "first": "Sue",
+                     "last": "Smith"
+                 },
+                 {
+                     "first": "Frank",
+                     "last": "Jones"
+                 },
+                 {
+                     "name": "Anne",
+                     "title": "Applebaum"
+                 }
+             ]
+ }
+```
+
+## Complex JSON Files
+
+Very complex JSON files can be constructed from a deep nesting of arrays that contain objects and objects that contain arrays, etc. etc. etc. The outermost structure in the example above is an object. It contains information about a single compmany. If we want to capture information about many companies, we could create an array of different company objects as shown below.
+ 
+```json
+ [
+     {
+         "companyName": "Widgets R Us",
+         "founded": 2022,
+         "employees":
+                 [
+                     {
+                         "first": "Sue",
+                         "last": "Smith"
+                     },
+                     {
+                         "first": "Frank",
+                         "last": "Jones"
+                     },
+                     {
+                         "first": "Anne",
+                         "last": "Applebaum"
+                     }
+                 ]
+     },
+     {
+         "companyName": "Pete's Pizza",
+         "founded": 2020,
+         "employees":
+                 [
+                     {
+                         "first": "Pete",
+                         "last": "Jones"
+                     },
+                     {
+                         "first": "Paula",
+                         "last": "Jones"
+                     }
+     }
+ ]
+```

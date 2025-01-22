@@ -2,6 +2,12 @@
 
 The tidyverse is a collection of R packages designed for data science that share common design philosophies and work seamlessly together. These packages make data manipulation, visualization, and analysis more intuitive and efficient.
 
+See these resources for more info about the entire tidyverse
+family of packages.
+
+* <https://r4ds.hadley.nz/>{target="_blank"}
+* <https://tidyverse.org/>{target="_blank"}
+
 ## Installation and Loading
 
 To install all tidyverse packages:
@@ -13,6 +19,8 @@ To load the core tidyverse packages:
 ```r
 library(tidyverse)
 ```
+
+Alternatively, you can install and load each package separately.
 
 ## Core Tidyverse Packages
 

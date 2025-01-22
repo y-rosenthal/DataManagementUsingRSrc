@@ -1,0 +1,39 @@
+# Creating, editing and validating JSON files
+
+You can create JSON files with any text editor (e.g. Notepad, VSCode, the RStudio editor, etc.) Many text editors will help you with editing JSON files. For example, VSCode displays different JSON datatypes (see below) in different colors and highlights any errors that appear in the JSON format (such as missing commas, missing quotes, etc). This helps you correct the errors to make sure that the JSON is "valid". 
+
+In addition VSCode makes it easy to navigate large JSON files by allowing you to "collapse and expand" entire JSON objects and arrays. If you point at the line numbers with your mouse, arrows appear next to the line numbers.  Click on these arrows to collapse and expand objects and arrays that span multiple lines.
+
+Note that for VSCode to recognize a file as a JSON file you should name the file with a ".json" extension at the end of the filename.
+
+## USING A JSON VALIDATOR TOOL
+ 
+Another way to determine if a JSON file is "valid" is to copy the contents into a JSON validation service such as https://jsonlint.com/. Try doing so with the JSON examples shown above. If you paste one of them into
+https://jsonlint.com/  and press the "Validate JSON" button, you should see "valid JSON" in the Results section.
+ 
+ 
+## EXTRA WHITESPACE IN JSON IS IGNORED (i.e. spaces, tabs and newlines)
+ 
+Formatting JSON files with spaces, tabs and newlines to clearly show the structure of the data is highly recommended. However, strictly speaking, whitespace (i.e. spaces, tabs and newlines) that does not appear between quotes do not affect the "validity" of the JSON. For example, the following would also be a valid
+JSON representation of the data from the last example. Of course, spaces that appear between quotes, such as "Books R Us" are not ignored.
+ 
+The following IS valid JSON (but don't do this):
+ 
+```
+[{"hardcover": false,"title": "How to Program in R"
+,"copyright":2017,"publisher": {"pubName": "Books R Us","pubWebsite":
+"https://booksrus.com/"},"categories":
+["R","technology","statistics"],"author" :{"first": "Robert","last":
+"Rosen"}},{"hardcover": true,"title": "Python For Perfectionists","copyright":
+2018,"categories": ["Python", "technology"],"author" :{"title": "Dr.","first":
+"Sue","last": "Smith"}},{"hardcover": true,"title": "Cooking For Programmers","copyright":
+2018,"categories": ["cooking"],"author" :{"first":
+"Joe","middle": "J","last": "Johnson"}}]
+```
+
+Note that any "quoted information" must all appear on one line. For example, the quoted title "How to Program in R" appears at the very end of the fist line of the JSON shown above. If the title were split between the 1st and 2nd lines, the JSON would NOT be valid.
+
+Removing all the unnecessary whitespace (spaces, tabs and newlines) from a JSON file is known as "minifying" the JSON file. Sometimes JSON files are intentionally "minified". Specifically, this often is done to reduce the amount of data that needs to be transferred when JSON data is sent from one computer to another via an API. For right now, don't worry about APIs. We will cover APIs very soon.
+ 
+Most JSON editors have features for automatically "prettifying" the JSON file so that it is indented properly. For example, in VSCode you can press Shift + Alt + F (Windows) or Shift + Option + F (Mac) to format a JSON document. See this page (or search online for others) for more tips on using VSCode to edit
+JSON documents: https://linuxpip.org/vscode-format-json/

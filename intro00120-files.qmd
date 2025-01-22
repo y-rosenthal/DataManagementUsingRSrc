@@ -1,0 +1,93 @@
+# Working with files
+
+## Mac Finder and Windows File Explorer
+
+The Finder app on Mac and the File Explorer app on Windows are used to 
+navigate the files on your computer. 
+You should become familiar with how to use those apps on 
+your computer. For more info search online. Youtube videos are often a good
+way to learn about how to use these features.
+
+## Filename extensions
+
+### What is a filename extension?
+
+A filename extension is the portion of the filename that appears after
+the final period. For example, in the file LetterToBob.docx, the filename 
+extension is .docx. In a file named finances.xlsx, the filename 
+extension is .xlsx. 
+
+### A filename extension indicates which program should be used to open a file
+
+Modern Microsoft Word documents have a .docx filename extensions (older versions of
+Microsoft Word used a .doc extension).
+
+Modern Microsoft Excel documents have a .xlsx filename extension (older versions
+of Excel used a .xls extension).
+
+When you double click on a file, that file is often opened inside a particular
+program. Most modern operating systems use the filename extension to determine
+which program to use with the file. For example files that end with .xlsx are
+typically automatically opened up in Excel and files that end with .docx are
+typically automatically opened up in Microsoft Word.
+
+Opening a file with the wrong program usually leads to problems. For example,
+if you try to open an Excel file with Microsoft Word or a Word file with Excel,
+the program that you opened will not be able to use the file correctly.
+
+### Some files can be opened with different programs.
+
+You typically would open a .docx file with Microsoft Windows. However, 
+other programs exist that can also be used to open a .docx file. 
+For example these other programs can also work with .docx files:
+
+* LibreOffice Writer - Open-source software that can edit .docx files.
+
+* WPS Office Writer - A lightweight alternative with .docx compatibility.
+
+* Apple Pages - Supports .docx on macOS and iOS.
+
+* OnlyOffice - Free and online office suite for .docx editing.
+
+* Zoho Writer - Cloud-based editor with .docx support.
+
+* SoftMaker FreeOffice - Free software supporting .docx files.
+
+If you have more than one of these programs installed on your computer, 
+one of them will be the "default" program to open when you double click on 
+a .docx file. Both Mac and Windows computers have a way to configure which
+is the default program for each filename extension. The specifics of how 
+to do so often change with different releases of an operating system. 
+For info about how to do so on your computer, please search online
+with your favorite search engine or AI.
+
+### How come I can't see filename extensions
+
+Changing a filename extension can cause the computer to open up the wrong 
+program when you double click on the filename. Many non-technical users
+are not aware of this and might inadvertantly change the filename extension
+without understanding the ramifications. For this reason,
+on new Windows and Mac computers, the filename extensions are usually
+hidden from view. The filename extensions exist, they are just hidden from view.
+There is always a way to show (or hide) the filename extensions. However, different
+versions of Windows and Mac OS provide different ways to do this.
+
+Search online for instructions on how to either show or hide filename extensions
+on your computer.
+
+
+## ZIP files
+
+A ZIP file is a single file that contains multiple files.
+
+
+### How to create a ZIP file?
+
+Search online for info for your operating system.  
+For example "how can I create a ZIP file from a specific folder on Windows 11"
+
+### How to "unzip", i.e. extract the files, from a ZIP file?
+
+Search online for info for your operating system.  
+For example "how can I unzip a zip file on Mac Sequoia".
+

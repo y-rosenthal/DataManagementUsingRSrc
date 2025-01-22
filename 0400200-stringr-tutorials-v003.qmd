@@ -1,20 +1,21 @@
 # stringr tutorial
 
 This is an overview of the stringr package that is part of the "tidyverse"
-family of packages. 
+family of packages.  The info in this section comes from this youtube playlist:
+<https://www.youtube.com/watch?v=oIu5jK8DeX8&list=PLiC1doDIe9rDwsUhd3FtN1XGCV2ES1xZ2>{target="_blank"}
 
-The info in this section comes from this youtube playlist:
-<https://www.youtube.com/watch?v=oIu5jK8DeX8&list=PLiC1doDIe9rDwsUhd3FtN1XGCV2ES1xZ2>
-
-## tidyverse
-
+<div style="font-style: italic; margin-left: 2em;"> 
 See these resources for more info about the entire tidyverse
 family of packages.
 
-* <https://r4ds.hadley.nz/>
-* <https://tidyverse.org/>
+* <https://r4ds.hadley.nz/>{target="_blank"}
+* <https://tidyverse.org/>{target="_blank"}
 
-## Other tidyverse material
+See these links for more info about the stringr package
+
+* <https://stringr.tidyverse.org/>{target="_blank"}
+
+See these links for more info about other related tidyverse packagaes
 
 * tibble package: <https://tibble.tidyverse.org/>
 * magrittr: <https://magrittr.tidyverse.org/>
@@ -23,6 +24,7 @@ family of packages.
 * dplyr package: <https://dplyr.tidyverse.org/>
   - Also see this playlist for info about dplyr:
     <https://www.youtube.com/watch?v=THGFXV4RW8U&list=PLiC1doDIe9rC8RgWPAWqDETE-VbKOWfWl>
+</div>
 
 ```{r}
 #| echo: false

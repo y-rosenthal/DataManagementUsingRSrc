@@ -1,0 +1,34 @@
+# Using JSON in R
+
+The jsonlite R pacakge is used to read JSON files into R.
+The following is the link to the CRAN webpage for the jsonlite package. 
+See the ***vignettes*** and ***reference manual*** linked there.  
+  
+> [jsonlite: A Simple and Robust JSON Parser and Generator for
+R](https://cran.r-project.org/web/packages/jsonlite/index.html){target=_blank}
+    
+
+Below, I copied the links to *some* of the vignettes from that page. However, 
+it's best to check the official CRAN page in case there are modifications
+or if there are new vignettes added there (this page was compiled in Jan 2025).
+    
+    
+* IMPORTANT: The following describes how to use the fromJSON and toJSON functions 
+  from the jsonlite package. 
+  [Getting started with JSON and jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html){target=_blank}
+    
+* The following will be covered later when we discuss APIs:  
+  [Fetching JSON data from REST APIs (2022-01-16)](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html)
+    
+* The following is nice to know but is something that you can figure
+  out yourself without needing this:  
+  [Combining pages of JSON data with jsonlite *(2022-01-16)*](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-paging.html)
+
+* The following is a more detailed definition of how JSON is converted to 
+  R data and how R data is converted to JSON.  You should *NOT* need to look at this but it is nice
+  to know that it is available for reference in case you get stuck.
+  
+  [A mapping between JSON data and R objects *(March 2014)*](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-mapping.pdf)
+
+* There are some other vignettes on the CRAN page, but you probably don't 
+  need to look at them. 
