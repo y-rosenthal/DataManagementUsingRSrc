@@ -1,0 +1,303 @@
+# Coding with AI - an overview
+
+Modern Artificial Intelligence (AI) has been steadily growing in capability. 
+It is now at the point that AI can significantly help with
+software development and coding tasks. 
+
+Current versions of AI are often able to complete basic
+coding tasks correctly, however, they often make
+mistakes when the problem is complex and
+the code for the software starts becoming longer and more intricate. 
+
+In addition, even when the AI produces “correct” code, the implementation created
+by the AI is often not the best solution. The AI generated code might not follow
+best practices for ensuring that the code is easily understood, efficient, and
+“scales well” to large amounts of data and/or users. Professional software
+developers will still need to be involved with software development for the
+foreseeable future. 
+
+The use of AI will be integrated into several parts of this course. 
+We first should introduce some terminology that is helpful to know.
+
+## Some AI terminology
+
+The following terms and concepts are related to modern AI. 
+Some terms are defined differently by different people. There is no 
+"official consensus" on how some of these terms are defined.
+In fact the very term
+"Artificial Intelligence" is often defined differently by different people.
+The following are "working definitions" that will be assumed in this text.
+
+These terms and concepts can be described at defined at different levels
+of detail. The following aims for a target audience of an intelligent adult
+without a deep technical background.
+
+<yrDef>
+## <yrT>data</yrT>
+Raw facts, figures, or information that can be recorded and analyzed. 
+Data comes in many forms, such as numbers, text, images, or videos. 
+For example, a list of daily temperatures, customer comments or photos 
+uploaded to social media are all types of data. In technology, data 
+is the foundation for creating insights, decisions, and <yrT>machine learning models</yrT>.
+</yrDef>
+
+<yrDef>
+## <yrT>data set</yrT> 
+<yrD>A collection of data, usually presented in a structured format like a table, spreadsheet, or database, a CSV file, a JSON file, etc. It’s often used for analysis or training machine learning models. For example, a data set could include a list of student grades, a catalog of product prices, or medical records of patients.
+</yrD>
+</yrDef>
+## <yrT>machine learning</yrT>
+
+<yrD audience="intelligent adult without deep tech background">
+The act of teaching a computer system to recognize patterns in data.
+
+
+The computer 
+This involves "training" a <yrT>machine learning model</yrT>. 
+
+A "machine learning model" is basically a computer program 
+that can 
+The "machine learning model" contains computer code and data. 
+The machine learning process trains the machine learning model
+to recognize patterns in the data. 
+
+
+
+A type of computer programming where machines (computers) learn to make decisions or predictions based on data. Instead of being explicitly programmed for every task, the machine identifies patterns in the data and uses those patterns to improve over time. For example, a machine learning system can learn to recognize faces in photos or recommend movies based on your preferences.
+</yrD>
+
+## machine learning model 
+
+
+
+## Predictive machine learning model
+
+An machine learning model is a program that learns from data 
+
+
+to perform specific tasks, like predicting an outcome, sorting things into categories, or creating text. It’s like teaching a computer how to solve a problem by giving it examples.
+
+
+
+
+
+
+
+You said:
+for AI model - explain a little bit how a simple model is trained with examples that have many attributes and a single target variable
+ChatGPT said:
+ChatGPT
+An AI model is trained by showing it examples that include many attributes (inputs) and a single target variable (output). Think of it like teaching the model how to match patterns.
+
+For example, if you're training a model to predict house prices, the attributes could be the size of the house, the number of bedrooms, and the location. The target variable would be the house price. You give the model a lot of these examples, and it learns the relationships between the attributes and the price.
+
+During training, the model makes guesses (predictions), compares them to the actual prices, and adjusts itself to improve. Over time, it gets better at predicting the target variable for new examples it hasn’t seen before.
+
+## foundation models
+
+Foundation models are very large AI systems trained on huge amounts of data. They are like general-purpose tools that can be customized to do many tasks, such as writing, translating, or recognizing images.
+
+## Large Language Models (LLM)
+
+There are different types of AI software systems. <yrDef>Foundation models</yrDef>
+The development of AI systems 
+AI systems need to be "trained" to 
+AI systems are developed as "models". 
+A Large 
+The following are all “large language model” AI systems, similar to chatgpt that
+you can use for this assignment. The AI space is new and developing 
+rapidly. There are other choices and new options and offerings become available
+
+
+* https://claude.ai/   (this is probably the best at coding today)
+* https://chatgpt.com/
+* https://gemini.google.com/
+* https://grok.com/
+
+
+You are to use AI to code an R program. You are to keep making the
+program more complicated until the AI finally does NOT produce perfect results.
+Then you are to debug the code and post the final product.
+
+This assignment is intended to start getting you familiar with using AI for
+coding tasks. 
+
+As an example, we used claude.ai to build a tic tac toe program in R.
+We used the following prompt:
+
+```
+Please write a tic tac toe game in R. 
+The board should be stored in a matrix. 
+The game should be played by two human players. 
+A sample game might look like this:
+
+The board looks like this:
+
+1 2 3 
+4 5 6
+7 8 9
+
+Player 1 (i.e. x) choose a number to move to: 5
+
+The board looks like this:
+1 2 3 
+4 x 6
+7 8 9
+
+Player 2 (i.e. o) choose a number to move to: 5
+Please choose a number on the board: apple
+Please choose a number on the board: 7
+
+The board looks like this:
+1 2 3 
+4 x 6
+o 8 9
+
+Keep this going until someone wins or there is a tie.
+After the game is over, ask the users if they would like 
+to play again.
+
+Please only use Base R code - no packages.
+```
+
+Claude.ai responded with (basically) the correct code for the requested tic tac toe program.
+If you copy/paste the following code into R and run it, you will be playing
+tic tac toe. 
+
+```{r}
+#| eval: false
+
+# Create a function to display the board
+display_board <- function(board) {
+  cat("\nThe board looks like this:\n\n")
+  for(i in 1:3) {
+    cat(board[i,], "\n")
+  }
+  cat("\n")
+}
+
+# Function to check if a player has won
+check_win <- function(board, player) {
+  # Check rows
+  for(i in 1:3) {
+    if(all(board[i,] == player)) return(TRUE)
+  }
+  # Check columns
+  for(i in 1:3) {
+    if(all(board[,i] == player)) return(TRUE)
+  }
+  # Check diagonals
+  if(all(diag(board) == player)) return(TRUE)
+  if(all(diag(board[3:1,]) == player)) return(TRUE)
+  
+  return(FALSE)
+}
+
+# Function to check if the board is full (tie)
+check_tie <- function(board) {
+  return(!any(board %in% 1:9))
+}
+
+# Main game function
+play_tictactoe <- function() {
+  # Initialize game
+  playing <- TRUE
+  
+  while(playing) {
+    # Create board
+    board <- matrix(1:9, nrow=3, byrow=TRUE)
+    game_over <- FALSE
+    current_player <- "x"
+    
+    # Main game loop
+    while(!game_over) {
+      # Display board
+      display_board(board)
+      
+      # Get player move
+      valid_move <- FALSE
+      while(!valid_move) {
+        cat(sprintf("Player %s choose a number to move to: ", 
+            ifelse(current_player == "x", "1 (i.e. x)", "2 (i.e. o)")))
+        move <- readline()
+        
+        # Check if input is numeric
+        if(!grepl("^[1-9]$", move)) {
+          cat("Please choose a number on the board.\n")
+          next
+        }
+        
+        move <- as.numeric(move)
+        
+        # Check if move is valid (position is not taken)
+        if(!any(board == move)) {
+          cat("That position is already taken. Please choose another.\n")
+          next
+        }
+        
+        valid_move <- TRUE
+      }
+      
+      # Update board
+      board[board == move] <- current_player
+      
+      # Check for win
+      if(check_win(board, current_player)) {
+        display_board(board)
+        cat(sprintf("Player %s wins!\n", 
+            ifelse(current_player == "x", "1", "2")))
+        game_over <- TRUE
+      }
+      
+      # Check for tie
+      else if(check_tie(board)) {
+        display_board(board)
+        cat("It's a tie!\n")
+        game_over <- TRUE
+      }
+      
+      # Switch players
+      current_player <- ifelse(current_player == "x", "o", "x")
+    }
+    
+    # Ask to play again
+    cat("Would you like to play again? (y/n): ")
+    play_again <- readline()
+    playing <- tolower(play_again) == "y"
+  }
+  
+  cat("Thanks for playing!\n")
+}
+
+# Start the game
+play_tictactoe()
+```
+
+## Suggestions for prompting the AI models
+
+* Speak to the AI as you would speak with a person.
+
+* Give the AI a little more information than you might think necessary.
+  Including the background information and reasons for why you are doing something
+  can help a person and in this case the AI, tailor their responses to take
+  into account things that you may not have thought of. 
+
+## Different types of errors
+
+There can be two different types of errors in code:
+
+1. A "syntax error". For this type of error R (or another
+   programming language) can often displays an error message because you didn't
+   use the
+   language correctly. For example, misspelling the name of a function.
+   Some of these types of errors can be trickly, for example you might not get 
+   an error message, if there is a missing closing parentheses somewhere in 
+   the generated R code.
+   
+2. A "logic error". 
+  
+Running the code requires the following R command:
+
+```{r}
+#| eval: false
+```

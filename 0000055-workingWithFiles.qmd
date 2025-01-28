@@ -44,7 +44,6 @@ However, one thing should be made absolutely clear now:
 Difference between a "full path" and a "relative path"
 
 ***A "full path" always starts with a "/".***
-***A "full path" always starts with a "/".***
 
 IMPORTANT: MAKE SURE THAT YOU KNOW THIS ...
 
@@ -220,9 +219,19 @@ fs::file_delete() - Deletes files
 
 fs::file_exists() - Checks if files exist
 
-fs::path() - Builds file paths in a safe, platform-independent way. For example:
+fs::path() and fs::path_wd() - Builds file paths in a safe, platform-independent way (see below).
 
-fs::path("data", "raw", "myfile.csv")  # builds "data/raw/myfile.csv"
+```{r}
+# Basically the same as getwd()
+fs::path_wd()
+
+# Build a full path that starts with the working directory and continues
+# with the names shown below.
+fs::path_wd("data", "raw", "myfile.csv")  
+
+# Build a relative path "data/raw/myfile.csv"
+fs::path("data", "raw", "myfile.csv")  
+```
 
 Note: You need to install and load the fs package to use these (install.packages("fs") and library(fs)). The fs package makes working with files more consistent across operating systems and helps avoid common errors.
 

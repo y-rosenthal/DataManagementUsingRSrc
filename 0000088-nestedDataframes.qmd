@@ -1,0 +1,95 @@
+# Nested Dataframes
+
+A "nested dataframe" can contain 
+<!--
+# Create individual columns
+names <- c("Alice", "Bob", "Charlie")
+ages <- c(25, 30, 35)
+
+# Create a list for hobbies
+hobbies <- list(
+  c("Reading", "Swimming"),
+  c("Cycling", "Cooking"),
+  c("Hiking", "Painting")
+)
+
+# Combine into a data frame
+df <- data.frame(
+  Name = names,
+  Age = ages,
+  stringsAsFactors = FALSE
+)
+
+# Add the list as a column
+df$Hobbies <- hobbies
+
+# View the resulting data frame
+print(df)
+
+# view the Hobbies column
+df$Hobbies
+
+df$Hobbies[[1]]
+df$Hobbies[[1]][1]
+
+
+# Be careful
+
+
+
+
+
+
+l1 = list(
+  list( mgr = "joe",
+        players = c("mike", "john", "al"),
+        schedule = data.frame(
+          day = c("sun","mon","tue"),
+          start = c(7,8,9)
+        )),
+  list( mgr = "sue",
+        players = c("mike", "john", "al"),
+        schedule = data.frame(
+          day = c("sun","mon","tue"),
+          start = c(7,8,9)
+        )),
+  "nothing"
+)
+
+df1 = data.frame( x = I(l1),
+                  y=c(1,2,3))
+
+
+df1
+
+df1 = data.frame(id=c(1,2))
+df1$x = l1
+df1
+df1$x
+?I
+
+
+
+
+
+
+
+l2 = list(
+  I(list( mgr = "joe",
+        players = c("mike", "john", "al"),
+        schedule = data.frame(
+          day = c("sun","mon","tue"),
+          start = c(7,8,9)
+        ))),
+  I(list( mgr = "sue",
+        players = c("mike", "john", "al"),
+        schedule = data.frame(
+          day = c("sun","mon","tue"),
+          start = c(7,8,9)
+        )))
+)
+
+df1 = data.frame( id = c(1,2),
+                  players = I(l1))
+
+-->

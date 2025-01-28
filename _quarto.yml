@@ -25,6 +25,10 @@ book:
       chapters:
       - 0000017-introToQuarto-v001.qmd
       
+    - part: Into to Coding With AI
+      chapters:
+      - aiCoding00100-overview.qmd
+    
     - part: Working with files
       chapters:
       - 0000055-workingWithFiles.qmd
@@ -34,6 +38,7 @@ book:
       - 0000075-whatIsJsonData.qmd
       - 0000080-editingAndValidatingJsonFiles.qmd
       - 0000085-jsonDataTypes.qmd
+      - 0000088-nestedDataframes.qmd
       - 0000090-usingJsonInR.qmd
       
     - part: Bash

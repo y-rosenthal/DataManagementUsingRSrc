@@ -3,3 +3,8 @@
 Official into: <https://quarto.org/docs/get-started/hello/rstudio.html>
 
 Markdown syntax: <https://quarto.org/docs/authoring/markdown-basics.html>
+
+Overview of Quarto in textbook:
+R for Data Science, 2e  
+by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund:   
+<https://r4ds.hadley.nz/quarto.html>

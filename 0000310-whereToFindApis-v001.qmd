@@ -91,7 +91,14 @@ rows = grepl("API", pkgs[,"package"], ignore.case = TRUE) |
 numberOfApiPackages = sum(rows)
 ```
 
-As of the date this document was compiled there were `r numberOfApiPackages`
+As of the date this document was compiled there were 
+
+```{r} 
+#| echo: false
+
+numberOfApiPackages
+```
+
 packages on CRAN that have the letters API in either the name of the package
 or the description.
 
