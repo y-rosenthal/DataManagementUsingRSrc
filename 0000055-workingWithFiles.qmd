@@ -170,14 +170,67 @@ To find the full path for a file, navigate to it using the "Finder" app on Mac
 or the "File Explorer" app on Windows. Each of these tools have a way to 
 show you the full path to the file. 
 
+## functions to read and write files in "Base R"
 
+R has numerous functions that allow reading files and writing to files
+(i.e. creating or modifying files). The following are built into R "out of 
+the box" (i.e. the "base R").
 
-## fs package
+For help with these functions see the R documentation (i.e. ?functionName)
+
+### readLines, writeLines 
+
+  These functions read and write lines of a file into/out-of
+  a character vector.
+
+### read.csv, write.csv
+    
+  read.csv: reads a .csv file into R as a data.frame  
+  
+  write.csv: write a dataframe to a csv file  
+
+### read.fwf
+
+  read a "fixed width file" into a data.frame.
+  A "fixed width file" is different from a CSV file. A CSV file
+  separates the data with commas. A "fixed width file" places each column
+  of data in a "fixed width". See the example below. Each column of info
+  is typed into a specific number of spaces. If a data value is shorter
+  than the width of the field for it's column then the rest of the info
+  in the column is filled in with spaces. Note that you need to use a 
+  monospace font in your editor to view this type of information in the way
+  it was intended. 
+  
+  Example: notice how each piece of data is padded with spaces if it 
+  doesn't take up the entire space for the column.
+  
+  ```
+  student        year       test1  test2   
+  joe            freshman   99     100
+  samantha       senior     100    97
+  bartholemeu    sophomore  77     65
+  ike            senior     82     81
+  ```
+  
+## fs package (a non-core part of "the tidyverse")
 
 The fs package provides modern file system operations in R. It makes working with files and folders more consistent across operating systems (Windows, Mac, Linux) and safer than base R functions. Think of it as a toolkit for handling files - copying, moving, creating directories, checking paths, and viewing directory structures. All functions start with clear prefixes like file_ or dir_ which makes them easy to remember and use.
-Install it with: install.packages("fs")
+
+Install the "fs" package with: install.packages("fs")
 
 ### dir_ls() function
+
+This works similarly to the dir() funciton in Base R. However, dir_ls() allows
+you to get much more information about each file, e.g.
+
+- size of the file
+- when the file was created
+- when the file was last modified
+- other info
+
+See the R documentation (i.e. ?fs::dir_ls after you've already installed 
+the fs package with install.packages("fs").
+
 
 ### dir_tree
 
@@ -219,6 +272,8 @@ fs::file_delete() - Deletes files
 
 fs::file_exists() - Checks if files exist
 
+<!-- Dont include this, path() isn't so necessary and introduces too much at once
+
 fs::path() and fs::path_wd() - Builds file paths in a safe, platform-independent way (see below).
 
 ```{r}
@@ -233,9 +288,13 @@ fs::path_wd("data", "raw", "myfile.csv")
 fs::path("data", "raw", "myfile.csv")  
 ```
 
-Note: You need to install and load the fs package to use these (install.packages("fs") and library(fs)). The fs package makes working with files more consistent across operating systems and helps avoid common errors.
+-->
 
 
+## readLines() and writeLines() to read/write lines of text files
+
+These are built into `Base R`. 
+see the R documentation
 
 ## read_csv and write_csv
 

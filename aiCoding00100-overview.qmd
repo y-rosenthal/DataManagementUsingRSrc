@@ -46,6 +46,7 @@ is the foundation for creating insights, decisions, and <yrT>machine learning mo
 <yrD>A collection of data, usually presented in a structured format like a table, spreadsheet, or database, a CSV file, a JSON file, etc. It’s often used for analysis or training machine learning models. For example, a data set could include a list of student grades, a catalog of product prices, or medical records of patients.
 </yrD>
 </yrDef>
+
 ## <yrT>machine learning</yrT>
 
 <yrD audience="intelligent adult without deep tech background">
