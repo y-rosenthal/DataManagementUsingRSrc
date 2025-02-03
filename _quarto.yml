@@ -29,6 +29,13 @@ book:
       chapters:
       - aiCoding00100-overview.qmd
     
+    - part: Intro to tidyverse
+      chapters:
+      - 0400050-whatIsTidyverse-v001.qmd
+      - 0400050-tibbles-v001.qmd
+      - 0400100-usingPipes-v001.qmd
+      - 0400200-stringr-tutorials-v003.qmd
+      
     - part: Working with files
       chapters:
       - 0000055-workingWithFiles.qmd
@@ -53,12 +60,6 @@ book:
       - 0200200-introToRegularExpressions-v036.qmd
       - 000260-PracticeWithRegulaExpressions-v003.qmd
 
-    - part: Intro to tidyverse
-      chapters:
-      - 0400050-whatIsTidyverse-v001.qmd
-      - 0400100-usingPipes-v001.qmd
-      - 0400200-stringr-tutorials-v003.qmd
-      
     - part: visualizations with ggplot2
       chapters:
       - 050050-tdyvrsGgplot2-v0001.qmd

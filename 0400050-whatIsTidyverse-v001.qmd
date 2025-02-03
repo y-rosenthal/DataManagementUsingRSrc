@@ -74,6 +74,11 @@ The core tidyverse includes packages that you'll likely use in almost every anal
 - Common uses: Managing and modifying factor variables
 - Learn more: https://forcats.tidyverse.org
 
+### lubridate
+- Purpose: Working with dates and times
+- Load with: `library(lubridate)`
+- Learn more: https://lubridate.tidyverse.org
+
 ## Non-Core Tidyverse Packages
 
 These packages are part of the tidyverse but aren't loaded automatically with `library(tidyverse)`. You'll need to load them individually when needed:
@@ -87,11 +92,6 @@ These packages are part of the tidyverse but aren't loaded automatically with `l
 - Purpose: Reading SPSS, Stata, and SAS files
 - Load with: `library(haven)`
 - Learn more: https://haven.tidyverse.org
-
-### lubridate
-- Purpose: Working with dates and times
-- Load with: `library(lubridate)`
-- Learn more: https://lubridate.tidyverse.org
 
 ### hms
 - Purpose: Working with time-of-day values
@@ -142,6 +142,11 @@ The distinction between core and non-core tidyverse packages is primarily about 
 - Updated and maintained on a coordinated release schedule
 
 ### Non-Core Packages:
+
+These packages are part of the tidyverse. They are installed with
+install.packages("tidyverse") but aren't loaded automatically with `library(tidyverse)`. 
+You'll need to load them individually (with library(PACKAGE_NAME) or require(PACKAGE_NAME).
+
 - Must be loaded individually
 - Serve more specialized purposes
 - Still follow tidyverse design principles
@@ -150,3 +155,48 @@ The distinction between core and non-core tidyverse packages is primarily about 
 - Often depend on core packages but are not required for basic data analysis workflows
 
 Remember that being "non-core" doesn't mean less important—it simply means the package serves a more specialized purpose that isn't needed in every analysis.
+
+## Non-Core Tidyverse Packages (as of Feb 2025)
+
+
+These packages are part of the tidyverse but aren't loaded automatically with `library(tidyverse)`. You'll need to load them individually:
+
+### File Reading and Writing
+
+* readxl: Efficiently reads Excel files (.xls and .xlsx formats) into R. Provides functions to read entire sheets or specific cells, and handles various Excel formatting quirks.
+
+* haven: Specializes in reading data from other statistical software like SPSS, Stata, and SAS. Preserves value labels, variable labels, and other metadata from the original files.
+
+* fs: Provides a cross-platform interface for working with files and directories. Includes tools for creating, moving, copying, and deleting files, as well as working with file permissions and paths in a consistent way across operating systems.
+
+* jsonlite: Handles reading and writing JSON data with robust encoding support. Specializes in converting between JSON data and R objects while maintaining data types and structures.
+
+* xml2: Provides tools for working with XML files. Includes functions for reading, writing, and manipulating XML data, with support for XPath expressions and namespace handling.
+
+### Web and Database
+
+* httr2: Modern toolkit for working with web APIs and HTTP. Includes features for authentication, request/response handling, and working with different HTTP methods.
+
+* rvest: Makes it easy to scrape data from web pages. Provides tools for extracting specific elements from HTML pages, handling forms, and navigating web pages programmatically.
+
+* dbplyr: Allows you to work with databases using familiar dplyr syntax. Translates R code into SQL queries behind the scenes, making it easier to work with large datasets stored in databases.
+
+* googledrive: Provides a full-featured interface to Google Drive from R. Allows you to upload, download, and manage files on Google Drive programmatically.
+
+### Modeling and Development
+
+* modelr: Contains helper functions for modeling and model visualization. Includes tools for data partitioning, cross-validation, and creating model predictions.
+
+* broom: Converts statistical model objects into tidy tibbles. Makes it easier to work with model outputs using tidyverse tools by providing consistent data structures.
+
+* reprex: Creates reproducible examples for sharing code problems or solutions. Formats R code and its output in a way that's perfect for posting to GitHub issues, Stack Overflow, or other forums.
+
+* devtools: Essential toolkit for R package development. Provides functions for creating, testing, and maintaining R packages, including tools for documentation and testing.
+
+### Time and Dates
+
+* hms: Specialized package for working with time-of-day values. Provides a simple class for storing and manipulating time measurements without dates.
+
+* clock: Comprehensive toolkit for working with dates and times. Offers more precise control over calendars, time zones, and date-time arithmetic than base R or lubridate.
+
+
