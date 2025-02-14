@@ -1,0 +1,424 @@
+# <yrChapterNumber></yrChapterNumber> assignment - weather API
+
+The United States National Weather Service maintains a free API that returns
+weather information for specific latitudes and longitudes. For this assignment
+you will call the API and store the info in CSV files. There are two
+different API endpoints that will be needed for this assignment.
+
+### The "base URL" - https://api.weather.gov/
+
+All URLs used to call the weather api start with *https://api.weather.gov/*.
+This is known as the "base URL" for the API.
+
+### points endpoint - https://api.weather.gov/points/{latitude},{longitude}
+
+The first "endpoint" we will use has the following format:
+
+> https://api.weather.gov/points/{latitude},{longitude}
+
+where {latitude} and {longitude} are replaced with specific numeric values
+for latitude and longitude. For example, 
+the following URL returns data for info about latitude 38.8894 and
+longitude -770.352 
+*(make sure to notice the comma "," that appears between the latitude*
+*and longitude numbers in the URL)*
+To make a similar call for other locations, simply replace the values
+with the appropriate latitude,longitude numbers.
+
+> https://api.weather.gov/points/38.8894,-77.0352
+  
+This "API call" doesn't return the actual weather data. Rather, the JSON
+it returns includes other
+API URLs that can be used to get the actual weather data (see the next bullet).
+The URL that we are interested in for this project is the "forecastHourly" URL.
+Below is an outline of the JSON that is returned from this API call. 
+We omitted most of the data so that we can clearly highlight
+where the "forecastHourly" URL is in the JSON.
+
+
+```json {style="font-size: 0.75em;"}
+// (Note - this is a comment. It starts with //. Classic JSON does not 
+// allow for comments, but JSONC (i.e. JSON with Comments) is recognized
+// by some JSON parsers.) 
+{
+  "@context":[
+    
+    // SOME STUFF REMOVED FOR BREVITY
+    
+  ],
+  "id":"https://api.weather.gov/points/38.8894,-77.0352",
+  "type":"Feature",
+  "geometry":{
+    
+    // SOME STUFF REMOVED FOR BREVITY
+    
+  },
+  "properties":{
+    
+    // SOME STUFF REMOVED FOR BREVITY
+    
+    // THIS IS THE LINE WE ARE INTERESTED IN
+    "forecastHourly":"https://api.weather.gov/gridpoints/LWX/97,71/forecast/hourly"
+    
+    // SOME STUFF REMOVED FOR BREVITY
+
+  }
+}
+```  
+
+
+### getting the hourly forecasts
+
+The "forecastHourly" URL is obtained from the API call in the previous bullet.
+That JSON included the following line.
+It is this URL that we use to get the actual hour by hour weather forecast data.
+*note that this data could potentially change every time you call the API*)
+  
+> "forecastHourly":"https://api.weather.gov/gridpoints/LWX/97,71/forecast/hourly",
+
+  
+Among other data, the JSON returned by this URL includes an array of time "periods".
+Each period describes the forecast for a single hour of time in the 
+specified location. For this specific URL there are 156 such periods in the data 
+(the exact number of periods may change each time you visit this URL). 
+Below we show an example of the first 2 periods from a specific call to this
+API. We removed much of the other data from the JSON shown below.
+  
+```json{style="font-size: 0.75em;"}
+
+{
+  "@context":[
+    
+    // SOME STUFF REMOVED FOR BREVITY
+    
+  ],
+  "type":"Feature",
+  "geometry":{
+    
+    // SOME STUFF REMOVED FOR BREVITY
+    
+  },
+  "properties":{
+    "units":"us",
+    "forecastGenerator":"HourlyForecastGenerator",
+    "generatedAt":"2025-02-12T17:34:21+00:00",
+    "updateTime":"2025-02-12T17:30:41+00:00",
+    "validTimes":"2025-02-12T11:00:00+00:00/P7DT14H",
+    "elevation":{
+    
+      // SOME STUFF REMOVED FOR BREVITY
+    
+     },
+    "periods":[
+      {
+        "number":1,
+        "name":"",
+        "startTime":"2025-02-12T12:00:00-05:00",
+        "endTime":"2025-02-12T13:00:00-05:00",
+        "isDaytime":true,
+        "temperature":34,
+        "temperatureUnit":"F",
+        "temperatureTrend":"",
+        "probabilityOfPrecipitation":{
+          "unitCode":"wmoUnit:percent",
+          "value":12
+        },
+        "dewpoint":{
+          "unitCode":"wmoUnit:degC",
+          "value":-0.5555555555555556
+        },
+        "relativeHumidity":{
+          "unitCode":"wmoUnit:percent",
+          "value":89
+        },
+        "windSpeed":"6 mph",
+        "windDirection":"E",
+        "icon":"https://api.weather.gov/icons/land/day/ovc?size=small",
+        "shortForecast":"Cloudy",
+        "detailedForecast":""
+      },
+      {
+        "number":2,
+        "name":"",
+        "startTime":"2025-02-12T13:00:00-05:00",
+        "endTime":"2025-02-12T14:00:00-05:00",
+        "isDaytime":true,
+        "temperature":34,
+        "temperatureUnit":"F",
+        "temperatureTrend":"",
+        "probabilityOfPrecipitation":{
+          "unitCode":"wmoUnit:percent",
+          "value":13
+        },
+        "dewpoint":{
+          "unitCode":"wmoUnit:degC",
+          "value":-0.5555555555555556
+        },
+        "relativeHumidity":{
+          "unitCode":"wmoUnit:percent",
+          "value":89
+        },
+        "windSpeed":"6 mph",
+        "windDirection":"E",
+        "icon":"https://api.weather.gov/icons/land/day/ovc?size=small",
+        "shortForecast":"Cloudy",
+        "detailedForecast":""
+      },
+      
+      // THE FIRST 2 PERIODS ARE SHOWN ABOVE.
+      // THE API CALL RETURNED 156 PERIODS. 
+      // THE REMAINDER OF THE PERIODS WERE REMOVED FOR BREVITY.
+      
+    ]
+  }
+}
+```
+
+### More info about the weather API
+
+* See the following URL for more information about how to use the API. 
+
+  - <https://weather-gov.github.io/api/general-faqs>
+
+  Other information about the API can be seen here:
+
+  - <https://www.weather.gov/documentation/services-web-api>
+
+  - <https://weather-gov.github.io/api/>
+
+
+## What you need to do
+
+### summary
+
+1. Create the following R functions 
+
+   * a function that calls the API to get the weather forecasts for a specific
+     latitude and longitude and returns the data in an R dataframe  
+     (see next section for details)
+   
+   * a second function that calls the first function in a loop. Each time the 
+     first function is called the data that is returned should be saved in a new
+     csv file. All of the CSV files should be placed in the same folder  
+     (see next section for details)
+     
+   * a third function that takes an entire folder of the csv files that
+     were created in the 2nd function and returns a single dataframe that
+     contains all of the rows from all of the csv files  
+     (see next section for details)
+
+2. Writeup your results in a Quarto document.  
+     (see next section for details)
+
+
+### Use of AI
+
+You MAY use AI to help you with this. However, you MUST UNDERSTAND
+all the code that you submit. If you don't understand the code, don't submit it.
+
+You may only use Base R, and the packages that we have learned about in class.
+This includes the following packages:
+
+- tibble
+- magrittr
+- jsonlite
+- stringr
+
+You should inform the AI of these instructions so that it knows
+not to use functions from other packages. However, keep in mind that even if
+you do tell the AI to only use functions from these packages, it might use
+other packages anyway. Ultimately, you are responsible for reviewing the code
+and ensuring that it adheres to these directions.
+
+Note that we did not cover all the functions in these packages. Nevertheless, 
+you MAY use functions that we didn't cover from these packages, 
+but you must understand the code before submitting it (research on your own
+any functions that we didn't cover in class).
+
+You MUST
+include a copy of all of your conversations with the AI in your 
+submission. (You may have multiple conversations with the AI).
+Use the yrWebSnap chrome extension to take a snapshot of the conversations
+with the AI.
+
+
+
+
+### what you need to do - detailed instructions
+
+#### function getForecastDf()
+
+Create the following R function
+
+```
+getForecastDf = function(latitude , longitude){
+  # your code goes here
+}
+```
+
+(a) This function should return a non-nested dataframe (i.e. a "normal" dataframe 
+in which each entry is a single number, TRUE or FALSE, or character value).
+The dataframe should include all of the data from each period
+from the hourly weather forcast as shown in the picture below. 
+There should be one row in the dataframe for each time period from the JSON. 
+
+In addition, the first 3 columns of the dataframe should include the following
+information. These extra columns will have the exact same data for each row in
+the dataframe.
+
+* latitude - ie. the latitude 
+
+* longitude - ie. the longitude
+
+* apiCallTime - ie. the date and time that the API was called which included
+  the info in the dataframe. The date/time/timezone should be formatted
+  in ISO 8601 format (see the appendix at the bottom of this file).
+  You can get this info using the following R code:
+  
+  `format(Sys.time(), "%Y-%m-%dT%H:%M:%S-%z")`
+
+<!--
+:::{.column-body-outset}
+-->
+
+:::{.column-screen}
+![first few rows of df - zoom in to see the data](forecastDfRows-v002.png){}
+:::
+
+#### function createForecastFiles()
+
+Create the following function:
+
+```
+createForecastFiles = function(latitude , 
+                               longitude , 
+                               sleepSeconds, 
+                               outputFolder = "." , 
+                               createFolder = FALSE ,
+                               numberOfApiCalls = Inf){
+  # your code goes here
+}
+```
+
+##### createForecastFiles - call the function getForecastDf in a loop
+
+The `createForecastFiles` function should continuously call the 
+function `getForecastDf` in a loop. The loop should go around 
+as many times as is specified in `numberOfApiCalls` argument. 
+
+The code in the `createForecastFiles` function should call 
+Sys.sleep(sleepSeconds) in 
+between each call to the getForecastDf function.
+
+##### createForecastFiles - save each dataframe in a separate .csv file
+
+Each time 
+getForecastsDf() is called, the
+dataframe that is returned should be saved in a separate
+csv file. The name of each csv file should contain the timestamp that 
+the API was called. Specifically, the filenames should match the following form:
+
+> hourlyData_lat_long_YYYY-MM-DDTHH-MM-SS-TZ.csv
+   
+*NOTES*
+
+* hourlyData is always the first part of the filename
+
+* lat is the latitude (e.g. 38.8894)
+
+* long in the longitude (e.g. -77.0352)
+
+* YYYY-MM-DD-HH-MM-SS-TZ is the date/time/timezone for when the API
+  was called. This should be the same date/time/timezone that is returned
+  in the first column of the dataframe - see (1) above.
+  However, note that the colons (:) from the date/time/timezone in 
+  dataframe should be changed to dashes (-) for the filename
+  since filenames on both Mac and Windows may not contain colons (:).
+  You can use the following code to make this change:  
+     `TIMESTAMP_WITHOUT_COLONS = gsub(':', '-', TIMESTAMP_WITH_COLONS)`
+     
+* The different parts of the filename described above are separated
+  from each other with underscores ( _ ). 
+ 
+ For example - the filename for the the dataframe shown in the image in 
+the previous section, should be:
+
+> hourlyData_38.8894_-77.0352_2025-02-13T03-56-55-0500.csv
+
+ 
+*If the outputFolder doesn't exist then*
+
+* If the `createFolder` argument is FALSE then the function should stop with an 
+  appropriate error message 
+
+* If the `createFolder` argument is TRUE then the function should create the folder
+  To do this, use the dir_create function in the fs package.
+
+
+<!--
+
+This video shows how to access the API via Tidyverse packages. For this
+assignment you are only to use the packages that we covered so far in class. 
+THis includes - anything from Base R, tibbles, magrittr pipes.
+
+https://www.youtube.com/watch?v=hmtE4QGIOuk&t=1609s
+
+The following blog post is associated with that video:
+
+-->
+
+
+### Create a Quarto file with explanations
+
+Include all of the following in the Quarto .qmd file:
+
+- An overall description of the problem - include a link to this webpage.
+
+- Include all of your code in code chunks. 
+  The code chunks should NOT run the code (use #| eval: false
+  at the top of the code chunk) See this page for more info:
+  <https://quarto.org/docs/computations/execution-options.html>
+  
+- Include links to the yrWebSnips of your AI conversations
+
+## What to submit
+
+- Create a folder that contains all of the following:
+
+  * A copy of the .qmd file.
+  * A copy of the rendered qmd file (ie. the .html file) as well as the 
+    folder that is created when you render the .qmd file.
+  * A sample of at least 3 copies of the .csv files that are created when 
+    you run your code.
+  * The .html files that contain the output from the yrWebSnip of your
+    conversations with the AI
+  
+- Create a ZIP file of this folder and submit it  
+
+## Appendix - Explanation of standard date/time/timezone format 
+
+Different countries and locales have different standards for how to write
+dates and times. When working with data it's important to use a standard
+that everyone can understand. To this end the following two standards are
+often cited in the computing world:
+
+- ISO 8601
+
+- RFC 3339
+
+There are slight differences between these standards. However, a commonly
+adopted practical way of writing dates/times based on thse standards is:
+"YYYY-MM-DDTHH:MM:SS±HH:MM", where "YYYY" is the year, "MM" is 
+the month, "DD" is the day, "HH" is the hour, 
+"MM" is the minute, "SS" is the second, 
+and "±HH:MM" represents the time zone offset from UTC (Coordinated Universal Time). 
+
+Key points about this format:
+
+* "T" Separator: The "T" character separates the date from the time. 
+* Time Zone Offset: The time zone is indicated by a plus (+) or minus (-) sign followed by the hours and minutes offset from UTC. 
+* "Z" for UTC: If the time is in UTC, you can use a "Z" instead of a time zone offset. 
+
+Example:
+
+* "2023-10-26T14:30:00-05:00": represents October 26, 2023 at 2:30 PM with a 5-hour time zone offset (e.g., Eastern Standard Time). 

@@ -1,3 +1,6 @@
+# <yrChapterNumber></yrChapterNumber> CSS Selector Questions
+
+```
 library(rvest)
 
 #########################################################.
@@ -286,3 +289,4 @@ modifiedHtml = r"(
 
 # Show the results
 viewHtmlInRStudio(modifiedHtml)
+```

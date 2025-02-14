@@ -1,3 +1,5 @@
+# <yrChapterNumber></yrChapterNumber> RStudio Code Folding
+
 ```{r}
 # How to hide/show portions of code in RStudio (i.e. "code folding") ####
 

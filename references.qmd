@@ -1,4 +1,4 @@
-# References {.unnumbered}
+# <yrChapterNumber></yrChapterNumber> References {.unnumbered}
 
 ::: {#refs}
 :::

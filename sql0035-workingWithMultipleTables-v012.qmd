@@ -1,4 +1,4 @@
-# Inner Joins.
+# <yrChapterNumber></yrChapterNumber> Inner Joins.
 
 ```{r}
 #| echo: false

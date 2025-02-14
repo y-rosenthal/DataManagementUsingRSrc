@@ -1,4 +1,6 @@
-# Using JSON in R
+# <yrChapterNumber></yrChapterNumber> Using JSON in R with jsonlite package
+
+## jsonlite vignettes
 
 The jsonlite R pacakge is used to read JSON files into R.
 The following is the link to the CRAN webpage for the jsonlite package. 
@@ -32,3 +34,22 @@ or if there are new vignettes added there (this page was compiled in Jan 2025).
 
 * There are some other vignettes on the CRAN page, but you probably don't 
   need to look at them. 
+
+
+## toJSON - create JSON from an R object
+
+### pretty argument and prettify function
+
+### use writeLines to write the JSON to a file
+
+### toJSON(SOME_R_OBJECT , auto_unbox=TRUE)
+
+#### readLines and writeLines
+
+
+## fromJSON - create an R object from JSON
+
+
+## Working with nested dataframes
+
+### tidyr - unnest , expand , crossing , nesting (TODO get exmaples from LLMs)

@@ -1,3 +1,6 @@
+# <yrChapterNumber></yrChapterNumber> Scraping Dynamic Websites 
+
+```
 ###############################################################################.
 # CODE BELOW WAS TAKEN FROM HERE:
 # https://github.com/ggSamoora/TutorialsBySamoora/blob/main/RSelenium%20Tutorial.R
@@ -135,3 +138,4 @@ median(price_values)
 
 # terminate the selenium server
 system("taskkill /im java.exe /f")
+```

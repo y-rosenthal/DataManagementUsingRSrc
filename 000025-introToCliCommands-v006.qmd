@@ -1,4 +1,4 @@
-# Working with the Bash Shell.
+# <yrChapterNumber></yrChapterNumber> Working with the Bash Shell.
 
 The "Bash Shell" command line interface has become a 
 ## Ryans Tutorials 

@@ -1,4 +1,4 @@
-## Ignore this section {.unnumbered}
+## <yrChapterNumber></yrChapterNumber> Ignore this section {.unnumbered}
 
 **You should ignore this section.**
 

@@ -1,9 +1,22 @@
 project:
   type: book
+  output-dir: _book
+  pre-render: copy_quartoYml_to_bookFolder-v001.R
+  resources:
+    - _quarto.yml
+    - yrNocacheHeaders-v001.html
+    - yrstuff.js
+
 
 book:
-  title: "Data Management With R"
+  title: "Data Management With R (latest version)"
   author: "Y. Rosenthal"
+  navbar:
+    left:
+      - text: "(click here for spring24 version of this website)"
+        href: https://yrosenthal.com/datamgmt/theOldBook
+  search: 
+    location: sidebar
 #  date: "1/21/2024"
   chapters:
     - index.qmd
@@ -12,86 +25,93 @@ book:
 
     - part: Some computer basics
       chapters:
-      - intro00100-operatingSystems.qmd
-      - intro00120-files.qmd
-      - intro00130-chromeExtensions.qmd
+      - intro00100-operatingSystems.qmd  # yrChapterNumber 1
+      - intro00120-files.qmd             # yrChapterNumber 2
+      - intro00130-chromeExtensions.qmd  # yrChapterNumber 3
 
+    - part: Into to Coding With AI
+      chapters:
+      - ai-000100-overview.qmd           # yrChapterNumber 4
+      - aiCoding00100-overview.qmd       # yrChapterNumber 5
+    
     - part: Intro to R packages
       chapters:
-      - 0000022-InstallingRPackages-v003.qmd
+      - 0000022-InstallingRPackages-v003.qmd  # yrChapterNumber 6
       
       
     - part: Intro to Quarto
       chapters:
-      - 0000017-introToQuarto-v001.qmd
+      - 0000017-introToQuarto-v001.qmd        # yrChapterNumber 7
       
-    - part: Into to Coding With AI
-      chapters:
-      - aiCoding00100-overview.qmd
-    
     - part: Intro to tidyverse
       chapters:
-      - 0400050-whatIsTidyverse-v001.qmd
-      - 0400050-tibbles-v001.qmd
-      - 0400100-usingPipes-v001.qmd
-      - 0400200-stringr-tutorials-v003.qmd
+      - 0400050-whatIsTidyverse-v001.qmd      # yrChapterNumber 8
+      - 0400050-tibbles-v001.qmd      # yrChapterNumber 9
+      - 0400100-usingPipes-v001.qmd      # yrChapterNumber 10
+      - 0400200-stringr-tutorials-v003.qmd      # yrChapterNumber 11
       
     - part: Working with files
       chapters:
-      - 0000055-workingWithFiles.qmd
+      - 0000055-workingWithFiles.qmd      # yrChapterNumber 12
       
     - part: JSON data
       chapters:
-      - 0000075-whatIsJsonData.qmd
-      - 0000080-editingAndValidatingJsonFiles.qmd
-      - 0000085-jsonDataTypes.qmd
-      - 0000088-nestedDataframes.qmd
-      - 0000090-usingJsonInR.qmd
+      - 0000075-whatIsJsonData.qmd      # yrChapterNumber 13
+      - 0000080-editingAndValidatingJsonFiles.qmd      # yrChapterNumber 14
+      - 0000085-jsonDataTypes.qmd      # yrChapterNumber 15
+      - 0000090-usingJsonInR.qmd      # yrChapterNumber 16
+      
+    - part: APIs
+      chapters:
+      - 0000088-nestedDataframes.qmd      # yrChapterNumber 17
+      - assignment-api-0000100-weatherDataApi-v001.qmd      # yrChapterNumber 18
       
     - part: Bash
       chapters:
       #- 0000013-IntroToTheBashCli-v009.qmd
-      - 0000011-WhatIsACli-v010.qmd
-      - 0000013-HowToRunTheBashShellCli-v011.qmd
-      - 0000025-introToBash-v007.qmd
+      - 0000011-WhatIsACli-v010.qmd      # yrChapterNumber 19
+      - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 20
+      - 0000025-introToBash-v007.qmd      # yrChapterNumber 21
       
     - part: Regular Expressions
       chapters:
-      - 0200200-introToRegularExpressions-v036.qmd
-      - 000260-PracticeWithRegulaExpressions-v003.qmd
+      - 0200200-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
+      - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 23
 
     - part: visualizations with ggplot2
       chapters:
-      - 050050-tdyvrsGgplot2-v0001.qmd
+      - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 24
     
     - part: Intro to dplyr and to SQL
       chapters:
-      - 0500100-tdyvrsDplyr-v005.qmd
-      - 0500400-sqlSelectIntro-v003.qmd                             # assumes dplyr knowledge
+      - 0500100-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
+      
+      - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 8       
+
       
     - part: Relational databases and SQL (no dplyr knowledge needed)
       chapters:
-      - sql0006-introToDatabases-v023.qmd                           # copied from introToSQL
-      - sql0014-theBooksDatabase-v001.qmd                           # NEW
-      - sql0010-introToSql-v023.qmd                                 # NEW
-      - sql0035-workingWithMultipleTables-v012.qmd                  # renumbered from sql0020
-      - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd
-      - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd
-      - sql0050-commonTableExpressions-v001.qmd                     # NEW
-      - sql0200-otherSqlCommands-v002.qmd                           # EDIT THIS 
-      - sql0900-sqlWindowFunctions-v002.qmd                         # NEW
-      - sql0950-workingWithDatabasesInR-v010.qmd
-      - 0600100-introToDb-v001.qmd
+      - sql0006-introToDatabases-v023.qmd # copied from introToSQL # yrChapterNumber 8
+      - sql0014-theBooksDatabase-v001.qmd # NEW # yrChapterNumber 8
+      - sql0010-introToSql-v023.qmd       # NEW # yrChapterNumber 8
+      - sql0035-workingWithMultipleTables-v012.qmd # renumbered from sql0020 # yrChapterNumber 8
+      - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd # yrChapterNumber 26
+      - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 27
+      - sql0050-commonTableExpressions-v001.qmd    # NEW # yrChapterNumber 8
+      - sql0200-otherSqlCommands-v002.qmd          # EDIT THIS  # yrChapterNumber 8
+      - sql0900-sqlWindowFunctions-v002.qmd        # NEW # yrChapterNumber 8
+      - sql0950-workingWithDatabasesInR-v010.qmd # yrChapterNumber 28
+      - 0600100-introToDb-v001.qmd # yrChapterNumber 29
 #       - 0500500-tdyvrsDbplyr-v002.qmd # TODO - look at the code from 0500100-tdyvrsDplyr-v0001.qmd for dbplyr
 #        - 83spr23/sqlNotes/sql0010-introToSql-v023.qmd
 
     - part: Web Scraping
       chapters:
-      - web-000300-internetArchitecture-v001.qmd
-      - web-000400-webscrapingContinued-015.qmd
-      - web-000130-WebscrapingJavascriptSites-v003.qmd
+      - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 30
+      - web-000400-webscrapingContinued-015.qmd # yrChapterNumber 31
+      - web-000130-WebscrapingJavascriptSites-v003.qmd # yrChapterNumber 32
       #- web-000420-practiceWithWebScraping-v001.qmd
-      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd
+      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 33
       
 #      
 #    - part: 0300100-excelAndR-v001.qmd
@@ -100,16 +120,16 @@ book:
 #    - part: 0990000-part-Questions-v001.qmd
     - part: Questions
       chapters:
-        - 0990100-cleaningData-v001.qmd
+        - 0990100-cleaningData-v001.qmd # yrChapterNumber 34
         
 #    - part: 0999000-appendices-v001.qmd
     - part: Appendices
       chapters:
-        - 0000100-topics-v001.qmd
-        - 0000200-bibliography-v001.qmd
-        - 0000300-whereToFindDatasets-v001.qmd
-        - 0000310-whereToFindApis-v001.qmd
-        - 0999000-toDo-v001.qmd
+        - 0000100-topics-v001.qmd # yrChapterNumber 35
+        - 0000200-bibliography-v001.qmd # yrChapterNumber 36
+        - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 37
+        - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 38
+        - 0999000-toDo-v001.qmd # yrChapterNumber 39
 #    - intro.qmd
 #    - summary.qmd
 #    - references.qmd
@@ -127,7 +147,25 @@ format:
     fontsize: 80%
     number-depth: 3
     link-external-newwindow: true
-    include-in-header: yrNocacheHeaders-v001.html
+    include-in-header:
+      - file: yrNocacheHeaders-v001.html
+      - text: |
+          <script src="yrstuff.js"></script>
+    css: yrStyles-main-v001.css
+    include-after-body:
+      text: |
+        <script>
+        const titles = document.querySelectorAll('.title');
+
+        titles.forEach(title => {
+          if (title.textContent.trim().startsWith('Appendix')) {
+            const chapterNumber = title.querySelector('yrChapterNumber');
+            if (chapterNumber) {
+              chapterNumber.classList.add('yrAppendixChapterNumber');
+            }
+          }
+        });
+        </script>
 #  pdf:
 #    documentclass: scrreprt
 #    fontsize: 9px

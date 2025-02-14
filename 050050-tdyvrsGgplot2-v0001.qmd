@@ -1,4 +1,4 @@
-# Intro to ggplot2
+# <yrChapterNumber></yrChapterNumber> Intro to ggplot2
 
 The info below is adapted from the book "R for Data Science, second edition" (r4ds2e).
 The book is available both online and

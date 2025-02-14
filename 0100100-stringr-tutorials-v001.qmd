@@ -24,7 +24,7 @@ data <- data.frame(db_subset)[, c("author","score","body")]
 
 <br><br><br><br><br><br><br><br><br>
 
-# stringr: Basic String Manipulation
+# <yrChapterNumber></yrChapterNumber> stringr: Basic String Manipulation
 
 ```{r}
 library(tidyverse)

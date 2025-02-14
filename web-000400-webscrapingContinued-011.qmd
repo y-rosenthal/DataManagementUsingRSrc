@@ -1,3 +1,6 @@
+# <yrChapterNumber></yrChapterNumber> Web Scraping using rvest
+
+```{r}
 ##################################################################
 ##################################################################
 ##
@@ -919,4 +922,4 @@ full_page = read_html("https://scrapethissite.com/pages/forms/?page_num=1")
 
 getLastPageNumber(full_page)  # test the new version
 
-
+```

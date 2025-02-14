@@ -1,4 +1,4 @@
-# Bibliography
+# <yrChapterNumber></yrChapterNumber> Bibliography
 
 The following is a list of books and online resources that we will use 
 during the course.
