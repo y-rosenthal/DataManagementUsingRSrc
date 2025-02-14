@@ -1,4 +1,4 @@
-# <yrChapterNumber></yrChapterNumber> What is an "operating system"
+# <yrChapterNumber>1. </yrChapterNumber> What is an "operating system"
 
 ## Operating Systems (Mac, Windows, Linux)
 

@@ -1,4 +1,4 @@
-# <yrChapterNumber></yrChapterNumber> Intro to R packages
+# <yrChapterNumber>6. </yrChapterNumber> Intro to R packages
 
 R can be extended with many different "packages" which contain
 functions that extend R's capabilities. There are currently 

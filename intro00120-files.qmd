@@ -1,4 +1,4 @@
-# <yrChapterNumber></yrChapterNumber> Working with files
+# <yrChapterNumber>2. </yrChapterNumber> Working with files
 
 ## Mac Finder and Windows File Explorer
 

@@ -1,4 +1,4 @@
-# <yrChapterNumber></yrChapterNumber> Chrome Extensions
+# <yrChapterNumber>3. </yrChapterNumber> Chrome Extensions
 
 A <yrDef>chrome extension</yrDef> is a piece of software that extends 
 the capabilities of the Chrome browser.

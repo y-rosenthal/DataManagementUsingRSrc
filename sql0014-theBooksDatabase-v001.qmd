@@ -1,4 +1,4 @@
-# <yrChapterNumber></yrChapterNumber> Get the data - "books database" and other tables
+# <yrChapterNumber>8. </yrChapterNumber> Get the data - "books database" and other tables
 
 ```{r}
 #| echo: false
