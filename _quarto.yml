@@ -54,18 +54,20 @@ book:
       chapters:
       - 0000055-workingWithFiles.qmd      # yrChapterNumber 12
       
-    - part: JSON data
+    - part: JSON data and APIs
       chapters:
       - 0000075-whatIsJsonData.qmd      # yrChapterNumber 13
       - 0000080-editingAndValidatingJsonFiles.qmd      # yrChapterNumber 14
       - 0000085-jsonDataTypes.qmd      # yrChapterNumber 15
       - 0000090-usingJsonInR.qmd      # yrChapterNumber 16
-      
-    - part: APIs
-      chapters:
       - 0000088-nestedDataframes.qmd      # yrChapterNumber 17
       - assignment-api-0000100-weatherDataApi-v001.qmd      # yrChapterNumber 18
       
+    - part: Regular Expressions
+      chapters:
+      - 0200200-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
+      - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 23
+
     - part: Bash
       chapters:
       #- 0000013-IntroToTheBashCli-v009.qmd
@@ -73,19 +75,16 @@ book:
       - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 20
       - 0000025-introToBash-v007.qmd      # yrChapterNumber 21
       
-    - part: Regular Expressions
+    - part: Intro to dplyr
       chapters:
-      - 0200200-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
-      - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 23
-
+      - 0500100-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
+      
     - part: visualizations with ggplot2
       chapters:
       - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 24
     
-    - part: Intro to dplyr and to SQL
+    - part: Intro to SQL
       chapters:
-      - 0500100-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
-      
       - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 8       
 
       
