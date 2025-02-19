@@ -1,4 +1,4 @@
-# <yrChapterNumber>26. </yrChapterNumber> SQL Select 
+# <yrChapterNumber>27. </yrChapterNumber> SQL Select 
 
 ```{r}
 #| echo: false
