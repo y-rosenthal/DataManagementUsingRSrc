@@ -1,4 +1,4 @@
-# <yrChapterNumber>27. </yrChapterNumber> How to run the Bash Shell
+# <yrChapterNumber>22. </yrChapterNumber> How to run the Bash Shell
 
 ### How to run Bash on Microsoft Windows
 

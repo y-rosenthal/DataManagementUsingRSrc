@@ -1,4 +1,4 @@
-# <yrChapterNumber>29. </yrChapterNumber> Intro to dplyr
+# <yrChapterNumber>24. </yrChapterNumber> Intro to dplyr
 
 The dplyr R package is part of the tidyverse family of packages.
 It is used to "slice and dice" tibbles to get exactly the 
@@ -11,6 +11,8 @@ Sources for info about the dplyr package:
 
 - The book "R for Data Science, second edition" is available online and in 
   print. The online version is here: <https://r4ds.hadley.nz/>
+  *(click on the drop the small drop down menus at the top*
+  *right and left of the page)*.
   The intro to dplyr appears here: <https://r4ds.hadley.nz/data-transform>
 
 - The official tidyverse website,<https://www.tidyverse.org/>, is a

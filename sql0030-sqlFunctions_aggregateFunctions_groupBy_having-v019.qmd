@@ -1,4 +1,4 @@
-# <yrChapterNumber>36. </yrChapterNumber> aggregate functions, group by, having
+# <yrChapterNumber>31. </yrChapterNumber> aggregate functions, group by, having
 
 ```{r}
 #| echo: false
