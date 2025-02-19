@@ -1,4 +1,4 @@
-# <yrChapterNumber>33. </yrChapterNumber> CSS Selector Questions
+# <yrChapterNumber>46. </yrChapterNumber> CSS Selector Questions
 
 ```
 library(rvest)

@@ -1,4 +1,4 @@
-# <yrChapterNumber>8. </yrChapterNumber> SQL "window" functions
+# <yrChapterNumber>40. </yrChapterNumber> SQL "window" functions
 
 See the following for more info:
 

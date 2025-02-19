@@ -1,4 +1,4 @@
-# <yrChapterNumber>8. </yrChapterNumber> Relational Databases and SQL (using R)
+# <yrChapterNumber>34. </yrChapterNumber> Relational Databases and SQL (using R)
 
 ```{r}
 #| include: false

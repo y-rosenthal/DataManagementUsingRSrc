@@ -1,4 +1,4 @@
-# <yrChapterNumber>39. </yrChapterNumber> Additional topics
+# <yrChapterNumber>52. </yrChapterNumber> Additional topics
 
 The following are additional topics that I plan to move to the main 
 portion of the text. This page is a temporary place to put the info as it's

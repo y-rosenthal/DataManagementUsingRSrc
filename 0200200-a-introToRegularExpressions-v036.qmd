@@ -1,0 +1,2531 @@
+# <yrChapterNumber>19. </yrChapterNumber> regular expressions (regex)
+
+```{r}
+rm(list=ls())
+```
+
+## Intro to Regular Expressions (Also Known As "regex")
+
+Regular expressions (AKA "regex") are patterns that are used to identify specific
+types of data. They can be used to search through and slice and dice
+character (i.e. textual) data in a variety of ways. The best 
+way to understand is just to dive right in, which we will do below. 
+
+Before we get started it's important to note that 
+regex is not an "R" thing. Rather regular expressions
+are a concept that are available to use in most programming languages
+(e.g. Python, Java, etc.) as well as in many text editors and in other
+technical environments (e.g. Bash). There are slightly different versions
+of regular expression syntax found in different environments. We will 
+be focusing mainly on how to use regular expressions in R. However, this
+knowledge carries over directly to using regex in other languages and
+technical environments. 
+
+## Some resources for learning regular expressions
+
+The following is one of the many online tutorials.
+
+* <https://ryanstutorials.net/regular-expressions-tutorial/>
+
+The following R help pages are relevant to regular expressions.
+However, they are hard to understand without a little intro first. I 
+recommend that you go through the material in this book first or in 
+other tutorilas. Then you can refer to the help pages when necessary.
+
+**Relevant R help pages**
+
+```{r}
+#| eval: false
+
+?regex     
+?grep      
+?strsplit  
+```
+
+R's stringr package also includes several functions that can 
+be used with regex. For now though, we will focus mainly on the "Base R" regex
+functions. Once you understand those, you will be very prepared to understand 
+functions in the stringr package that utilize regular expressions. 
+
+## Data for examples
+
+Before we start, let's define some data to be used with examples in this file.
+*(NOTE: I made up N. American apple and S. Korean Fig so that I can use*
+*them in some examples.)
+
+### fruit vector
+
+```{r}
+#| file: createData-vecFruit-v001.R
+#| echo: true
+```
+
+```{r}
+fruit
+```
+
+### addresses vector
+
+```{r}
+#| file: createData-vecAddresses-v001.R
+#| echo: true
+```
+
+```{r}
+addresses
+
+# show each address, one per line
+cat(addresses, sep="\n")
+```
+
+### famousQuotes dataframe
+
+```{r}
+#| file: createData-famousQuotesDf-v001.R
+#| echo: true
+```
+
+## The stringr package
+
+### stringr::words vector
+
+The stringr package includes some data that we will use in the examples. 
+
+```{r}
+#-------------------------------------------------------------------------.
+# NOTE - most of the examples in this file were created using the data above.
+# The stringr package also contains some data that can be used to experiment
+# with these functions. 
+#-------------------------------------------------------------------------.
+
+if(!require(stringr)){install.packages("stringr");require(stringr)}
+
+stringr::words
+head(stringr::words, 100)
+```
+
+## grep function
+
+```{r}
+# Show all words that
+# "start with a p, end with a y (with anything in the middle)"
+grep(stringr::words, pattern="^p.*y$", value=TRUE)
+
+# Starts with a p, ends with a y, nothing in the middle.
+# Only matches "py". 
+# There are no words that match.
+grep(stringr::words, pattern="^py$", value=TRUE)
+
+# match any word that start with p, ends with y and has a single
+# character between them
+grep(stringr::words, pattern="^p.y$", value=TRUE)
+
+# match any word that start with p, ends with y and
+# has exactly two characters between them.
+grep(stringr::words, pattern="^p..y$", value=TRUE)
+
+# match any word that start with p, ends with y and
+# has exactly four characters between them.
+grep(stringr::words, pattern="^p....y$", value=TRUE)
+
+# match any sequence of characters between the p and the y
+grep(stringr::words, pattern="^p.*y$", value=TRUE)
+
+# starts with a p
+grep(stringr::words, pattern="^p", value=TRUE)
+```
+
+## grep and grepl
+
+```{r}
+# When value=FALSE grep returns the positions in the vector of 
+# values that matched
+grep(stringr::words, pattern="^p.*y$", value=TRUE)
+grep(stringr::words, pattern="^p.*y$", value=FALSE)
+
+# default is value=FALSE
+grep(stringr::words, pattern="^p.*y$", value=FALSE)
+```
+
+
+```{r}
+#@ grep and grepl
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@ grep stands for "Globally search for a Regular Expression and Print the result"
+#@
+#@ Grep will search through the entries in a character vector and display those
+#@ entries that match a specified pattern (see examples below). These patterns
+#@ are known as regular expressions or "regex".
+#@
+#@ The history of grep started with a a command that was used on the Unix operating
+#@ system. It has been adapted for use with many programming environments. R has
+#@ its own version.
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+# grep ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# grep returns character values or the indexes (i.e. position numbers) 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Find all fruit whose name contains the letter "h"
+grep(pattern="h", x=fruit, value=TRUE)   # value=TRUE, show the acutal values that match the pattern 
+grep(pattern="h", x=fruit, value=FALSE)  # value=FALSE, show the index (ie. position) of the values that match 
+
+
+# grepl ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# grepl returns logical values (i.e. TRUE/FALSE vectors)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grepl(pattern="h", x=fruit)    # find which values include an "h"
+```
+
+## Summary: 3 ways to use grep or grepl
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - grep ( regexPattern , value=TRUE)  # returns the actual values that match  
+# - grep ( regexPattern , value=FALSE) # returns the index numbers of the values that match  
+# - grepl ( regexPattern )              # returns a logical vector that indicate which values match  
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# For now, let's focus on grep(... , value=TRUE) as it is easier to understand the results. 
+
+
+# The pattern is searched for in the entire entry ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The pattern is considered "matched" if it appears anywhere in the data value.
+# For example:   grep("h", fruit)
+#
+# returns all fruit that contain an "h", no matter whether the h is at the 
+# beginning, end or middle of the word.
+#
+# You can change this behavior with the ^ and $ metacharacters (see below)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+## Spaces are NOT ignored. 
+
+Spaces count as part of the pattern. They are NOT ignored.
+
+```{r}
+# fruits that contain a space
+grep(pattern=" ", x=fruit, value=TRUE) # all fruit that contain a space
+```
+
+```{r}
+# search for "k "  (i.e. k followed by a space)
+grep("k ", fruit, value=TRUE) # "black cherry"
+
+# search for "k"  (i.e. without a space - JUST a "k")
+grep("k", fruit, value=TRUE) # "prickly pear"  "black cherry"  "kumquat"
+
+# search for "ck" 
+grep("ck", fruit, value=TRUE) # "prickly pear"  "black cherry"  "kumquat"
+
+```
+
+## regex patterns do NOT understand "numbers"
+
+```{r}
+# regex patterns do NOT understand "numbers" ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Digits are NOT treated as numbers. They are treated the same as any
+# other character. Therefore grep("12", SOME_VECTOR) will match any value
+# that contains a 1 followed by a 2, including "123" and "34321234".
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+addresses # show all the addresses
+
+grep("23", addresses, value=TRUE)  # matches anything that contains 23
+```
+
+## case sensitivity
+
+By default, R's version of grep is case sensitive.
+
+There are a few different approaches for changing the default behavior
+to instead search case-INsensitively.
+
+### (a) case INsensitive searches - use ignore.case argument
+
+The first way - use ignore.case = TRUE. See the code below.
+
+```{r}
+grep("H",fruit, value=TRUE)  # contains a capital "H"
+grep("h",fruit, value=TRUE)  # contains a lowercase "h"
+grep("h", fruit, value=TRUE, ignore.case=TRUE) # contains AnY h
+grep("H", fruit, value=TRUE, ignore.case=TRUE) # same thing
+```
+
+### (b) case INsensitive searches - character classes - e.g. [aA]
+
+Another way to search for for both CAPITAL and lowercase characters, e.g. [Hh]
+For example, [hH] indicates that h or H is valid to be matched. 
+We will describe the exact meaning of the [square brackets] in a lot more 
+detail below.
+
+```{r}
+grep("[hH]", fruit, value=TRUE)
+```
+
+### (c) case INsensitive searches - use toupper() and tolower()
+
+another way using R's toupper or tolower functions
+
+```{r}
+msg = "She said 'Hello' to Joe."
+msg
+toupper(msg)
+tolower(msg)
+
+grep("h", tolower(fruit), value=TRUE)
+```
+
+## str_view() from the stringr package
+
+The str_view function from the stringr package can be very helpful
+when you're trying to understand a regular expression. str_view shows
+exactly what parts of a string match the pattern. See the example below.
+
+```{r}
+# str_view is part of the stringr package
+library(stringr)
+
+greetings = c("hi there", "yo dude", "shalom", "bon jour")
+cat(greetings, sep="\n")
+
+# match the letter h in each greeting
+str_view(greetings, "h")
+```
+
+## sub and gsub functions
+
+sub and gsub functions are used to "substitute" the text that was matched 
+by a regular expression with other text. 
+
+The difference between sub() and gsub() is that in a single character value,
+sub() function only substitutes the first part of the character value that 
+matched the regex. By contrast, the gsub() function replaces EVERY part of 
+the character value that matched the regex. (the "g" in "gsub" stands for
+"global"). See the examples below.
+
+IMPORTANT - both sub and gsub return the ENTIRE vector with only the 
+values matched the regex being changed. This is different from the grep and
+grepl functions that returned only those entries in the vector that
+matched the regular expression.
+
+```{r}
+#@ sub and gsub functions ####
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@
+#@ sub (SOME_REGEX_PATTERN, REPLACMENT, SOME_VECTOR)
+#@    sub returns a new vector. The return value is the same as SOME_VECTOR
+#@    except that the FIRST match of the pattern in each entry of SOME_VECTOR
+#@    is replaced with REPLACEMENT - see the examples below.
+#@
+#@ gsub (SOME_REGEX_PATTERN, REPLACMENT, SOME_VECTOR)
+#@    same as sub but ALL matches of the pattern are replaced (not just the
+#@    first in each entry of the the vector - see the exmaples below
+#@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+```
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# replace the first letter "e" that appears in any fruit with the letter "X"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+sub(pattern="e", replacement="X", x=fruit)  # "applX"    "N. AmXrican apple"     etc
+```
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# replace ALL of the "e"s that appears in any fruit with the letter "x"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+gsub(pattern="e", replacement="X", fruit)   # "applX"    "N. AmXrican applX"     etc
+```
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# remove all spaces from the addresses
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+gsub(pattern=" ", replacement="", addresses)   # "12345SesameStreet"   "OneMicro$oftWay"   etc.
+```
+
+We will revisit sub and gsub later with more complex examples ...
+
+## strsplit function
+
+`strsplit()` is used to split a string based on a "delimeter" that appears
+between the different values. This "delimeter" can be a regular expression.
+We'll come back to strsplit later, but let's introduce it here.
+
+```{r}
+sentences = c("He said hi. She said bye. We went to the park.",
+              "I like ice cream! Do you? Sue likes pizza.")
+sentences
+```
+
+```{r}
+#------------------------------------------------------------------------.
+# QUESTION - 
+# Use strsplit to split the values in the sentences vector by 
+# splitting based on spaces. Assign the result to the varible "sentenceWords".
+#
+# Write code to get the 3rd "word" from the 1st entry in the sentences 
+# vector.
+#------------------------------------------------------------------------.
+
+# ANSWER
+sentenceWords = strsplit(sentences, split=" ")
+sentenceWords
+
+# Notice that the result is a LIST:
+str(sentenceWords)
+
+# Show the 3rd word in the 1st sentence
+sentenceWords[[1]][3]
+```
+
+#### --- practice ---
+
+```{r}
+#------------------------------------------------------------------------.
+# QUESTION - split each entry in the sentences variable into individual 
+# sententces. 
+# 
+# WARNING - the value of the split argument is interpreted as a
+# regular expression pattern. Be careful.
+#------------------------------------------------------------------------.
+
+# ANSWER
+
+# 1st attempt - doesn't work. 
+strsplit(sentences, ".")
+
+# This doesn't work since the 2nd argument is a regular expression.
+# The following will split based on periods.
+sentences
+strsplit(sentences, "\\.")
+
+# Use a "regular expression" to instead split on any of a period, 
+# question mark, or exclamation point.
+sentences
+strsplit(sentences, "[.?!]")  # split on any one of .?!
+```
+
+## Other functions: regmatches, regexec, regexpr, gregexpr
+
+The following are other function in Base R that use regex. 
+These are a little more advanced. It's probably better to try researching
+these functions after first understanding the material presented in 
+this section.
+
+You can search online or see the R documentation for more info about these functions.
+
+* regmatches
+* regexec
+* regexpr
+* gregexpr
+
+## stringr functions 
+
+The stringr package includes many functions for use with character vectors.
+One example is str_length, which is very similar to the nchar() function
+in Base R.
+
+```{r}
+# The str_length function is part of the stringr package.
+# To use it you must install stringr (or install tidyverse, which is a 
+# collection of packages one of which is stringr)
+str_length(c("abc", "hello", "I like ice cream!"))
+
+# This function is very similar to the
+# nchar function that is built into base R.
+nchar(c("abc", "hello", "I like ice cream!"))  
+```
+
+The stringr package also includes numerous functions that make use
+of regular expressions. The following is a table of the stringr functions
+and the Base R functions that can be used to accomplish similar things.
+
+| stringr                            | Base R                    | Description                            |
+|------------------------------------|---------------------------|----------------------------------------|
+| `str_detect()`                     | `grepl()`                 | Returns TRUE/FALSE if pattern is found |
+| `str_extract(), str_extract_all()` | `regmatches()`            | Extract matching patterns              |
+| `str_match(), str_match_all()`     | `regexec(), regmatches()` | Extract matched groups                 |
+| `str_replace(), str_replace_all()` | `sub(), gsub()`           | Replace matched patterns               |
+| `str_split()`                      | `strsplit()`              | Split string on pattern                |
+| `str_subset()`                     | `grep(value = TRUE)`      | Keep strings matching pattern          |
+| `str_locate(), str_locate_all()`   | `regexpr(), gregexpr()`   | Find positions of matches              |
+| `str_count()`                      | `lengths(regmatches())`    | Count pattern occurrences             |
+
+## "anchors" \^ and \$
+
+```{r}
+# ^ and $    ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Regular Expressions use special characters to control what is matched.
+# These characters are called "meta-characters".
+#
+#   ^  "matches" the start of the character value
+#   $  "matches" the end of the character value
+#
+#   The [square brackets] described above are also "meta characters" in
+#   regular expressions. (We will describe those in more detail next)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep(pattern="^a", x=fruit, value=TRUE)  # find fruits that START with an "a"
+
+grep("a$", fruit, value=TRUE)  # find fruits that END with an "a"
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a command using grep to display all the fruits that start with
+# with a c or an s. Make your search case insensitive.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#         ANSWERS ####
+grep("^[csCS]", fruit, value=TRUE)
+
+grep("^[cs]", fruit, value=TRUE, ignore.case = TRUE)
+
+grep("^[cs]", tolower(fruit), value=TRUE)
+```
+
+## periods
+
+```{r}
+# . (i.e. a period) ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# a period (ie  .  ) "matches" any single character.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("^.a", fruit, value=TRUE)  # 2nd letter is a
+
+grep("^..a", fruit, value=TRUE)  # 3rd letter is a
+
+grep("a.$", fruit, value=TRUE)  # 2nd to last letter is an a
+
+grep("....", fruit, value=TRUE) # all fruit that are AT LEAST 4 characters long
+
+grep("^....$", fruit, value=TRUE) # all fruit that are EXACTLY 4 characters long
+```
+
+## "character classes" eg. [abc]
+
+```{r}
+# [abc] matches a SINGLE "a", "b" or "c".    ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# characters in [square brackets] match a single copy of
+# any of those characters, e.g.
+#  [abc]    matches exactly one of a,b or c
+#
+# DEFINITION: 
+# The [square brackets] with the characters in them are often referred to as 
+# "character classes" or "character sets"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### Examples
+
+```{r}
+grep("[qbxz]", fruit, value=TRUE)  # find fruit that contain q,b,x or z
+
+grep("[aeiou][aeiou]", fruit, value=TRUE)  # two vowels in a row
+
+grep("^.[aeiou][aeiou]", fruit, value=TRUE)  # vowels in the 2nd and 3rd positions
+
+grep("[aeiou][aeiou].$", fruit, value=TRUE)  # 2nd & 3rd to last characters are vowels
+
+grep("[aeiou][aeiou][aeiou]", fruit, value=TRUE)  # 3 vowels in a row
+
+
+
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# replace the FIRST vowel that appears in any fruit with the letter "X"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# replace ALL vowels that appears in any fruit with the letter "X"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+gsub("[aeiouAEIOU]", "X", fruit)
+
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# remove ALL of the vowels that appear in any fruit
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+gsub("[aeiouAEIOU]", "", fruit)
+```
+
+### dashes, e.g. [a-d]
+
+```{r}
+# Specify ranges with dash, e.g. [a-d] or [0-3] or [a-d0-3], etc ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Specify ranges with dash, e.g. [a-d] is same as [abcd], [0-3] is same as [0123] ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### Examples
+
+```{r}
+grep("[j-m]", fruit, value=TRUE)  # fruits that contain any of j,k,l,m
+
+addresses  # this was defined above
+
+grep("[0-9]", addresses, value=TRUE)  # contains a digit
+
+grep("[6-9]", addresses, value=TRUE)  # contains 6,7,8 or 9
+
+grep("[0-9][0-9]", addresses, value=TRUE)  # contains a number with at least 2 digits
+
+grep("[0-9][0-9][0-9][0-9]", addresses, value=TRUE)  # contains a # with at least 4 digits 
+
+grep("^[6-9]", addresses, value=TRUE)  # contains 6,7,8 or 9 as the first character
+
+grep("^.[6-9]", addresses, value=TRUE) # 6,7,8 or 9 is second character
+
+grep("[0-9]$", addresses, value=TRUE) # last character is a digit
+
+grep("[0-9][0-9][0-9]$", addresses, value=TRUE) # ends with at least 3 digits
+
+grep("[0-9][0-9][0-9][0-9]$", addresses, value=TRUE) # ends with at least 4 digits
+```
+
+### combine multiple ranges one [brackets]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You can combine multiple ranges and values in a single [brackets]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("[1-3x-z]$", addresses, value=TRUE) # ends with 1,2,3,x,y or z
+
+grep("[of-hq]", fruit, value=TRUE)  # seraches for any of o,f,g,h,q
+
+# REMEMBER THE [BRACKETS]!!!
+grep("of-hq", fruit, value=TRUE)  # searches for exactly :  "of-hq"
+```
+
+### [^abc]
+
+```{r}
+# [^abc] matches a single character that is NOT a,b or c ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# When ^ is the FIRST character in the [^brackets] it means to match a 
+# single character that is NOT one of the characters in the brackets
+#
+# [^abc]  - i.e. a single character that is NOT a,b or c
+# [^0-9]  - a non-digit
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("^[^0-9]", addresses, value=TRUE)  # does NOT start with a digit
+
+grep("[^0-9]$", addresses, value=TRUE)  # does NOT end with a digit
+
+grep("[^0-9]", addresses, value=TRUE)
+
+# Contains 5 non-vowels in a row (notice that space counts as a non-vowel)
+grep("[^aeiou][^aeiou][^aeiou][^aeiou][^aeiou]", fruit, value=TRUE, ignore.case=TRUE)
+```
+
+### metachars lose special meaning in brackets eg. [.$*] 
+
+```{r}
+# meta characters in [brackets] other than ^ - and ] lose their special meaning ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Most meta characters inside of [brackets] are treated like any other character.
+# They do NOT have any special meaning in the brackets. Therefore you can use
+# them without any problem inside a character class. For example [.$]
+# matches either a period or a dollar sign (see exmaples below).
+#
+# The only exceptions are ^ - and ] which DO have a special meaning inside of
+# the [square brackets] - see more info below.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("This is a period: .", "apple", "45 oranges", "$2", "This is an open bracket: [")
+stuff
+
+# EXAMPLE
+#
+# Match a period, left-square-bracket, or a dollar sign
+# You do NOT need backslashes inside of the [brackets]
+grep("[.[$]", stuff, value=TRUE)
+
+# ANOTHER EXAMPLE
+#
+# The following matches either a period or a digit.
+# You do NOT need to use a backslash before the period.
+grep("[.1-9]", stuff, value=TRUE)
+
+# The backslash will not hurt (but it isn't necessary inside the character class)
+# (below we will explain why there are TWO backslashes - for now you can leave
+# off both of the backslashes)
+grep("[\\.1-9]", stuff, value=TRUE)
+```
+
+### Special cases:    ^    -    ]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Special cases:    ^    -    ]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The following characters have to be addressed in a special way inside
+# of a character class. 
+#
+# ^   As we saw above, if the first character in the brackets is ^ the regex will
+#     look for characters that are NOT in the brackets. If ^ appears anywhere else
+#     inside the brackets it has no special meaning.
+#
+# -   As we saw above, [a-d] is the same as [abcd]. Therefore the - has a special
+#     meaning inside of a character class. If you want to actually search
+#     for a -, it must be the first, e.g. [-abc] or last character, eg. [abc-]
+#     in the class.
+#
+# ]   has a special meaning - i.e. to end the character class. Therefore if 
+#     you want to seach for an actual "]", the "]" should be specified
+#     as the very FIRST character in the class, e.g. []abc]
+#-------------------------------------------------------------------
+
+# Examples:
+
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+# The "." inside of [brackets] simply means an actual period.
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+stuff = c("...", "def", "...bbbzzzbz.bzz...z.b", "^^^")
+stuff
+grep ("[.x]", stuff, value=TRUE)
+```
+
+### matching ^ inside [square brackets]
+
+```{r}
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+# The "^" inside of [brackets] has a different meaning if it is in the 
+# first position or if it is anywhere else. For example:
+#
+# [^abc]   matches anything that is NOT an "a","b" or "c"
+#
+# [a^bc]   
+# [abc^]   both of these examples matches one "a","b","c" or "^" character
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+caretStuff = c("^^^", "hello", "???")
+caretStuff
+
+grep ("[^a-z]", caretStuff, value=TRUE)   # "^^^" "???"
+
+grep ("[a-z^]", caretStuff, value=TRUE)   # "^^^" "hello"
+
+grep ("[^^]", caretStuff, value=TRUE)     # "hello" "???"
+
+
+
+# find all entries that have any symbol that is not a ".", "b" or "z"
+
+stuff = c("...", "def", "...bbbzzzbz.bzz...z.b", "^^^")
+stuff
+grep ("[^.bz]", stuff, value=TRUE)
+
+#grep("[a-z.]", c())
+```
+
+### Matching a - inside [square brackets]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Matching a dash (i.e. - ) inside a character class
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# As we saw earlier, inside of [bracketes] a dash special meaning (to indicate a range).
+# To actually match a dash as one of the characters place the dash as either the 
+# first or last character in the brackets.
+
+
+dashStuff = c("---", "hello", "xxx")
+dashStuff
+
+grep ("[-xyz]", dashStuff, value=TRUE)   # "---" "xxx"
+
+grep ("[xyz-]", dashStuff, value=TRUE)   # "---" "xxx"   (same thing)
+
+grep ("[a-f]", dashStuff, value=TRUE)   # "hello"
+
+grep ("[-a-f]", dashStuff, value=TRUE)   # "---" "hello"
+```
+
+### Matching a ] inside [square brackets]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# To match a closing-square-bracket "]" inside a character class you must
+# specify the ] as the very FIRST symbol in the character class.
+#
+# NOTE - there are no special rules for matching an open-square-bracket, "["
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("]", "apple", "zzz" )
+stuff
+grep("]", stuff, value=TRUE)    #  "]"
+
+# The pattern "[]a]" matches a single character that is either "]" or "a".
+# It finds "]" and also "apple" (since "apple" it contains an "a").
+#
+# This works since "]" is placed as the very first character in the 
+# [brackets] so it is simply one of the characters that is searched for.
+
+grep("[]a]", stuff, value=TRUE) #  "]"  "apple"
+
+# This is VERY different for the pattern "[a]]"
+#
+# The following example shows what happens if you put the "]" in any
+# position other than the first. The pattern "[a]]" is broken down as follows:
+#
+#   [a]   This is the single character "a". Note
+#
+#   ]     This does NOT signify the end of the character class, but is 
+#         rather just a regular character that must be part of the text to be 
+#         matched.
+#
+# Therefore [a]] is looking for the EXACT text "a]" somewhere in the text
+# being searched.
+
+grep("[a]]", stuff, value=TRUE) # No matches - looking for "a]" in the text
+```
+
+## Searching with regular expressions in a "text editor"
+
+A "text editor" is a program that is used to edit "text files". A text file
+can only contain "plain text" - i.e. no pictures, no music, only one font, 
+
+RStudio's text editor
+
+The text editor that is in RStudio can be used to create many different
+types of files. For example, it can be used to create 
+both "R Script files" (i.e. .R files) and "Quarto Documents" (i.e. .qmd files).
+In addition, it can be used to create "plain text files". To do so, choose
+the following menu choices from RStudio's menu: "File | New File | Text File"
+
+
+```{r}
+# NOTE: regular expressions are used in many different languages and environments.
+# In general in regular expression in OTHER environments, 
+# if you want to actually match a metacharacter (e.g. period, parentheses,
+# caret, dollar sign, etc) you precede the metacharacter with a backslash.
+#
+# For example, you can do this in RStudios text editor - just type ctrl-f or cmd-f
+# and click "regex" checkbox. Then type your regular expression into the 
+# search box.
+# For example
+# Try searching the addresses.txt file for the following in the RStudio text
+# editor:
+#
+#   one|1
+#   .
+#   \.
+#   $
+#   \$
+#
+# Matching meta characters requires that you "escape" the meta-character
+# by preceding it with a backslash e.g.  \.
+```
+
+## Matching meta-characters
+
+```{r}
+# Matching meta-characters ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# NOTE: regular expressions are used in many different languages and environments.
+# In general in regular expression in OTHER environments, 
+# if you want to actually match a metacharacter (e.g. period, parentheses,
+# caret, dollar sign, etc) you precede the metacharacter with a backslash.
+#
+# For example, you can do this in RStudios text editor - just type ctrl-f or cmd-f
+# and click "regex" checkbox. Then type your regular expression into the 
+# search box.
+#
+# For example
+# Try searching the addresses.txt file for the following in the RStudio text
+# editor:
+#
+#   one|1
+#   .
+#   \.
+#   $
+#   \$
+#
+# Matching meta characters requires that you "escape" the meta-character
+# by preceding it with a backslash e.g.  \.
+#
+#
+#
+# When writing regular expression patterns in R you must use TWO \\'s to escape a metacharacter ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# HOWEVER, in R, since character values already use a backslash
+# such as \n for a new line, you must use TWO backslashes in the regex
+# pattern. The first backslash escapes the 2nd backslash from R
+# so that R's character values don't interpret it in a special way.
+# See the examples below.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### Reminder of how backslashes (\) are used in R ####
+
+```{r}
+# Reminder of how backslashes (\) are used in R ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Remember that R uses backslashes to change the meaning (or to "escape" 
+# the meaning) of the character that follows the backslash. 
+# For example in the following cat command, \n, is displayed as a 
+# "newline character" and \t is displayed as a tab.
+
+cat("Hello\nJoe\thow are you\n\ndoing?\n\tI'm fine.")
+
+# Similarly in the following cat command the \" escapes the meaning
+# of the quote. It no longer implies the end of the quotation. The 
+# meaning of \" is simply to include a quotation mark as part of the 
+# text.
+
+cat("Lincoln said \"Four score and seven years ago today...\"")
+
+# If the following line were not commented it would cause an error
+# because the quotation is not actually closed due to the \ before the
+# final quotation mark.
+#
+#cat("This is a backslash: \")   # ERROR
+
+# The following works correctly. Note that \\ is needed to escape
+# the normal meaning of the backslash character!
+#cat("This is a backslash: \\")   # ERROR
+
+#cat("This is a period \.")   # ERROR \. is NOT an R escape sequence
+
+# You must use TWO backslashes in R's regular expressions ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# In R you must use two backslashes in a regex pattern to 
+# escape a metacharacter.
+
+
+grep("\\.", addresses, value=TRUE)  # all addresses that contain a period
+
+grep(".", addresses, value=TRUE)  # All the addresses
+
+stuff = c("", "apple", "", "banana")
+stuff
+grep(".", stuff, value=FALSE)
+
+grep(".", stuff, value=TRUE)
+
+# This is an ERROR in R but would be correct in other 
+# languages or environment that use regular expressions
+#grep("\.", addresses, value="TRUE")  # ERROR - R doesn't recognize \.
+
+# Without the backslash you will find all addresses that contain
+# at least a single character (i.e. all the addresses)
+grep(".", addresses, value="TRUE")  
+
+grep("\\$", addresses, value=TRUE)   # addresses that contain a dollar sign
+
+grep("$", addresses, value=TRUE)    # all addresses - why?? - they all have an ending
+```
+
+### To search for an actual backslash you must use 4 backslashes in the pattern
+
+```{r}
+# To search for an actual backslash you must use 4 backslashes in the pattern ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Searching for an actual backslash in the data can be tricky. 
+# Remember, one of our addresses had a backslash in it. Let's find it.
+#
+# To look for a single backslash in the data you must use FOUR backslashes.
+# Just as R character values need to "escape" a backslash with a 2nd backslash,
+# so too do regular expressions need to escape a backslash with a 2nd backslash.
+# Therefore if you want to write a regular expression in R that searches for
+# a backslash, you must write FOUR backslashes in a row. The first two resolve
+# to a single backslash. The 3rd and 4th resolve to a single backslash. Then finally
+# the two single backslashes are used in the regular expression to match a 
+# single actual backslash in the data.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+answer = grep("\\\\", addresses, value=TRUE)  # look for a single backslash in the data
+
+answer
+
+cat(answer)
+
+
+
+stuff="\\\\"
+stuff
+cat(stuff)
+```
+
+## Matching QUOTES
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Matching QUOTES
+#
+# "Quotation marks" are NOT meta-characters in regular expressions. They
+# have no special meaning in a regular expression. However, as with all 
+# R code you must make sure to use a single backslash if the quotation mark
+# is inside of quotation marks (e.g.  "\"" ) - see the example below.
+#
+# Note that when using R's regular expression functions, regex
+# meta-characters, such as the period or ^ for which you want to remove 
+# the special meaning require a DOUBLE backslash (as explained above).
+#
+# A regex pattern in VS Code (or a similar editor) that includes " or ' 
+# would not need any backslashes since these aren't regex meta characters.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+quoteStuff = c("Joe says great stuff.", "Franklin said \"a penny saved ...\"")
+quoteStuff
+cat(quoteStuff, sep="\n")
+grep ("\"", quoteStuff, value=TRUE) #  "Franklin said \"a penny saved ...\""
+
+
+grep ("\\.", quoteStuff, value=TRUE) #  "Franklin said \"a penny saved ...\""
+```
+
+## Different "flavors" or "dialects" of regular expressions. ####
+
+```{r}
+# Different "flavors" or "dialects" of regular expressions. ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Regular expressions have been around for a long time. Different "dialects"
+# of regular expressions have popped up over the years. 
+#
+# Some programming languages and tools use slightly different "rules" 
+# for regular expressions. This can be frustrating. However, the basic set
+# of regular expresion rules remains the same for most programming languages 
+# and tools. 
+#
+# Regular expressions first became popular with the Unix operating system in 
+# the 1970s. There were many different versions of Unix being marketed by 
+# different companies, each with slight differences. POSIX is a standard that
+# defines how things should be done in a standard way across all the different
+# versions of Unix. POSIX addresses regular expressions too. 
+#
+# POSIX introduced "named character classes" as described below. R will 
+# recognize these. 
+#
+# Other additions to the regular expression notation were introduced by 
+# the once very popular Perl programming language. You can get these features
+# to work in R by specifying perl=TRUE as one of the arguments for grep
+# and other functions in R that work with regular expressions. 
+# For more details about perl regular expressions, see ?regex.
+#
+# As we said above, regular expressions are NOT totally standardized across all 
+# languages and environments. For example (as of Feb 10, 2022)
+# there are subtle differences between the rules for regular expressions
+# that are used in R and those that are used in the 
+# Visual Studio Code (VS Code) text editor. You can see a summary of the 
+# rules used by VS Code here:
+#   https://docs.microsoft.com/en-us/visualstudio/ide/using-regular-expressions-in-visual-studio?view=vs-2022
+#
+# Although there may be some differences between different languaes and 
+# environments, the vast majority of regular expression meta characters
+# work the same across the different environments. 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### [[:digit:]] vs \\d - different shorthand notations for character classes
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Two different shorthand notations for character classes
+# - POSIX named character classes , e.g. [[:alnum:]]  [[:digit:]]   etc. 
+# - backslash shortcuts , e.g. \s \S \d \D  etc.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+#### "POSIX" named character classes, e.g. [[:digit:]] ####
+
+```{r}
+# "POSIX" named character classes, e.g. [[:alnum:]] ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# NOTE: These are available in R. 
+#
+#       They currently are NOT available in VSCode
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Bracket notation in regular expressions (e.g. [aeiou] or [0-9]) are known as 
+# character classes. 
+#
+# You can use several "named character classes" as shorthand for some common
+# character classes. These are shown below. Notice the [[double brackets]]
+# We'll explain more about the the [[double brackets]] below.
+#
+# [[:upper:]]   same as [A-Z]
+# [[:lower:]]   same as [a-z]
+# [[:space:]]   same as [ \r\n\t]
+# [[:punct:]]   all "special" characters, eg. !@#$% etc...
+# [[:digit:]]   same as [0-9]
+# [[:alpha:]]   same as [a-zA-Z]
+# [[:alnum:]]   same as [a-zA-Z0-9]
+#
+# The [[double brackets]] shown above are necessary since these
+# "named character classes" must actually be placed inside a pair of 
+# [square brackets]. For example, you can also use the named
+# character classes inside a larger character class.
+#
+# For example the following will match any single character
+# from the following list:    -,+,*,/,(,),0,1,2,3,4,5,6,7,8,9
+#
+#   [-+*/()[:digit:]]    is the same as [-+*/()0-9]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### --- practice ---
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search for addresses that contain at least one digit. Use a POSIX
+# named character class.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER 
+grep("[[:digit:]]", addresses, value=TRUE)   # uses POSIX named character classes
+
+str_view(addresses, "[[:digit:]]")
+
+# NOTE - the pattern "[:digit:]" with one set of [brackets] does NOT work.
+#
+# Since there is only one set of [brackets], the pattern matches any one of
+# the characters that are between the [brackets], i.e. match
+# one of the characters ":", "d", "i", "g", "i", "t" or ":"
+# This is equivalent to "[:digt]"  (I removed the 2nd ":" and the 2nd "i" as
+# they are repetitive.)
+
+# THIS DOESN'T WORK! - see note above
+grep("[:digit:]", addresses, value=TRUE)  # looks for one of the following :,d,i,g,i,t,:
+
+
+grep("^[N[:digit:]]", addresses, value=TRUE)   # same as [N0-9]
+```
+
+```{r}
+# QUESTION:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a command that replaces any sequence of digits or mathematical 
+# operators with the text "<<MATH-EXPRESSION>>"
+#
+# You can use the following "mathStuff" variable to test your answer.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mathStuff <- c("What is 3+2 ? Do you know the answer?",
+               "99.5 desgrees in Farenheit is 99.5*(5/9)-32 degrees in Celcius")
+
+mathStuff
+```
+
+```{r}
+# ANSWER
+
+gsub("[-+*/().[:digit:]]+", "<<MATH-EXPRESSION>>", mathStuff)
+```
+
+```{r]}
+# QUESTION:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a grep command that matches punctuation and letters, but not numbers.
+# You can use the following data to test your answer. Use POSIX named
+# character classes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("1234",  # This should NOT match since it doesn't contain letters or punctuation
+          "12.34", # This SHOULD match since it contains punctuation.
+          ".",     # This SHOULD match since it contains punctuation.
+          "hi")    # This SHOULD match since it contains at least one letter
+```
+
+```{r}
+# ANSWER
+
+# The following will match any punctuation or letters but not numbers
+grep("[[:punct:][:alpha:]]", stuff, value=TRUE)   #   "."    "hi"
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search for fruits that contain spaces using the POSIX
+# named character classes for spaces
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+grep("[[:space:]]", fruit, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search fruit for those that contain punctuation (e.g. periods, commas, etc)
+# using the POSIX named character classes
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+
+grep ("[[:punct:]]", fruit, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Show fruit that contain either an x,y,z or some punctuation.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+
+# NOTE that there are TWO sets of brackets. The POSIX named character
+# class, [:punct:], is itself inside a set of [brackets].
+
+grep("[xyz[:punct:]]", fruit, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search all ADDRESSES for those that contain punctuation (e.g. periods,
+# commas, etc) or actual digits (e.g. 0123456789) using POSIX named
+# character classes
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+
+grep("[[:punct:][:digit:]]", addresses, value=TRUE)
+
+# This also works
+grep("[[:punct:]0-9]", addresses, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search all ADDRESSES for those that contain some punctuation that 
+# comes immediately after the letter t. Use POSIX named classes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+grep("[tT][[:punct:]]", addresses, value=TRUE)
+
+# ANOTHER WAY
+grep("[tT][^[:alnum:]]", addresses, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# answer the previous question without using POSIX named classes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("[tT][,.!?]", addresses, value=TRUE)
+```
+
+#### backslash shortcuts for character classes, e.g. \s \S \d \D etc.
+
+```{r}
+# backslash shortcuts for character classes, e.g. \s \S \d \D etc. ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The following are also shorthand notation that you can use for some
+# characer classes.
+#
+# Note that in R you must use a double backslash, e.g. \\s instead of \s
+#
+# \s   is the same as [ \n\t\r]  also same as [[:space:]]
+#      It matches anything which is considered whitespace.
+#      This could be a space, tab, line break etc.
+#
+# \S   is the same as [^ \n\t\r]
+#      It matches the opposite of \s, that is anything which is not considered
+#      whitespace.
+#
+# \d   is the same as [0-9]  (ie. it matches a single digit)  same as [[:digit:]]
+#
+# \D   is the same as [^0-9] (i.e. it matches a single NON-digit)
+#
+# \w - matches anything which is considered a word character. That is
+#      [A-Za-z0-9_]. Note the inclusion of the underscore character '_'. This is
+#      because in programming and other areas we regularly use the underscore as part
+#      of, say, a variable or function name.
+#
+# \W - matches  [^A-Za-z0-9_] the opposite of \w, that is anything which is not considered a
+#      word character.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+## WORD BOUNDRIES:  \b
+
+```{r}
+# WORD BOUNDRIES:  \b ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# \b matches a "word boundary"   (remember in R use \\b)
+# 
+# You can use this before a pattern to mean that the pattern must
+# come at the beginning of a word - see examples below.
+#
+# You can use this after a pattern to mean that the pattern must
+# come at the end of a word - see examples below.
+#
+# Note that a "word boundary" is not a particular character such as a 
+# space or comma, but rather is a position in the text. 
+#
+# NOTE - a "word" may include letters, digits or underscores
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+heWords = c("he", "here", "there", "the", "who was she?", "headache")
+heWords
+
+# Example: word starts with "he"
+grep ("\\bhe", heWords, value=TRUE)  # "he" "here" (NOT "there","the","who was she?")
+
+# Example: word ends with "he"
+grep ("he\\b", heWords, value=TRUE)  # "he" "the" "who was she?" (NOT "here","there")
+
+# Example: match only the word "he"
+grep ("\\bhe\\b", heWords, value=TRUE)  # "he"
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You can use \b with more complicated patterns too.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Examples: 
+grep ("\\b[Hh]", fruit, value=TRUE)  # fruits that have a word that starts with H or h
+
+grep ("[aeiouAEIOU]\\b", fruit, value=TRUE)  # fruits that end with a vowel
+```
+
+## "pattern1|pattern2"  matches pattern1 OR pattern2 
+
+```{r}
+# "pattern1|pattern2"  matches pattern1 OR pattern2 ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Combining patterns
+#
+#    PATTERN1|PATTERN2  matches if either PATTERN1 or PATTERN2 is found
+#
+#    (PATTERN)          you may surround patterns with (parentheses) if necessary
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("black|blue|green", fruit, value=TRUE) # contains black,blue or green
+
+grep("^(1|One)", addresses, value=TRUE, ignore.case=TRUE) # 1 or One at beginning 
+
+grep("(^1|^One)", addresses, value=TRUE) # same thing 
+
+grep("^1|^One", addresses, value=TRUE) # same thing 
+
+grep("[0-9]", addresses, value=TRUE)
+
+grep("0|1|2|3|4|5|6|7|8|9", addresses, value=TRUE)  # Same as [0-9]
+```
+
+## breaking up long patterns with paste0 ####
+
+```{r}
+# breaking up long patterns with paste0 ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Do NOT include extra whitespace in patterns!!!
+# 
+# For long patterns you can use paste0 to break up the pattern
+# so it is more readable in the code.
+#
+# See examples below.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Show those addresses that contain one of the numbers 1-9 spelled out in words,
+# e.g. "one", "two", etc
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER - note that writing the pattern using paste0 with collapse = ""
+# makes the pattern easy to understand. You can also comment on 
+# individual portions of the pattern. 
+
+pattern = paste0("\\bone\\b|",     # match the word "one"
+                 "\\btwo\\b|",     # match the word "two"
+                 "\\bthree\\b|",   # etc.
+                 "\\bfour\\b|",
+                 "\\bfive\\b|",
+                 "\\bsix\\b|",
+                 "\\bseven\\b|",
+                 "\\beight\\b|",
+                 "\\bnine\\b")
+
+grep(pattern, addresses, value=TRUE, ignore.case = TRUE)
+
+# Note that the following also works but is
+#   - MUCH harder to read 
+#   - MUCH harder to check for errors and
+#   - cannot be commented on for different parts of the pattern
+
+grep(
+  "\\bone\\b|\\btwo\\b|\\bthree\\b|\\bfour\\b|\\bfive\\b|\\bsix\\b|\\bseven\\b|\\beight\\b|\\bnine\\b",
+  addresses, value=TRUE, ignore.case = TRUE)
+```
+
+### example
+
+```{r}
+# A more complex example ####
+
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Display those addresses that contain a number that is exactly one
+# digit long. For example: 
+#
+#   addresses =
+#    c("3 Olive St.",              # should match (because of 3)
+#      "Forty Five 2nd Street",    # should match (because of 2nd)
+#      "Ninety Nine Cone St. apartment 7",
+#                                  # should match (because of 7)
+#      "7",                        # should match
+#
+#      "12345 Sesame Street",      # should NOT match (12345 is five digits)
+#      "One main Street Apt 12b",  # should NOT match (12 is two digits)
+#      "Two Main St. Apt 99",      # should NOT match (99 is two digits) 
+#      "45")                       # should NOT match
+#
+#   > YOUR COMMAND GOES HERE
+#   [1] "3 Olive St."
+#   [2] "Forty Five 2nd Street"
+#   [3] "Ninety Nine Cone St. apartment 7"
+#   [4] "7"
+#
+# NOTE: the pattern "[0-9]" will NOT work as it will match every one of 
+# values above
+#
+# NOTE: the pattern "\\b[0-9]\\b" is a good try but will not match
+# "Forty Five 2nd Street" as the 2 in "2nd" is NOT followed by a word boundary.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+# Note - there are 4 possible ways for a single digit appear in the text:
+#
+# (a) The digit can appear at the very beginning of the text and be followed by
+#     a non-digit, e.g. "3 Olive street". 
+#
+#     The pattern: "^[0-9][^0-9]"     
+#     matches "3 Olive street"
+#     but doesn't match "Forty Five 2nd Street" (since the 2 is not at the
+#                                                beginning of the text).
+#
+# Similarly, each of the following patterns will match a single digit for
+# some texts but not for others. 
+#
+# (b) [^0-9][0-9][^0-9] : NONdigit digit NONdigit anywhere in the text
+# (c) [^0-9][0-9]$      : last two characters are a NONdigit followed by a single digit
+# (d) ^[0-9]$           : whole thing is JUST one digit
+#
+# For actual addresses you probably don't have to worry about the last
+# case, but for other types of data you might.
+#
+# You can write a pattern that deals with all of these cases by
+# separating the different "sub-patterns" from each other with "|" symbols.
+# For example, the following answers the question, but the pattern is VERY
+# hard to read. (see below for a better way to write this code.)
+
+grep("^[0-9][^0-9]|[^0-9][0-9][^0-9]|[^0-9][0-9]$|^[0-9]$", addresses, value=TRUE)
+
+
+# we can use paste0 to make this easier to read
+
+pattern <- 
+  paste0 ( "^[0-9][^0-9]" ,     # starts with digit followed by a NONdigit
+         "|[^0-9][0-9][^0-9]",  # NONdigit digit NONdigit anywhere in the text 
+         "|[^0-9][0-9]$",       # ends with a NONdigit followed by a single digit
+         "|^[0-9]$")            # whole thing is JUST one digit 
+
+grep(pattern, addresses, value=TRUE)
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a command that displays all addresses that contain the
+# number "one" or 1.
+#
+# Notice that the following will NOT work. This gets "Cone" and 12345 too:
+#
+#   grep("one|1", addresses, value=TRUE, ignore.case=TRUE) # NO - matches Cone and 12345
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+# The following is the way to do it. Regular expressions require 
+# a very thoughtful approach!
+#
+# The word "one" or the number "1" (not including the number 123)
+pattern = paste0("^one[^a-z]|",       # one at beginning
+                 "[^a-z]one[^a-z]|",  # one in middle
+                 "[^a-z]one$|",       # one at end
+                 "^one$|",            # ONLY the word "one"
+                 "^1[^0-9]|",         # 1 at beginning
+                 "[^0-9]1[^0-9]|",    # 1 in middle
+                 "[^0-9]1$|",         # 1 at end
+                 "^1$")               # ONLY the number 1
+
+
+pattern
+
+grep(pattern, addresses, value=TRUE, ignore.case=TRUE)
+
+
+# Same thing but MUCH harder to read!!!
+# You should break up long patterns with paste0 and comment them as shown above.
+
+grep(
+  "^one[^a-z]|[^a-z]one[^a-z]|[^a-z]one$|^one$|^1[^0-9]|[^0-9]1[^0-9]|[^0-9]1$|^1$",
+  addresses, value=TRUE, ignore.case=TRUE)
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# df is a dataframe. Write a command that shows all rows from df
+# for which the 2nd character in the first column is "x". 
+# 
+# Hints: 
+#   a. Access a dataframe as you normally would but use grep or lgrep to
+#      return either the row numbers or TRUE/FALSE
+#      values that identify the rows to be displayed.
+# 
+#   b. Remember that you are NOT told what the column names are. Therefore you
+#      must use a number to stipulate the first column and NOT a column name.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Use this example data
+df = data.frame( partNum = c("ax4321", "az12", "bx1234", "bw987"),
+                 partName = c("widget","thingie","gadget","gizmo"),
+                 price =    c(0.50, 0.60, 1.70, 0.80),
+                 stringsAsFactors = FALSE)
+df
+
+# Show the rows that contain "x" as the 2nd character in the partNum
+
+
+# One answer - using grep
+df[ grep ( "^.x", df$partNum , ignore.case=TRUE ) ,   ]
+
+# Another answer - using grepl
+df[ grepl ( "^.x", df$partNum , ignore.case=TRUE ) ,   ]
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Using the same data as above, only show those rows that contain an "x"
+# in the 2nd character of the partNum whose price is also less than 1.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+df
+
+df[ grepl ( "^.x", df$partNum , ignore.case=TRUE ) & df$price < 1 ,   ]
+```
+
+## Quantifiers: {n,m}  {n}  {n,}  +  *  ?   
+
+```{r}
+#@ Quantifiers: {n,m}  {n}  {n,}  +  *  ?  ####
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@
+#@ Quantifiers are symbols in the pattern that identify how many repetetitions
+#@ to look for of a particular sub-pattern. The quantifiers include
+#@
+#@   SOME_SUB_PATTERN{n,m}    (where n and m are numbers)
+#@   SOME_SUB_PATTERN{n}      (where n is a number)
+#@   SOME_SUB_PATTERN{n,}      (where n is a number)
+#@   SOME_SUB_PATTERN+
+#@   SOME_SUB_PATTERN*
+#@   SOME_SUB_PATTERN?
+#@
+#@ See below for an explanation of each type of quantifier.
+#@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+```
+
+### Quantifiers with {curly braces}   eg. {3}   {2,5}   {3,}   ####
+
+```{r}
+# Quantifiers with {curly braces}   eg. {3}   {2,5}   {3,}   ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 
+#    SOME_PATTERN{3}       three matches in a row
+#    SOME_PATTERN{3,6}     between three and six matches in a row
+#    SOME_PATTERN{3,}      at least 3 matches in a row
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# "[0-9]{4}" matches 4 digits in a row, same as "[0-9][0-9][0-9][0-9]"
+#
+# Note that this will also return those entries that have more than 4 digits
+# in a row since these entries ALSO have 4 digits in a row (plus some extra
+# digits)
+
+grep("[0-9]{4}", addresses, value=TRUE)  # 4 digits , same as "[0-9][0-9][0-9][0-9]"
+# Note that if we use gsub, only the first 4 digits will be substituted.
+gsub("[0-9]{4}", "xxxx", addresses)  # 4 digits , same as "[0-9][0-9][0-9][0-9]"
+
+
+grep("[0-9]{3}", addresses, value=TRUE)  # 3 digits 
+# Note that if we use gsub, only the first 3 digits will be substituted.
+gsub("[0-9]{3}", "xxxx", addresses)  # 4 digits , same as "[0-9][0-9][0-9][0-9]"
+
+
+grep("[0-9]{3}", addresses, value=TRUE)  # 3 digits 
+grep("\\b[0-9]{3}\\b", addresses, value=TRUE)  # 3 digits 
+
+
+# EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# match a word that is exactly 4 letters long
+
+pattern = 
+  paste0 ("^[a-zA-Z]{4}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4}$",
+          "|^[a-zA-Z]{4}$")
+
+pattern =
+  paste0 ("\\b[a-zA-Z]{4}\\b")
+
+# use the same pattern for both addressess and fruit
+
+grep(pattern, addresses, value=TRUE)
+
+grep(pattern, fruit, value=TRUE)
+
+
+# Another way - using \b
+pattern = "\\b[a-zA-Z]{4}\\b"
+grep(pattern, addresses, value=TRUE)
+
+
+# Use a text editor (e.g. the one in RStudio) to see how this works ...
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Paste the following in the text editor to see how this pattern works.
+#
+#  \b[a-zA-Z]{4}\b
+#
+# This will match any 4 character word. It will NOT match 3 or 5 character words.
+# Note that in VS Code you should use only one backslash (i.e. \b ) but in R
+# you would use two backslashes (i.e. \\b ) as explained above.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# match a word that is at least 4 letters long
+# Use {4,} instead of {4}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Paste this into VSCode regex search.
+#   ^[a-zA-Z]{4,}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{4,}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{4,}$|^[a-zA-Z]{4,}$
+```
+
+```{r}
+# match a word that is at least 3,4 or 5 letters long
+# Use {3,5} instead of {4}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Paste this into VSCode regex search.
+#   ^[a-zA-Z]{3,5}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{3,5}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{3,5}$|^[a-zA-Z]{3,5}$
+```
+
+```{r}
+# ANOTHER EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# match a word that is exactly 7 letters long
+pattern = 
+  paste0 ("^[a-zA-Z]{7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7}$",
+          "|^[a-zA-Z]{7}$")
+
+# use the same pattern for both addresses and fruit
+grep(pattern, addresses, value=TRUE)
+grep(pattern, fruit, value=TRUE)
+
+
+# match any word that is between 4 and 7 letters long
+pattern = 
+  paste0 ("^[a-zA-Z]{4,7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4,7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4,7}$",
+          "|^[a-zA-Z]{4,7}$")
+
+grep(pattern, addresses, value=TRUE)
+grep(pattern, fruit, value=TRUE)      # ... "apple" ... "peach" ... (5 letter long words too)
+
+
+# match a word that is at least 7 letters long
+pattern = 
+  paste0 ("^[a-zA-Z]{7,}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7,}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7,}$",
+          "|^[a-zA-Z]{7,}$")
+
+grep(pattern, addresses, value=TRUE)
+grep(pattern, fruit, value=TRUE)
+
+
+# Exactly 3 digits (see example in last section of exactly one digit)
+pattern = paste0(
+  "^[0-9]{3}[^0-9]",
+  "|[^0-9][0-9]{3}[^0-9]",
+  "|[^0-9][0-9]{3}$",
+  "|^[0-9]{3}$"
+)
+grep(pattern, addresses, value=TRUE)
+
+
+grep("[^aeiou]{5}", fruit, value=TRUE)  # at least 5 non vowels in a row
+grep("[^aeiou]{6}", fruit, value=TRUE)  # at least 6 non vowels in a row
+grep("[^aeiou]{7}", fruit, value=TRUE)  # at least 7 non vowels in a row
+
+grep("^.[aeiou]{2}", fruit, value=TRUE)  # vowels in the 2nd and 3rd positions
+
+grep("[aeiou]{2}.$", fruit, value=TRUE)  # 2nd & 3rd to last characters are vowels
+```
+
+```{r}
+# QUESTION
+# Search for fruit that are 4 or 6 letters long.
+#
+
+grep ("^[a-zA-Z]{4}$|^[a-zA-Z]{6}$", fruit, value=TRUE)
+
+grep ("(^[a-zA-Z]{4}$)|(^[a-zA-Z]{6}$)", fruit, value=TRUE)
+
+grep ("^(([a-zA-Z]{4})|([a-zA-Z]{6}))$", fruit, value=TRUE)
+```
+
+## Quantifiers with    *   +  and  ?  ####
+
+```{r}
+# Quantifiers with    *   +  and  ?  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#      PATTERN* is the same as PATTERN{0,}  i.e. zero or more repetitions
+# 
+#      PATTERN+ is the same as PATTERN{1,}  i.e. one or more repetitions
+#
+#      PATTERN? is the same as PATTERN{0,1}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+grep("^[^aeiouAEIOU].*[^aeiouAEIOU]$", fruit, value=TRUE) # start and end with non-vowel 
+
+# match at least two spaces in the text (including just two spaces)
+pattern = ".* .* .*"       
+
+pattern = ".*e.*e.*"       
+grep(pattern, fruit, value=TRUE) 
+
+spacesStuff = c("nospaces",
+          "this has three spaces",
+          "just two spaces", 
+          "one space", 
+          "two  spaces", 
+          "three   spaces", 
+          "",
+          " ", 
+          "  ", 
+          "   ")
+spacesStuff
+grep(pattern, spacesStuff, value=TRUE) 
+```
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Find solutions for the questions at the website.
+# The website is free to use.
+#
+#         http://play.inginf.units.it/
+#
+# 1. When you get to this page, scroll all the way to the bottom.
+#
+# 2. You will be prompted for your "regex skill level" and other basic signup
+#    info. It, seems that you must fill in this info in order for the example
+#    questions to work correctly. However, the exact answers to these questions
+#    don't seem to matter (it seems that you get the same questions no 
+#    matter what "skill level" you choose)
+# 
+# 3. Press the "Next" button.
+#
+# 4. You will then be prompted with a list of regex metacharacters 
+# Some of these are a little challenging: http://play.inginf.units.it/#/
+#
+# You can find sample answers here: https://avicoder.me/2019/01/21/regex-fun/
+# There could definitely be other valid answers.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWERS THAT WE DID TOGETHER IN CLASS
+
+# level 1
+#   \d+
+
+
+# level 2
+#   [a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}
+#   ([a-zA-Z0-9]{2}:){5}[a-zA-Z0-9]{2}
+#   ([0-9a-zA-Z][0-9a-zA-Z]:){5}[0-9a-zA-Z][0-9a-zA-Z]
+
+
+# level 3
+#
+#   ftp://ftp[^.]*\.[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?/pub/FreeBSD/
+#   ftp://ftp[^.]*(\.[a-zA-Z]+)+/pub/FreeBSD/
+#   ftp://ftp\d*(\.[a-zA-Z]+)+/pub/FreeBSD/
+
+
+# level 4
+#   \$[^$]+\$
+```
+
+## gsub works with patterns
+
+```{r}
+# gsub ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# gsub works with patterns
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+gsub("[aeiou]", "x", fruit)   # replace all vowels with x's
+
+gsub("[^aeiou]", "x", fruit)   # replace all non-vowels with x's
+
+gsub("[^aeiou]+", "x", fruit)   # replace one or more non-vowels with a single x
+
+gsub("[^aeiou]*", "x", fruit)
+
+gsub("[^aeiou]*", "x", "apple")
+```
+
+## backreferences \\1 \\2 etc
+
+```{r}
+# BACKREFERENCES  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Parenthesized expressions in a regex can be referred "back" to 
+# with \1, \2 ... 
+# (remember in R you need two backslashes - i.e. \\1, \\2, ...)
+#
+# The original regex standard only allowed for up to nine
+# backreferences, ie. \1 \2 \3 ... \9  
+# It did not allow for \10. Some environments have ways to
+# allow you to reference \10 and further but I personally
+# don't know how to do that in R ... I guess you could 
+# research that if you need to but it usually doesn't
+# come up. If it becomes an issue, there is almost always
+# a simple way to workaround the situation
+# using loops and other coding approaches.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+# Find fruits that have 3 letters in the pattern xyx or aba
+grep ("([a-z])[a-z]\\1", fruit, value=TRUE)
+
+grep ("([a-z])([a-z])\\1\\2", fruit, value=TRUE)
+
+grep("([a-z][a-z])\\1", fruit, value=TRUE)
+
+
+gsub ("([a-z])([a-z])\\1", "\\2\\1\\2", fruit)
+
+gsub("^(.)(.)(.)",   # reverse the first 3 characters  
+     "\\3\\2\\1", 
+     fruit)
+
+# QUESTION
+# Write a command to swap the first character and last character of
+# each fruit
+
+gsub( "^(.)(.*)(.)$" , "\\3\\2\\1" , fruit)
+
+gsub( "^(.)(.*)(.)$" , "\\3-\\2-\\1" , fruit)
+
+
+# QUESTION 
+# Find fruits that start and end with the same letter
+#
+
+grep("^(.).*\\1$", fruit, value=TRUE)
+
+
+shoppingList = c("35 yumberry pops", 
+                 "four strawberries         ", 
+                 " five apples",
+                 "six yumberry and strawberries pops")
+shoppingList
+
+# QUESTION
+# Use sub or gsub to replace words that start and end with the same letter
+# with the first letter then "XXXX" then the last letter of the word
+
+gsub("\\b(.).*\\1\\b", "\\1XXXX\\1", shoppingList)
+
+# Make the * UN-greedy by following it with a ?
+gsub("\\b(.).*?\\1\\b", "\\1XXXX\\1", shoppingList)
+
+#
+gsub("\\b([a-z])[a-z]*?\\1\\b", "\\1XXXX\\1", shoppingList)
+```
+
+## "greedy" vs "non-greedy" quantifiers ####
+
+```{r}
+# "greedy" vs "non-greedy" quantifiers ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# By default, quantifiers (e.g. + * ?) are "greedy"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# By **default** quantifiers are "greedy". In other words ...
+#
+# A "greedy" match works as follows:
+#
+#   1. The regex engine tries to start matching the regex at the beginning o
+#      of the text
+#
+#   2. If there are any quantifiers (e.g. * + ?) in the regex, the reular
+#      expression engine tries to match AS MUCH of the text as possible.
+#      (see the example in VSCode described below).
+#
+#   3. 
+#   
+# by as much as it can. This behavior can be changed by using 
+# "non-greedy" quantifiers as shown below. To make a quantifier non-greedy
+# just follow it with a question mark.
+#
+
+
+# Greedy quantifiers: match as MUCH as possible while still being able to
+# match rest of the pattern. The greedy quantifiers:
+#
+#   PATTERN{n,m}  minimum of n, maximum of m
+#   PATTERN{n,}   n or more
+#   PATTERN+      same as {1,} i.e. one or more 
+#   PATTERN*      same as {0,} i.e. zero or more of the preceding pattern
+#   PATTERN?      same as {0,1} ie. zero or one (i.e. optional)
+#
+# UNgreedy (or stingy) quantifiers:
+# match as LITTLE as possible while still being able to
+# match rest of the pattern. The greedy quantifiers:
+#
+#   PATTERN{n,m}?  minimum of n, maximum of m
+#   PATTERN{n,}?   n or more
+#   PATTERN+?      same as {1,} i.e. one or more 
+#   PATTERN*?      same as {0,} i.e. zero or more of the preceding pattern
+#   PATTERN??      same as {0,1} ie. zero or one (i.e. optional)
+#
+
+# EXAMPLES:
+
+# greedy   {n,m}
+# ungreedy {n,m}?
+
+sub("[0-9]{3,5}", "x", "123456 1234")  # {3,5} greedy   "x6 1234"
+sub("[0-9]{3,5}?", "x", "123456 1234") # {3,5}? UNgreedy "x456 1234"
+
+gsub("[0-9]{3,5}", "x", "123456 1234")  # {3,5} greedy   "x6 x"
+gsub("[0-9]{3,5}?", "x", "123456 1234") # {3,5}? UNgreedy "xx x4"
+
+
+
+# greedy   +
+# ungreedy +?
+
+sub("[0-9]+", "x", "123456 1234")      # +  greedy   "x 1234"       
+sub("[0-9]+?", "x", "123456 1234")     # +? UNgreedy "x23456 1234"  
+
+gsub("[0-9]+", "x", "123456 1234")     # +     greedy   "x x"
+gsub("[0-9]+?", "x", "123456 1234")    # +?    UNgreedy "xxxxxx xxxx"
+
+
+
+
+# greedy   *
+# ungreedy *?
+
+sub("[0-9]*", "x", "123456 1234")      # *  greedy   "x 1234"
+sub("[0-9]*?", "x", "123456 1234")     # *? UNgreedy "x123456 1234"
+
+gsub("[0-9]*", "x", "123456 1234")     # *     greedy   "x x"
+gsub("[0-9]*?", "x", "123456 1234")    # *?    UNgreedy "xxxxxx xxxx"
+
+
+
+# greedy   ?
+# ungreedy ??
+
+sub("[0-9]?", "x", "123456 1234")      # ?  greedy   "x23456 1234"
+sub("[0-9]??", "x", "123456 1234")     # ?? UNgreedy "x123456 1234"
+
+gsub("[0-9]?", "x", "123456 1234")     # ?   greedy   "xxxxxx xxxx"
+gsub("[0-9]??", "x", "123456 1234")    # ??  UNgreedy  "x1x2x3x4x5x6x x1x2x3x4x"
+
+
+
+sub("[a-z]*?", "x", "abcde")
+```
+
+### examples
+
+```{r}
+# Question
+# Extract JUST the first quotation from each of the following.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+quotations = c('Bill said "hi" to Jill. She replied "bye" to him and "hello" to the driver.',
+               'Tony said "I love ice cream!" to his mom. He then said "I love mom:)"')
+
+# ANSWER: use greedy and UNgreedy quantifiers as appropriate
+sub('(.*?)(".*?")(.*)', "\\2", quotations)
+
+# ANOTHER ANSWER: This also works and perhaps is easier to understand (or perhaps not :)
+sub('([^"]*)("[^"]*")(.*)', "\\2", quotations)
+
+###################################.
+# The following are NOT answers
+###################################.
+
+# NOT an answer - Compare with the following - this one gets the last quotation
+sub('(.*)(".*")(.*)', "\\2", quotations)
+
+# It's helpful to see what happens with the str_view function in the following
+# cases
+
+# This matches everything from the first quotation mark to the last
+str_view(quotations, '".*"')
+
+# The following is more what we want. *? is now a non-greedy quantifier. 
+# Therefore, it matches the first quoted info.
+# Then str_view continues by showing you the next match (i.e. the 2nd
+# quoted info), then the 3rd match, etc.
+str_view(quotations, '".*?"')
+
+```
+
+#### AN ASIDE - the 1st question mark is not actually necessary in this case
+
+```{r}
+# This also works - see below for why the first ? is not necessary in this case.
+sub('(.*)(".*?")(.*)', "\\2", quotations)
+```
+
+
+
+
+```{r}
+# Use VSCode to understand greedy VS non-greedy quantifiers
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Use VSCode to open a text file that contains a lot of English text.
+#
+# Do a regex search in VSCode for
+#   e.*e
+#
+# This is a "greedy" search (since it uses * instead of *?).
+# It searches for "e" following by anything followed by another "e".
+# This will highlight on each line all the text starting from the 
+# first e on the line until the last e on the line.
+#
+# Now search again using a non-greedy quantifier, i.e. .*?
+#   e.*?e
+#
+# The results will be potentially several matches on each line. 
+# Each match starts with an "e" and extends to the next "e" but no further.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+## The complete list of quantifiers 
+
+```{r}
+# The complete list of quantifiers 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# In general you can use ? to turn any greedy quantifier into a non-greedy
+# quantifier
+#
+#   *  - zero or more (greedy)
+#   *? - zero or more (non-greedy)
+#
+#   +  - one or more (greedy)
+#   +? - one or more (non-greedy)
+#
+#   ?  - zero or one (greedy)
+#   ?? - zero or one (non-greedy)
+#
+# NOTE the following also allow for non-greedy ? modifier. However, these
+# are not really necessary - see the notes below.
+#
+#   {3,5}  - 3,4 or 5 repetitions (greedy - i.e. will match all 5 if they are there)
+#   {3,5}? - (non-greedy - will match 3 even if there are 5)
+#            Notice - you could just write {3} instead of {3,5}? (think about it)
+#
+#   {3,}   - (greedy)     3 or more matches in a row, matches as many as there are
+#   {3,}?  - (non-greedy) will always match first 3 even if there are more (non-greedy)
+#            Notice - you could just write {3} instead of {3,}? (think about it)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### examples
+
+```{r}
+# EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+quotedCsv = c('"a,b,c","apple,orange","watermellon"')
+cat(quotedCsv)
+
+# The following gsub uses a greedy quantifier, ie. *.
+# It will match as much as it can.
+
+# greedy
+gsub('".*"', 'QUOTES', quotedCsv)   # "QUOTES"
+
+# non-greedy
+gsub('".*?"', 'QUOTES', quotedCsv) # "QUOTES,QUOTES,QUOTES"
+
+
+# A MORE COMPLEX EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+text = "She sells sea shells by the sea shore."
+
+result = gsub("(.*)(sea)(.*)", "1st \\1\n2nd \\2\n3rd \\3", text)
+
+cat(result)
+
+
+# Reults are "greedy", i.e. the .* in the beginning matches as much as 
+# it can as long as the whole regex will work. The result is:
+
+# 1st part: She sells sea shells by the 
+# 2nd part: sea
+# 3rd part: shore.
+
+# The following DOES NOT happen
+#
+# 1st part:    She sells 
+# 2nd part:    sea
+# 3rd par:     shells by the sea shore.
+
+
+# we can make the regex UN-GREEDY by using a ? AFTER the *
+#
+
+text = "She sells sea shells by the sea shore."
+
+
+result = gsub("(.*?)(sea)(.*)", "1st \\1\n2nd \\2\n3rd \\3", text)
+
+cat(result)
+```
+
+## Challenges ####
+
+```
+# Challenges ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Use the following for the challenges below
+
+stuff = c("His ssn is 876543890.",
+          "Call me at 212 950 3216 when you have time.",
+          "Please call Joe at 777-7777",
+          "Sue's number is (555)123   4567.",
+          "7182345678 is the number for the helpdesk.",
+          "Email Anne at anne@anneco.com and explain.",
+          "Meet me @ 10pm.",
+          "Mikes company is called mike@large",
+          "To work in Whatsapp internationally you need to enter his number as +1 555 555 5555.")
+stuff
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a regular expression to find telephone numbers
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+pattern = paste0 ( "(^|\\D)",              # start with a non-digit or the start of the text
+                   "(\\(?\\d{3}\\)?)?",    # optional area code with optional (parentheses)
+                   " *",                   # zero or more spaces
+                   "\\d{3}",               # first 3 digits
+                   " *-? *",               # any number of spaces surrounding an optional dash
+                   "\\d{4}",
+                   "(\\D|$)")  # end with a non digit or a the end of the text
+
+pattern
+grep (pattern, stuff, value=TRUE)
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Challenge: 
+# 
+# Extract just the telephone numbers in a standard format.
+#
+# Make sure to use parentheses in the pattern.
+#
+# Substitute JUST the parts you want.
+#
+# Use grep (... value=FALSE ...) to get the positions that 
+# matched and keep only those.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# Show how to extract just the area code, first 3 and last 4 digits
+stuff
+newpattern = paste0 ( "(^|.*\\D)",  # tel# at beginning or after a non-digit
+                      "(\\(?(\\d{3})\\)?)?", # optional area code with optional (parentheses)
+                      "( *)",      # zero or more spaces
+                      "(\\d{3})",  # first 3 digits
+                      "( *-? *)",  # any number of spaces surrounding an optional dash
+                      "(\\d{4})",  # last 4 digits
+                      "(\\D.*|$)"  # tel # at end or before non-digit
+)
+grep(newpattern, stuff, value=TRUE)
+positionsWithTelNums = grep(newpattern, stuff)
+reformatted = gsub(newpattern, "\\2 \\5 \\7", stuff) 
+
+reformatted[positionsWithTelNums]
+
+
+
+
+result = gsub (newpattern, 
+               paste0("1stPart \\1\n",
+                      "2ndPart \\2\n",
+                      "3rdPart \\3\n4thPart \\4\n",
+                      "5thPart \\5\n6thPart \\6\n7thPart \\7\n8thPart \\8\n"),
+               stuff)
+
+result
+
+cat(result[1])
+cat(result[2])
+cat(result[3])
+
+# The following example shows a "bug" in the regex. 
+# Since regular expressions are "greedy", the area code is matched
+# in the 1st part if it is indeed surrounded by parentheses. 
+# We can fix this but it is tricky.
+cat(result[4])
+
+cat(result[5])
+cat(result[6])
+cat(result[7])
+cat(result[8])
+cat(result[9])
+
+# See the pattern used above
+
+telNums = gsub(newpattern, "\\3 \\5-\\7", stuff)
+telNums
+cat(telNums, sep="\n")
+
+positionsWithTelNums = grep(newpattern, stuff, value=FALSE)
+positionsWithTelNums
+
+telNums
+telNums [ positionsWithTelNums ]
+
+
+stuff
+gsub(newpattern, "XXXXXXXXXX", stuff)
+
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# - write a regular expression to find email addresses and extract them 
+#   from a character vector
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of all the words from "The adventures of Sherlock Holmes".
+# You can find the UTF-8 encoding version here:
+#    https://www.gutenberg.org/files/1661/1661-0.txt
+#
+# HINT: use
+#  - readLines  with  url("https://www.gutenberg.org/files/1661/1661-0.txt")
+#  - strsplit
+#  - unlist    (remember that strsplit returns a LIST)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+book = readLines(url("https://www.gutenberg.org/files/1661/1661-0.txt"),
+                 encoding="UTF-8")
+head(book)
+
+words = strsplit(book, " +")
+
+head(words)
+
+words = unlist(words)
+
+head(words, 100)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of the 10 most common words in "The Adventures of Sherlock Holmes"
+# HINT: Use the table function.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wordTable = table(words)
+head(wordTable)
+
+sorted = sort(wordTable)
+head(wordTable)
+
+tail(sorted)
+
+
+# Lookahead and lookbehind ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Lookahead and lookbehind are used to match a portion of the text but NOT
+# consider it part of the match. To use this you MUST set the following
+# argument in grep, strsplit, gsub, etc:    perl=TRUE
+#
+#    Positive Lookahead	(?=pattern)
+#    Negative Lookahead	(?!pattern)
+#    Positive Lookbehind	(?<= pattern)
+#    Negative Lookbehind	(?<! pattern)
+# 
+# See this page
+#  https://debuggingdata.com/post/r/regular-expressions-look-arounds/
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("a100", "200b" , "@300", "400@")
+stuff
+
+# Lookbehind
+gsub("(?<=[a-z])\\d+", "NUMBER", stuff, perl=TRUE)
+
+
+# Lookbehind  (not equal to )
+gsub("(?<![a-z0-9])\\d+", "NUMBER", stuff, perl=TRUE)
+
+
+# Lookahead
+gsub("\\d+(?=[a-z])", "NUMBER", stuff, perl=TRUE)
+
+# Lookahead   (not equal to )
+gsub("\\d+(?![a-z0-9])", "NUMBER", stuff, perl=TRUE)
+
+
+quotations
+
+# Replace all letters between quotation marks with XXXX
+gsub('(?<=")[a-zA-Z!.? ]+(?=")', "XXXX", quotations, perl=TRUE)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of all the sentences from "The adventures of Sherlock Holmes".
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+book = readLines(url("https://www.gutenberg.org/files/1661/1661-0.txt"),
+                 encoding="UTF-8")
+
+book[100:110]
+
+newBook = paste0(book, collapse=" ")
+
+length(newBook)
+
+str(newBook)
+
+sentences = strsplit(newBook, "[.?!]")[[1]]
+
+str(sentences)
+
+length(sentences)
+
+sentences[3]
+head(sentences)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of all quotations from "The adventures of Sherlock Holmes".
+# HINT: use an un-greedy search
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+# Other arguments and functions ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# help pages
+
+?regex
+
+?grep
+
+?strsplit
+
+
+# grep(pattern, x, ignore.case = FALSE, perl = FALSE, value = FALSE,
+#      fixed = FALSE, useBytes = FALSE, invert = FALSE)
+#
+# grepl(pattern, x, ignore.case = FALSE, perl = FALSE,
+#       fixed = FALSE, useBytes = FALSE)
+#
+# sub(pattern, replacement, x, ignore.case = FALSE, perl = FALSE,
+#     fixed = FALSE, useBytes = FALSE)
+#
+# gsub(pattern, replacement, x, ignore.case = FALSE, perl = FALSE,
+#      fixed = FALSE, useBytes = FALSE)
+#
+
+text = "She sells sea shells by the sea shore."
+
+sub("sea", "xxxxx", text)
+
+gsub("sea", "xxxxx", text)
+
+sub("s", "x", text)
+
+gsub("s", "x", text)
+
+gsub(".", "x", text)
+
+gsub("\\.", "x", text)
+
+gsub(".", "x", text, fixed=TRUE)
+
+
+words = strsplit(text, " ")
+
+words
+
+# Get the 2nd word from the text:
+words[[1]][2]
+
+
+words = strsplit(addresses, " ")
+
+
+words
+
+# Get the 2nd word from the 3rd address
+words[[3]][2]
+
+
+# Other functions - sub vs gsub, regexpr, gregexpr, regexec ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# See the documentation for the following functions: 
+#
+# regexpr(pattern, text, ignore.case = FALSE, perl = FALSE,
+#         fixed = FALSE, useBytes = FALSE)
+#
+# gregexpr(pattern, text, ignore.case = FALSE, perl = FALSE,
+#          fixed = FALSE, useBytes = FALSE)
+#
+# regexec(pattern, text, ignore.case = FALSE, perl = FALSE,
+#         fixed = FALSE, useBytes = FALSE)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+## More practice with regex - see the following websites
+
+
+
+
+
+```
+# More practice with regex  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# See the following sites:
+
+# http://regextutorials.com/
+# https://regexone.com/
+# https://librarycarpentry.org/lc-data-intro/03-quiz/index.html
+# https://www.hackerrank.com/domains/regex
+# https://regex.sketchengine.co.uk/
+
+
+# Period comes between rest of line and first word
+pattern = paste0("(^[A-Za-z]+)",     # first word on line
+                 "(\\s+)",           # spaces after the first word
+                 "(.*)"              # rest of the line
+                 )
+
+str_replace_all(sentences, pattern=pattern, replacement="\\3\\2\\1")
+
+
+
+# Period comes between rest of line and first word
+pattern = paste0("(^[A-Za-z]+)",     # first word on line
+                 "(\\s+)",           # spaces after the first word
+                 "(.*)",              # rest of the line except for the final period
+                 "([?!.])"
+)
+
+movedFirstWordToEnd = str_replace_all(sentences, pattern=pattern, replacement="\\3\\2\\1\\4")
+str_to_sentence(movedFirstWordToEnd)
+
+#########################
+
+# change the case on the first word to uppercase
+# change the case on the last word to lowercase
+
+toupper(c("hello", "goodbye"))
+
+
+
+#str_replace_all(sentences, pattern="(^[A-Za-z]+)(\\s+)(.*)", "\\3\\2\\1")
+```
