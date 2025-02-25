@@ -72,6 +72,7 @@ book:
       #- 0200200-e-introToRegularExpressions-v036.qmd      # yrChapterNumber 23
       #- 0200200-f-introToRegularExpressions-v036.qmd      # yrChapterNumber 24
       - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 20
+      - 0990100-cleaningData-v001.qmd # yrChapterNumber 21
 
     - part: Bash
       chapters:
@@ -123,9 +124,8 @@ book:
 #    - part: Excel and R
 
 #    - part: 0990000-part-Questions-v001.qmd
-    - part: Questions
-      chapters:
-        - 0990100-cleaningData-v001.qmd # yrChapterNumber 43
+#    - part: Questions
+#      chapters:
         
 #    - part: 0999000-appendices-v001.qmd
     - part: Appendices

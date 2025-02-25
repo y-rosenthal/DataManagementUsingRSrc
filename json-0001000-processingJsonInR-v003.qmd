@@ -1,72 +1,3 @@
-# <yrChapterNumber>16. </yrChapterNumber> Using JSON in R with jsonlite package
-
-## jsonlite vignettes
-
-The jsonlite R pacakge is used to read JSON files into R.
-The following is the link to the CRAN webpage for the jsonlite package. 
-See the ***vignettes*** and ***reference manual*** linked there.  
-  
-> [jsonlite: A Simple and Robust JSON Parser and Generator for
-R](https://cran.r-project.org/web/packages/jsonlite/index.html){target=_blank}
-    
-
-Below, I copied the links to *some* of the vignettes from that page. However, 
-it's best to check the official CRAN page in case there are modifications
-or if there are new vignettes added there (this page was compiled in Jan 2025).
-    
-    
-* IMPORTANT: The following describes how to use the fromJSON and toJSON functions 
-  from the jsonlite package. 
-  [Getting started with JSON and jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html){target=_blank}
-    
-* The following will be covered later when we discuss APIs:  
-  [Fetching JSON data from REST APIs (2022-01-16)](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html)
-    
-* The following is nice to know but is something that you can figure
-  out yourself without needing this:  
-  [Combining pages of JSON data with jsonlite *(2022-01-16)*](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-paging.html)
-
-* The following is a more detailed definition of how JSON is converted to 
-  R data and how R data is converted to JSON.  You should *NOT* need to look at this but it is nice
-  to know that it is available for reference in case you get stuck.
-  
-  [A mapping between JSON data and R objects *(March 2014)*](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-mapping.pdf)
-
-* There are some other vignettes on the CRAN page, but you probably don't 
-  need to look at them. 
-
-<!--
-
-## toJSON - create JSON from an R object
-
-### pretty argument and prettify function
-
-### use writeLines to write the JSON to a file
-
-### toJSON(SOME_R_OBJECT , auto_unbox=TRUE)
-
-#### readLines and writeLines
-
-
-## fromJSON - create an R object from JSON
-
-
-## Working with nested dataframes
-
-### tidyr - unnest , expand , crossing , nesting (TODO get exmaples from LLMs)
-
--->
-
-## Summary of above
-
-The above vignettes are great for understanding this material.
-Below I present some of my own material, however, reading the vignettes
-linked above is just as good (or maybe better) than reading my material.
-
-
-
-
-
 <!-- This was created with claude.ai
 URL: https://claude.ai/chat/dc928f19-5a27-48fa-8690-efac36c52d48
 TOPIC: Qarto about jsonlite and nested dataframes
@@ -114,7 +45,7 @@ TO DO AFTER TEST
   - explain about encoding
 -->
 
-## Working with JSON in R using jsonlite
+# <yrChapterNumber></yrChapterNumber> Working with JSON in R using jsonlite
 
 Using R to read/write JSON files and process their contents comes down
 to knowing how to do the following
@@ -137,6 +68,8 @@ package.
 ```{r}
 if(!require(jsonlite)){install.packages("jsonlite");require(jsonelite);}
 ```
+
+## The jsonlite package
 
 The `jsonlite` package in R provides numerous functions for working with JSON.
 We will discuss the following functions below:
@@ -326,7 +259,7 @@ prettify(json_string)
 minify(prettify(json_string))  # Converting pretty JSON back to compact form
 ```
 
-### toJSON() - How R objects are converted into JSON 
+## toJSON() - How R objects are converted into JSON 
 
 The information below reflects the 
 default approach that toJSON() uses in converting R data into JSON.
@@ -613,7 +546,7 @@ following sources:
    # fromJSON("https://api.example.com/data")  # Commented out as URL doesn't exist
    ```
 
-### fromJSON() - How the JSON is converted to an R object.
+## fromJSON() - How the JSON is converted to an R object.
 
 The general rule is as follows:
 
@@ -800,15 +733,7 @@ fromJSON(json_matrix, simplifyMatrix = FALSE)
 ### Working with Nested Data Frames
 
 When JSON contains nested objects or arrays, `fromJSON()` can 
-create nested data frames. A typical dataframe contains only simple
-individual values (e.g. a single number, text value or logical value) in 
-each cell of the dataframe. A nested dataframe can contain an entire
-"inner" dataframe or list inside the cells of the "outer" dataframe.
-The data can be accessed via typical R dataframe techniques. However, 
-it's important to analyze the structure of the data - e.g. using str() or
-View() - to understand how to access the data you want.
-
-**Example**:
+create nested data frames:
 
 ```{r}
 # JSON with nested structure
@@ -873,14 +798,7 @@ nested_df$pets[[1]]$type
 
 In this example, the nested data frame has a column `pets` that contains another data frame. Each row in the `pets` column corresponds to the pets owned by the person in that row of the main data frame.
 
-### three dimensional (3d) arrays
-
-Some JSON contains JSON arrays nested inside JSON arrays, nested inside a
-JSON array.
-This type of data gets converted into an R three dimensional (3d) array.
-The following shows an example of how to extract data from such a structure in R.
-There is a lot of similarity to how this data is extracted from 2d matrices.
-(NOTE - an R matrix is also known as a 2d array).
+## 3 dimensional (3d) arrays
 
 ```{r}
 #| warning: false

@@ -1,0 +1,132 @@
+# Regular Expression Practice - Cleaning Data
+
+## Instructions
+
+In this assignment, you'll practice using regular expressions to identify and clean messy data. The dataset below contains employee expense records with various inconsistencies in formatting. Your task is to write R code using regular expressions to identify different patterns in the data.
+
+You may use any of the regex functions we covered in class:
+- `grep()`: Find patterns and return matching indices or values
+- `grepl()`: Find patterns and return TRUE/FALSE for each element
+- `sub()`: Replace the first occurrence of a pattern
+- `gsub()`: Replace all occurrences of a pattern
+- `strsplit()`: Split strings based on a pattern
+
+For each question:
+1. First try to solve it yourself
+2. If you get stuck, try to break down the pattern you're looking for into smaller pieces
+3. Test your solution with the sample data to make sure it catches all cases
+
+```{r}
+library(tibble)
+expenses = tribble(
+  ~employee,           ~date,          ~amount,          ~category,         ~comments,
+  "Sue Smith",         "1/19/2023",    "59.99",         "food",            "lunch with client",
+  "schwartz, joe",     "01/19/2023",   "$27.00",        "office supplies", "paper for printer",
+  "mike david harris", "2023-01-19",   "25",            "Office Stuff",    NA,
+  "Dr. A. Davis",      "19/1/2023",    "five hundred",  "FOOD",            "NA",
+  "Dr Jones",          "1/19/23",      "1,234.56",      "office suppl.",   "chairs",
+  "S. Jones Jr",       "19/01/23",     "1000",          "Office supplies", "desk",
+  "Conway, Ella Sr.",  "Jan 19, 2023", "$35.23",        "LUNCH",           "---",
+  "Brown, Tom",        "2/15/2023",    "42.50",         "food",            "dinner meeting",
+  "  Williams, Kate  ","02/15/2023",   "$89.99",        "office supplies", "toner cartridge",
+  "robert james lee",  "2023/02/15",   "75",            "Office Stuff",    NA,
+  "mike green jr.",  "2023/02/15",     "500",           "OFFICE SUPPLIES",    NA,
+  "Dr. B. Wilson",     "15/2/2023",    "two hundred",   "FOOD",            "NA",
+  "Dr Smith",          "2/15/23",      "2,345.67",      "office suppl.",   "monitor",
+  "R. Brown Jr",       "March 2, 2023","750",           "Office supplies", "filing cabinet",
+  "Martinez, Ana Sr.", "Feb 15, 2023", "$48.75",        "LUNCH",           "---",
+  "Johnson,Mary",      "3/22/2023",    "63.45",         "food",            "team lunch",
+  "Cooper,  Sam",       "03/22/2023",   "$156.00",      "office supplies", "office decoration",
+  "peter michael wu",  "2023-03-22",   "50",            "Office Stuff",    NA,
+  "Dr. C. Taylor",     "2/3/2023",     "one thousand",  "FOOD",            "NA",
+  "Drake Wilson",        "3/14/24",      "500",         "Office supplies", "printer",
+  "Dr Chen",           "3/2/23",       "3,456.78",      "office suppl.",   "laptop",
+  "T. Wilson Jr",      "Jun 27 2024",  "500",           "Office supplies", "printer",
+  "Rodriguez, Eva Sr.","Mar 22, 2023", "$92.45",        "LUNCH",           "---"
+)
+```
+
+## Questions
+
+### Name Format Questions
+
+1. Answer all parts
+
+    a) Write R code using regex to identify all names that are in "last, first" 
+       format (e.g., "Schwartz, Joe", including those with suffixes like "Sr." or
+       "Jr."). Make sure that you allow for any number of spaces between the 
+       comma and the first name (including if there aren't any spaces).
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+```{r}
+grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
+```
+:::
+
+    b) Modify your answer to show only names that are strictly in last, first form (without a suffix) 
+   
+::: {.callout-note collapse="true"}
+### Click here for answer
+```{r}
+grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
+```
+:::
+
+2. Write R code using regex to display only names that begin with "Dr" (with or without a period).
+   Make sure that you don't display names (e.g. "Drake Wilson") that begin with Dr 
+   but who aren't doctors.
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+   ```{r}
+   grep("^Dr[. ]", expenses$employee, value=TRUE)
+   ```
+:::
+
+3. Write R code using regex to identify all names that are completely lowercase (no capitalization).
+
+4. Write R code using regex to identify all names that include a middle name or middle initial.
+
+5. Write R code using regex to identify all names that have a suffix (Sr. or Jr., with or without the period).
+
+### Date Format Questions
+
+6. Write R code using regex to identify dates in the MM/DD/YYYY format (with or without leading zeros), ensuring valid months (1-12) and days (1-31).
+
+7. Write R code using regex to identify dates in the European format (DD/MM/YYYY or DD/MM/YY), ensuring valid days and months.
+
+8. Write R code using regex to identify dates in ISO format (YYYY-MM-DD).
+
+9. Write R code using regex to identify dates that use written month names (e.g., "Jan 19, 2023", "Feb 15, 2023").
+
+### Amount Format Questions
+
+10. Write R code using regex to identify amounts that include a dollar sign (e.g., "$27.00", "$156.00").
+
+11. Write R code using regex to identify amounts that are written out in words (e.g., "five hundred", "one thousand").
+
+12. Write R code using regex to identify amounts that include thousand separators (commas) (e.g., "1,234.56", "2,345.67").
+
+13. Write R code using regex to identify amounts that are whole numbers without decimal places (e.g., "25", "1000").
+
+### Category Format Questions
+
+14. Write R code using regex to identify categories that are entirely uppercase (e.g., "FOOD", "LUNCH").
+
+15. Write R code using regex to identify all variations of "office supplies" (including abbreviated forms and different capitalizations).
+
+### Comment Format Questions
+
+16. Write R code using regex to identify comments that are either NA, "NA", or 
+    consist entirely of dashes (e.g "---" and "-----").
+
+17. Write R code using regex to identify comments that describe meetings (containing words like "lunch", "dinner", "client", "team").
+
+### Challenge Questions
+
+18. Write R code using regex to extract just the last name from any name format in the employee column. Your solution should work for all name formats in the dataset.
+
+19. Write R code using regex to convert all dates to YYYY-MM-DD format, regardless of their original format. Your solution should handle all date formats in the dataset.
+
+20. Write R code using regex to standardize all amounts to a decimal number format (e.g., "1234.56"), removing dollar signs, commas, and converting written amounts to numbers.

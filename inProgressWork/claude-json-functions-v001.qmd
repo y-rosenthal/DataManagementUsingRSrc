@@ -1,72 +1,3 @@
-# <yrChapterNumber>16. </yrChapterNumber> Using JSON in R with jsonlite package
-
-## jsonlite vignettes
-
-The jsonlite R pacakge is used to read JSON files into R.
-The following is the link to the CRAN webpage for the jsonlite package. 
-See the ***vignettes*** and ***reference manual*** linked there.  
-  
-> [jsonlite: A Simple and Robust JSON Parser and Generator for
-R](https://cran.r-project.org/web/packages/jsonlite/index.html){target=_blank}
-    
-
-Below, I copied the links to *some* of the vignettes from that page. However, 
-it's best to check the official CRAN page in case there are modifications
-or if there are new vignettes added there (this page was compiled in Jan 2025).
-    
-    
-* IMPORTANT: The following describes how to use the fromJSON and toJSON functions 
-  from the jsonlite package. 
-  [Getting started with JSON and jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html){target=_blank}
-    
-* The following will be covered later when we discuss APIs:  
-  [Fetching JSON data from REST APIs (2022-01-16)](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html)
-    
-* The following is nice to know but is something that you can figure
-  out yourself without needing this:  
-  [Combining pages of JSON data with jsonlite *(2022-01-16)*](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-paging.html)
-
-* The following is a more detailed definition of how JSON is converted to 
-  R data and how R data is converted to JSON.  You should *NOT* need to look at this but it is nice
-  to know that it is available for reference in case you get stuck.
-  
-  [A mapping between JSON data and R objects *(March 2014)*](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-mapping.pdf)
-
-* There are some other vignettes on the CRAN page, but you probably don't 
-  need to look at them. 
-
-<!--
-
-## toJSON - create JSON from an R object
-
-### pretty argument and prettify function
-
-### use writeLines to write the JSON to a file
-
-### toJSON(SOME_R_OBJECT , auto_unbox=TRUE)
-
-#### readLines and writeLines
-
-
-## fromJSON - create an R object from JSON
-
-
-## Working with nested dataframes
-
-### tidyr - unnest , expand , crossing , nesting (TODO get exmaples from LLMs)
-
--->
-
-## Summary of above
-
-The above vignettes are great for understanding this material.
-Below I present some of my own material, however, reading the vignettes
-linked above is just as good (or maybe better) than reading my material.
-
-
-
-
-
 <!-- This was created with claude.ai
 URL: https://claude.ai/chat/dc928f19-5a27-48fa-8690-efac36c52d48
 TOPIC: Qarto about jsonlite and nested dataframes
@@ -114,7 +45,7 @@ TO DO AFTER TEST
   - explain about encoding
 -->
 
-## Working with JSON in R using jsonlite
+# <yrChapterNumber></yrChapterNumber> Working with JSON in R using jsonlite
 
 Using R to read/write JSON files and process their contents comes down
 to knowing how to do the following
@@ -131,80 +62,15 @@ to knowing how to do the following
 
 These topics are covered below.
 
-To use the toJSON or fromJSON functions we will need to use the jsonlite 
-package.
-
-```{r}
-if(!require(jsonlite)){install.packages("jsonlite");require(jsonelite);}
-```
-
-The `jsonlite` package in R provides numerous functions for working with JSON.
-We will discuss the following functions below:
-
-- `toJSON()`: Convert R objects into a JSON format character vector
-   (You can then write this vector to a file using writeLines() - see above)
-   
-- `fromJSON()`: Convert JSON data into R objects
-
-- `prettify()` : Format the JSON text on different lines and indent the text in a readable way
-
-- `minify()` : Convert JSON text to a single line and remove all extra spaces and tabs
-
-
-## toJSON() - Convert R objects to JSON text
+## Convert R objects to JSON text
 
 Any R object (e.g. vector, list, dataframe, etc) can be converted to 
-JSON text and written to a JSON file. The steps are:
-
-1. Convert the R object to JSON text :  
-
-   `jsonText = jsonlite::toJSON( SOME_R_OBJECT )` 
-   
-2. Write the JSON text to a file :
-
-   `writeLines(jsonText, filename)`
-   
-   
-**Example**:
+JSON text using jsonlite::toJSON(). That text can then be written to 
+a JSON text file using the baseR writeLines() function. The following is 
+a simple example:
 
 ```{r}
-# create a dataframe
-df = data.frame(
-  student = c("joe", "sue", "anne"),
-  honors = c(FALSE, FALSE, TRUE),
-  test1 = c(NA,80,90),
-  test2 = c(75,85,95)
-)
-
 df
-
-# convert the dataframe to JSON text
-json = toJSON(df, pretty=TRUE)
-
-json
-
-# Create a new directory (i.e. folder) to contain the json files.
-# (We create a folder to contain the file. The folder isn't necessary but
-# in general, it's a good idea to organize your files into folders that make sense.)
-dir.create("jsonFiles", 
-           showWarnings=FALSE) # don't warn us if the folder already exists
-
-# Create a file that contains the JSON data
-writeLines(json, "jsonFiles/sampleJsonFile.json")
-
-# Use dir() to see that the file has been created.
-dir("jsonFiles")
-
-# We can see the text of the file by reading the lines of 
-# the file into a character vector with the BaseR readLines() function.
-lines = readLines("jsonFiles/sampleJsonFile.json")
-
-# A character vector - each entry is one line from the file.
-# This can be very hard to read.
-lines
-
-# It is much easier to read the data with cat
-cat(lines, sep="\n")
 ```
 
 <!--
@@ -233,7 +99,6 @@ cat(lines, sep="\n")
 
 -->
 
-<!--
 ## Writing JSON to a text file
 
 JSON in its raw form is just plain text. 
@@ -248,7 +113,7 @@ Create an R variable that contains the JSON text.
 JSON. We could just as well have created a character vector that contains a new 
 character value for each line of the JSON file.)
 
-```
+```{r}
 # Create a character value that contains JSON.
 #
 # We can write a single character value that spans multiple lines
@@ -271,192 +136,21 @@ Write the data to a file using the writeLines function.
 (We create a folder to contain the file. The folder isn't necessary but
 in general, it's a good idea to organize your files into folders that make sense.)
 
-```
+```{r}
 # Create a new directory (i.e. folder) to contain the json files.
 dir.create("jsonFiles", 
            showWarnings=FALSE) # don't warn us if the folder already exists
 
 # Create a file that contains the JSON data
 writeLines(jsonData, "jsonFiles/sampleJsonFile.json")
+```
 
-# Use dir() to see that the file has been created.
+Use dir() to see that the file has been created.
+
+```{r}
+# Show the contents of the 'jsonFiles' folder.
 dir("jsonFiles")
 ```
-
--->
-
-
-### toJSON( ... pretty=TRUE ...)
-
-Note that toJSON call above included the argument "pretty=TRUE". 
-This formats the JSON with easy to read indentation.
-
-By contrast, if you leave out "pretty=TRUE" (or if you specify pretty=FALSE)
-the JSON is created in "minified" format - i.e. all in one line without
-any extra "whitespace" (no extra spaces, tabs or newline characters), 
-as shown below. The minified version is easy for computers 
-to read and takes up less space.
-The "pretty" version is appropriate when you want people to read
-and understand the JSON.
-
-There are also standalone functions prettify() and minify() that 
-convert JSON text - see the next section.
-
-
-### prettify()  , minify()
-
-The jsonlite package also provides standalone functions for formatting JSON text.
-
-- `jsonlite::prettify()` formats JSON text on different lines and indents the text in a readable    way.
-
-- `jsonlite::minify()` removes all extra "whitespace" from JSON text. In other 
-  words, it converts JSON text to a single line and removes all 
-  extra spaces and tabs.
-
-**Examples**
-
-```{r}
-# Create a compact JSON string
-json_string <- '{"name":"Alice","age":25,"hobbies":["reading","hiking"]}'
-
-# Make it pretty
-prettify(json_string)
-
-# Make it compact
-minify(prettify(json_string))  # Converting pretty JSON back to compact form
-```
-
-### toJSON() - How R objects are converted into JSON 
-
-The information below reflects the 
-default approach that toJSON() uses in converting R data into JSON.
-However, toJSON() takes numerous arguments that can be used to adjust exactly
-what form the resulting JSON takes. For more info see 
-the R help `?toJSON`
-
-- R vectors are converted into JSON arrays
-
-  ```{r}
-  nums = c(10,20,30)
-  toJSON(nums, pretty=TRUE)
-  ```
-  
-- R dataframes are converted into a JSON array of JSON classes.
-  Each class represents a row of the dataframe and contains a "name":value 
-  pair for each value in the row. 
-  If a row contains NA in a column, the resulting JSON class will be 
-  missing the "name":value pair that corresponds to that column
-  (for an example of NA, see Joe's grade for test1 in the example below)
-
-  **Example:**
-  
-  ```{r}
-  df = data.frame(
-    student = c("joe", "sue", "anne"),
-    honors = c(FALSE, FALSE, TRUE),
-    test1 = c(NA,80,90),
-    test2 = c(75,85,95)
-  )
-
-  toJSON(df, pretty=TRUE)
-  ```
-
-- R matrices are converted into a JSON array of JSON arrays
-
-  **Example**
-  
-  ```{r}
-  mat = matrix(seq(10,120,by=10), nrow=3, ncol=4)
-  mat
-  toJSON(mat, pretty=TRUE)
-  ```
-  
-<!-- YRTODO - FINISH THIS PART
-
-- R "3 dimensional arrays" are converted into JSON arrays of
-  JSON arrays of JSON arrays. 
-  
-  **Example**
-  
-  ```{r}
-  my_array <- array(1:24, dim = c(2, 3, 4))
-  my_array
-  
-  toJSON(my_array, pretty=TRUE)
-  ```
--->
-
-- R lists whose values have names are converted into JSON classes.
-
-  **Example**
-  
-  ```{r}
-  # named lists
-  
-  namedList = list( first="joe", middle=NA, last="jones", gpa=3.5, honors=FALSE )
-  toJSON(namedList, pretty=TRUE)
-  ```
-
-<!--  
-  R lists whose values do NOT have names are converted into JSON arrays.
-  
-  
-  ```
-  # unnamed lists
-  
-  unnamedList = list("abc", TRUE, 100, NA)
-  
-  unnamedList 
-  
-  toJSON(unnamedList, pretty=TRUE)
-
-  ```
--->
-
-
-
-
-
-## fromJSON() - Convert JSON text into R objects
-
-Often we start with JSON text - either from a JSON file or JSON data
-that is returned from a call to a Web API - and we want to convert 
-the JSON into R objects (lists, dataframes, etc) so 
-that we can work with the data in R.
-
-We can use the fromJSON() function to convert JSON text into an R object.
-fromJSON() can accept (a) a filename that contains JSON text 
-(b) a Web API URL that returns JSON text or (c) a character vector
-that contains JSON text. fromJSON() returns an R object (e.g. 
-list, dataframe, matrix, etc) that can be manipulated with R code
-to get at the exact data you want.
-
-After converting the JSON text to an R object, it is helpful to use
-the str() or View() functions to 
-see the structure of the R object so that you can 
-figure out how to access the specific data you want.
-
-
-**Example**:
-
-We use fromJSON() to read the file that we created above from the dataframe
-and get an R object that contains the data.
-
-
-
-```{r}
-x = fromJSON("jsonFiles/sampleJsonFile.json")
-
-x
-```
-
-In this case it's easy to understand that fromJSON() returns a dataframe
-since we know that we had originally created this JSON from an R dataframe.
-However, when reading complex JSON files, it can be helpfult to use the
-str() or View() functions to view the structure of the data so that 
-you can understand how to retrieve the specific data that you want.
-
-<!--
 
 ## Reading JSON from a text file into a character vector
 
@@ -472,7 +166,7 @@ To do so, call:
 To demonstrate we use readLines() to read the data from the JSON file we 
 created above into a new variable. 
 
-```
+```{r}
 # Read the json data from the file into an R character vector
 jsonDataReadIn = readLines("jsonFiles/sampleJsonFile.json")
 
@@ -482,7 +176,7 @@ jsonDataReadIn
 # Use cat to display the JSON in a more readable way
 cat(jsonDataReadIn, sep='\n')
 ```
--->
+
 
 <!--
 If an R character vector contains JSON text, the JSON can be written out to a
@@ -495,13 +189,27 @@ the file.
 -->
 
 
-<!--
+## The jsonlite package
+
+The `jsonlite` package in R provides numerous functions for working with JSON.
+We will discuss the following functions below:
+
+- `toJSON()`: Convert R objects into a JSON format character vector
+   (You can then write this vector to a file using writeLines() - see above)
+   
+- `fromJSON()`: Convert JSON data into R objects
+
+- `prettify()` : Format the JSON text on different lines and indent the text in a readable way
+
+- `minify()` : Convert JSON text to a single line and remove all extra spaces and tabs
+
+
 ## jsonlite::toJSON() - convert R Objects (e.g. vectors, dataframes, lists, etc) to JSON
 
 The `toJSON()` function converts R objects (vectors, lists, data frames) into 
 JSON text.
 
-```
+```{r}
 library(jsonlite)
 
 # Create a nested list
@@ -529,7 +237,7 @@ whose class attribute is "json".
 You can write this data to a file 
 by calling writeLines(jsonData) (as described above).
 
-```
+```{r}
 # The jsonData variable was created above
 jsonData
 
@@ -546,18 +254,141 @@ length(unclass(jsonData))
 writeLines(jsonData, "exampleJsonData.json")
 ```
 
--->
 
-<!--
+### jsonlite::toJSON( ... pretty=TRUE ...)
 
-## fromJSON() - convert JSON to R Objects
+Note that toJSON call above included the argument "pretty=TRUE". 
+This formats the JSON with easy to read indentation.
+
+By contrast, if you leave out "pretty=TRUE" (or if you specify pretty=FALSE)
+the JSON is created in "minified" format - i.e. all in one line without
+any extra "whitespace" (no extra spaces, tabs or newline characters), 
+as shown below. The minified version is easy for computers 
+to read and takes up less space.
+The "pretty" version is much more appropriate when you want people to read
+and understand the JSON.
+
+```{r}
+toJSON(people)
+```
+
+
+### jsonlite::prettify()  ,  jsonlite::minify()
+
+The jsonlite package also provides standalone functions for formatting JSON text.
+
+- `jsonlite::prettify()` formats JSON text on different lines and indents the text in a readable    way.
+
+- `jsonlite::minify()` removes all extra "whitespace" from JSON text. In other 
+  words, it converts JSON text to a single line and removes all 
+  extra spaces and tabs.
+
+**Examples**
+
+```{r}
+# Create a compact JSON string
+json_string <- '{"name":"Alice","age":25,"hobbies":["reading","hiking"]}'
+
+# Make it pretty
+prettify(json_string)
+
+# Make it compact
+minify(prettify(json_string))  # Converting pretty JSON back to compact form
+```
+
+## How R objects are converted into JSON
+
+The information below reflects the 
+default approach that toJSON() uses in converting R data into JSON.
+However, toJSON() takes numerous arguments that can be used to adjust exactly
+what form the resulting JSON takes. For more info see 
+the R help `?toJSON`
+
+- R vectors are converted into JSON arrays
+
+  ```{r}
+  nums = c(10,20,30)
+  json = toJSON(nums, pretty=TRUE)
+  json
+  ```
+  
+- R dataframes are converted into a JSON array of JSON classes.
+  Each class represents a row of the dataframe and contains a "name":value 
+  pair showing the value for each column in that row. 
+  If a row contains NA in a column, the resulting JSON class will be 
+  missing the "name":value pair that corresponds to that column
+  (for an example of NA, see Joe's grade for test1 in the example below)
+
+  **Example:**
+  
+  ```{r}
+  df = data.frame(
+    student = c("joe", "sue", "anne"),
+    honors = c(FALSE, FALSE, TRUE),
+    test1 = c(NA,80,90),
+    test2 = c(75,85,95)
+  )
+
+  df
+
+  json = toJSON(df)
+
+  # Display the JSON text with proper indentation
+  prettify(json)
+  ```
+
+- R matrices are converted into a JSON array of JSON arrays
+
+  **Example**
+  
+  ```{r}
+  mat = matrix(seq(10,120,by=10), nrow=3, ncol=4)
+  mat
+  
+  json = toJSON(mat)
+  
+  prettify(json)
+  ```
+  
+- R lists whose values have names are converted into JSON classes.
+
+  **Example**
+  
+  ```{r}
+  # named lists
+  
+  namedList = list( first="joe", middle=NA, last="jones", gpa=3.5, honors=FALSE )
+  
+  namedList
+  
+  json1 = toJSON(namedList)
+  
+  prettify(json1)
+  ```
+  
+  R lists whose values do NOT have names are converted into JSON arrays.
+  
+  
+  ```{r}
+  # unnamed lists
+  
+  unnamedList = list("abc", TRUE, 100, NA)
+  
+  unnamedList 
+  
+  json2 = toJSON(unnamedList)
+
+  prettify(json2)
+  ```
+  
+## jsonlite::fromJSON() - convert JSON to R Objects
 
 Use the `fromJSON()` function to convert JSON to an R object. 
 Different types of R objects (e.g. lists, vectors, data.frames, matrices)
 can be created depending on how the JSON is structured (see details
 in the sections below).
 
-```
+```{r}
 # Convert JSON to an R object.
 # (Notice the 'single quotes' around the entire text. These are 
 #  necessary since the JSON itself contains "double quotes".)
@@ -569,9 +400,7 @@ rData
 str(rData)
 ```
 
--->
-
-### fromJSON() - The JSON can come from a character vector, a file, or an API
+### The JSON can come from a character vector, a file, or an API
 
 The `fromJSON()` function can accept JSON data from any of the 
 following sources:
@@ -606,37 +435,14 @@ following sources:
    # fromJSON("data.json")  # Commented out as file doesn't exist
    ```
 
-4. From a Web API URL
+4. From an Web API URL
 
    ```{r}
    # Example with a public API
    # fromJSON("https://api.example.com/data")  # Commented out as URL doesn't exist
    ```
 
-### fromJSON() - How the JSON is converted to an R object.
-
-The general rule is as follows:
-
-The fromJSON function has a few "simplifyXXX" arguments (see below). The
-default is that all "simplifyXXX" arguments are set to TRUE. When that is
-the case then the fromJSON function usually operates in a way that 
-is the opposite to 
-the toJSON function. If toJSON converts a particular type of R object
-into a particular type of JSON, then fromJSON will convert that type of
-JSON into the correponding type of R object. See the discussion of the 
-toJSON function above for details. 
-
-This is usually enough to understand what's going on. To get specific data
-from the R object, it helps a lot to understand the structure of the 
-object by using the str() or View() functions.
-
-The following goes into more detail, but you really don't have to 
-study this too deeply. In general, looking at the str() function and 
-navigating through the data using your knowledge of R is usually enough.
-
-
-
-**More details**
+## How the JSON is converted to an R object.
 
 1. Usually JSON consists of a JSON class or a JSON array. 
    However, a single number, character value, true/false or null is also
@@ -711,7 +517,7 @@ When the simplifyVector, simplifyDataFrame or simplifyMatrix arguements are
 TRUE, then the R object being returned might be a vector, dataframe, matrix
 or list (depending on the structure of the JSON).
 
-#### fromJSON() - simplifyVector
+#### simplifyVector
 
 ```{r}
 # JSON array example
@@ -724,7 +530,7 @@ fromJSON(json_array)
 fromJSON(json_array, simplifyVector = FALSE)
 ```
 
-#### fromJSON() - simplifyDataFrame
+#### simplifyDataFrame
 
 When simplifyDataframe is set to TRUE JSON data that consists of an array of 
 classes, is returned as an R dataframe. Each row of the dataframe comes
@@ -760,9 +566,7 @@ str(x)
 ```
 
 
-<!--
-
-```
+```{r}
 # A JSON array of JSON classes
 jsonText <- '[
   {"name": "Alice", "age": 25},
@@ -779,9 +583,8 @@ x = fromJSON(jsonText, simplifyDataFrame = FALSE)
 x
 str(x)
 ```
--->
 
-#### fromJSON() - simplifyMatrix
+#### simplifyMatrix
 
 ```{r}
 # JSON representing matrix-like data
@@ -797,18 +600,10 @@ fromJSON(json_matrix)
 fromJSON(json_matrix, simplifyMatrix = FALSE)
 ```
 
-### Working with Nested Data Frames
+### Working with Nest ed Data Frames
 
 When JSON contains nested objects or arrays, `fromJSON()` can 
-create nested data frames. A typical dataframe contains only simple
-individual values (e.g. a single number, text value or logical value) in 
-each cell of the dataframe. A nested dataframe can contain an entire
-"inner" dataframe or list inside the cells of the "outer" dataframe.
-The data can be accessed via typical R dataframe techniques. However, 
-it's important to analyze the structure of the data - e.g. using str() or
-View() - to understand how to access the data you want.
-
-**Example**:
+create nested data frames:
 
 ```{r}
 # JSON with nested structure
@@ -841,11 +636,10 @@ nested_df
 #    tidyverse::glimpse() function in tidyverse's dplyr package - similar to str()
 #    the variable in the "Environment" window pane in RStudio
 
-# See the structure of the data to understand how to extract specific data
+# See the structure 
 str(nested_df)
 
-# By analyzing the output from str() we can understand how to access 
-# specific data that we might want.
+# Accessing nested data
 
 # Get the pet owner's names
 nested_df$name
@@ -873,20 +667,10 @@ nested_df$pets[[1]]$type
 
 In this example, the nested data frame has a column `pets` that contains another data frame. Each row in the `pets` column corresponds to the pets owned by the person in that row of the main data frame.
 
-### three dimensional (3d) arrays
-
-Some JSON contains JSON arrays nested inside JSON arrays, nested inside a
-JSON array.
-This type of data gets converted into an R three dimensional (3d) array.
-The following shows an example of how to extract data from such a structure in R.
-There is a lot of similarity to how this data is extracted from 2d matrices.
-(NOTE - an R matrix is also known as a 2d array).
+## 3d arrays
 
 ```{r}
 #| warning: false
-
-# The following JSON gets converted into a 3 dimensinal array in R
-# which is basically an array of matrices
 
 x=fromJSON('[
               [
@@ -902,32 +686,4 @@ x=fromJSON('[
                 [21,22,23,24]
               ]
             ]')
-
-# 1st matrix
-x[1,,]
-
-# 2nd matrix
-x[2,,]
-
-# 3rd matrix
-x[3,,]
-
-# The first index specifies which matrix or matrices
-# The 2nd index specifies which row or rows
-# The 3rd index specifies which column or columns
-
-# all values from 1st row of 3rd matrix
-x[3,1,]
-
-# all values from 2nd column of 1st matrix
-x[1,,2]
-
-# The 2nd matrix, 1st row, 3rd column
-x[2,1,3]
-
-# All 3 matrices, just the numbers in the first row and first column
-x[,1,1]
-
-# The 2nd rows from each matrix
-x[,2,]
 ```

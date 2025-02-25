@@ -16,8 +16,9 @@
 /*-save[0-9]*/
 /*.save[0-9]*/
 
-# ignreo all other folders
+# ignore all other folders
 /*/
 
 # do NOT ignore images folder
 !/images/
+!/inProgressWork/
