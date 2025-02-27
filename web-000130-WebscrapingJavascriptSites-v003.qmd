@@ -1,4 +1,4 @@
-# <yrChapterNumber>41. </yrChapterNumber> Scraping Dynamic (JavaScript) Websites
+# <yrChapterNumber>42. </yrChapterNumber> Scraping Dynamic (JavaScript) Websites
 
 ## Files for the rest of this presentation
 

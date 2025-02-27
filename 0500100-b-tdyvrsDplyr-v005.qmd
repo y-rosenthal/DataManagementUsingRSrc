@@ -1,5 +1,35 @@
-# <yrChapterNumber>25. </yrChapterNumber> dplyr verbs - select, filter, etc.
+# <yrChapterNumber>26. </yrChapterNumber> dplyr verbs - select, filter, etc.
 
+```{r}
+#| include: false
+
+# YR NOTE - this is hidden from the final output. It is being done so that 
+# the files for the website are in the data folder. This helps organize
+# the files for the development of the website. However, I don't want to 
+# reader of the website to be confused by that so we copy the file 
+# into the . folder so that we don't have to include any folder in the 
+# call to read.csv below.
+
+file.copy(from="data/salespeople-v002.csv", to=".")
+```
+
+```{r}
+#| include: false
+
+# YR NOTE - this is hidden from the final output. It is being done so that # Read in the data into a tibble
+#
+# Note that the following code uses the readr::read_csv function from the readr
+# package which is part of the tidyverse collection of packages. 
+# This function is similar to the base-R read.csv function.
+# 
+# read_csv returns a tibble, which is the data structure that the 
+# tidyverse packages use in lieu of dataframes. A tibble is basically
+# a dataframe with extra features.
+# By contrast, the base-r read.csv function returns a dataframe.
+
+library(readr)
+sales = read_csv("salespeople-v002.csv", na=c("","NULL"), show_col_types=FALSE)
+```
 
 ## select()
 
@@ -13,6 +43,8 @@ Note that there are NO quotes around the column names (this differs from
 the base-r way of specifying column names in a dataframe).
 
 ```{r}
+library(dplyr, warn.conflicts=FALSE, quietly=TRUE)
+
 # Show just the specified columns from the sales tibble
 select(.data=sales, first, last, salesInThousands)
 ```

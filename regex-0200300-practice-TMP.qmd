@@ -1,0 +1,176 @@
+# Practice Questions: Regular Expressions for Data Cleaning
+
+Use the expenses dataset we created earlier to answer the following questions. Each question should be answered using regular expressions with the functions we've learned (grep, grepl, sub, gsub, or strsplit).
+
+## Names Format Questions
+
+### Question 1
+Write R code using regex to identify all names that are in "last, first" format (e.g., "Schwartz, Joe").
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[A-Za-z]+, [A-Za-z]+( [A-Za-z]+\\.?)?$", expenses$employee, value=TRUE)
+```
+This will return names like "Schwartz, Joe", "Conway, Ella Sr.", etc.
+:::
+
+### Question 2
+Write R code using regex to identify all names that include a title (Dr. or Dr).
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^Dr\\.? ", expenses$employee, value=TRUE)
+```
+This will return names like "Dr. A. Davis", "Dr Jones", etc.
+:::
+
+### Question 3
+Write R code using regex to identify all names that are completely lowercase (no capitalization).
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[a-z ]+$", expenses$employee, value=TRUE)
+```
+This will return names like "mike david harris", "peter michael wu", etc.
+:::
+
+## Date Format Questions
+
+### Question 4
+Write R code using regex to identify dates in the MM/DD/YYYY format (with or without leading zeros).
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$", expenses$date, value=TRUE)
+```
+This will return dates like "1/19/2023", "01/19/2023", etc.
+:::
+
+### Question 5
+Write R code using regex to identify dates in the European format (DD/MM/YYYY or DD/MM/YY).
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[0-9]{1,2}/[0-9]{1,2}/([0-9]{2}|[0-9]{4})$", expenses$date, value=TRUE)
+```
+This will return dates like "19/1/2023", "19/1/23", etc.
+:::
+
+### Question 6
+Write R code using regex to identify dates that use month names (e.g., "Jan 19, 2023").
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[A-Za-z]{3,} [0-9]{1,2}, [0-9]{4}$", expenses$date, value=TRUE)
+```
+This will return dates like "Jan 19, 2023", "Feb 15, 2023", etc.
+:::
+
+## Amount Format Questions
+
+### Question 7
+Write R code using regex to identify amounts that include a dollar sign.
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^\\$[0-9,.]+$", expenses$amount, value=TRUE)
+```
+This will return amounts like "$27.00", "$35.23", etc.
+:::
+
+### Question 8
+Write R code using regex to identify amounts that are written out in words.
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[a-z ]+$", expenses$amount, value=TRUE)
+```
+This will return amounts like "five hundred", "two hundred", etc.
+:::
+
+### Question 9
+Write R code using regex to identify amounts that include thousand separators (commas).
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[0-9]+,[0-9]+\\.[0-9]+$", expenses$amount, value=TRUE)
+```
+This will return amounts like "1,234.56", "2,345.67", etc.
+:::
+
+## Category Format Questions
+
+### Question 10
+Write R code using regex to identify categories that are entirely uppercase.
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[A-Z]+$", expenses$category, value=TRUE)
+```
+This will return categories like "FOOD", "LUNCH", etc.
+:::
+
+### Question 11
+Write R code using regex to identify all variations of "office supplies" (including abbreviated forms).
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^[Oo]ffice [Ss]up", expenses$category, value=TRUE)
+```
+This will return categories like "office supplies", "Office supplies", "office suppl.", etc.
+:::
+
+### Question 12
+Write R code using regex to identify comments that are either NA or placeholder dashes.
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+grep("^(NA|---)$", expenses$comments, value=TRUE)
+```
+This will return comments that are either "NA" or "---".
+:::
+
+## Challenge Questions
+
+### Question 13
+Write R code using regex to extract just the last name from any name format in the employee column.
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+# This requires multiple patterns to handle different formats
+names <- expenses$employee
+# For "Last, First" format
+last_names1 <- sub("^([A-Za-z]+),.*$", "\\1", names)
+# For "First Last" format
+last_names2 <- sub("^.* ([A-Za-z]+)( Jr\\.?| Sr\\.?)?$", "\\1", names)
+```
+:::
+
+### Question 14
+Write R code using regex to convert all dates to YYYY-MM-DD format.
+
+::: {.callout-tip collapse="true"}
+## Answer
+```r
+# This would require multiple gsub statements to handle each format
+# Here's a partial solution for MM/DD/YYYY format:
+dates <- expenses$date
+gsub("^([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})$", "\\3-\\1-\\2", dates)
+# Note: A complete solution would need to handle all date formats
+```
+:::
+
+Remember to test your regex patterns with different examples from the dataset to ensure they work as expected. You can use the `grep(..., value=TRUE)` option to see the actual matches rather than just their positions in the vector.

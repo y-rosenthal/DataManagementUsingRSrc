@@ -1,0 +1,658 @@
+# <yrChapterNumber>17. </yrChapterNumber> JSON Parsing Practice in R
+
+<!--
+This was created in Claude.ai
+URL: https://claude.ai/chat/209c9b49-139c-4577-b5dc-1aaa8a9329e9
+TOPIC: Parsing JSON Data in R: Practice Exercises
+-->
+
+<style>
+h3 { color:blue; }
+</style>
+
+These exercises ask you to retrieve specific information from JSON
+that has been processed by the fromJSON() function.
+
+Each exercise includes some JSON and then specific questions that ask 
+you to retrieve specific data from that JSON.
+
+The questions are rated easy,medium,harder based on the following:
+
+**easy questions**: data is readily accessible by 
+simply using list, dataframe and matrix notation
+
+**medium questions**: you might need additional functions such as unlist() or others.
+
+**harder questions**: require to you to use either apply functions or loops to solve the problem.
+
+```{r}
+library(jsonlite)
+```
+
+## Exercise: Basic JSON Object Access
+
+Answer the questions below by referring to
+the following JSON response from an API.
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see JSON</summary>
+```{r}
+# API response stored in variable 'weather_data'
+weather_data <- fromJSON('{
+  "location": "Seattle",
+  "current": {
+    "temperature": 12.5,
+    "conditions": "Cloudy",
+    "wind": {
+      "speed": 15.5,
+      "direction": "NW"
+    }
+  },
+  "forecast": [
+    {"day": "Monday", "high": 14, "low": 8},
+    {"day": "Tuesday", "high": 16, "low": 9},
+    {"day": "Wednesday", "high": 15, "low": 7}
+  ]
+}')
+```
+</details>
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see fromJSON() output</summary>
+```{r}
+# THE STRUCTURE
+str(weather_data)
+
+# THE DATA
+weather_data
+```
+</details>
+
+### Question (easy): Write R code to extract the current temperature.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+weather_data$current$temperature
+# or alternatively
+weather_data[["current"]][["temperature"]]
+```
+</details>
+
+### Question (easy): Write R code to create a vector of all forecasted high temperatures.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+weather_data$forecast$high
+# or
+weather_data$forecast[,"high"]
+```
+</details>
+
+## Exercise: E-commerce Product Data
+
+Answer the questions below by referring to the following JSON response from an e-commerce API.
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see JSON</summary>
+```{r}
+# API response stored in variable 'product_data'
+product_data <- fromJSON('{
+  "store": "TechStore",
+  "products": [
+    {
+      "id": "p123",
+      "name": "Wireless Headphones",
+      "price": 89.99,
+      "stock": 45,
+      "colors": ["black", "white", "blue"],
+      "specs": {
+        "battery": "20 hours",
+        "connectivity": "Bluetooth 5.0",
+        "weight": "250g"
+      }
+    },
+    {
+      "id": "p124",
+      "name": "Smart Watch",
+      "price": 199.99,
+      "stock": 28,
+      "colors": ["black", "silver"],
+      "specs": {
+        "battery": "48 hours",
+        "connectivity": "Bluetooth 5.0",
+        "weight": "45g"
+      }
+    },
+    {
+      "id": "p125",
+      "name": "Wireless Charger",
+      "price": 29.99,
+      "stock": 120,
+      "colors": ["black", "white"],
+      "specs": {
+        "input": "QC 3.0",
+        "output": "15W",
+        "weight": "80g"
+      }
+    }
+  ],
+  "last_updated": "2024-02-20"
+}')
+```
+</details>
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see fromJSON() output</summary>
+```{r}
+# THE STRUCTURE
+str(product_data)
+
+# THE DATA
+product_data
+```
+</details>
+
+### Question (easy): Write R code to extract the name and price of the second product.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+# Extract name
+product_data$products$name[2]
+# or
+product_data$products[2, "name"]
+
+# Extract price
+product_data$products$price[2]
+# or
+product_data$products[2, "price"]
+
+# Combined as a named vector
+c(name = product_data$products$name[2], price = product_data$products$price[2])
+```
+</details>
+
+### Question (easy): Write R code to extract all available colors for the Wireless Headphones product.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+# Find the row index for the Wireless Headphones
+headphone_index <- which(product_data$products$name == "Wireless Headphones")
+
+# Extract the colors
+product_data$products$colors[[headphone_index]]
+```
+</details>
+
+### Question (easy): Write R code to create a data frame showing each product's name, price, and stock.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+data.frame(
+  name = product_data$products$name,
+  price = product_data$products$price,
+  stock = product_data$products$stock
+)
+
+# Alternatively
+product_data$products[, c("name", "price", "stock")]
+```
+</details>
+
+## Exercise: Restaurant Menu API
+
+Answer the questions below by referring to the following JSON response from a restaurant menu API.
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see JSON</summary>
+```{r}
+# API response stored in variable 'menu_data'
+menu_data <- fromJSON('{
+  "restaurant": {
+    "name": "Flavor Haven",
+    "location": "123 Main St",
+    "hours": "11am-10pm",
+    "menu": {
+      "appetizers": [
+        {"item": "Garlic Bread", "price": 5.99, "vegetarian": true},
+        {"item": "Buffalo Wings", "price": 9.99, "vegetarian": false},
+        {"item": "Mozzarella Sticks", "price": 7.99, "vegetarian": true}
+      ],
+      "main_courses": [
+        {"item": "Margherita Pizza", "price": 14.99, "vegetarian": true, "sizes": ["small", "medium", "large"]},
+        {"item": "Beef Burger", "price": 12.99, "vegetarian": false, "sides": ["fries", "salad"]},
+        {"item": "Fettuccine Alfredo", "price": 13.99, "vegetarian": true, "options": ["add chicken"]}
+      ],
+      "desserts": [
+        {"item": "Chocolate Cake", "price": 6.99, "vegetarian": true},
+        {"item": "Ice Cream", "price": 4.99, "vegetarian": true, "flavors": ["vanilla", "chocolate", "strawberry"]}
+      ]
+    }
+  }
+}')
+```
+</details>
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see fromJSON() output</summary>
+```{r}
+# THE STRUCTURE
+str(menu_data)
+
+# THE DATA
+menu_data
+```
+</details>
+
+### Question (easy): Write R code to extract the name and location of the restaurant.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+# Extract name
+menu_data$restaurant$name
+
+# Extract location
+menu_data$restaurant$location
+
+# Combined as a named vector
+c(name = menu_data$restaurant$name, location = menu_data$restaurant$location)
+```
+</details>
+
+### Question (easy): Write R code to extract all vegetarian items from the appetizers section.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+# Filter the appetizers data frame for vegetarian items
+vegetarian_apps <- menu_data$restaurant$menu$appetizers[menu_data$restaurant$menu$appetizers$vegetarian == TRUE, ]
+
+# Just the names of vegetarian appetizers
+vegetarian_app_names <- menu_data$restaurant$menu$appetizers$item[menu_data$restaurant$menu$appetizers$vegetarian == TRUE]
+
+# Show the result
+vegetarian_apps
+# or
+vegetarian_app_names
+```
+</details>
+
+### Question (easy): Write R code to calculate the average price of all main courses.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+mean(menu_data$restaurant$menu$main_courses$price)
+```
+</details>
+
+## Exercise: Nested Arrays
+
+Answer the questions below by referring to
+the following JSON response from an API.
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see JSON</summary>
+```{r}
+# API response stored in variable 'library_data'
+library_data <- fromJSON('{
+  "library": {
+    "name": "Central Library",
+    "books": [
+      {
+        "title": "Data Science Basics",
+        "authors": ["Smith, J.", "Jones, K."],
+        "categories": ["programming", "statistics"],
+        "ratings": [4.5, 4.8, 4.2]
+      },
+      {
+        "title": "Statistics Using R",
+        "authors": ["Smith, J.", "Jones, K."],
+        "categories": ["statistics", "R"],
+        "ratings": [4.5, 4.8, 4.2]
+      },
+      {
+        "title": "R Programming Guide",
+        "authors": ["Wilson, M."],
+        "categories": ["programming", "R"],
+        "ratings": [4.7, 4.6, 4.9, 4.5]
+      }
+    ]
+  }
+}')
+```
+</details>
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see fromJSON() output</summary>
+```{r}
+# THE STRUCTURE
+str(library_data)
+
+# THE DATA
+library_data
+```
+</details>
+
+### Question (medium): Write code to create a vector of all unique book categories 
+across all books.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+unique(unlist(library_data$library$books$categories))
+```
+</details>
+
+### Question (harder): get named vector of ratings for each book
+
+Calculate the average rating for each book and store it 
+in a named vector where names are book titles.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+bookTitles = sapply(library_data$library$books$ratings, mean)
+names(bookTitles) = library_data$library$books$title
+bookTitles
+```
+</details>
+
+## Exercise: Complex Nested Structures
+
+Answer the questions below by referring to
+the following JSON response from a social media API.  
+The API was called with the following URL: 
+https://api.somesite.com/userinfo/Alex Chen
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see JSON</summary>
+```{r}
+# API response stored in variable 'social_data'
+# The response includes info about a single user "Alex Chen"
+social_data <- fromJSON('{
+  "user": {
+    "id": "u123",
+    "name": "Alex Chen",
+    "posts": [
+      {
+        "id": "p1",
+        "content": "Learning R!",
+        "timestamp": "2024-02-15",
+        "comments": [
+          {
+            "user": "Carol Wu",
+            "text": "Check out tidyverse",
+            "likes": 5
+          },
+          {
+            "user": "Bob Smith",
+            "text": "Great choice!",
+            "likes": 3
+          },
+          {
+            "user": "Carol Wu",
+            "text": "tidyverse makes many things easier",
+            "likes": 2
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "content": "JSON parsing is fun",
+        "timestamp": "2024-02-16",
+        "comments": [
+          {
+            "user": "Mike Jones",
+            "text": "Try jsonlite",
+            "likes": 4
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "content": "Coffee is key :)",
+        "timestamp": "2024-02-16",
+        "comments": [
+          {
+            "user": "Carol Wu",
+            "text": "I totally agree!",
+            "likes": 1
+          },
+          {
+            "user": "Mike Jones",
+            "text": "yessss",
+            "likes": 0
+          }
+        ]
+      }
+
+    ]
+  }
+}')
+```
+</details>
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see fromJSON() output</summary>
+```{r}
+# THE STRUCTURE
+str(social_data)
+
+# THE DATA
+social_data
+```
+</details>
+
+### Question (harder): Create a data frame containing each comment's user and number of likes.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+# Method 1 - extract vectors separately and combine into a dataframe
+users = unlist(sapply(social_data$user$posts$comments, function(x) x$user))
+likes = unlist(sapply(social_data$user$posts$comments, function(x) x$likes))
+data.frame(user=users, likes=likes)
+
+# Method 2: Using do.call to combine list of data frames
+do.call(rbind, lapply(social_data$user$posts$comments, function(comments) {
+  comments
+}))[, c("user", "likes")]
+
+# Method 3: Using tidyverse if available
+library(tidyverse)
+bind_rows(social_data$user$posts$comments)[,c("user","likes")]
+```
+</details>
+
+### Question (harder): function returning all comments by specific user
+
+Create a function that takes the social_data object and a 
+username as parameters, then returns all comments made by that user.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+find_user_comments <- function(data, username) {
+  
+  # CommentsListDf is a list of dataframes. Each dataframe in the
+  # list contains the columns: user, text, likes
+  commentsListDf = data$user$posts$comments
+  
+  # commentsList is a list of vectors. The vectors contain just the comments for 
+  # the specified username. There is one vector in the list from each of
+  # the original dataframes.
+  commentsList = lapply(commentsListDf, function(df){ df[df$user==username, "text"]})
+  
+  # Combine all of the vectors in the list into a single vector.
+  return( unlist(commentsList) )
+}
+
+# Test the function
+find_user_comments(social_data, "Carol Wu")
+```
+</details>
+
+## Exercise: Working with Lists of Data Frames
+
+Answer the questions below by referring to
+the following JSON response from a fitness tracking API:
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see JSON</summary>
+```{r}
+# API response stored in variable 'fitness_data'
+fitness_data <- fromJSON('{
+  "user_id": "f789",
+  "tracking_data": {
+    "daily_steps": [
+      {"date": "2024-02-14", "steps": 8432, "active_minutes": 45},
+      {"date": "2024-02-15", "steps": 10234, "active_minutes": 62},
+      {"date": "2024-02-16", "steps": 7321, "active_minutes": 38}
+    ],
+    "workouts": [
+      {
+        "type": "running",
+        "sessions": [
+          {"date": "2024-02-14", "duration": 30, "distance": 5.2},
+          {"date": "2024-02-14", "duration": 25, "distance": 3.9},
+          {"date": "2024-02-16", "duration": 25, "distance": 4.1}
+        ]
+      },
+      {
+        "type": "cycling",
+        "sessions": [
+          {"date": "2024-02-14", "duration": 30, "distance": 9.1},
+          {"date": "2024-02-15", "duration": 45, "distance": 15.3}
+        ]
+      }
+    ]
+  }
+}')
+```
+</details>
+
+<details style="background-color:#DDD;padding:5px;">
+<summary>Click to see fromJSON() output</summary>
+```{r}
+# THE STRUCTURE
+str(fitness_data)
+
+# THE DATA
+fitness_data
+```
+</details>
+
+### Question (harder): Create a data frame with total distance covered for each type of workout.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```{r}
+workout_summary <- data.frame(
+  type = fitness_data$tracking_data$workouts$type,
+  total_distance = sapply(fitness_data$tracking_data$workouts$sessions, 
+                         function(x) sum(x$distance))
+)
+
+workout_summary
+```
+</details>
+
+<!-- YRTODO 
+4.2 has a bug. I'm not even sure what the response is supposed to look like.
+Perhaps ask in the chat from claude.ai.
+
+Bonus question I didn't even look at this yet.
+
+Fix both of these.
+
+
+### Question: function to get all list of all activities for specific date
+
+Create a function that takes the fitness_data object and a date as parameters, 
+then returns a list containing all fitness activities 
+(both steps and workouts) for that date.
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```r
+get_daily_activities <- function(data, target_date) {
+  # Get steps for the date
+  daily_steps <- subset(data$tracking_data$daily_steps,
+                       date == target_date)
+  
+  # Get workouts for the date
+  workouts <- lapply(data$tracking_data$workouts, function(workout) {
+    sessions <- subset(workout$sessions, date == target_date)
+    if (nrow(sessions) > 0) {
+      cbind(type = workout$type, sessions)
+    } else {
+      NULL
+    }
+  })
+  
+  # Remove NULL entries from workouts
+  workouts <- Filter(Negate(is.null), workouts)
+  
+  list(
+    steps = daily_steps,
+    workouts = workouts
+  )
+}
+
+# Test the function
+get_daily_activities(fitness_data, "2024-02-14")
+```
+</details>
+
+## Bonus Challenge
+
+Create a function that recursively traverses any JSON object and returns a 
+character vector of all possible access paths to leaf nodes (scalar values). 
+For example:
+
+```r
+# Example usage:
+get_json_paths(weather_data)
+# Should return something like:
+# [1] "location"
+# [2] "current$temperature"
+# [3] "current$conditions"
+# [4] "current$wind$speed"
+# [5] "current$wind$direction"
+# ...
+```
+
+<details style="border:1px solid blue;padding:5px;">
+<summary>Click for answer</summary>
+```r
+get_json_paths <- function(obj, prefix = "") {
+  paths <- character()
+  
+  if (is.list(obj)) {
+    for (name in names(obj)) {
+      new_prefix <- if (prefix == "") name else paste0(prefix, "$", name)
+      paths <- c(paths, get_json_paths(obj[[name]], new_prefix))
+    }
+  } else if (is.data.frame(obj)) {
+    for (col in names(obj)) {
+      new_prefix <- if (prefix == "") col else paste0(prefix, "$", col)
+      paths <- c(paths, new_prefix)
+    }
+  } else {
+    paths <- prefix
+  }
+  
+  return(paths)
+}
+```
+</details>
+
+This challenge helps students understand the recursive nature of JSON structures and reinforces their understanding of how R represents these nested data structures internally.
+
+-->

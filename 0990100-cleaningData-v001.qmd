@@ -1,4 +1,4 @@
-# <yrChapterNumber>43. </yrChapterNumber> "Cleaning" data
+# <yrChapterNumber>21. </yrChapterNumber> "Cleaning" data
 
 Often data comes to us in a "messy" format. One of the "less glamorous" but
 very important jobs of anyone
@@ -58,7 +58,6 @@ The following are many of the inconsistencies
   
 # What you need to do 
 
-Write the following function named cleanUp that takes the dataframe as 
+Write a function named cleanUp that takes the dataframe as 
 an argument and returns a cleaned dataframe where all of the values in 
-each column
-follow a consistent structure.
+each column follow a consistent structure.
