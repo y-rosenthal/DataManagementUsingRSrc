@@ -1,0 +1,91 @@
+project:
+  type: book
+  output-dir: _book
+  pre-render: copy_quartoYml_to_bookFolder-v001.R
+  post-render: Rscript yrZipQmdFiles.R
+  resources:
+    - _quarto.yml
+    - yrNocacheHeaders-v001.html
+    - yrstuff-v001.js
+    - assignment-api-0000100-weatherDataApi-v002.qmd.zip
+    - assignment-api-0000100-weatherDataApi-v001.qmd.zip
+  render:
+    - "*.qmd"
+    - "assignment-api-0000100-weatherDataApi-v001.qmd"
+
+book:
+  title: "Data Management With R (latest version)"
+  author: "Y. Rosenthal"
+  chapters:
+    - index.qmd
+    - part: Some computer basics
+      chapters:
+        - intro00100-operatingSystems.qmd
+        - intro00120-files.qmd
+        - intro00130-chromeExtensions.qmd
+    - part: Into to Coding With AI
+      chapters:
+        - ai-000100-overview.qmd
+        - aiCoding00100-overview.qmd
+    - part: Intro to R packages
+      chapters:
+        - 0000022-InstallingRPackages-v003.qmd
+    - part: Intro to Quarto
+      chapters:
+        - 0000017-introToQuarto-v001.qmd
+    - part: Intro to tidyverse
+      chapters:
+        - 0400050-whatIsTidyverse-v001.qmd
+        - 0400050-tibbles-v001.qmd
+        - 0400100-usingPipes-v001.qmd
+        - 0400200-stringr-tutorials-v003.qmd
+    - part: JSON data and APIs
+      chapters:
+        - 0000075-whatIsJsonData.qmd
+        - 0000080-editingAndValidatingJsonFiles.qmd
+        - 0000085-jsonDataTypes.qmd
+        - 0000090-usingJsonInR.qmd
+        - 0000093-jsonParsingPractice-v001.qmd
+        - assignment-api-0000100-weatherDataApi-v002.qmd
+
+website:
+  navbar:
+    left:
+      - text: "(click here for spring24 version of this website)"
+        href: https://yrosenthal.com/datamgmt/theOldBook
+  search:
+    location: sidebar
+
+execute:
+  error: true
+  warning: true
+
+format:
+  html:
+    theme: cosmo
+    toc-expand: true
+    fontsize: 80%
+    number-depth: 3
+    link-external-newwindow: true
+    include-in-header:
+      - file: yrNocacheHeaders-v001.html
+      - text: |
+          <script src="yrstuff.js"></script>
+    css: yrStyles-main-v001.css
+    include-after-body:
+      text: |
+        <script>
+        const titles = document.querySelectorAll('.title');
+
+        titles.forEach(title => {
+          if (title.textContent.trim().startsWith('Appendix')) {
+            const chapterNumber = title.querySelector('yrChapterNumber');
+            if (chapterNumber) {
+              chapterNumber.classList.add('yrAppendixChapterNumber');
+            }
+          }
+        });
+        </script>
+  docx: default
+
+editor: source

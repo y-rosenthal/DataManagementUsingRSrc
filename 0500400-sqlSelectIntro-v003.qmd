@@ -135,6 +135,8 @@ SQL "SELECT" command. It is this command that is used to extract data
 from a database and organize the data into a desired form. 
 We will focus in this section on an intro to the SQL SELECT statement. 
 
+## Using SQL in R
+
 As we said above, R is NOT a Database Management System. However SQL is a 
 very popular language. Many technologists come to R, already having a deep
 knowledge of the SQL language. Therefore it is nice to know that the SQL
@@ -148,6 +150,9 @@ which takes a SQL command as its argument. Wherever the SQL command
 refers to the name of a relational database "table", sqldf runs the SQL
 command using the R dataframe with that name.
 
+There are other more advanced ways for R to connect to SQL databases (DB) and
+database management systems (DBMS). We will cover the more advanced ways later.
+For now, sqldf will suit our purposes for this intro.
 
 ## dplyr is very similar to the SQL SELECT command
 

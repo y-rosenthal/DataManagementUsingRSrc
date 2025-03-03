@@ -1,58 +1,3 @@
-<!-- YR-TODO: 
--->
-
-<style>
-  .yr-tmp-redText {
-    color: red; 
-    font-style: italic; 
-    border: 1px solid black;
-    padding: 2px;
-  }
-  
-  .yr-tmp-redText a {
-    color: red; 
-    font-weight: bold;
-  }
-</style>
-
-<div class="yr-tmp-redText">
-**NOTE**  These instructions were modified slightly since they were 
-originally posted. This did NOT change what you need to do in any 
-significant way. A summary of the changes is listed below.
-I'll give full credit if you did the project using either the new (see below)
-or the [old instructions](assignment-api-0000100-weatherDataApi-v001.html).
-
-- Feb. 28, 2025 - Modifications:
-
-  * Changed some wording or style to make to make the instructions
-    clearer without changing the meaning of what was said.
-
-  * In the [instructions for function getForecastDf](#function-getForecaseId) 
-    elaborated more on
-    how to check the arguments. This doesn't change the assigment, 
-    it just makes the instructions more explicit and easier to understand.
-    
-  * In the [instructions for function createForecastFiles](#function-createForecastFiles),
-    changed the filename prefix to "weatherData_". (The original instructions 
-    said "hourlyData_", however that name is misleading as you can generate
-    the files on any time schedule - not just hourly).
-
-  * To see exactly which lines changed (you really don't have to) you can
-    [click here](files/_assignment-weatherDataApi-diff-ver1-ver2.html) to see the output of <https://diffchecker.com> when applied
-    to the 
-    [original Quarto .qmd](assignment-api-0000100-weatherDataApi-v001.qmd.zip) 
-    file and the 
-    [new Quarto .qmd file](assignment-api-0000100-weatherDataApi-v002.qmd.zip)
-    (for this current version of this webpage). The left side of the screen
-    shows the contents of the original .qmd file and the right side the 
-    contents of the .qmd file that generated this version of the page.
-    <span style="font-style: italic; font-size: .8em;">
-    (The page from diffchecker was saved with the 
-    [yrWebSnap chrome plugin](https://github.com/y-rosenthal/yrWebSnap).)
-    </span>
-    
-</div>
-
 # <yrChapterNumber>18. </yrChapterNumber> assignment - weather API
 
 <style>
@@ -97,21 +42,13 @@ Below is an outline of the JSON that is returned from this API call.
 We omitted most of the data so that we can clearly highlight
 where the "forecastHourly" URL is in the JSON.
 
-<!-- YR-TODO: run the api and put a link to the full JSON here.
-
 Click [here]() to see the full JSON as it was returned from the API.
 
--->
-
 ```json {style="font-size: 0.75em;"}
-// NOTE - this is a comment. Classic JSON does NOT allow for comments, 
-// but JSONC (i.e. JSON with Comments) is recognized by some JSON parsers.
-// A comment in JSONC is introduced with "//" (similar to how a comment
-// in R is introduced with "#").
-//
-// The actual API does not include comments in the JSON that is returned. 
-// I added this comment and the comments in the JSON below in order
-// to highlight just the portion of the JSON I wanted you to focus on.
+// (Note - this is a comment. It starts with // Classic JSON does not 
+// allow for comments, but JSONC (i.e. JSON with Comments) is recognized
+// by some JSON parsers.) The actual API does not include comments in the JSON 
+// that is returned. 
 {
   "@context":[
     
@@ -289,18 +226,14 @@ and ensuring that it adheres to these directions.
 
 Note that we did not cover all the functions in these packages. Nevertheless, 
 you MAY use functions that we didn't cover from these packages, 
-but you must understand the code before submitting it (you should do your
-own research about any functions that we didn't cover in class).
+but you must understand the code before submitting it (research on your own
+any functions that we didn't cover in class).
 
 You MUST
 include a copy of all of your conversations with the AI in your 
 submission. (You may have multiple conversations with the AI).
-Use the yrWebSnap chrome extension to take a snapshot of the HTML page
-of the conversations you had with the AI. Do NOT submit 
-images (i.e. screenshots) of the AI conversation. Rather, I want an
-HTML file that was produced by the yrWebSnap Chrome extension, so
-that I can copy/paste the text from your conversations. You can't easily
-copy/paste text from an image.
+Use the yrWebSnap chrome extension to take a snapshot of the conversations
+with the AI.
 
 You may be tempted to propmt the AI with a complete copy of the instructions
 in this file. That is fine. You can try that. However, sometimes you have 
@@ -322,7 +255,7 @@ about each step.
      Create an R function that calls the API to get the weather forecasts for a specific
      latitude and longitude. The latitude and longitude should be passed to 
      this function as arguments. The function should return a dataframe  
-     that contains the weather data.  
+     that contains the weather data.
      (see next section for details)
    
    * **function createForecastFiles()** - 
@@ -343,7 +276,7 @@ about each step.
 
 ### detailed instructions
 
-#### function getForecastDf() {#function-getForecaseId}
+#### function getForecastDf()
 
 Create the following function. See below for an explanation of each 
 of the arguments. Below is a list of what the function needs to do.
@@ -354,28 +287,23 @@ getForecastDf = function(latitude , longitude){
 }
 ```
 
-##### (a) Check all arguments
+##### (a) Check all arguments ...
 
-Your function should check that the arguments make sense. Both latitude
-and longitude should be numeric vectors of length 1 (i.e. just one number
-for each argument). If the arguments don't follow these rules then the 
-function should stop with an appropriate error
+Your function should check that the arguments adhere to the following
+rules. If they don't, the function should stop with an appropriate error
 message - i.e. call stop( SOME_ERROR_MESSAGE )
 
+##### (b) Check all arguments ...
 
-##### (b) Call the API and return a dataframe with the data
-
-The function should call the API to get the weather data.
-The function should return a non-nested dataframe (i.e. a "normal" dataframe 
+This function should return a non-nested dataframe (i.e. a "normal" dataframe 
 in which each entry is a single number, TRUE/FALSE, character value or NA).
 The dataframe should include all of the data from each period
 from the hourly weather forecast as shown in the image below. 
 There should be one row in the dataframe for each time period from the JSON. 
 
-In addition, to the data that is in the JSON, your dataframe should include
-the following columns. These extra columns will have the exact same data 
-for each row in the dataframe and should be the first three columns in 
-the dataframe:
+In addition, the first 3 columns of the dataframe should include the following
+information. These extra columns will have the exact same data for each row in
+the dataframe.
 
 * latitude - ie. the latitude
 
@@ -391,7 +319,6 @@ the dataframe:
 Below is an image of an example of the first few rows of a dataframe 
 returned from this function.
 
-
 <!--
 :::{.column-body-outset}
 -->
@@ -400,7 +327,7 @@ returned from this function.
 ![](forecastDfRows-v002.png){}
 :::
 
-#### function createForecastFiles() {#function-createForecastFiles}
+#### function createForecastFiles()
 
 Create the following function. See below for an explanation of each 
 of the arguments. Below is a list of what the function needs to do.
@@ -416,14 +343,14 @@ createForecastFiles = function(latitude ,
 }
 ```
 
-##### (a) Check all arguments
+##### (a) Check all arguments ...
 
 Your function should check that the arguments adhere to the following
 rules. If they don't, the function should stop with an appropriate error
 message - i.e. call stop( SOME_ERROR_MESSAGE )
 
-* latitude, longitude, sleepSeconds and numberOfApiCalls should all be
-  numeric vectors whose length is 1.
+* latitude, longitude, sleepSeconds, numberOfApiCalls numeric vectors 
+  whose length is 1.
   
 * createFolder should be a logical vector whose length is 1.
 
@@ -442,11 +369,10 @@ If the outputFolder doesn't exist then
 
 
 
-##### (c) call the getForecastDf function in a loop
+##### (c) call the getForecastDf in a loop
 
-The `createForecastFiles` function should continuously call your
-`getForecastDf` function (that was described above) in a loop. 
-The loop should iterate (i.e. "go around")
+The `createForecastFiles` function should continuously call the 
+function `getForecastDf` in a loop. The loop should go around 
 as many times as is specified in `numberOfApiCalls` argument. 
 As part of this loop the function should call `Sys.sleep(sleepSeconds)` to
 ensure that there are at least `sleepSeconds` seconds between every call
@@ -459,7 +385,7 @@ dataframe that is returned should be saved in a separate
 csv file. The name of each csv file should contain the timestamp that 
 the API was called in the following format:
 
-> weatherData_lat_long_YYYY-MM-DDTHH-MM-SS-TZ.csv
+> hourlyData_lat_long_YYYY-MM-DDTHH-MM-SS-TZ.csv
 
 *NOTES*
 
@@ -472,9 +398,9 @@ the API was called in the following format:
 * YYYY-MM-DD-HH-MM-SS-TZ is the date/time/timezone for when the API
   was called. This should be the same date/time/timezone that is returned
   in the first column of the dataframe - see (1) above.
-  However, note that the colons ( : ) from the date/time/timezone in 
-  dataframe should be changed to dashes ( - ) for the filename
-  since filenames on both Mac and Windows may not contain colons.
+  However, note that the colons (:) from the date/time/timezone in 
+  dataframe should be changed to dashes (-) for the filename
+  since filenames on both Mac and Windows may not contain colons (:).
   You can use the following code to make this change:  
      `TIMESTAMP_WITHOUT_COLONS = gsub(':', '-', TIMESTAMP_WITH_COLONS)`
      
@@ -497,7 +423,7 @@ using a loop with code similar to the following:
 ```
 while( SOME_CONDITION ){
   Sys.sleep( 15 )
-  cat(".")
+  cat(" .")
 }
 ```
 

@@ -1,3 +1,7 @@
+---
+sidebar: false
+---
+
 # <yrChapterNumber>18. </yrChapterNumber> assignment - weather API
 
 <style>

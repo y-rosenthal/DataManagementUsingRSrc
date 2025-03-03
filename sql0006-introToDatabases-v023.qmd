@@ -1,4 +1,4 @@
-##<yrChapterNumber>29. </yrChapterNumber>  "databases" and "database management systems"
+## <yrChapterNumber>29. </yrChapterNumber>  "databases" and "database management systems"
 
 "A database" is a collection of data that can be accessed by a computer 
 programs in an accurate and efficient way. 
@@ -77,6 +77,48 @@ the storage and retrieval of the data in a database.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
+### Document databases - e.g. MongoDB
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     (b) MongoDb is an example of Database Management software that stores information
+#         in "JSON" notation. We will explore more about JSON later in the semester.
+#         However as an example, the above information could be represented in a JSON
+#          file as shown below:
+#
+#           [
+#             {
+#               "name" : "annie",
+#               "friends" : [ "sam" ]
+#             },
+#             {
+#               "name" : "jack",
+#               "friends" : [ "annie" , "mac" , "doug" , "harry" ]
+#             },
+#             {
+#               "name" : "howard",
+#               "friends" : [ "jack" ]
+#             },
+#             {
+#               "name" : "sam",
+#               "friends" : [ ]
+#             },
+#             {
+#               "name" : "mac",
+#               "friends" : [ ]
+#             },
+#             {
+#               "name" : "harry",
+#               "friends" : [ ]
+#             },
+#             {
+#               "name" : "doug",
+#               "friends" : [ ]
+#             }
+#           ]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
 ### Graph databases - e.g. Neo4J
 
 ```{r}
@@ -136,46 +178,42 @@ the storage and retrieval of the data in a database.
 #            howard    jack
 ```
 
-### Document databases - e.g. MongoDB
+### Other types of NoSQL databases
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#     (b) MongoDb is an example of Database Management software that stores information
-#         in "JSON" notation. We will explore more about JSON later in the semester.
-#         However as an example, the above information could be represented in a JSON
-#          file as shown below:
-#
-#           [
-#             {
-#               "name" : "annie",
-#               "friends" : [ "sam" ]
-#             },
-#             {
-#               "name" : "jack",
-#               "friends" : [ "annie" , "mac" , "doug" , "harry" ]
-#             },
-#             {
-#               "name" : "howard",
-#               "friends" : [ "jack" ]
-#             },
-#             {
-#               "name" : "sam",
-#               "friends" : [ ]
-#             },
-#             {
-#               "name" : "mac",
-#               "friends" : [ ]
-#             },
-#             {
-#               "name" : "harry",
-#               "friends" : [ ]
-#             },
-#             {
-#               "name" : "doug",
-#               "friends" : [ ]
-#             }
-#           ]
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+<yrAiGen url="chatgpt.com" topic="?" />
+
+NoSQL databases are categorized into four main types, each optimized for specific use cases:
+
+1. **Document Stores**  *(mentioned above)*
+   - Store data in flexible, JSON-like documents.  
+   - Suitable for hierarchical and semi-structured data.  
+   - **Examples:** MongoDB, CouchDB, Firebase Firestore
+
+2. **Graph Databases**  *(mentioned above)*
+   - Store relationships between data points as graphs (nodes and edges).  
+   - Ideal for social networks, fraud detection, and recommendation systems.  
+   - **Examples:** Neo4j, ArangoDB, Amazon Neptune3. **Key-Value Stores**  
+
+3. **Key-Value Stores**  
+   - Store data as a collection of key-value pairs.  
+   - Fast reads and writes, ideal for caching and session management.  
+   - **Examples:** Redis, Amazon DynamoDB, Riak
+
+4. **Column-Family Stores**  
+   - Organize data into columns rather than rows, optimized for analytical queries.  
+   - Designed for high scalability and distributed storage.  
+   - **Examples:** Apache Cassandra, HBase, ScyllaDB
 
 
+
+
+
+4. **Column-Family Stores**  
+   - Organize data into columns rather than rows, optimized for analytical queries.  
+   - Designed for high scalability and distributed storage.  
+   - **Examples:** Apache Cassandra, HBase, ScyllaDB
+
+4. **Graph Databases**  
+   - Store relationships between data points as graphs (nodes and edges).  
+   - Ideal for social networks, fraud detection, and recommendation systems.  
+   - **Examples:** Neo4j, ArangoDB, Amazon Neptune
