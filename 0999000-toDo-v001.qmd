@@ -39,7 +39,13 @@ How to work with APIs uing R (httr2 package tutorial)
 Trends in API world
 <https://www.forbes.com/sites/forbestechcouncil/2024/02/07/four-trends-shaping-apis-in-2024/?sh=14a432ea3369>
 
+## Code for graphs and charts - e.g. mermaid
 
+Info about mermaid:
+<https://mermaid.js.org/>
+
+Using in Quarto: 
+<https://quarto.org/docs/authoring/diagrams.html>
 
 ## Online books
 

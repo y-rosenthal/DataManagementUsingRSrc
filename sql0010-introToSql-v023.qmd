@@ -129,22 +129,46 @@ You can download the data for this tutorial from the following files.
 You can load these tables into your R session with the following commands.
 
 ```{r}
-grades = read.csv("grades.csv")
+grades = read.csv("grades.csv", na.strings=c("", "NULL", "NA"))
 load("sqlbolt_tables-v007.RData")
 ```
 
 Below are the contents of these tables:
 
+::: {.callout-note collapse="true"}
+#### Click here to see the **grades** table
 ```{r}
-# Tables that we will be using in this presentation.
-
 sqldf("select * from grades")
+```
+:::
+
+::: {.callout-note collapse="true"}
+#### Click here to see the **movies** table
+```{r}
 sqldf("select * from movies")
+```
+:::
+
+::: {.callout-note collapse="true"}
+#### Click here to see the **orders** table
+```{r}
 sqldf("select * from orders")
+```
+:::
+
+::: {.callout-note collapse="true"}
+#### Click here to see the **customers** table
+```{r}
 sqldf("select * from customers")
+```
+:::
+
+::: {.callout-note collapse="true"}
+#### Click here to see the **north_american_cities** table
+```{r}
 sqldf("select * from north_american_cities")
 ```
-
+:::
 
 
 ## SQL SELECT statement

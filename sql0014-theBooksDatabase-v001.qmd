@@ -40,7 +40,7 @@ see the instructions in the sections below.
 
 - The following files are all associated with the "Books database": 
 
-  * [booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v020.docx) 
+  * [booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v024.docx) 
   
     This file contains a description of the database as well as a discussion of
     different concepts related to databases in general. You should use this
@@ -59,7 +59,7 @@ see the instructions in the sections below.
     
     - [title_authors.csv](data/booksDatabase/title_authors.csv)
   
-    - [royalties](data/booksDatabase/royalties.csv)
+    - [royalties.csv](data/booksDatabase/royalties.csv)
 
 
 ## Prepare to import the data
@@ -90,10 +90,12 @@ grades = read.csv("grades.csv")
   
 Once you've done so, you can display the data:
 
+::: {.callout-tip collapse="true"}
+#### Click here - grades table
 ```{r}
 sqldf("select * from grades")
 ```
-
+:::
 
 ## import the data: customers, orders, movies, north_american_cities, etc
 
@@ -114,30 +116,60 @@ load("sqlbolt_tables-v007.RData")
 
 Below are the contents of these tables:
 
+::: {.callout-tip collapse="true"}
+#### Click here - grades table
 ```{r}
 sqldf("select * from grades")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - movies table
+```{r}
 sqldf("select * from movies")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - orders table
+```{r}
 sqldf("select * from orders")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - customers table
+```{r}
 sqldf("select * from customers")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - north_american_cities table
+```{r}
 sqldf("select * from north_american_cities")
 ```
+:::
 
-
-## import the data: "books database"
+## The "Books Database"
 
 The "books database" is a collection of several relational database tables. 
 The links to download the files for this database are located at the top
 of this webpage.
 
-Pay special attention to the file
-[booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v020.docx)
-which contains a description of the database as well as a discussion of
-different concepts related to databases in general. You should use this
-file as a tutorial about the books database. The end of this file
-contains many questions/answers to test your knowledge of SQL.
+The following file contains a complete description of this particular
+database as well as:
+
+- a tutorial on many "relational database" concepts
+- a tutorial on Entity Relationship Diagrams (ERDs)
+- a set of questions and answers
+
+[booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v024.docx)
 
 Once you've downloaded the various files you can run the following commands to 
 import the data into R.
+
+### Import the data (books database)
 
 ```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,13 +185,98 @@ title_authors = read_csv("data/booksDatabase/title_authors.csv", na="NULL", show
 royalties = read_csv("data/booksDatabase/royalties.csv", na="NULL", show_col_types=FALSE)
 ```
 
-Below are the contents of these tables:
+### Books Database - Entity Relationship Diagram (ERD)
 
-```{r}
-sqldf("select * from titles")
-sqldf("select * from publishers")
-sqldf("select * from title_authors")
-sqldf("select * from authors")
-sqldf("select * from royalties")
+The following is an "Entity Relationship Diagram (ERD)" that 
+describes the relationships between the tables. See the Word document
+linked above for more info:
+
+```{mermaid}
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#0000ff', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'mainBkg': '#ffffff', 'background': '#ffffff', 'edgeLabelBackground': '#ffffff' }}}%%
+erDiagram
+    authors ||--o{ title_authors : ""
+    title_authors }|--|| titles : ""
+    titles ||--o| royalties : ""
+    publishers |o--o{ titles : ""
+    
+    authors {
+        string au_id PK
+        string au_fname
+        string au_lname
+        string phone
+        string address
+        string city
+        string state
+        string zip
+    }
+    
+    title_authors {
+        string title_id FK1
+        string au_id FK2
+        int au_order
+        float royalty_share
+    }
+    
+    titles {
+        string title_id PK
+        string title_name
+        string type
+        string pub_id FK
+        int pages
+        float price
+        int sales
+        date pubdate
+    }
+    
+    publishers {
+        string pub_id PK
+        string pub_name
+        string city
+        string state
+        string country
+    }
+    
+    royalties {
+        string title_id PK
+        float advance
+        float royalty_rate
+    }
 ```
 
+Below are the contents of these tables:
+
+
+::: {.callout-tip collapse="true"}
+#### Click here - titles table
+```{r}
+sqldf("select * from titles")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - publishers table
+```{r}
+sqldf("select * from publishers")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - title_authors table
+```{r}
+sqldf("select * from title_authors")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - authors table
+```{r}
+sqldf("select * from authors")
+```
+:::
+
+::: {.callout-tip collapse="true"}
+#### Click here - royalties table
+```{r}
+sqldf("select * from royalties")
+```
+:::

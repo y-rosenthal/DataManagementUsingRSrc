@@ -1,10 +1,46 @@
 ## <yrChapterNumber>29. </yrChapterNumber>  "databases" and "database management systems"
 
-"A database" is a collection of data that can be accessed by a computer 
-programs in an accurate and efficient way. 
+A **"database (DB)"** is a collection of data that can be accessed by a computer 
+programs (see below) in an accurate and efficient way. 
 
 A "Database Management System (DBMS)" is the software that is used to enable
 the storage and retrieval of the data in a database. 
+
+Datbases and DBMS software are usually used as 
+part of a larger software system. Software that is coded in programming 
+languages such as R, Python, Java, etc. have the ability to interact with 
+a DBMS to store an retrieve data from a database.
+
+## Common features of databases 
+
+Most databases and DBMS software provides the following features:
+
+- **Reliable and Accurate Data** – Databases have built-in rules to keep data
+  correct and consistent. They prevent mistakes like duplicate entries or missing
+  information by ensuring that all data follows set guidelines. 
+
+- **Multi User Access** – Databases allow many people to access
+  and update data at the same time without causing errors or losing information.
+  They use special features to keep everything organized, even when multiple users
+  make changes at once. 
+
+- **Handles Tremendous Amounts of Data** – Databases are designed to store and
+  manage huge amounts of data efficiently. They remain fast and responsive even as
+  the amount of data grows.
+
+- **Security** – Databases have security settings to control who can
+  see or change the data. 
+  
+- **Reliability** - Databases have safeguards to ensure that changes are
+  properly saved and that information isn’t lost, even if something goes wrong
+  (e.g. a blackout, earthquake, etc.).
+
+::: {style="font-style: italic"}
+Note that Excel is not usually considered a "database". Excel is FANTASTIC 
+as a tool
+for quickly gaining insights into data. However, Excel does not have most of
+the  features listed above that describe typical databases. 
+:::
 
 ## Different categories of databases
 
@@ -59,32 +95,25 @@ the storage and retrieval of the data in a database.
 
 ### Non-Relational Databases (AKA NoSQL databases)
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 2. Non-Relational Databases (also known as NoSQL databases)
-# 
-#    We will mention more about these types of databases towards the end of 
-#    the semester.
-#
-#    These types of databases organize information in formats other than rows
-#    and columns. 
-#
-#    SOME NoSql databases actually CAN be manipulated with the SQL language.
-#    However, the term NoSql has come to include any database that stores
-#    information in a form other than in strict rows and columns.
-#
-#    Some examples are shown below.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+NoSQL (or non-relational) databases organize information in formats other than 
+rows and columns. 
+
+SOME NoSql databases actually CAN be manipulated with the SQL language.
+However, the term NoSql has come to include any database that stores
+information in a form other than in strict rows and columns.
+
+Some examples are shown below.
 
 ### Document databases - e.g. MongoDB
 
+
 ```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#     (b) MongoDb is an example of Database Management software that stores information
-#         in "JSON" notation. We will explore more about JSON later in the semester.
+#         MongoDb is an example of Database Management software that stores information
+#         in "JSON" notation. Other similar products include CouchDB, Firebase
+#         and Firestore. We will explore more about JSON later in the semester.
 #         However as an example, the above information could be represented in a JSON
-#          file as shown below:
+#         file as shown below:
 #
 #           [
 #             {
@@ -121,85 +150,124 @@ the storage and retrieval of the data in a database.
 
 ### Graph databases - e.g. Neo4J
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#    (a) Neo4J is an example of a "graph database". These types of databases
-#        organize their information in a structure that looks like a "web"
-#        of information.
-# 
-#        For example see the diagram below
-#        (For a better version of this diagram see the picture at the top of
-#         the following webpage: https://aws.amazon.com/nosql/graph/
-#         or see the file "graph-of-friends.png" file in the files for this lesson.)
-#
-#                           (friend)
-#                    Sam <------------ Annie
-#                                        ^
-#                                        |
-#                                        |(friend)
-#                                        |
-#                                        |
-#                           (friend)     |        (friend)
-#                   Mac <-------------- Jack ---------------> Doug
-#                                       | ^
-#                                       | |
-#                              (friend) | | 
-#                                       | | (friend)                
-#                                       v |         
-#                                   Harry Howard
-#
-#        This example shows a set of people and who is friends with whom.
-#        There is a different icon for each person. "Friend arrows" indicate 
-#        who is friends with whom. In this example the arrows have a direction.
-#        For example:
-#                            (friends)
-#                     Jack ------------->  Doug   
-#        
-#        can mean that Jack is friends with Doug but Doug is not friends with Jack.
-#        However, graph databases also have the option to assume that a one-way 
-#        arrow actually implies a two way relationship such that
-#        Jack ---> Doug also implies that Doug is friends with Jack. In any
-#        case, this lesson is not focusing on the details of graph databases.
-#
-#        For many types of information a diagram as shown above is much more
-#        intuitive and understandable than a table of information. This is
-#        just one reason why graph databases are popular.
-#
-#        However, this same information could be converted to the following
-#        table and stored in a relational database.
-#
-#            name      is_friends_with
-#            ----      ---------------
-#            annie     sam
-#            jack      annie
-#            jack      mac
-#            jack      doug
-#            jack      harry
-#            howard    jack
+2. **Graph Databases**  *(mentioned above)*
+
+Neo4J is an example of a "graph database". These types of databases
+organize their information in a "graph" structure.
+A graph looks like a "web" of information. It is comprised of "nodes"
+that contain data which are connected
+via "edges" that represent relationships between the nodes. 
+ 
+For example:
+
+```{mermaid}
+graph TD
+    %% Position nodes to match example layout
+    Sam([Sam])
+    Annie([Annie])
+    Mac([Mac])
+    Jack([Jack])
+    Doug([Doug])
+    Harry([Harry])
+    
+    %% Create bidirectional connections with straight lines
+    Annie <-->|friend| Sam
+    Jack <-->|friend| Annie
+    Jack <-->|friend| Mac
+    Jack <-->|friend| Doug
+    Jack <-->|friend| Harry
+    
+    %% Black and white styling
+    classDef person fill:white,stroke:black,stroke-width:1px;
+    class Sam,Annie,Mac,Jack,Doug,Harry person;
+    
+    %% Force specific layout
+    Sam ~~~ Annie
+    Mac ~~~ Jack ~~~ Doug
+    Jack ~~~ Harry
+    
+    %% Make invisible linkage lines transparent
+    linkStyle 5,6,7 stroke:none;
 ```
+
+This example shows a set of people and who is friends with whom.
+There is a different icon for each person. "Friend arrows" indicate 
+who is friends with whom.
+
+For many types of information a diagram as shown above is much more
+intuitive and understandable than a table of information. This is
+just one reason why graph databases are popular.
+
+However, this same information could be converted to the following
+table and stored in a relational database.
+
+```
+            name      is_friends_with
+            ----      ---------------
+            annie     sam
+            jack      annie
+            jack      mac
+            jack      doug
+            jack      harry
+```
+
+The following is version of the graph also includes "company" nodes and 
+relationships indicating where people work.
+In general, graphs can be
+quite complex and be used to store all sorts of information.
+
+```{mermaid}
+graph LR
+    %% Define nodes with type labels
+    Sam([Person: Sam])
+    Annie([Person: Annie])
+    Mac([Person: Mac])
+    Jack([Person: Jack])
+    Doug([Person: Doug])
+    Harry([Person: Harry])
+    Acme([Company: Acme Inc.])
+    MikroTek([Company: MikroTek])
+    
+    %% Friend relationships (bidirectional)
+    Annie <-->|friend| Sam
+    Jack <-->|friend| Annie
+    Jack <-->|friend| Mac
+    Jack <-->|friend| Doug
+    Jack <-->|friend| Harry
+    
+    %% Work relationships
+    Sam -->|works at| Acme
+    Annie -->|works at| Acme
+    Mac -->|works at| MikroTek
+    Jack -->|works at| MikroTek
+    Doug -->|works at| MikroTek
+    
+    %% Styling for nodes - white background with black borders and text
+    classDef person fill:white,stroke:black,stroke-width:1px,color:brown;
+    classDef company fill:white,stroke:black,stroke-width:2px,stroke-dasharray:5 2,color:green;
+    
+    %% Apply styles
+    class Sam,Annie,Mac,Jack,Doug,Harry person;
+    class Acme,MikroTek company;
+```
+
 
 ### Other types of NoSQL databases
 
 <yrAiGen url="chatgpt.com" topic="?" />
 
-NoSQL databases are categorized into four main types, each optimized for specific use cases:
+The are other types of NoSQL databases. The following are also
+popular. We will not go into these in more detail now.
 
-1. **Document Stores**  *(mentioned above)*
-   - Store data in flexible, JSON-like documents.  
-   - Suitable for hierarchical and semi-structured data.  
-   - **Examples:** MongoDB, CouchDB, Firebase Firestore
+The main thing that NoSQL databases have in common is that the data is NOT
+stored in a rectangular form (i.e. rows and columns). 
 
-2. **Graph Databases**  *(mentioned above)*
-   - Store relationships between data points as graphs (nodes and edges).  
-   - Ideal for social networks, fraud detection, and recommendation systems.  
-   - **Examples:** Neo4j, ArangoDB, Amazon Neptune3. **Key-Value Stores**  
-
-3. **Key-Value Stores**  
+1. **Key-Value Stores**  
    - Store data as a collection of key-value pairs.  
    - Fast reads and writes, ideal for caching and session management.  
    - **Examples:** Redis, Amazon DynamoDB, Riak
 
-4. **Column-Family Stores**  
+2. **Column-Family Stores**  
    - Organize data into columns rather than rows, optimized for analytical queries.  
    - Designed for high scalability and distributed storage.  
    - **Examples:** Apache Cassandra, HBase, ScyllaDB
@@ -207,13 +275,3 @@ NoSQL databases are categorized into four main types, each optimized for specifi
 
 
 
-
-4. **Column-Family Stores**  
-   - Organize data into columns rather than rows, optimized for analytical queries.  
-   - Designed for high scalability and distributed storage.  
-   - **Examples:** Apache Cassandra, HBase, ScyllaDB
-
-4. **Graph Databases**  
-   - Store relationships between data points as graphs (nodes and edges).  
-   - Ideal for social networks, fraud detection, and recommendation systems.  
-   - **Examples:** Neo4j, ArangoDB, Amazon Neptune
