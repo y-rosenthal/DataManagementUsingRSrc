@@ -1,4 +1,4 @@
-# <yrChapterNumber>30. </yrChapterNumber> Get the data - "books database" and other tables
+# <yrChapterNumber>27. </yrChapterNumber> Get the data - "books database" and other tables
 
 ```{r}
 #| echo: false
@@ -22,46 +22,6 @@ file.copy(from="data/grades.csv", to=".")
 file.copy(from="data/sqlbolt_tables-v007.RData", to=".")
 ```
 
-## Download all of the files
-
-Download the files by clicking on the links below.
-To load the various collections of data into R
-see the instructions in the sections below.
-
-- The following file contains the grades table:  
-
-  * [grades.csv](grades.csv)
-
-- The following file contains several tables of data    
-  (customers, orders, movies, north_american_cities, boxOffice, 
-  buildings, employees)  
-
-  * [sqlbolt_tables-v007.RData](sqlbolt_tables-v007.RData)
-
-- The following files are all associated with the "Books database": 
-
-  * [booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v024.docx) 
-  
-    This file contains a description of the database as well as a discussion of
-    different concepts related to databases in general. You should use this
-    file as a tutorial about the books database. The end of this file
-    contains many questions/answers to test your knowledge of SQL.
-    
-
-  * The following are the files that you can use to import the data
-    for the database into R.
-    
-    - [titles.csv](data/booksDatabase/titles.csv)
-    
-    - [authors.csv](data/booksDatabase/authors.csv)
-    
-    - [publishers.csv](data/booksDatabase/publishers.csv)
-    
-    - [title_authors.csv](data/booksDatabase/title_authors.csv)
-  
-    - [royalties.csv](data/booksDatabase/royalties.csv)
-
-
 ## Prepare to import the data
 
 In order to read the data into R and to access the data using SQL, we will
@@ -79,7 +39,9 @@ if(!require(sqldf)){install.packages("sqldf");require(sqldf);}
 
 ## import the data: grades
 
-[grades.csv](grades.csv) is a .csv file that contains information
+Download the CSV file: [grades.csv](grades.csv) 
+
+This a .csv file that contains information
 about students and their grades.
 You can read the contents of the file into R 
 with the read.csv function as shown below.
@@ -99,8 +61,17 @@ sqldf("select * from grades")
 
 ## import the data: customers, orders, movies, north_american_cities, etc
 
-The file [sqlbolt_tables-v007.RData](sqlbolt_tables-v007.RData)
-contains the following different collections of information:
+Download the RData file: [sqlbolt_tables-v007.RData](sqlbolt_tables-v007.RData)
+
+A .RData file contains a copy of R's environment variables. You can 
+save you environment variables to an RData file with the `save()` function.
+(see ?save). Once you have an RData file, you can load those variables
+into your R environment with the `load()` function (see ?load).
+
+This RData file 
+contains the following different dataframe variables. When using the 
+sqldf() function, each dataframe 
+variable can used as though it were a Relational Database table.
 
 - customers
 - orders
@@ -153,30 +124,40 @@ sqldf("select * from north_american_cities")
 
 ## The "Books Database"
 
-The "books database" is a collection of several relational database tables. 
-The links to download the files for this database are located at the top
-of this webpage.
+Download the CSV files for the "books database".
+These CSV files together comprise the data for
+the "books database". 
 
-The following file contains a complete description of this particular
-database as well as:
+- [titles.csv](data/booksDatabase/titles.csv)
+    
+- [authors.csv](data/booksDatabase/authors.csv)
+    
+- [publishers.csv](data/booksDatabase/publishers.csv)
+    
+- [title_authors.csv](data/booksDatabase/title_authors.csv)
+  
+- [royalties.csv](data/booksDatabase/royalties.csv)
 
-- a tutorial on many "relational database" concepts
-- a tutorial on Entity Relationship Diagrams (ERDs)
-- a set of questions and answers
+Download a tutorial on using Relational databases.
 
-[booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v024.docx)
+- [booksDatabase description and Questions](data/booksDatabaseDescription-withQuestions-ANSWERS-v024.docx)
 
-Once you've downloaded the various files you can run the following commands to 
+This word document contains:
+
+(a) a complete description of the "books database"
+(b) a tutorial on how "relational databases" are structured
+(c) a tutorial on Entity Relationship Diagrams (ERDs)
+(d) a set of questions and answers
+
+Once you've downloaded the various CSV files you can run the following commands to 
 import the data into R.
 
 ### Import the data (books database)
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# The books database contains information about various books, authors,
-# publishers, etc.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+
+```{r}
 # Read in the data for the books database - see the 
 titles = read_csv("data/booksDatabase/titles.csv", na="NULL", show_col_types=FALSE)
 authors = read_csv("data/booksDatabase/authors.csv", na="NULL", show_col_types=FALSE)

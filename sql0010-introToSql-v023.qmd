@@ -1,4 +1,4 @@
-# <yrChapterNumber>31. </yrChapterNumber> Relational Databases and SQL (using R)
+# <yrChapterNumber>30. </yrChapterNumber> Tntro to Relational Databases and SQL ***(no dplyr required)***
 
 ```{r}
 #| include: false
@@ -6,6 +6,17 @@
 # dataframes should display in the following width without "wrapping"
 options(width = 999)
 ```
+
+## IMPORTANT NOTE
+
+This section contains a general intro to the SQL SELECT statement. 
+If you already know the basics of the R dplyr package, you can get a 
+quicker intro to SQL SELECT from the section that assumes some dplyr 
+knowledge that appears above.
+
+
+
+## Intro to SQL
 
 We will spend the next few sections focusing on 
 "Structured Query Language (SQL)", the language that is used for accessing

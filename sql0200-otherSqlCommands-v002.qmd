@@ -1,4 +1,4 @@
-# <yrChapterNumber>36. </yrChapterNumber> other commands: update/delete, create/drop/insert
+# <yrChapterNumber>35. </yrChapterNumber> other commands: update/delete, create/drop/insert
 
 As we've seen, the SQL SELECT command is used to retrieve data from a 
 database in many different forms. This is by far the most important SQL command 

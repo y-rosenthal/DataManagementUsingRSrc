@@ -1,4 +1,4 @@
-# <yrChapterNumber>34. </yrChapterNumber> more joins (cross/left/right/full), subqueries, set operations, case, self joins
+# <yrChapterNumber>33. </yrChapterNumber> more joins (cross/left/right/full), subqueries, set operations, case, self joins
 
 ```{r}
 #| echo: false
