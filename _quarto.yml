@@ -1,192 +1,192 @@
- project:
-   type: book
-   output-dir: _book
-   pre-render: copy_quartoYml_to_bookFolder-v001.R
-   post-render: Rscript yrZipQmdFiles.R
-   resources:
-     - _quarto.yml
-     - yrNocacheHeaders-v001.html
-     - yrstuff-v001.js
-     - assignment-api-0000100-weatherDataApi-v002.qmd.zip
-     - assignment-api-0000100-weatherDataApi-v001.qmd.zip
-   render:
-     - "*.qmd"  # Ensures all .qmd files are rendered, even if not in `chapters`
-     - "assignment-api-0000100-weatherDataApi-v001.qmd"  # Ensure the old version gets rendered
- 
- book:
-   title: "Data Management With R (latest version)"
-   author: "Y. Rosenthal"
+project:
+  type: book
+  output-dir: _book
+  pre-render: copy_quartoYml_to_bookFolder-v001.R
+  post-render: Rscript yrZipQmdFiles.R
+  resources:
+    - _quarto.yml
+    - yrNocacheHeaders-v001.html
+    - yrstuff-v001.js
+    - assignment-api-0000100-weatherDataApi-v002.qmd.zip
+    - assignment-api-0000100-weatherDataApi-v001.qmd.zip
+  render:
+    - "*.qmd"  # Ensures all .qmd files are rendered, even if not in `chapters`
+    - "assignment-api-0000100-weatherDataApi-v001.qmd"  # Ensure the old version gets rendered
 
-   chapters:
-     - index.qmd
- #    - 00000-tmpMermaid.qmd
- #        - 0000051-filenames-v001.qmd
- 
-     - part: Some computer basics
-       chapters:
-       - intro00100-operatingSystems.qmd  # yrChapterNumber 1
-       - intro00120-files.qmd             # yrChapterNumber 2
-       - intro00130-chromeExtensions.qmd  # yrChapterNumber 3
- 
-     - part: Into to Coding With AI
-       chapters:
-       - ai-000100-overview.qmd           # yrChapterNumber 4
-       - aiCoding00100-overview.qmd       # yrChapterNumber 5
-     
-     - part: Intro to R packages
-       chapters:
-       - 0000022-InstallingRPackages-v003.qmd  # yrChapterNumber 6
-       
+book:
+  title: "Data Management With R (latest version)"
+  author: "Y. Rosenthal"
+
+  chapters:
+    - index.qmd
+#    - 00000-tmpMermaid.qmd
+#        - 0000051-filenames-v001.qmd
+
+    - part: Some computer basics
+      chapters:
+      - intro00100-operatingSystems.qmd  # yrChapterNumber 1
+      - intro00120-files.qmd             # yrChapterNumber 2
+      - intro00130-chromeExtensions.qmd  # yrChapterNumber 3
+
+    - part: Into to Coding With AI
+      chapters:
+      - ai-000100-overview.qmd           # yrChapterNumber 4
+      - aiCoding00100-overview.qmd       # yrChapterNumber 5
+    
+    - part: Intro to R packages
+      chapters:
+      - 0000022-InstallingRPackages-v003.qmd  # yrChapterNumber 6
+      
 -      
-     - part: Intro to Quarto
-       chapters:
-       - 0000017-introToQuarto-v001.qmd        # yrChapterNumber 7
-       
-     - part: Intro to tidyverse
-       chapters:
-       - 0400050-whatIsTidyverse-v001.qmd      # yrChapterNumber 8
-       - 0400050-tibbles-v001.qmd      # yrChapterNumber 9
-       - 0400100-usingPipes-v001.qmd      # yrChapterNumber 10
-       - 0400200-stringr-tutorials-v003.qmd      # yrChapterNumber 11
-       
-     - part: Working with files
-       chapters:
-       - 0000055-workingWithFiles.qmd      # yrChapterNumber 12
-       
-     - part: JSON data and APIs
-       chapters:
-       - 0000075-whatIsJsonData.qmd      # yrChapterNumber 13
-       - 0000080-editingAndValidatingJsonFiles.qmd      # yrChapterNumber 14
-       - 0000085-jsonDataTypes.qmd      # yrChapterNumber 15
-       - 0000090-usingJsonInR.qmd      # yrChapterNumber 16
-       #- 0000088-nestedDataframes.qmd      # yrChapterNumber 17
-       - 0000093-jsonParsingPractice-v001.qmd      # yrChapterNumber 17
-       - assignment-api-0000100-weatherDataApi-v002.qmd      # yrChapterNumber 18
-       
-     - part: Regular Expressions
-       chapters:
-       - 0200200-a-introToRegularExpressions-v036.qmd      # yrChapterNumber 19
-       #- 0200200-b-introToRegularExpressions-v036.qmd      # yrChapterNumber 20
-       #- 0200200-c-introToRegularExpressions-v036.qmd      # yrChapterNumber 21
-       #- 0200200-d-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
-       #- 0200200-e-introToRegularExpressions-v036.qmd      # yrChapterNumber 23
-       #- 0200200-f-introToRegularExpressions-v036.qmd      # yrChapterNumber 24
-       - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 20
-       - 0990100-cleaningData-v001.qmd # yrChapterNumber 21
- 
-     - part: Bash
-       chapters:
+    - part: Intro to Quarto
+      chapters:
+      - 0000017-introToQuarto-v001.qmd        # yrChapterNumber 7
+      
+    - part: Intro to tidyverse
+      chapters:
+      - 0400050-whatIsTidyverse-v001.qmd      # yrChapterNumber 8
+      - 0400050-tibbles-v001.qmd      # yrChapterNumber 9
+      - 0400100-usingPipes-v001.qmd      # yrChapterNumber 10
+      - 0400200-stringr-tutorials-v003.qmd      # yrChapterNumber 11
+      
+    - part: Working with files
+      chapters:
+      - 0000055-workingWithFiles.qmd      # yrChapterNumber 12
+      
+    - part: JSON data and APIs
+      chapters:
+      - 0000075-whatIsJsonData.qmd      # yrChapterNumber 13
+      - 0000080-editingAndValidatingJsonFiles.qmd      # yrChapterNumber 14
+      - 0000085-jsonDataTypes.qmd      # yrChapterNumber 15
+      - 0000090-usingJsonInR.qmd      # yrChapterNumber 16
+      #- 0000088-nestedDataframes.qmd      # yrChapterNumber 17
+      - 0000093-jsonParsingPractice-v001.qmd      # yrChapterNumber 17
+      - assignment-api-0000100-weatherDataApi-v002.qmd      # yrChapterNumber 18
+      
+    - part: Regular Expressions
+      chapters:
+      - 0200200-a-introToRegularExpressions-v036.qmd      # yrChapterNumber 19
+      #- 0200200-b-introToRegularExpressions-v036.qmd      # yrChapterNumber 20
+      #- 0200200-c-introToRegularExpressions-v036.qmd      # yrChapterNumber 21
+      #- 0200200-d-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
+      #- 0200200-e-introToRegularExpressions-v036.qmd      # yrChapterNumber 23
+      #- 0200200-f-introToRegularExpressions-v036.qmd      # yrChapterNumber 24
+      - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 20
+      - 0990100-cleaningData-v001.qmd # yrChapterNumber 21
+
+    - part: Bash
+      chapters:
 -      #- 0000013-IntroToTheBashCli-v009.qmd
-       - 0000011-WhatIsACli-v010.qmd      # yrChapterNumber 22
-       - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 23
-       - 0000025-introToBash-v007.qmd      # yrChapterNumber 24
-       
-     - part: Intro to dplyr
-       chapters:
-       - 0500100-a-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
-       - 0500100-b-tdyvrsDplyr-v005.qmd      # yrChapterNumber 26
-       
-     - part: Intro to SQL (assumes knowledge of dplyr)
-       chapters:
-       - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 28
- 
+      - 0000011-WhatIsACli-v010.qmd      # yrChapterNumber 22
+      - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 23
+      - 0000025-introToBash-v007.qmd      # yrChapterNumber 24
+      
+    - part: Intro to dplyr
+      chapters:
+      - 0500100-a-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
+      - 0500100-b-tdyvrsDplyr-v005.qmd      # yrChapterNumber 26
+      
+    - part: Intro to SQL (assumes knowledge of dplyr)
+      chapters:
+      - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 28
+
 -      
-     - part: Relational databases and SQL (no dplyr knowledge needed)
-       chapters:
-       - sql0006-introToDatabases-v023.qmd # copied from introToSQL # yrChapterNumber 29
-       - sql0014-theBooksDatabase-v001.qmd # NEW # yrChapterNumber 30
-       - sql0010-introToSql-v023.qmd       # NEW # yrChapterNumber 31
-       - sql0035-workingWithMultipleTables-v012.qmd # renumbered from sql0020 # yrChapterNumber 32
-       - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd # yrChapterNumber 33
-       - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 34
-       - sql0050-commonTableExpressions-v001.qmd    # NEW # yrChapterNumber 35
-       - sql0200-otherSqlCommands-v002.qmd          # EDIT THIS  # yrChapterNumber 36
-       - sql0900-sqlWindowFunctions-v002.qmd        # NEW # yrChapterNumber 37
-       - sql0950-workingWithDatabasesInR-v010.qmd # yrChapterNumber 38
-       - 0600100-introToDb-v001.qmd # yrChapterNumber 39
+    - part: Relational databases and SQL (no dplyr knowledge needed)
+      chapters:
+      - sql0006-introToDatabases-v023.qmd # copied from introToSQL # yrChapterNumber 29
+      - sql0014-theBooksDatabase-v001.qmd # NEW # yrChapterNumber 30
+      - sql0010-introToSql-v023.qmd       # NEW # yrChapterNumber 31
+      - sql0035-workingWithMultipleTables-v012.qmd # renumbered from sql0020 # yrChapterNumber 32
+      - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd # yrChapterNumber 33
+      - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 34
+      - sql0050-commonTableExpressions-v001.qmd    # NEW # yrChapterNumber 35
+      - sql0200-otherSqlCommands-v002.qmd          # EDIT THIS  # yrChapterNumber 36
+      - sql0900-sqlWindowFunctions-v002.qmd        # NEW # yrChapterNumber 37
+      - sql0950-workingWithDatabasesInR-v010.qmd # yrChapterNumber 38
+      - 0600100-introToDb-v001.qmd # yrChapterNumber 39
 -#       - 0500500-tdyvrsDbplyr-v002.qmd # TODO - look at the code from 0500100-tdyvrsDplyr-v0001.qmd for dbplyr
 -#        - 83spr23/sqlNotes/sql0010-introToSql-v023.qmd
-     
-     - part: Git and Github
-       chapters: 
-       - github-000700-markdownGithubVsQuarto.qmd # yrChapterNumber: git-1
-       
-     - part: visualizations with ggplot2
-       chapters:
-         - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 27
-     
-     - part: Web Scraping
-       chapters:
-       - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 40
-       - web-000400-webscrapingContinued-015.qmd # yrChapterNumber 41
-       - web-000130-WebscrapingJavascriptSites-v003.qmd # yrChapterNumber 42
+    
+    - part: Git and Github
+      chapters: 
+      - github-000700-markdownGithubVsQuarto.qmd # yrChapterNumber: git-1
+      
+    - part: visualizations with ggplot2
+      chapters:
+        - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 27
+    
+    - part: Web Scraping
+      chapters:
+      - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 40
+      - web-000400-webscrapingContinued-015.qmd # yrChapterNumber 41
+      - web-000130-WebscrapingJavascriptSites-v003.qmd # yrChapterNumber 42
 -      #- web-000420-practiceWithWebScraping-v001.qmd
-       - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 43
-       
- #      
- #    - part: 0300100-excelAndR-v001.qmd
- #    - part: Excel and R
- 
- #    - part: 0990000-part-Questions-v001.qmd
- #    - part: Questions
- #      chapters:
-         
- #    - part: 0999000-appendices-v001.qmd
-     - part: Appendices
-       chapters:
-         - 0000100-topics-v001.qmd # yrChapterNumber 44
-         - 0000200-bibliography-v001.qmd # yrChapterNumber 45
-         - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 46
-         - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 47
-         - 0999000-toDo-v001.qmd # yrChapterNumber 48
- #    - intro.qmd
- #    - summary.qmd
- #    - references.qmd
- #
- # bibliography: references.bib
+      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 43
+      
+#      
+#    - part: 0300100-excelAndR-v001.qmd
+#    - part: Excel and R
 
- website:
-   navbar:
-     left:
-       - text: "(click here for spring24 version of this website)"
-         href: https://yrosenthal.com/datamgmt/theOldBook
-   search:
-     location: sidebar
- 
- execute:
-   error: true
-   warning: true
- 
- format:
-   html:
-     theme: cosmo
-     toc-expand: true
-     fontsize: 80%
-     number-depth: 3
-     link-external-newwindow: true
-     include-in-header:
-       - file: yrNocacheHeaders-v001.html
-       - text: |
-           <script src="yrstuff.js"></script>
-     css: yrStyles-main-v001.css
-     include-after-body:
-       text: |
-         <script>
-         const titles = document.querySelectorAll('.title');
- 
-         titles.forEach(title => {
-           if (title.textContent.trim().startsWith('Appendix')) {
-             const chapterNumber = title.querySelector('yrChapterNumber');
-             if (chapterNumber) {
-               chapterNumber.classList.add('yrAppendixChapterNumber');
-             }
-           }
-         });
-         </script>
- #  pdf:
- #    documentclass: scrreprt
- #    fontsize: 9px
+#    - part: 0990000-part-Questions-v001.qmd
+#    - part: Questions
+#      chapters:
+        
+#    - part: 0999000-appendices-v001.qmd
+    - part: Appendices
+      chapters:
+        - 0000100-topics-v001.qmd # yrChapterNumber 44
+        - 0000200-bibliography-v001.qmd # yrChapterNumber 45
+        - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 46
+        - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 47
+        - 0999000-toDo-v001.qmd # yrChapterNumber 48
+#    - intro.qmd
+#    - summary.qmd
+#    - references.qmd
+#
+# bibliography: references.bib
 
-   docx: default
- 
- editor: source
+website:
+  navbar:
+    left:
+      - text: "(click here for spring24 version of this website)"
+        href: https://yrosenthal.com/datamgmt/theOldBook
+  search:
+    location: sidebar
+
+execute:
+  error: true
+  warning: true
+
+format:
+  html:
+    theme: cosmo
+    toc-expand: true
+    fontsize: 80%
+    number-depth: 3
+    link-external-newwindow: true
+    include-in-header:
+      - file: yrNocacheHeaders-v001.html
+      - text: |
+          <script src="yrstuff.js"></script>
+    css: yrStyles-main-v001.css
+    include-after-body:
+      text: |
+        <script>
+        const titles = document.querySelectorAll('.title');
+
+        titles.forEach(title => {
+          if (title.textContent.trim().startsWith('Appendix')) {
+            const chapterNumber = title.querySelector('yrChapterNumber');
+            if (chapterNumber) {
+              chapterNumber.classList.add('yrAppendixChapterNumber');
+            }
+          }
+        });
+        </script>
+#  pdf:
+#    documentclass: scrreprt
+#    fontsize: 9px
+
+  docx: default
+
+editor: source
