@@ -1,3 +1,6 @@
+--- _quarto-backup.yml	2025-03-03 11:28:45.272048700 -0500
++++ _quarto.yml	2025-03-04 10:14:49.644331700 -0500
+@@ -1,187 +1,164 @@
  project:
    type: book
    output-dir: _book
@@ -11,12 +14,20 @@
      - assignment-api-0000100-weatherDataApi-v001.qmd.zip
    render:
      - "*.qmd"  # Ensures all .qmd files are rendered, even if not in `chapters`
-     - "assignment-api-0000100-weatherDataApi-v001.qmd"  # Ensure the old version gets rendered
- 
- book:
+-    - "assignment-api-0000100-weatherDataApi-v001.qmd"  # Ensure the old version gets renderedbook:
++    - "assignment-api-0000100-weatherDataApi-v001.qmd"  # Ensure the old version gets rendered
++
++book:
    title: "Data Management With R (latest version)"
    author: "Y. Rosenthal"
-
+-  navbar:
+-    left:
+-      - text: "(click here for spring24 version of this website)"
+-        href: https://yrosenthal.com/datamgmt/theOldBook
+-  search: 
+-    location: sidebar
+-#  date: "1/21/2024"
++
    chapters:
      - index.qmd
  #    - 00000-tmpMermaid.qmd
@@ -66,11 +77,11 @@
      - part: Regular Expressions
        chapters:
        - 0200200-a-introToRegularExpressions-v036.qmd      # yrChapterNumber 19
-       #- 0200200-b-introToRegularExpressions-v036.qmd      # yrChapterNumber 20
-       #- 0200200-c-introToRegularExpressions-v036.qmd      # yrChapterNumber 21
-       #- 0200200-d-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
-       #- 0200200-e-introToRegularExpressions-v036.qmd      # yrChapterNumber 23
-       #- 0200200-f-introToRegularExpressions-v036.qmd      # yrChapterNumber 24
+-      #- 0200200-b-introToRegularExpressions-v036.qmd      # yrChapterNumber 20
+-      #- 0200200-c-introToRegularExpressions-v036.qmd      # yrChapterNumber 21
+-      #- 0200200-d-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
+-      #- 0200200-e-introToRegularExpressions-v036.qmd      # yrChapterNumber 23
+-      #- 0200200-f-introToRegularExpressions-v036.qmd      # yrChapterNumber 24
        - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 20
        - 0990100-cleaningData-v001.qmd # yrChapterNumber 21
  
@@ -86,7 +97,12 @@
        - 0500100-a-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
        - 0500100-b-tdyvrsDplyr-v005.qmd      # yrChapterNumber 26
        
-     - part: Intro to SQL (assumes knowledge of dplyr)
+-    - part: visualizations with ggplot2
+-      chapters:
+-      - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 27
+-    
+-    - part: Intro to SQL
++    - part: Intro to SQL (assumes knowledge of dplyr)
        chapters:
        - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 28
  
@@ -111,10 +127,10 @@
        chapters: 
        - github-000700-markdownGithubVsQuarto.qmd # yrChapterNumber: git-1
        
-     - part: visualizations with ggplot2
-       chapters:
-         - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 27
-     
++    - part: visualizations with ggplot2
++      chapters:
++        - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 27
++    
      - part: Web Scraping
        chapters:
        - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 40
@@ -123,15 +139,15 @@
 -      #- web-000420-practiceWithWebScraping-v001.qmd
        - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 43
        
- #      
- #    - part: 0300100-excelAndR-v001.qmd
- #    - part: Excel and R
- 
- #    - part: 0990000-part-Questions-v001.qmd
- #    - part: Questions
- #      chapters:
-         
- #    - part: 0999000-appendices-v001.qmd
+-#      
+-#    - part: 0300100-excelAndR-v001.qmd
+-#    - part: Excel and R
+-
+-#    - part: 0990000-part-Questions-v001.qmd
+-#    - part: Questions
+-#      chapters:
+-        
+-#    - part: 0999000-appendices-v001.qmd
      - part: Appendices
        chapters:
          - 0000100-topics-v001.qmd # yrChapterNumber 44
@@ -139,19 +155,19 @@
          - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 46
          - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 47
          - 0999000-toDo-v001.qmd # yrChapterNumber 48
- #    - intro.qmd
- #    - summary.qmd
- #    - references.qmd
- #
- # bibliography: references.bib
-
- website:
-   navbar:
-     left:
-       - text: "(click here for spring24 version of this website)"
-         href: https://yrosenthal.com/datamgmt/theOldBook
-   search:
-     location: sidebar
+-#    - intro.qmd
+-#    - summary.qmd
+-#    - references.qmd
+-#
+-# bibliography: references.bib
++
++website:
++  navbar:
++    left:
++      - text: "(click here for spring24 version of this website)"
++        href: https://yrosenthal.com/datamgmt/theOldBook
++  search:
++    location: sidebar
  
  execute:
    error: true
@@ -183,10 +199,11 @@
            }
          });
          </script>
- #  pdf:
- #    documentclass: scrreprt
- #    fontsize: 9px
-
+-#  pdf:
+-#    documentclass: scrreprt
+-#    fontsize: 9px
++
    docx: default
+-editor: source
  
- editor: source
++editor: source
