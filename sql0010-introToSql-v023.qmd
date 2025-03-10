@@ -1,4 +1,4 @@
-# <yrChapterNumber>30. </yrChapterNumber> Tntro to Relational Databases and SQL ***(no dplyr required)***
+# <yrChapterNumber>30. </yrChapterNumber> Intro to Relational Databases and SQL ***(no dplyr required)***
 
 ```{r}
 #| include: false
@@ -100,21 +100,18 @@ arranges its data in rows and columns.
 
 ### The sqldf R package
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Using the sqldf R package ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# SQL is NOT an "R" concept ... however we can use SQL in R via 
-# the sqldf package.
-#
-# The "sqldf" package in R allows you to use the sqldf() function
-# to run sql statements using R dataframes instead of database tables.
-# We will be using this package to introduce the first sql commands
-# we will learn. 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SQL is NOT an "R" concept ... however we can use SQL in R via 
+the sqldf package.
 
+The "sqldf" package in R allows you to use the sqldf() function
+to run sql statements using R dataframes instead of database tables.
+We will be using this package to introduce the first sql commands
+we will learn. 
+
+```{r}
 # install and load (i.e. require) the sqldf package 
-
 if(!require(sqldf)){install.packages("sqldf");require(sqldf);}
 ```
 
@@ -184,69 +181,58 @@ sqldf("select * from north_american_cities")
 
 ## SQL SELECT statement
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# SQL select statement                                                     ####
-#
-# The select statement is used to retrieve information from a relational
-# database table (or in our case, from an R dataframe). The select statement
-# has several "clauses". The following are the allowed clauses. The ... after
-# each clause name represents additional text that needs to be typed. We will
-# learn how to use each of these different clauses below.
-# 
-# The following are the clauses of a SQL select statement:
-#
-#     select ...
-#     from ...
-#     where ...
-#     group by ..
-#     having ...
-#     order by ..
-#     limit ...        (NOTE: the limit clause is found in many SQL implementations but is not standard)
-#
-#
-# NOTES: 
-#
-# 1. All of the clauses are optional, except for the select clause.
-#
-# 2. The clauses that appear in a particular select statement must be 
-#    in the order shown above. 
-#
-# 3. The limit clause is not a standard part of SQL but is commonly used in many flavors
-#    of the SQL language.
-#
-# 4. According to the ANSI SQL standard, SQL is NOT case sensitive.
-#    In other words you can type "SELECT ..." or "select ...". 
-#
-#    Often, programmers will capitalize the clause names in select statements however,
-#    this is not required.
-#
-#    Some SQL products do make SQL case sensitive. This is especially true
-#    when it comes to names of tables and names of columns in the tables.
-#
-#    The sqldf package that we will be using is case-insensitve (i.e. case does
-#    NOT matter) for everything EXCEPT for table names (i.e. dataframe names).
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The "select" statement is used to retrieve information from a relational
+database table (or in our case, from an R dataframe). The select statement
+has several "clauses". The following are the allowed clauses. The ... after
+each clause name represents additional text that needs to be typed. We will
+learn how to use each of these different clauses below.
+
+The following are the clauses of a SQL select statement:
+
 ```
+    select ...
+    from ...
+    where ...
+    group by ..
+    having ...
+    order by ..
+    limit ...        (NOTE: the limit clause is found in many SQL implementations but is not standard)
+```
+
+NOTES:
+
+1. All of the clauses are optional, except for the select clause.
+
+2. The clauses that appear in a particular select statement must be
+   in the order shown above.
+
+3. The limit clause is not a standard part of SQL but is commonly used in many flavors
+   of the SQL language.
+
+4. According to the ANSI SQL standard, SQL is NOT case sensitive.
+   In other words you can type "SELECT ..." or "select ...".
+
+   Often, programmers will capitalize the clause names in select statements however,
+   this is not required.
+
+   Some SQL products do make SQL case sensitive. This is especially true
+   when it comes to names of tables and names of columns in the tables.
+
+   The sqldf package that we will be using is case-INsensitve (i.e. case does
+   NOT matter) for everything EXCEPT for table names (i.e. dataframe names).
 
 ## How to use the R sqldf() function
 
-```{r}
-#| output: false
-#| warning: false
+The sqldf function accepts a single argument that is expected to 
+be a SQL SELECT command - e.g. `sqldf( SOME_SQL_COMMAND )`.  
+The table names in the SELECT command are expected to 
+be R dataframes.
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# The sqldf function accepts a single argument that is expected to 
-# be a SQL SELECT command. The table names in the SELECT command are expected to 
-# be R dataframes.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can get help with the sqldf package by typing: 
+`help(package="sqldf")`
 
-# See help info about the sqldf package
-help(package="sqldf")
-
-# See help about the sqldf function that is part of the sqldf package
-?sqldf
-```
+You can get help about the `sqldf` function that is part of the sqldf 
+package by typing: `?sqldf`
 
 ## Intro to the SQL SELECT command
 
@@ -260,65 +246,54 @@ sqldf("select student, test1, test2
 
 ## SELECT * FROM .....
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# SELECT * FROM ....
-#
-# You can type * instead of the column names to get all of the columns.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can type * instead of the column names to get all of the columns.
 
+```{r}
 sqldf("select * from grades")   # display the entire grades table
 ```
 
 
-## capturing the output of sqldf in R
+## capturing the output of sqldf in an R variable
+
+In R, when using the sqldf function, you can capture the output of sqldf
+in another variable. This simply creates a new R dataframe (which in sqldf
+is analogous to a database table).
 
 ```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# The output of sqldf is another dataframe   ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# In a relational database there is usually a way to 
-# capture the output of a select statement in a different table
-# however, the actual mechanism is not standard. MANY sql database
-# software products use the "into" clause of the select statement
-# to do so. I am not going to talk about that here because that
-# really depends on the exact sql product you are using.
-#
-# In R, when using the sqldf function, you can capture the output of sqldf
-# in another variable. This simply creates a new R dataframe (which in sqldf
-# is analogous to a database table).
-#
-# Remember though that the actual sqldf() function in R is NOT technically 
-# part of the SQL language. It is simply how we can use SQL commands to 
-# manipulate R dataframes.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 # Example: Capture the output of the sql command in a new dataframe
 
-justTest1 = sqldf("select student, test1, test2
-                   from grades")
+just_test1_and_test2 = sqldf("select student, test1, test2
+                              from grades")
 
 # Here is the original table
 sqldf("select * from grades")
 
 # Here is the new table
-sqldf("select * from justTest1")
+sqldf("select * from just_test1_and_test2")
 ```
 
+Remember though that the actual sqldf() function in R is NOT technically
+part of the SQL language. It is simply how we can use SQL commands to
+manipulate R dataframes.
+
+In a relational database there usually is some way to
+capture the output of a select statement in a different table
+however, the actual mechanism is not standard. MANY sql database
+software products use the "into" clause of the select statement
+to do so. That is not the case for SQLite (the version of SQL
+that we are using). The bottom line is that the exact technique
+of storing the output of a SELECT statement in a new table is different
+from SQL product to SQL product. 
 
 
-## case-sensitivity in SQL
+## A note about case-sensitivity in sqldf()
+
+As mentioned above, sqldf is case-INsensitive regarding parts of the
+command OTHER THAN the table names (i.e. the dataframe names).
+To demonstrate, the following will produce the same results as the 
+command above.
 
 ```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# A note about case-sensitivity ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# NOTE: as mentioned above, sqldf is case-INsensitive regarding parts of the
-# command OTHER THAN the table names (i.e. the dataframe names).
-# To demonstrate, the following will produce the same results as the 
-# command above.
-
 # same results as above
 sqldf("SELECT STUDENT, TEST1, TEST2   
       FROM grades")
@@ -334,18 +309,13 @@ sqldf("SELECT STUDENT, TEST1, TEST2
 
 ## order by
 
+The ORDER BY clause allows you to specify the order that
+the rows should appear in the results.
+Numbers are ordered numerically.
+Character data is ordered alphabetically.
+
 ```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ORDER BY                                                     ####
-#
-# The ORDER BY clause allows you to specify the order that
-# the rows should appear in the results.
-# Numbers are ordered numerically.
-# Character data is ordered alphabetically.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-# Order by test1
+# Order by test1 
 sqldf("select student, year, test1, test2
       from grades
       order by test1")
@@ -359,13 +329,13 @@ sqldf("select student, year, test1, test2
 sqldf("select student, year, test1, test2
       from grades
       order by year")
+```
 
-#..........................................................................
-# You can specify asc to indicate "ascending" order  (this is the default)
-#
-# You can specify desc to indicate "descending" order
-#..........................................................................
+You can specify **asc** to indicate "ascending" order  (this is the default)
 
+You can specify **desc** to indicate "descending" order
+
+```{r}
 # specify asc for order (i.e. ascending) - this is the default.
 # if you dont' specify asc you will get the same results.
 
@@ -377,16 +347,17 @@ sqldf("select student, year, test1, test2
 sqldf("select student, year, test1, test2
       from grades
       order by test1 desc")
+```
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# You can specify more than one column in the order by clause
-# The 2nd specified column will only have an effect for rows 
-# that have the same value in the first specified column.
-#
-# Notice that there is a separate asc or desc indicator
-# for each of the columns in the order by clause
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Ordering by 2 or more columns
 
+You can specify more than one column in the order by clause
+The 2nd specified column will only have an effect for rows 
+that have the same value in the first specified column.
+
+#### Examples - ordering by 1 column (we did this above)
+
+```{r}
 #.............................
 # ordering by a single column
 #.............................
@@ -404,10 +375,18 @@ sqldf("select student, year, test1
 sqldf("select student, year, test1
       from grades
       order by year asc")
+```
 
+### Examples - ordering by 2 different columns
+
+```{r}
 #..................................................
 # order the data by two different columns
 #..................................................
+
+# In the queries below we order the data by two different columns.
+# Notice that there is a separate **asc** or **desc** indicator
+# for each of the columns in the order by clause.
 
 # Order the data alphabetically by year.
 # For all of the rows for a particular year, sort the test1 values
@@ -442,7 +421,11 @@ sqldf("select student, test1, test2
 sqldf("select student, test1, test2
       from grades
       order by test1 desc, student asc")
+```
 
+### Examples - order by 3 different columns
+
+```{r}
 #..................................................
 # order the data by three different columns
 #..................................................
@@ -688,30 +671,34 @@ single quotes to quote textual values (as in the concatenation example below).
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-```{r}
-#///////////////////////////////////////////////////////////////
-# QUESTION
-#
-# Show a column named id_student that contains the values from the 
-# the id and student columns concatenated together. Also show the 
-# test1, test2 and test3 columns.
-#///////////////////////////////////////////////////////////////
+### Practice
 
+#### QUESTION
+
+Show a column named id_student that contains the values from the 
+the id and student columns concatenated together. Also show the 
+test1, test2 and test3 columns.
+
+
+::: {.callout-note collapse="true"}
+#### Click here for answer
+```{r}
 # ANSWER 
 
 sqldf("select id || student as id_student, test1, test2, test3
       from grades")
 ```
+:::
 
+#### Question
+
+Modify the answer to the previous question so that the data in the
+"id_student" column contains a dash between the 
+id and the name of the student.
+
+::: {.callout-note collapse="true"}
+#### Click here for answer
 ```{r}
-#///////////////////////////////////////////////////////////////
-# QUESTION
-#
-# Modify the answer to the previous question so that the
-# "id_student" column contains a dash between the 
-# id and the name of the student.
-#///////////////////////////////////////////////////////////////
-
 # ANSWER:
 # 
 # You need to use 'quotes' around the '-' dash.
@@ -721,56 +708,58 @@ sqldf("select id || student as id_student, test1, test2, test3
 sqldf("select id || '-' || student as id_student, test1, test2, test3
       from grades")
 ```
+:::
 
 ## Rules for naming tables and columns
 
-**NOTE**: 
+**NOTE**: "IDS1020-Intro to IDS" students can ignore this section.
 
-- "IDS1020-Intro to IDS" students can ignore this section.
+What happens if you use non-standard characters in the names.
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Rules for naming tables and columns:
-#
-# What happens if you use non-standard characters in the names.
-#
-#   - ANSI standard SQL - use "double quotes" for non-standard column or
-#     table names ( NOT 'single quotes' )
-#
-#   - some other flavors of SQL may use other symbols for this purpose.
-#     For example:
-#       o Microsoft Access uses [square brackets] and 
-#       o MySql uses `grave accent` characters (AKA `backticks`)
-#         (https://en.wikipedia.org/wiki/Grave_accent)
-#     
-#   - sqlite (i.e. the default version of SQL for sqldf) allows all of the 
-#     above, i.e. "double quotes", `back ticks` and [square brackets]
-#     to surround non-standard names. However, it is best to use 
-#     "double quotes" as that is the ANSI standard.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Every version of SQL has its own rules for which characters are allowed
-# to be used in table names and column names. To be safe that your code will work
-# on any version of SQL the best bet is to stick to the following rules for 
-# both table names and for column names:
-# 
-#   1. only use letters, numbers and underscores
-#   2. start the name with a letter
-#
-# However, many SQL versions allow for non-standard characters to be included
-# in a table name or column name. However, if you use a non-standard character
-# then you must 'quote' the name of the table or name of the column
-# in SQL commands using the quoting rules provided by the version of SQL
-# you are using. When using sqldf, if you use a non-standard character 
-# (e.g. a period, a space, etc) then you should surround the name of the 
-# table or column with "double quotes" (`backticks` and [square brackets] also
-# work but "double quotes" are preferred as that is the ANSI standard).
-# You cannot use 'single quotes' for this purpose.
-#
-# To demonstrate we can use the iris dataframe that is built into R.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+- **ANSI standard SQL**:  use "double quotes" for non-standard column or
+  table names ( NOT 'single quotes' ) - e.g. \"table name\"
 
-### WARNING: In SQLite, you must use "double quotes" for non standard table or column names.
+- some other flavors of SQL may use other symbols for this purpose.
+
+  For example:
+  
+  * **Microsoft Access** uses [square brackets] and
+  
+  * **MySql** uses `grave accent` characters  (AKA `backticks`)
+    (https://en.wikipedia.org/wiki/Grave_accent) - e.g. \`table name\`
+
+  * **SQLite** (i.e. the default version of SQL for sqldf) allows all of the
+    above, i.e. "double quotes", \`back ticks\` and [square brackets]
+    to surround non-standard names. However, it is best to use
+    "double quotes" as that is the ANSI standard.
+
+    
+Every version of SQL has its own rules for which characters are allowed
+to be used in table names and column names. To be safe that your code will work
+on any version of SQL the best bet is to stick to the following rules for
+both table names and for column names:
+
+- only use letters, numbers and underscores
+
+- start the name with a letter
+
+However, many SQL versions allow for non-standard characters to be included
+in a table name or column name. However, if you use a non-standard characters
+then you must 'quote' the name of the table or name of the column
+in SQL commands using the quoting rules provided by the version of SQL
+you are using. When using sqldf, if you use a non-standard character in a column
+name or table name
+(e.g. a period, a space, etc) then you should surround the name of the
+table or column with "double quotes" (`backticks` and [square brackets] also
+work but "double quotes" are preferred as that is the ANSI standard).
+You cannot use 'single quotes' for this purpose.
+
+EXAMPLE: 
+
+To demonstrate we can use the iris dataframe that is built into R.
+
+
+**WARNING:** In SQLite, you must use "double quotes" for non standard table or column names.
 
 **NOTE**: 
 

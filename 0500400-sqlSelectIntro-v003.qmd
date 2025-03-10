@@ -1,4 +1,4 @@
-# <yrChapterNumber>29. </yrChapterNumber> Introf to SQL Select ***(assumes some knowledge of dplyr)***
+# <yrChapterNumber>29. </yrChapterNumber> Intro to SQL Select ***(assumes some knowledge of dplyr)***
 
 ```{r}
 #| echo: false
@@ -304,7 +304,7 @@ Often an entire table is referred to
 as an "entity" (technically a table, which is a collection of rows,
 is an "entity set" or an "entity type").
 
-The truth is not many people use the word "entity" or "entity set". However, 
+The truth is that not many people use the word "entity" or "entity set". However, 
 an "Entity Relationship Diagram" is used to show the tables 
 in a database and how the tables are "related" to each other.
 
@@ -374,7 +374,7 @@ sqldf("SELECT first, last, baseInThousands,
        ")
 ```
 
-## use aggregate functions in SELECT to create summary rows
+## use aggregate functions in SELECT to create summary rows {#yrAggregateFunctions}
 
 ```{r}
 # The dplyr summarize function is used to summarize (or aggregate) info from
@@ -395,7 +395,7 @@ sqldf("select count(*), avg(baseInThousands), max(baseInThousands)
        ORDER BY region ASC, salesInThousands DESC")
 
 # As shown above we can assign names to the new columns.
-# Again, the word "AS" is optional. The following statement
+# Again, as we said above, the word "AS" is optional. The following statement
 # would work exactly the same way if we did not have the word "AS"
 
 sqldf("SELECT count(*) as numberOfEmployees, 
@@ -408,7 +408,7 @@ sqldf("SELECT count(*) as numberOfEmployees,
 # This version does not have the word "AS".
 # The results are exactly the same.
 
-sqldf("SELECT count(*) as numberOfEmployees, 
+sqldf("SELECT count(*) numberOfEmployees, 
               avg(baseInThousands) averagebaseInThousands, 
               max(baseInThousands) maxbaseInThousands
        FROM sales
@@ -482,7 +482,7 @@ sqldf("SELECT *
        ORDER BY region ASC, salesInThousands DESC")
 ```
 
-## GROUP BY clause
+## GROUP BY clause {#yrGroupBy}
 
 ```{r}
 # The GROUP BY clause in SQL is directly analogous to the group_by function in dplyr.
@@ -528,7 +528,7 @@ sqldf("SELECT count(*), avg(baseInThousands) avgBase, max(baseInThousands) maxBa
 ## LIMIT clause
 
 ```{r}
-# The LIMIT clause is similar to print(n=) with dplyr.
+# The LIMIT clause is similar to print(n=...) and slice_head(n=...) with dplyr.
 # It limits the number of rows returned to the first few
 # that would have been returned had the query not included the LIMIT clause.
 #
@@ -544,6 +544,99 @@ sqldf("SELECT *
 # something similar is part of many SQL flavors.
 ```
 
+## Restrictions on SELECT clauses that contain aggregate functions, (eg. avg, sum, min, max, count)
+
+**If a SELECT clause includes aggregate functions then the SELECT should NOT**
+**include non-aggregated columns, unless those columns are part of the**
+**GROUP BY clause.**
+
+*(The rest of this section explains this "rule")*
+
+--- 
+
+If a SELECT clause contains an [aggregate function](#yrAggregateFunctions) 
+then one of the following two things happen:
+
+- if there is no GROUP BY, then only one row is returned, (see example below)
+
+- if the statement contains a GROUP BY then one row is returned per group of 
+  rows in the table. (see the [GROUP BY clause](#yrGroupBy) above)
+
+For example, in the following statement, the SELECT clause includes aggregate 
+functions but does NOT contain a group by. Therefore only one row is returned.
+The next example includes a GROUP BY which causes more than one row to 
+be returned. 
+
+```{r} 
+sqldf("select avg(baseInThousands) as avgBase, 
+              max(baseInThousands) as maxBase, 
+              avg(yearsWithCompany) as avgYears
+       from sales")
+```
+
+The following statement is very similar to the statement above. However,
+the following includes a GROUP BY. Therefore
+a single row is returned PER GROUP. Note that the SELECT clause also includes
+the title column, which is also in the GROUP BY clause. 
+
+```{r}
+sqldf("select title,
+              avg(baseInThousands) as avgBase, 
+              max(baseInThousands) as maxBase, 
+              avg(yearsWithCompany) as avgYears
+       from sales
+       group by title")
+```
+
+This makes sense since an aggregate function (e.g. avg, sum, min, max, count) 
+takes multiple values from different rows in the table and returns only a single 
+value. A select statement that doesn't have a GROUP BY passes the values 
+from all rows in the table to the aggregate function. If a select has a GROUP BY
+then the aggregate functions are called once for each group of rows. 
+
+A SELECT clause that includes aggregate functions which also includes 
+non-aggregated values that are not part of the GROUP BY is problematic.
+Because of the aggregate function(s) only a single row will be returned. 
+However, the non-aggregated values could have multiple rows. This causes 
+a conflict - should only one row be returned (because of the aggregate 
+functions) of should more than one row be returned (because of the non-aggregated data)?
+The rules of SQL say that ONLY ONE ROW is returned. However, ONE OF THE 
+SEVERAL non-aggregated values will also be returned. This could lead to 
+misleading output. 
+
+For example, *DO NOT DO THE FOLLOWING*. You will NOT get an error, but
+the output WILL BE MISLEADING.
+
+The following SELECT uses aggreagate functions and INCORRECTLY also
+includes region which is NOT part of the GROUP BY. It appears that the output
+only reflects data from the region that is output. However, that is NOT
+correct. The output of a particular row actually is summary info for 
+all rows with the specified title, regardless of the region.
+
+*(NOTE: the -- in the command below introduces a comment in SQLite)*
+
+```{r}
+sqldf("select title,
+              region, -- DO NOT DO THIS - region is NOT in the GROUP BY
+              avg(baseInThousands) as avgBase, 
+              max(baseInThousands) as maxBase, 
+              avg(yearsWithCompany) as avgYears
+       from sales
+       group by title")
+```
+
+The following has the same problem but for a query that doesn't have 
+any group by.
+
+```{r}
+sqldf("select 
+              region, -- DO NOT DO THIS - region is NOT in the GROUP BY
+              avg(baseInThousands) as avgBase, 
+              max(baseInThousands) as maxBase, 
+              avg(yearsWithCompany) as avgYears
+       from sales
+       ")
+```
 
 
 
