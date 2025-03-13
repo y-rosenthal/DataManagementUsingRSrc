@@ -87,13 +87,17 @@ book:
       
     - part: Relational databases and SQL
       chapters:
-      - sql0014-theBooksDatabase-v001.qmd # NEW # yrChapterNumber 27
-      - sql0006-introToDatabases-v023.qmd # copied from introToSQL # yrChapterNumber 28
+      - sql0014-theBooksDatabase-v001.qmd # get the data # yrChapterNumber 27
+      - sql0006-introToDatabases-v023.qmd # db and dbms - copied from introToSQL # yrChapterNumber 28
       - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 29
-      - sql0010-introToSql-v023.qmd       # NEW # yrChapterNumber 30
-      - sql0035-workingWithMultipleTables-v012.qmd # renumbered from sql0020 # yrChapterNumber 31
+      - sql0010-introToSql-v023.qmd       # NO dplyr knowledge # yrChapterNumber 30
+      - sql0035-workingWithMultipleTables-v012.qmd # inner joins - renumbered from sql0020 # yrChapterNumber 31
       - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd # yrChapterNumber 32
-      - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
+      #- sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
+      - sql0040-a-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
+      #- sql0040-b-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
+      #- sql0040-c-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
+      #- sql0040-d-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
       - sql0050-commonTableExpressions-v001.qmd    # NEW # yrChapterNumber 34
       - sql0200-otherSqlCommands-v002.qmd          # EDIT THIS  # yrChapterNumber 35
       - sql0900-sqlWindowFunctions-v002.qmd        # NEW # yrChapterNumber 36

@@ -781,8 +781,11 @@ head(iris,10)
 # Use sqldf to display just the Sepal.Length, Sepal.Width and Species columns 
 # from the "iris" dataframe.
 #//////////////////////////////////////////////////////////////////////////
+```
 
-
+::: {.callout-note collapse="true"}
+### click here for answer
+```{r}
 # ANSWER
 #
 # This dataframe has column names that contain periods. A period
@@ -814,6 +817,7 @@ sqldf('select `Sepal.Length`, `Sepal.Width`, Species from iris')
 # for every row in the output.
 sqldf("select 'Sepal.Length', 'Sepal.Width', Species from iris")
 ```
+:::
 
 ### Aside: using R "raw strings" (only for those learning R)
 
@@ -851,7 +855,7 @@ cat(strangeValue)    # Backslash: \  Quote: "  Apostrophe: '
 # You can use r"(raw strings)" to very simply quote any SQL command
 # that you want to pass to sqldf, regardless of what is in the SQL.
 
-sqldf( r"(select "Sepal.Length", "Sepal.Width", Species from iris)" )
+sqldf( r"(select "Sepal.Length", "Sepal.Width", Species from iris limit 10)" )
 
 
 # NOTE - R's new "raw string" syntax is very useful for 
@@ -1050,7 +1054,8 @@ sqldf("select 3 as curve, student, test1, test1 + 3 as curved_test1 from grades"
 
 - "IDS1020-Intro to IDS" students can ignore this section.
 
-
+::: {.callout-note collapse="true"}
+#### Click here to see the notes on NA (this is a review from last semester)
 ```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Remember how NA works in R  ####
@@ -1098,6 +1103,7 @@ is.na(salarys)    # FALSE FALSE TRUE TRUE
 # results in NULL.
 #..................................................................
 ```
+:::
 
 ## NULL in SQL
 
@@ -1245,14 +1251,35 @@ load("sqlbolt_tables-v007.RData")
 
 Below are the contents of these tables:
 
+::: {.callout-note collapse="true"}
+# click to see movies table
 ```{r}
 sqldf("select * from movies")
+```
+:::
+
+::: {.callout-note collapse="true"}
+# click to see orders table
+```{r}
 sqldf("select * from orders")
+```
+:::
+
+::: {.callout-note collapse="true"}
+# click to see customers table
+```{r}
 sqldf("select * from customers")
+```
+:::
+
+::: {.callout-note collapse="true"}
+# click to see north_american_cities table
+```{r}
 sqldf("select * from north_american_cities")
 ```
+:::
 
-### Practice - select clause
+## Practice - select clause
 
 ```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1325,7 +1352,7 @@ sqldf("select id, title, director, year, length_minutes
        from movies")
 ```
 
-#### Practice - ADDITIONAL QUESTIONS (not on sqlbolt.com)
+## Practice - ADDITIONAL QUESTIONS (not on sqlbolt.com)
 
 ```{r}
 # QUESTION
@@ -1383,7 +1410,36 @@ sql =
 # sqldf(sql)       # ERROR - no such column: hours
 ```
 
-### Practice - where clause
+## AND/OR &nbsp;&nbsp;&nbsp; BETWEEN ... AND ... &nbsp;&nbsp;&nbsp; x IN (some list)
+
+WHERE conditions can include any/all of the following
+
+* AND/OR  (and is done before or), you can use (parentheses) to change
+  the order of operations
+
+* x BETWEEN y AND z
+
+  - if x is numeric then no qoutes - e.g.   
+    
+    > WHERE x BETWEEN 100 AND 200  
+     
+  - if x is TEXT (i.e. character) then values have 'single quotes' - e.g.  
+  
+    > WHERE x BETWEEN  'A'  AND  'D'    -- includes all text that starts with A,B or C (not D)
+
+* x IN ('a','list','of','values')
+
+  - if x is numeric then the numbers in parentheses do NOT have quotes, e.g.  
+
+    > WHERE x IN (100,200,300)  
+
+
+  - if x is TEXT (ie. character) then the values in parentheses must have 'single quotes'
+
+    > WHERE x IN ('value1', 'value2', 'value3')
+
+  
+## Practice - where clause
 
 ```{r}
 #-------------------------------------------------------------------------
@@ -1395,8 +1451,8 @@ sql =
 # SELECT column, another_column, .
 # FROM mytable
 # WHERE condition
-# AND/OR another_condition
-# AND/OR .;
+#       AND/OR another_condition
+#       AND/OR another_conditiion, etc
 # 
 # 
 # 
@@ -1407,9 +1463,9 @@ sql =
 # NOT BETWEEN . AND . 	Number is not within range of two values (inclusive) 	col_name NOT BETWEEN 1 AND 10
 # IN (.) 	Number exists in a list 	col_name IN (2, 4, 6)
 # NOT IN (.) 	Number does not exist in a list 	col_name NOT IN (1, 3, 5)
+```
 
-
-
+```
 ###########################
 # Exercise 2 - Tasks
 ###########################
@@ -1476,7 +1532,7 @@ sql = "select *
 sqldf(sql)
 ```
 
-### Practice - limit clause
+### limit clause
 
 ```{r}
 ###############################################################.
@@ -1510,8 +1566,11 @@ sqldf(sql)
 # have been displayed without the limit clause and then 
 # displays the next M rows of data.
 ###############################################################.
+```
 
+### PRACTICE 
 
+```{r}
 # Find the first 5 movies and their release year
 
 # We will learn the best way to do this a little later. The
@@ -1633,7 +1692,7 @@ sql = "select *
 sqldf(sql)
 ```
 
-### Practice - "like" operator
+### The "like" operator
 
 ```{r}
 ######################################################################.
@@ -1657,8 +1716,11 @@ sqldf(sql)
 #   [a-c]  similar to regular expressions. Not all DBMS software recognizes
 #   [^a-c] these. sqlite does not.
 ######################################################################.
+```
 
+### PRACTICE
 
+```{r}
 # exercise 3
 
 # Exercise 3 - Tasks
@@ -1754,7 +1816,7 @@ sqldf("select * from movies where substr(title,1,1) = 'M'")
 sqldf("select * from movies where title < 'D'")
 ```
 
-### Practice - select distinct
+### SELECT DISTINCT ...
 
 ```{r}
 ################################################################.
@@ -1796,11 +1858,14 @@ sqldf("select DISTINCT student, year, honors, major
       from grades
       where honors = TRUE and major = 'IDS'
       order by year, major")
+```
 
+### Practice
 
-
+::: {.callout-note collapse="true"}
+#### click here for practice
+```{r}
 # Exercise 4
-
 
 # Show just the director column
 sql = "select director 
@@ -1902,10 +1967,12 @@ sql = "select *
        limit 5 offset 10"
 sqldf(sql)
 ```
+:::
 
-### Practice - more practice - north_american_cities
+### More practice - north_american_cities
 
-
+::: {.callout-note collapse="true"}
+#### click here for practice
 ```{r}
 # Review 1 - Tasks
 #
@@ -2006,6 +2073,7 @@ sql = "select *
        "
 sqldf(sql)
 ```
+:::
 
 ## dynamic SQL - a brief introduction
 

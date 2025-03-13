@@ -544,101 +544,279 @@ sqldf("SELECT *
 # something similar is part of many SQL flavors.
 ```
 
-## Restrictions on SELECT clauses that contain aggregate functions, (eg. avg, sum, min, max, count)
+## DO NOT select both aggregate and non-aggregate data
 
-**If a SELECT clause includes aggregate functions then the SELECT should NOT**
+**SUMMARY OF THIS SECTION:**
+**If a SELECT clause includes aggregate functions then the SELECT clause should NOT**
 **include non-aggregated columns, unless those columns are part of the**
-**GROUP BY clause.**
+**GROUP BY clause.** *(The rest of this section explains this rule.)*
+**IMPORTANT** - if you don't follow this rule, then you will
+NOT get an error but your output will be misleading.
 
-*(The rest of this section explains this "rule")*
+*Before reading the rest of this section I highly recommend that you review*
+*the sections above on*
+*[aggreate functions](#yrAggregateFunctions) and the [GROUP BY clause](#yrGroupBy)*
 
---- 
+### Example of INCORRECT select that includes both aggregate and non-aggregated columns
 
-If a SELECT clause contains an [aggregate function](#yrAggregateFunctions) 
-then one of the following two things happen:
+<!--
+Do ***NOT*** do the following. You will *not* get an error, but
+***the output WILL BE MISLEADING.*** -->
 
-- if there is no GROUP BY, then only one row is returned, (see example below)
+<!-- YR-TODO fix the hardcoded data for USA, other regions below with
+queries to get the right data -->
 
-- if the statement contains a GROUP BY then one row is returned per group of 
-  rows in the table. (see the [GROUP BY clause](#yrGroupBy) above)
+Examine the query shown below. The 
+SELECT ***incorrectly*** uses the aggregate functions ***avg*** and ***max***
+mixed together with non-aggregate data, i.e. ***region*** (Note that the region 
+column is NOT part of the GROUP BY). The results are ***misleading***.
 
-For example, in the following statement, the SELECT clause includes aggregate 
-functions but does NOT contain a group by. Therefore only one row is returned.
-The next example includes a GROUP BY which causes more than one row to 
-be returned. 
+Even though the underlying data in the sales table contains Managers for all of the 
+regions (africa, asia, europe, usa), the results below seem to imply that the 
+data in the "Manager" row is only for Managers for the "usa" region. However,
+that is NOT the case. The ***maxBase*** and ***avgYears*** columns show the maxBase and
+avgYears for ***ALL*** managers (not just for those from the usa region). 
+The fact that the output shows "usa" and not "africa", "asia" or "europe"
+is by chance. There is no guarantee that one of the other regions would be 
+shown in similar queries.
 
-```{r} 
-sqldf("select avg(baseInThousands) as avgBase, 
-              max(baseInThousands) as maxBase, 
-              avg(yearsWithCompany) as avgYears
-       from sales")
-```
 
-The following statement is very similar to the statement above. However,
-the following includes a GROUP BY. Therefore
-a single row is returned PER GROUP. Note that the SELECT clause also includes
-the title column, which is also in the GROUP BY clause. 
 
-```{r}
-sqldf("select title,
+> ```{r}
+> # NOTE: the -- in the command below introduces a comment in SQLite
+> 
+> sqldf("select title,
+>               region, -- DO NOT DO THIS - region is NOT in the GROUP BY
+>               avg(baseInThousands) as avgBase, 
+>               max(baseInThousands) as maxBase, 
+>               avg(yearsWithCompany) as avgYears
+>        from sales
+>        group by title
+>        order by title")
+> ```
+
+<!-- YR-TODO - probably remove this
+You can see that there are multiple values of region for Manager
+rows 
+(i.e. 
+*`{r} paste(sqldf("select region from sales where title='Manager' order by region")$region, collapse=', ')`* ).
+However the ouptput in the query above only shows one of those regions
+(i.e.
+`{r} sqldf("select title,
+              region, -- DO NOT DO THIS - region is NOT in the GROUP BY
               avg(baseInThousands) as avgBase, 
               max(baseInThousands) as maxBase, 
               avg(yearsWithCompany) as avgYears
        from sales
-       group by title")
+       group by title
+       order by title")[1,2]`
+)
+It appears that the output
+only reflects data from the 
+`{r} sqldf("select title,
+              region, -- DO NOT DO THIS - region is NOT in the GROUP BY
+              avg(baseInThousands) as avgBase, 
+              max(baseInThousands) as maxBase, 
+              avg(yearsWithCompany) as avgYears
+       from sales
+       group by title
+       order by title")[1,2]`
+region. However, that is NOT
+correct. Each row contains is summary info for 
+all rows with the specified title, regardless of the region shown in the output.
+-->
+
+
+<!-- YR-TODO - probably remove this
+Therefore, 
+even though there will be one row in the output that summarizes all of the
+rows for the same title (e.g. all of the *salesperson* rows) there might be
+multiple different region values for the different underlying *salesperson* 
+rows. To see the different values of region for the diffrent salesperson
+rows we can run the following query:
+
+::: {.callout-note}
+### there are different regions for different Managers
+```{r}
+sqldf("select title, region, first, last
+       from sales
+       where title = 'Manager'
+       order by region")
 ```
+:::
 
-This makes sense since an aggregate function (e.g. avg, sum, min, max, count) 
-takes multiple values from different rows in the table and returns only a single 
-value. A select statement that doesn't have a GROUP BY passes the values 
-from all rows in the table to the aggregate function. If a select has a GROUP BY
-then the aggregate functions are called once for each group of rows. 
-
-A SELECT clause that includes aggregate functions which also includes 
-non-aggregated values that are not part of the GROUP BY is problematic.
-Because of the aggregate function(s) only a single row will be returned. 
-However, the non-aggregated values could have multiple rows. This causes 
-a conflict - should only one row be returned (because of the aggregate 
-functions) of should more than one row be returned (because of the non-aggregated data)?
-The rules of SQL say that ONLY ONE ROW is returned. However, ONE OF THE 
-SEVERAL non-aggregated values will also be returned. This could lead to 
-misleading output. 
-
-For example, *DO NOT DO THE FOLLOWING*. You will NOT get an error, but
-the output WILL BE MISLEADING.
-
-The following SELECT uses aggreagate functions and INCORRECTLY also
-includes region which is NOT part of the GROUP BY. It appears that the output
+You can see that there are multiple values of region for Manager
+rows 
+(i.e. 
+*`{r} paste(sqldf("select region from sales where title='Manager' order by region")$region, collapse=', ')`* ).
+However the ouptput in the query below only shows one of those regions
+(i.e.
+`{r} sqldf("select title,
+              region, -- DO NOT DO THIS - region is NOT in the GROUP BY
+              avg(baseInThousands) as avgBase, 
+              max(baseInThousands) as maxBase, 
+              avg(yearsWithCompany) as avgYears
+       from sales
+       group by title")[1,2]`
+)
+It appears that the output
 only reflects data from the region that is output. However, that is NOT
 correct. The output of a particular row actually is summary info for 
 all rows with the specified title, regardless of the region.
 
-*(NOTE: the -- in the command below introduces a comment in SQLite)*
 
-```{r}
-sqldf("select title,
+-->
+
+---
+
+The following has the same problem but for a query that doesn't contain a 
+GROUP BY. The results shown below seem to imply that the avgBase, 
+maxBase and avgYears columns only take into account rows from the 
+***"`{r} sqldf("select 
               region, -- DO NOT DO THIS - region is NOT in the GROUP BY
               avg(baseInThousands) as avgBase, 
               max(baseInThousands) as maxBase, 
               avg(yearsWithCompany) as avgYears
-       from sales
-       group by title")
-```
+       from sales")[1,1]`"***
+region. However, that is NOT the case. the avgBase, maxBase and avgYears
+take into account rows from ***ALL*** regions.
 
-The following has the same problem but for a query that doesn't have 
-any group by.
+> ```{r}
+> # NOTE: the -- in the command below introduces a comment in SQLite
+> 
+> sqldf("select 
+>               region, -- DO NOT DO THIS - region is NOT in the GROUP BY
+>               avg(baseInThousands) as avgBase, 
+>               max(baseInThousands) as maxBase, 
+>               avg(yearsWithCompany) as avgYears
+>        from sales
+>        ")
+> ```
+
+
+### Explanation 
+
+If a SELECT clause contains an [aggregate function](#yrAggregateFunctions) 
+then one of the following two things happen:
+
+- If there is no GROUP BY, then only one row is returned.
+  
+  ::: {.callout-note collapse="true"}
+  ### click for example
+  The following SELECT clause includes aggregate 
+  functions and there is NO group by. Therefore only one row is returned.
+
+  ```{r} 
+  sqldf("select avg(baseInThousands) as avgBase, 
+                max(baseInThousands) as maxBase, 
+                avg(yearsWithCompany) as avgYears
+         from sales")
+  ```
+  :::
+
+
+- If there IS a GROUP BY then one row is returned per group of 
+  rows in the table. (see the [GROUP BY clause](#yrGroupBy) above)
+
+  ::: {.callout-note collapse="true"}
+  ### click for example
+  The following statement is very similar to the statement above. However,
+  this statement includes a GROUP BY. Therefore
+  a single row is returned PER GROUP. Note that the SELECT clause also includes
+  the title column, which is also in the GROUP BY clause. 
+
+  ```{r}
+  sqldf("select title,
+                avg(baseInThousands) as avgBase, 
+                max(baseInThousands) as maxBase, 
+                avg(yearsWithCompany) as avgYears
+         from sales
+         group by title")
+  ```
+  :::
+
+This makes sense since an aggregate function (e.g. avg, sum, min, max, count) 
+takes multiple values from different rows in the table and returns only a single 
+value. A select statement that doesn't have a GROUP BY passes the values 
+from all rows in the table to the aggregate function. By contraste, 
+a select with a GROUP BY calls the aggregate functions once for each group of 
+rows. 
+
+A SELECT clause that includes aggregated columns as well as  
+non-aggregated columns is problematic.0
+The aggregate function(s) return a single value so only a single row should be 
+diplayed. 
+However, the non-aggregated values could have multiple values and hence 
+multiple rows. This causes 
+a conflict (a) should only one row be returned (because of the aggregate 
+functions) or (b) should more than one row be returned (because of the non-aggregated data)?
+The rules of SQL say that ONLY ONE ROW is returned. However, ONE OF THE 
+SEVERAL non-aggregated values will also be returned. This could lead to 
+misleading output. 
+
+### ANSI SQL standard vs SQLite vs other databases 
+
+According to the ANSI SQL standard, queries such as those listed above that
+include both aggregate and non-aggregate columns should cause an ERROR. 
+However, in actuality, different RDBMS software treat this issue differently. 
+By default, when using sqldf() within R, the SQLite version of the SQL is used.
+SQLite does NOT return an error when issuing such queries. However, as shown
+above, the results can be very misleading. SQLite's approach is that the 
+person writing the query is expected to be responsible enough to not break this
+rule.
+Other RDBMS software may issue ERRORs or warnings or take a similar approach
+to SQLite (see the documentation for the specific RDBMS software). 
+
+#### Why doesn't SQLite check for this error?
+
+There are situations where this rule can be too limiting. For example, 
+the following grades table lists different grades that 
+students got in a class. Each row lists the student's ID and the 
+student's social security number (ssn), both of which could 
+theoretically be a primary key for the table (i.e. they are 
+"candiate primary keys").
 
 ```{r}
-sqldf("select 
-              region, -- DO NOT DO THIS - region is NOT in the GROUP BY
-              avg(baseInThousands) as avgBase, 
-              max(baseInThousands) as maxBase, 
-              avg(yearsWithCompany) as avgYears
-       from sales
-       ")
+#| include: false
+
+grades = data.frame(
+  studentId = c('001','001','002','002'),
+  ssn = c('111-11-1111', '111-11-1111', '222-22-2222', '222-22-2222'),
+  assessment = c('test1', 'test2', 'test1', 'test2'),
+  grade = c(70,80,90,100)
+)
 ```
 
+> ```{r}
+> sqldf("select * from grades")
+> ```
 
+The following query breaks the rule described above (ssn is in the SELECT
+but not in the GROUP BY). Nevertheless, the query gives accurate results. 
+This is because
+the studentId and the ssn are guaranteed to each contain the same
+unique values for a specific student.
+
+> ```{r}
+> sqldf("select studentId, ssn, avg(grade)
+>        from grades
+>        group by studentId
+>        order by studentId")
+> ```
+
+Similarly, this also breaks the rule (i.e. studentId is in the SELECT
+but not in the GROUP BY) but the results are accurate:
+
+
+> ```{r}
+> sqldf("select studentId, ssn, avg(grade)
+>        from grades
+>        group by ssn
+>        order by studentId")
+> ```
+
+Bottom line is that SQLite requires the person who is writing the SQL
+to do it correctly!
 
 <!--
 ```{r}
