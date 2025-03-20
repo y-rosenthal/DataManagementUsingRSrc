@@ -1,0 +1,1782 @@
+# <yrChapterNumber>(sqlQstns-1)</yrChapterNumber> Database Questions (and Answers)
+
+```{r}
+#| echo: false
+#| output: false
+
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
+
+The questions below require you to write SQL code. 
+The questions refer to the 
+[Books Database](sql0014-theBooksDatabase-v001.html#yrBooksDatabase)
+which is fully described fully on
+[this page](sql0014-theBooksDatabase-v001.html#yrBooksDatabase). However
+for your convenience, the info from that page was also copied below.
+
+The rows of data shown for the various tables 
+is the data as it appears in the 
+datatabase today. However, with any database, you must consider that 
+the data might change in the future. For example, new
+rows might be added, prices might change, data may be removed, etc.
+
+The code in the 
+answer for each question MUST WORK even if data were to be different
+than the current data in the database
+(i.e. do NOT write the answer such that it 
+only works for the existing data - the code should work no matter
+what data is in the tables as long as the tables continue to have 
+the same structure as they do now.
+
+<!-- 
+  NOTE in the following .callout
+  that the collapse="false" instead of "true" because
+  the mermaid in the include doesn't get initialized correctly
+  if collapse="true". There are workarounds for this using JavaScript
+  but I don't want to do that now. The solution for now is to start
+  with the section open and allow the user to collapse it. 
+-->
+
+::: {.callout-tip collapse="false"}
+#### Click here to hide/show this section
+{{< include yrBooksDatabase-common-v001.qmd >}}
+:::
+
+
+```{=html}
+<!-- This html/css/javascript code chunk adds SHOW ALL ANSWERS
+     and HIDE ALL ANSWERS buttons -->
+
+<div class="answer-controls">
+  <button id="show-all-answers" class="btn btn-primary">Show All Answers</button>
+  <button id="hide-all-answers" class="btn btn-secondary">Hide All Answers</button>
+</div>
+
+<style>
+.answer-controls {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.answer-controls button {
+  margin: 0 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Debug information
+  console.log("Toggle buttons script loaded");
+  
+  // Show All Answers button click handler
+  document.getElementById('show-all-answers').addEventListener('click', function() {
+    console.log("Show All clicked");
+    
+    // Find all collapsed callout contents
+    const collapsedContents = document.querySelectorAll('.callout-note .callout-collapse.collapse:not(.show)');
+    console.log("Found", collapsedContents.length, "collapsed elements");
+    
+    // Click their toggle buttons
+    collapsedContents.forEach(function(content) {
+      // Get the callout ID number from the content ID
+      const calloutId = content.id.split('-')[1];
+      
+      // Find the toggle button for this specific callout
+      const toggleButton = document.querySelector(`.callout-btn-toggle [data-bs-target="#callout-${calloutId}-contents"]`);
+      if (toggleButton) {
+        console.log("Clicking toggle for callout", calloutId);
+        toggleButton.click();
+      } else {
+        // Fallback - try to find the toggle button in ancestor elements
+        const parentCallout = content.closest('.callout');
+        if (parentCallout) {
+          const btn = parentCallout.querySelector('.callout-btn-toggle');
+          if (btn) {
+            console.log("Clicking fallback toggle for callout", calloutId);
+            btn.click();
+          }
+        }
+      }
+    });
+  });
+  
+  // Hide All Answers button click handler
+  document.getElementById('hide-all-answers').addEventListener('click', function() {
+    console.log("Hide All clicked");
+    
+    // Find all expanded callout contents
+    const expandedContents = document.querySelectorAll('.callout-note .callout-collapse.collapse.show');
+    console.log("Found", expandedContents.length, "expanded elements");
+    
+    // Click their toggle buttons
+    expandedContents.forEach(function(content) {
+      // Get the callout ID number from the content ID
+      const calloutId = content.id.split('-')[1];
+      
+      // Find the toggle button for this specific callout
+      const toggleButton = document.querySelector(`.callout-btn-toggle [data-bs-target="#callout-${calloutId}-contents"]`);
+      if (toggleButton) {
+        console.log("Clicking toggle for callout", calloutId);
+        toggleButton.click();
+      } else {
+        // Fallback - try to find the toggle button in ancestor elements
+        const parentCallout = content.closest('.callout');
+        if (parentCallout) {
+          const btn = parentCallout.querySelector('.callout-btn-toggle');
+          if (btn) {
+            console.log("Clicking fallback toggle for callout", calloutId);
+            btn.click();
+          }
+        }
+      }
+    });
+  });
+  
+  // Debug log to show what elements are available in the document
+  console.log("All callout elements:", document.querySelectorAll('.callout').length);
+  console.log("All callout-collapse elements:", document.querySelectorAll('.callout-note .callout-collapse').length);
+  console.log("All toggle buttons:", document.querySelectorAll('.callout-btn-toggle').length);
+  console.log("All expanded callouts:", document.querySelectorAll('.callout-note .callout-collapse.collapse.show').length);
+  console.log("All collapsed callouts:", document.querySelectorAll('.callout-note .callout-collapse.collapse:not(.show)').length);
+});
+</script>
+```
+
+
+
+### Single Table queries
+
+<!------------------------------------------------------
+TOPICS: 
+------------------------------------------------------->
+ 
+1.	List all books (title and number sold) that sold more than 100 copies. List the books with the most sales at the top. 
+
+    Using the data shown above, the output should be:
+
+```{r q100}
+#| echo: false
+sqldf("
+		select title_name, sales
+		from titles
+		where sales > 1000
+		order by sales desc;
+")
+```
+
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q100"
+```
+:::
+
+<!----------------------------------------------------------->
+
+2.	List all authors who are live either in NY or CA and whose last name begins with a "K". 
+
+    Using the data shown above, the output should be:
+
+```{r q200}
+#| echo: false
+sqldf("
+  -- NOTE: 
+  --  parentheses are required in the WHERE 
+  --  since AND is done before OR by default)
+	select au_fname, au_lname
+	from authors
+	where (state = 'NY' or state='CA')  and  substr(au_lname,1,1) = 'K';   
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q200"
+```
+:::
+
+<!----------------------------------------------------------->
+
+3.	List the first and last names of all authors whose last name starts with a letter from A through J  
+(HINT: In the where clause, make sure that the first letter of the last name is both  >="A" and also <"K")
+(HINT: another possible solution is to use the LIKE several times - once for A, once for B, once for C, etc up to J. Each LIKE should be separated from the others by OR's)
+
+    Using the data shown above, the output should be:
+
+```{r q300-ans1}
+#| echo: false
+# ONE ANSWER:
+sqldf("
+		select au_fname, au_lname
+		from authors
+		where substr(au_lname,1,1) >= 'A' and substr(au_lname,1,1) < 'K';
+")
+```
+
+```{r q300-ans2}
+#| echo: false
+# ANOTHER ANSWER
+sqldf("
+	select au_fname, au_lname
+	from authors
+	where 	au_lname like 'A%' or au_lname like 'B%' or au_lname like 'C%' or 
+                          au_lname like 'D%' or au_lname like 'E%' or au_lname like 'F%' or 
+                          au_lname like 'G%' or au_lname like 'H%' or au_lname like 'I%' or 
+                          au_lname like 'J%'
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q300-ans1"
+```
+
+```{r}
+#| ref.label: "q300-ans2"
+```
+:::
+
+
+<!----------------------------------------------------------->
+
+4.	For each author, show their first initial, followed by a period and a space, followed by their last name. In the 2nd column show the author's state. Show the column heading for the first column as 'AuthorName'.  Order the results in alphabetical order based on the full name of the person.
+
+    Using the data shown above, the output should be:
+
+```{r q400}
+#| echo: false
+
+sqldf("select substr(au_fname,1,1) || '. ' || au_lname  as   'AuthorName',  state
+	     from authors
+    	 order by au_lname, au_fname;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q400"
+```
+:::
+
+<!----------------------------------------------------------->
+
+5.	Show the titles of all books. Also show the length of the title, i.e. how many characters, including spaces and punctuation. Display the 2nd column with the name 'TitleLength'.  Sort the output so that the shortest titles are listed first. If two titles are the same length then sort those titles alphabetically. 
+
+    Using the data shown above, the output should be:
+
+```{r q500}
+#| echo: false
+
+sqldf("
+		select title_name, length(title_name) as 'TitleLength'
+		from titles
+		order by length(title_name), title_name;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q500"
+```
+:::
+
+
+
+### Single table queries with aggregate functions but no “group by”  (i.e. these will return EXACTLY one row for each query). 
+
+<!----------------------------------------------------------->
+
+6.	List the average price of all books.
+
+    Using the data shown above, the output should be:
+
+```{r q600}
+#| echo: false
+
+sqldf("
+		select avg(price) 
+		from titles;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q600"
+```
+:::
+
+<!----------------------------------------------------------->
+
+7.	List the average price of history books.
+
+    Using the data shown above, the output should be:
+
+```{r q700}
+#| echo: false
+
+sqldf("
+		select avg(price) 
+		from titles
+		where type = 'history';
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q700"
+```
+:::
+
+
+<!----------------------------------------------------------->
+
+8.	List the number of pages in the longest and shortest books (don't list the actual title of the book).
+
+    Using the data shown above, the output should be:
+
+
+```{r q800}
+#| echo: false
+
+sqldf("
+		select min(pages) , max(pages) from titles
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q800"
+```
+:::
+
+
+### Single table queries with calculated values
+
+<!----------------------------------------------------------->
+
+9.	List the title_name and total revenue for each book. (Revenue for a book is the number sold times the price of the book.)
+
+    Using the data shown above, the output should be:
+
+```{r q900}
+#| echo: false
+
+sqldf("
+		select title_name,   sales * price   as   'Total  Revenue'
+		from titles;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q900"
+```
+:::
+
+
+<!----------------------------------------------------------->
+
+10.	List title of each book and the sale price for the book where the sale price is 10% off of the original price.
+
+    Using the data shown above, the output should be:
+
+
+```{r q1000}
+#| echo: false
+sqldf("
+		select title_name, price * 0.90 as 'Sale Price'
+		from titles;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1000"
+```
+:::
+
+## Single table queries with “group by”. 
+
+These can use aggregate functions but will return at most one row in the output for each “group” of rows as defined in the “group by”
+
+<!----------------------------------------------------------->
+
+11.	For each "type" of book (e.g. biography, children, etc) list the number of pages in the shortest book of that type and the number of pages in the longest book of that type. Sort the results alphabetically by the type of book. 
+
+    Using the data shown above, the output should be:
+
+
+```{r q1100}
+#| echo: false
+
+sqldf("
+	select type, min(pages) AS 'Length of Shortest' ,  max(pages)  as 'Length of Longest'
+		from titles
+		group by type
+		order by type;
+")
+```
+
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1100"
+```
+:::
+
+
+<!----------------------------------------------------------->
+
+12.	List the types of books (e.g. history, biography, etc) and the average price of those books for which the average price of books in that category is at least $12.00.
+
+    Using the data shown above, the output should be:
+
+```{r q1200}
+#| echo: false
+
+sqldf("
+		select type, avg(price)
+		from titles
+		group by type
+		having avg(price) >= 12;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1200"
+```
+:::
+
+<!----------------------------------------------------------->
+
+13.	For each type of book (e.g. biography, children, etc), show the number of those books that are 450 pages or longer. The column heading should be '# of long books'. If there are no titles of a particular type that are so long, then don't show that type at all.
+
+    Using the data shown above, the output should be:
+
+```{r q1300}
+#| echo: false
+#| 
+sqldf("
+		select type, count(*) as '# of long books'
+		from titles
+		where pages >= 450
+		group by type;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1300"
+```
+:::
+
+
+<!----------------------------------------------------------->
+
+14.	Modify the answer to the previous question so that only those types for which there are at least 2 long books are displayed.
+
+    Using the data shown above, the output should be:
+
+
+```{r q1400}
+#| echo: false
+
+sqldf("
+		select type, count(*) as '# of long books'
+		from titles
+		where pages >= 450
+		group by type
+		having count(*) >= 2;         -- this is the only change.
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+NOTE: the only change to the above answer is   
+      the addition of the HAVING clause at the end.
+```{r}
+#| ref.label: "q1400"
+```
+:::
+
+
+## Multiple table queries with group by 
+
+<!----------------------------------------------------------->
+
+15.	For each publisher, list the name of the publisher and total 
+    number of pages that the publisher has published in all their books 
+    (ie. add up all the pages in all books for each publisher). 
+    Show the publishers who have published the most pages at the top 
+    of the result list.
+
+    Using the data shown above, the output should be:
+
+```{r q1500}
+#| echo: false
+
+sqldf("
+		select pub_name, sum(pages)
+		from publishers join titles on publishers.pub_id = titles.pub_id
+		group by pub_name
+		order by sum(pages) desc;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1500"
+```
+:::
+
+
+<!----------------------------------------------------------->
+
+16.	Modify the previous query so that only publishers who have published at least 1250 pages will show up.
+
+    Using the data shown above, the output should be:
+
+```{r q1600}
+#| echo: false
+
+sqldf("
+		select … -- same as previous question
+		from … -- same as previous question
+		group … -- same as previous question
+		having  sum(pages)  >= 1250      -- THIS LINE IS THE ONLY CHANGE 
+		order … -- same as previous question 
+")
+```
+
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1600"
+```
+:::
+
+<!----------------------------------------------------------->
+
+17.	List each publisher's name and the numbers of pages in their longest and shortest books. Sort the results by the publisher's name.
+
+    Using the data shown above, the output should be:
+
+```{r q1700}
+#| echo: false
+
+sqldf("
+		select pub_name, min(pages) AS 'Length of Shortest' ,  max(pages)  as 'Length of Longest'
+		from titles join publishers on titles.pub_id = publishers.pub_id
+		group by pub_name
+		order by pub_name;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1700"
+```
+:::
+
+
+## Multiple table queries
+
+<!----------------------------------------------------------->
+
+18.	List the authors first and last names, the author's state, the title name, the publisher name and the publishers state for all books.
+
+    Using the data shown above, the output should be:
+
+
+```{r q1800}
+#| echo: false
+
+sqldf("
+	select au_fname, au_lname, authors.state, title_name, pub_name, publishers.state
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1800"
+```
+:::
+
+<!----------------------------------------------------------->
+
+19.	List the title, number of pages, authors first and last names and author's state for all books that are longer than 150 pages and whose author lives in NY or CA.
+
+    Using the data shown above, the output should be:
+
+
+```{r q1900}
+#| echo: false
+
+sqldf("
+	select title_name, pages, au_fname, au_lname, authors.state 
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	where pages > 150 and   (state = 'NY'  or   state = 'CA') ;  -- (parentheses ARE necessary since by default AND is done before OR)
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q1900"
+```
+:::
+
+<!----------------------------------------------------------->
+
+20.	List the authors first and last names, the author's state, the title name, the publisher name and the publishers state only for those books where the author and publisher are from the same state. (HINT: specify authors.state [note: there is a period between author and state] in the criteria for the publisher's state).
+
+    Using the data shown above, the output should be:
+
+```{r q2000}
+#| echo: false
+
+sqldf("
+	select au_fname, au_lname, authors.state, title_name, pub_name, publishers.state
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id
+                where authors.state = publishers.state;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r q2000}
+#| ref.label: ""
+```
+:::
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+<dim style="font-size: 300%"><strong><em>NOTE: I'm in the middle of
+fixing the "collpasablility" of the answers. For the remaining questions
+please understand that the text "Using the data shown above, the output should be:" might seem misplaced and that the answer is written explicitly without the "click for answer" sections working. I hope to finish 
+fixing this functionality soon. (I already fixed questions 1-20 and 46-48.)
+</em></strong></dim>
+
+
+
+21.	List the title and authors of all books published by "Abatis Publishers" 
+    sort the results in alphabetical order by title and then by the 
+    au_order column. Do NOT show that au_order column in the output.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+	select au_fname, au_lname, title_name, pub_name
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id
+	where pub_name = 'Abatis Publishers'
+	order by title_name, au_order;
+
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+22.	List the publisher name, author name, and title name for all books that have at least 100 pages and that sold at least 200 copies. Sort the results in alphabetical order first by publisher and then by author.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+	select pub_name, au_fname, au_lname, title_name
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id
+                where   pages >= 100 and sales >= 200
+	order by  pub_name,   au_lname,  au_fname;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+23.	List authors first and last names and the titles they wrote for publishers whose name (ie. the publisher's name) begins with "A", "B" or "C"
+
+    Using the data shown above, the output should be:
+
+ANSWER: 
+	select au_fname, au_lname, title_name, pub_name
+	from authors join title_authors on authors.au_id = title_authors.au_id 
+	                      join titles on title_authors.title_id = titles.title_id 
+	                      join publishers on publishers.pub_id = titles.pub_id
+	where substr(pub_name, 1,1) IN ('A','B','C');
+
+ANOTHER ANSWER: Same as above but use the following WHERE clause instead:
+	select …  # same as above
+	from …. # same as above
+	where substr(pub_name, 1,1) = 'A' or substr(pub_name, 1,1) = 'B' or
+	           substr(pub_name, 1,1) = 'C';
+
+ANOTHER ANSWER: Same as above but use the following WHERE clause instead:
+
+	select …  # same as above
+	from …. # same as above
+	where pub_name like 'A%'  or  pub_name like 'B%'  or pub_name like 'C%';
+
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+24.	List the  publisher name, author's name and phone number for all authors that have written books for the publisher's whose name begins with a letter from A through J.  (HINT: specify the publisher's name twice but only show one of them. In the criteria for one of them list >="A" and in the criteria for the other list <"K").
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select pub_name, au_fname, au_lname, phone
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+	                	      join publishers on publishers.pub_id = titles.pub_id
+		where substr(pub_name,1,1) >= 'A' and substr(pub_name,1,1) < 'K';
+
+
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+25.	List the titles of all books and the number of authors for the book (NOT the actual author names). Sort the results so that the books with the most authors appear on top. All books that have the same number of authors should be listed in alphabetical order.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select title_name, count(*) as 'Number of Authors'
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+		group by titles.title_id, title_name
+		order by count(*) desc, title_name;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+26.	List the titles of all books that have 2 or more authors and that are longer than 50 pages.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select title_name, count(*) as 'Number of Authors'
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+		where pages >= 50
+		group by titles.title_id, title_name
+		having count(*) >= 2
+		order by count(*) desc, title_name;
+
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+27.	List all publishers and the number of books that the publisher has published (not the actual titles, just the number of books). Sort the list so that the publisher with the most books appears on top.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select pub_name, count(*) as '# of Books'
+		from titles join publishers on publishers.pub_id = titles.pub_id
+		group by publishers.pub_id, pub_name
+		order by count(*) desc;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+28.	List the publisher name and total revenue for each for each publisher. (Total revenue for a publisher is the total revenue for all books published by that publisher. Revenue for a book is the number sold times the price of the book.)
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select pub_name, sum(sales * price) as 'Total Revenue'
+		from titles join publishers on publishers.pub_id = titles.pub_id
+		group by publishers.pub_id, pub_name	;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+29.	Modify the previous query to only list those publishers who have at least ten thousand dollars in total revenue.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select pub_name, sum(sales * price) as 'Total Revenue'
+		from titles join publishers on publishers.pub_id = titles.pub_id
+		group by publishers.pub_id, pub_name	;
+		having sum(sales * price) >= 10000;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+30.	List the title and author of each book. For each author for a particular book, list the amount of the "advance" that (s)he got for that book.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select title_name, au_fname, au_lname, advance
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+	                	      join royalties on royalties.title_id = titles.title_id;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+31.	List the title and author of each book. For each author for a particular book, list the total amount in royalties that (s)he got for that book. 
+Hint: the royalty dollars for a particular book is the "price" times the "sales" times the "royalty_rate" times the "royalty_share". Sort the results so that the authors who made the most royalty dollars are listed at the top. (NOTE: make sure to read the database description at the top of this document to understand the fields ROYALTIES.ROYALTY_RATE and the field TITLE_AUTHORS.ROYALTY_SHARE).
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select title_name, au_fname, au_lname, royalty_share * royalty_rate * sales * price as  'Total Royalties for Author'
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+	                	      join royalties on royalties.title_id = titles.title_id;		
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+32.	List the name of each author and the total amount of royalty dollars that they received for all of their books (name this column “RoyaltyDollars”).  Hint: the royalty dollars for a particular book is the "price" times the "sales" times the "royalty_rate" times the "royalty_share". Sort the results so that the authors who made the most royalty dollars are listed at the top. 
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select au_fname, au_lname, sum(royalty_share * royalty_rate * sales * price)  as  'Total Royalties for Author'
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+	                	      join royalties on royalties.title_id = titles.title_id
+		group by authors.au_id, au_fname, au_lname
+		order by sum(royalty_share * royalty_rate * sales * price)  desc;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+33.	Modify the query from the previous question so that the list only includes authors who made more than $50,000.00 in royalties.
+
+    Using the data shown above, the output should be:
+
+	ANSWER:
+		select au_fname, au_lname, sum(royalty_share * royalty_rate * sales * price)  as  'Total Royalties for Author'
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+	                	      join royalties on royalties.title_id = titles.title_id
+		group by authors.au_id, au_fname, au_lname
+		having sum(royalty_share * royalty_rate * sales * price) > 50000
+		order by sum(royalty_share * royalty_rate * sales * price)  desc;
+
+<!----------------------------------------------------------->
+
+## Subqueries, outer joins, unions and other stuff ...
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+34.	Show the title names  and number of pages for those books that are longer than (ie.  more pages) the average length of all books.
+
+    Using the data shown above, the output should be:
+
+ANSWER:
+	select title_name , pages
+	from titles
+	where pages >= (select avg(pages) from titles);
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+35.	Show the publisher's name and number of authors who have written books for that publisher:
+
+    Using the data shown above, the output should be:
+
+ANSWER:
+		select pub_name, count(DISTINCT authors.au_id) as '# of authors'
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+		                      join publishers on publishers.pub_id = titles.pub_id
+		group by pub_id, pub_name;
+		
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+36.	Show the pub_name and the number of titles published by that publisher. Only include publishers for whom at least 5 authors have worked. 
+
+    Using the data shown above, the output should be:
+
+ANSWER:
+	select pub_name, count(*) as 'Number of Titles'
+	from publishers as pub1 join titles on pub1.pub_id = titles.pub_id
+	group by pub1.pub_id, pub_name
+	having   5 <= (	select count(DISTINCT authors.au_id)
+		from authors join title_authors on authors.au_id = title_authors.au_id 
+		                      join titles on title_authors.title_id = titles.title_id 
+		                      join publishers as pub2 on pub2.pub_id = titles.pub_id
+		where pub2.pub_id = pub1.pub_id ) ;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+37.	Show the names of publishers who did not publish any books (I guess they are just getting started  )
+
+    Using the data shown above, the output should be:
+
+ANSWER – with a subquery
+
+	select pub_name 
+	from publishers  as   pub1
+	where not exists
+		( select * 
+		from publishers  as pub2  join titles on pub2.pub_id = titles.pub_id
+		where pub2.pub_id = pub1.pub_id );
+
+ANSWER – with a left join
+	select pub_name from publishes left join titles on publishers.pub_id = titles.pub_id
+	where title_id is NULL;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+38.	List the name of each publisher and the total number of books that each publisher has published. Sort the results so that the publishers who published the most books appear at the top. If two or more publishers published the same number of books then they should be listed in alphabetical order. 
+
+a.	The answer should only include publishers who have published some books.
+
+    Using the data shown above, the output should be:
+
+
+	ANSWER:
+		select pub_name, count(*)
+		from titles join publishers on publishers.pub_id = titles.pub_id
+		group by pub_name
+		order by count(*) desc, pub_name;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+b.	Same as previous question but 
+    this time make sure to also include publishers who have published zero books
+
+    Using the data shown above, the output should be:
+
+ANSWER:
+		select pub_name, count(titles.title_id)
+		from publishers left join titles on publishers.pub_id = titles.pub_id
+		group by pub_name
+		order by count(*) desc, pub_name;
+
+ANSWER – with a UNION – however the previous answer is shorter and more to the point
+
+	select pub_name , 0  as  NumTitles
+	from publishes left join titles on publishers.pub_id = titles.pub_id
+	where title_id is NULL 
+
+UNION
+
+	select pub_name, count(*) as NumTitles
+	from titles join publishers on publishers.pub_id = titles.pub_id
+	group by pub_name;
+
+## Additional questions 
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+39.	Show the names of the authors and the publishers who published their books.
+    Only show those authors/publishers where the author lives in the same state 
+    as the publisher who published the book.
+    Do not show any author/pbulisher names twice.
+
+    Using the data shown above, the output should be:
+
+**ANSWER**
+
+sqldf("
+select distinct au_fname, au_lname, pub_name, authors.state, publishers.state
+from authors join title_authors on authors.au_id = title_authors.au_id
+             join titles on title_authors.title_id = titles.title_id
+             join publishers on titles.pub_id = publishers.pub_id
+where authors.state = publishers.state
+      ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+40.	The exchange rate for nis/usd is 3.3.  
+    Write a query that shows the titles and prices for biographies that cost between
+    10 and 20 dollars. Show two columns for the prices. One column for USD
+    and one column for NIS. Name the columns "price in USD" and "price in NIS".
+    Sort the results so that the most expensive books are displayed first.
+
+    Using the data shown above, the output should be:
+
+**ANSWER**
+
+sqldf("
+select title_name, price * 3.3 as 'price in NIS', price as 'price in USD', type
+from titles
+where type = 'biography' and
+      price >= 10 and price <= 20
+order by price desc
+      ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+41.	Show those titles for which the price of the book is greater than the 
+    average price of all books and the number of pages of the book is less
+    than the average number of pages for all books. 
+    
+    Using the data shown above, the output should be:
+
+sqldf("
+select title_name, price, pages
+from titles
+where price > (select avg(price) from titles) and
+      pages < (select avg(pages) from titles)
+      ")
+
+sqldf("select avg(price) from titles")
+sqldf("select avg(pages) from titles")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+42.	Show the authors who have not written any books
+
+    Using the data shown above, the output should be:
+
+sqldf("
+select au_fname, au_lname
+from authors left join title_authors on authors.au_id = title_authors.au_id
+where title_authors.au_id is null
+")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+43.	In each row show an author's name and the number of books that author wrote.  
+    Only show those authors who wrote at least two books.  
+    Sort the results alphabetically (last name, first name).
+
+    Using the data shown above, the output should be:
+
+sqldf("
+select au_fname, au_lname, count(*)
+from authors join title_authors on authors.au_id = title_authors.au_id
+group by au_fname, au_lname
+having count(*) >= 2
+      ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+44.	Same as previous question. However, this time, only show those authors
+    who wrote biographies, the count of the number of biographies they wrote
+    and only show those authors who wrote at least 2 biographies.
+    
+    Using the data shown above, the output should be:
+
+sqldf("
+select au_fname, au_lname, count(*)
+from authors join title_authors on authors.au_id = title_authors.au_id
+             join titles on title_authors.title_id = titles.title_id
+where type = 'biography'
+group by au_fname, au_lname
+having count(*) >= 2
+")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
+45.	Each row of your output should show the name of an author and a publisher.
+    The author did not necessarily write a book for that publisher.
+    The authors should be those authors whose average book price for books they
+    published is above average.
+    The publishers should be those publishers whose average book price for books
+    they published is above average.
+
+    Using the data shown above, the output should be:
+
+<!----------------------------------------------------------->
+
+46.	Show the names of the most prolific authors, i.e. the authors 
+    who have written the most books. Note that there could be
+    several different authors who are "tied" for the most number of books 
+    written. Sort the names in alphabetical order (last name, first name)
+    Also show the au_id and the number of titles that the author wrote.
+
+    Using the data shown above, the output should be:
+
+```{r q4600}
+#| echo: false
+
+sqldf("
+select authors.au_id, au_fname, au_lname, count(*) as numTitles
+from authors join title_authors on authors.au_id = title_authors.au_id
+group by authors.au_id, au_fname, au_lname
+having numTitles = 
+          (select max(numTitles2) 
+           from 
+               (select authors.au_id, count(*) as numTitles2
+                from authors join title_authors on authors.au_id = title_authors.au_id
+                group by authors.au_id, au_fname, au_lname))
+order by au_lname, au_fname
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+This is a rather complex answer.
+This approach uses a subquery within a subquery.
+There may be other approaches too.
+There may be simpler answers too.
+ 
+To explain we will show the subqueries and what they produce.
+Then we will show the full query that includes the subquery.
+
+The following query is NOT the answer. It is simply a query that 
+shows the number of books that were written by each author. This
+will be used as a subquery in the answer shown below.
+
+```{r}
+sqldf("
+          select authors.au_id, count(*) as numTitles
+          from authors join title_authors on authors.au_id = title_authors.au_id
+          group by authors.au_id, au_fname, au_lname
+")
+```
+
+We'd like to get the max number of titles that an author wrote. 
+This amounts to getting the highest number from the numTitles column
+in the previous query. We can do that by using the above query 
+as a subquery in the from clause.
+
+```{r}
+sqldf("
+          select max(numTitles2) 
+          from 
+               (select authors.au_id, count(*) as numTitles2
+                from authors join title_authors on authors.au_id = title_authors.au_id
+                group by authors.au_id, au_fname, au_lname)
+      ")
+```
+
+Finally we can put this all together to answer our question. 
+The following is the FULL ANSWER to the original question.
+It uses the above query as a subquery in the having clause (see 
+the code below). Note that in the following code there is a
+subquery inside of a subquery.
+
+**FINAL ANSWER:**
+
+```{r}
+#| ref.label: "q4600"
+```
+:::
+
+
+47.	Show all topics and the authors who wrote books on those topics. 
+    Sort the ouput in alphabetical order by topic and within each 
+    topic in alphabetical order by the author. The first name and
+    last name of each author should be combined into a single column
+    called 'author'.
+
+    Using the data shown above, the output should be:
+
+
+```{r q4700}
+#| echo: false
+
+sqldf("
+	select type, au_fname || ' ' || au_lname as author
+		from titles join title_authors on titles.title_id = title_authors.title_id
+                join authors on title_authors.au_id = authors.au_id
+		group by type, authors.au_id, au_fname, au_lname
+		order by type, au_lname, au_fname;
+")
+```
+
+::: {.callout-note collapse="true"}
+#### Click for answer
+```{r}
+#| ref.label: "q4700"
+```
+:::
+
+
+48.	Answer all parts of this question
+
+  (a) Show all authors who wrote at least one biography or a history book 
+      for Abatis Publishers. Do NOT show an author's name more than once
+      even if they wrote several books.
+      
+      Using the data shown above, the output should be:
+       
+      ```{r q4800a}
+      #| echo: false
+      
+      sqldf("
+      	select distinct au_fname, au_lname
+      	from authors join title_authors on authors.au_id = title_authors.au_id
+      	             join titles on title_authors.title_id = titles.title_id
+      	             join publishers on titles.pub_id = publishers.pub_id
+      	where publishers.pub_name = 'Abatis Publishers' and
+      	      (titles.type = 'biography' or titles.type = 'history')
+      	order by au_lname, au_fname
+      ")
+      ```
+
+      ::: {.callout-note collapse="true"}
+      #### Click for answer
+      ```{r}
+      #| ref.label: "q4800a"
+      ```
+      :::
+
+      
+      
+  (b) Show all authors who wrote at least one psychology book 
+      for Abatis Publishers. Do NOT show an author's name more than once
+      even if they wrote several books.
+      
+      Using the data shown above, the output should be:
+       
+      ```{r q4800b}
+      #| echo: false
+      
+      sqldf("
+      	select distinct au_fname, au_lname
+      	from authors join title_authors on authors.au_id = title_authors.au_id
+      	             join titles on title_authors.title_id = titles.title_id
+      	             join publishers on titles.pub_id = publishers.pub_id
+      	where publishers.pub_name = 'Abatis Publishers' and
+      	      titles.type = 'psychology'
+      	order by au_lname, au_fname
+      ")
+      ```
+      
+
+      ::: {.callout-note collapse="true"}
+      #### Click for answer
+      ```{r}
+      #| ref.label: "q4800b"
+      ```
+      :::
+      
+  (c) Abatis Publishers believes publishing a book on the history 
+      of psychology during Sigmund Freud's era would be a worthwhile endeavor.
+      They think it would be best to get two authors to collaborate on 
+      the book - one author who has a psychology background and one author
+      who has a history or biography background. 
+      
+      In order to brainstorm
+      which authors might work together well, Abatis Publishers
+      would like to see a list
+      of each author who wrote a history or biography book with them matched
+      up with each author who wrote a pschology book with them. The publisher
+      will then look through the list and think about which combination of
+      authors might make the most sense - then they'll try to contact
+      the chosen authors and persuade them to take on the project.
+      
+      Write a query that returns two columns. 
+      
+      The first column should be named 'history/biography author' and
+      contain names of authors who wrote a history or biography 
+      book with Abatis (combine the authors first and last
+      names into a single column).
+      
+      The second column should be named 'psychology author' and
+      contain names of authors who wrote a psychology
+      book with Abatis.
+      
+      The output should show every combination of a history/biogrphy 
+      author who wrote for Abatis with a psychology author who wrote for 
+      Abatis.
+      
+      Using the data shown above, the output should be:
+
+      ```{r q4800c}
+      #| echo: false
+      
+      sqldf("
+        select hist_bio_authors.au_fname || ' ' || hist_bio_authors.au_lname 
+                   as 'history/biography author', 
+               psych_authors.au_fname || ' ' || psych_authors.au_lname
+                   as 'psychology author' 
+        from 
+            ( -- this is the query from part (a)
+          	  select distinct au_fname, au_lname
+            	from authors join title_authors on authors.au_id = title_authors.au_id
+            	             join titles on title_authors.title_id = titles.title_id
+        	                 join publishers on titles.pub_id = publishers.pub_id
+            	where publishers.pub_name = 'Abatis Publishers' and
+            	      (titles.type = 'biography' or titles.type = 'history')
+        	    order by au_lname, au_fname
+        	  ) as hist_bio_authors
+
+            cross join
+            
+            ( -- this is the query from part (b)
+            	select distinct au_fname, au_lname
+            	from authors join title_authors on authors.au_id = title_authors.au_id
+        	                 join titles on title_authors.title_id = titles.title_id
+      	                   join publishers on titles.pub_id = publishers.pub_id
+            	where publishers.pub_name = 'Abatis Publishers' and
+          	        titles.type = 'psychology'
+          	  order by au_lname, au_fname
+          	) as psych_authors
+      ")
+      ```
+      
+
+      ::: {.callout-note collapse="true"}
+      #### Click for answer
+      ```{r}
+      #| ref.label: "q4800c"
+      ```
+      :::
+
+

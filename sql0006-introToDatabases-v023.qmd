@@ -6,14 +6,24 @@ programs (see below) in an accurate and efficient way.
 A "Database Management System (DBMS)" is the software that is used to enable
 the storage and retrieval of the data in a database. 
 
-Datbases and DBMS software are usually used as 
-part of a larger software system. Software that is coded in programming 
-languages such as R, Python, Java, etc. have the ability to interact with 
-a DBMS to store an retrieve data from a database.
-
 ## Common features of databases 
 
-Most databases and DBMS software provides the following features:
+Most databases and DBMS software provide the following features:
+
+- **Able to be contolled by other software** - Databases and DBMS software are 
+  usually used as part of a larger software system. Software that is coded in 
+  programming languages such as R, Python, Java, etc. have the ability to 
+  interact with a DBMS in order to store an retrieve data from a database. 
+  
+  For example, websites that manipulate a lot of data generally
+  consist of a "web server software program" 
+  that users communicate with. The "web server software" program in turn
+  communicates with a DBMS in order to store and retrieve data for each 
+  user. For example, facebook.com makes use of one or more
+  databases to store and retrieve messages, friend information, advertisements,
+  etc. The web server program retrieves the information it needs from 
+  a database and uses that information to create a web page that is then 
+  returned to the user and displayed in the browser.
 
 - **Reliable and Accurate Data** – Databases have built-in rules to keep data
   correct and consistent. They prevent mistakes like duplicate entries or missing
@@ -35,6 +45,7 @@ Most databases and DBMS software provides the following features:
   properly saved and that information isn’t lost, even if something goes wrong
   (e.g. a blackout, earthquake, etc.).
 
+
 ::: {style="font-style: italic"}
 Note that Excel is not usually considered a "database". Excel is FANTASTIC 
 as a tool
@@ -42,58 +53,316 @@ for quickly gaining insights into data. However, Excel does not have most of
 the  features listed above that describe typical databases. 
 :::
 
-## Different categories of databases
+## Different categories of databases 
 
-### Relational Databases
+There are different types of databases and Database Management System (DBMS) 
+software. These types can be 
+categorized by how their data is structured. 
 
-```{r}
-# Different categories of databases exist. Databases in use
-# today in business can be broken down into two different categories:
-#
-# 1. Relational Databases
-#    
-#    o These types of databases store information in "tables" that have rows
-#      and columns of information - very similar to the way the data is
-#      arranged in an R dataframe.
-# 
-#      - Each column of a relational database table
-#        (a) has a name
-#        (b) has a datatype (e.g. numeric, logical, character, etc)
-#     
-#      - Relational database tables use the term NULL in the same way that 
-#        R uses the term NA - we'll see examples of this later.
-#
-#    o There are MANY different relational database products in use today.
-#      Some very popular ones are:
-#
-#      - Microsoft SQL Server
-#      - Oracle Relational Database Management System
-#      - MySql
-#      - Postgres
-#      - MariaDb
-#      - many, many others
-#
-#    o All Relational database software uses the SQL language to manipulate the 
-#      contents of the database. (there may be a rare exception I don't know about)
-#
-#      Each relational database software product has its own "flavor"
-#      of the SQL language. You can think of this as different "dialects"
-#      of the same language. For example the difference between English 
-#      as it's used in the USA vs as it is used in England.
-#
-#      There exists a SQL standard that is recognized by all relational database
-#      software programs
-#      (see https://blog.ansi.org/2018/10/sql-standard-iso-iec-9075-2016-ansi-x3-135/#gref).
-#      However, most relational database products add additional 
-#      capabilities and commands to its version of SQL to differentiate it
-#      from other relational database products in the market.
-#
-#      In this class we will be focusing primarily on the SQL standard
-#      features that are included in all relational database products
-#      and not on the extensions that are provided by the various products.
-```
+**Relational databases** (sometimes referred to as **"SQL"** databases) 
+arrange data in "tables" that are comprised of 
+"rows" and "columns" (similar to an R dataframe or an Excel spreadsheet). 
 
-### Non-Relational Databases (AKA NoSQL databases)
+**Non-Relational** databases (often referred to as **"NoSQL"** databases)
+structure data in other forms (e.g. [JSON](#yrDocumentDatabases) or 
+[graphs](#yrGraphDatabases) - see below)
+
+
+## What is a "Relational Database"
+
+Relational databases store information in "**tables**" that have rows
+and columns of information - very similar to the way the data is
+arranged in an R dataframe. A single relational database is a collection 
+of one or more tables.
+Each column of a relational database table (a) has a 
+name (b) has a datatype (e.g. numeric, logical, character, etc)
+
+<!-- YR-TODO move NULL to another place in the notes
+
+- Relational database tables use the term NULL in the same way that 
+  R uses the term NA - we'll see examples of this later.
+-->
+
+There are MANY different relational database products in use today.
+Some very popular ones are:
+
+- Postgres
+- MySql
+- MariaDb
+- Microsoft SQL Server
+- Oracle Relational Database Management System
+- SQLite
+- many, many others
+
+
+## What is SQL (often pronounced "sequel")
+
+<!-- YRTODO - fix this CSS - the table in the markdown 
+format below has a double edge at the top and bottom.
+
+I wanted rounded corners, etc.
+This CSS is complicated by the fact that I'm trying to 
+deal with my own table html (see below) as well as a 
+markdown table in a Quarto collapsable callout. This seems
+to present issues. There is also the fact that the quarto 
+table gets rendered with thead and tbody sections while 
+my table code doesn't do that. See claude.ai
+URL: https://claude.ai/chat/e7f54494-5a79-427d-9109-11c6672907f4
+Topic: Formatting Differences in Quarto Tables
+-->
+
+<style>
+  .callout-note table, 
+  .yrtable {
+    border: 1px solid #ddd;
+    border-collapse: separate;
+    border-radius: 10px;
+    overflow: hidden;
+    border-spacing: 0;
+  }
+
+  .callout-note table th, 
+  .callout-note table td, 
+  .yrtable th, 
+  .yrtable td {
+    border: 1px solid #ddd;
+    vertical-align: top;
+    padding: 1px 5px;
+  }
+
+  /* Apply rounded corners only to the outermost cells */
+  .callout-note table thead tr:first-child th:first-child,
+  .callout-note table thead tr:first-child td:first-child,
+  .yrtable tr:first-child th:first-child,
+  .yrtable tr:first-child td:first-child { border-top-left-radius: 10px; }
+
+  .callout-note table thead tr:first-child th:last-child,
+  .callout-note table thead tr:first-child td:last-child,
+  .yrtable tr:first-child th:last-child,
+  .yrtable tr:first-child td:last-child { border-top-right-radius: 10px; }
+
+  .callout-note table tbody tr:last-child th:first-child,
+  .callout-note table tbody tr:last-child td:first-child,
+  .yrtable tr:last-child th:first-child,
+  .yrtable tr:last-child td:first-child { border-bottom-left-radius: 10px; }
+
+  .callout-note table tbody tr:last-child th:last-child,
+  .callout-note table tbody tr:last-child td:last-child,
+  .yrtable tr:last-child th:last-child,
+  .yrtable tr:last-child td:last-child { border-bottom-right-radius: 10px; }
+</style>
+
+Relational database software uses **Structured Query Language (SQL)** to 
+manipulate database contents. SQL commands are categorized as follows:
+
+Relational database software uses the **Structured Query Language (SQL)**
+(often pronounced *"sequel"*) to manipulate the 
+contents of the database. Commands in the SQL language are often 
+grouped into the following categories:
+
+*(For this class, we will focus on the first two categories listed below, *
+*i.e. DDL and DML)*
+
+
+<table class="yrtable" style="width:100%;font-size:80%;">
+<tr><th>Category</th><th>Commands</th></tr>
+
+<tr>
+  <td>**DDL (Data Definition Language) Commands**<br />
+     Defines and modifies database structure.</td>
+  <td>
+      `CREATE DATABASE` – Creates a new database. <br> 
+      `CREATE TABLE` – Creates a new table in an existing database. <br> 
+      `DROP TABLE` – Removes an entire table from a database. </td>
+</tr>
+
+<tr>
+  <td>**DML (Data Manipulation Language) Commands**<br />
+      Manipulates data within tables.</td>
+  <td>
+      `SELECT` –  retrieves data from database tables. The SELECT statement has many different options that allow the data to be retireved in very customized formats and arrangements. E.g. SELECT can be used to summarize data, retrieve only data that has specific attributes, display data in specific order, etc.<br> 
+      `INSERT` – Adds new rows to a table. <br> 
+      `DELETE` – Removes rows from a table. <br> 
+      `UPDATE` – Modifies existing data in a table.
+  </td>
+</tr>
+
+
+<tr>
+  <td>**DCL (Data Control Language) Commands**<br />
+     Manages user permissions.</td>
+  <td>
+      `GRANT` – Give permission to specific users to access specific data in the database.<br> 
+      `REVOKE` – Remove permission from specific users to access specific info in the database.
+  </td>
+</tr>
+
+<tr>
+  <td>**TCL (Transaction Control Language) Commands**<br />
+Transactions ensure that a group of operations either **all succeed** or **none take effect**. 
+If a failure occurs, the system ensures consistency using transaction control commands.
+<em><strong>(* see below for more info about transactions)</strong></em>
+  <td>
+      `START TRANSACTION` – Begins a transaction. <br> 
+      `COMMIT` – Saves changes permanently. <br> 
+      `ROLLBACK` – Reverts changes if needed. <br> 
+      `SAVEPOINT` – Creates checkpoints within a transaction.
+
+  </td>
+</tr>
+
+<tr>
+<td colspan="2">
+
+<em><strong>(* transactions explained more fully)</strong>: 
+Most Relational databases offer "transaction control". A transaction
+is a set of operations that are supposed to either all happen as a group
+or not happen at all. For example, when processing a money transfer
+between two bank accounts, the following steps must happen:
+   
+**Step 1**: remove money from account 1  
+**Step 2**: deposit money in account 2  
+   
+These two steps are viewed as a "transaction". Either both steps 
+should happen - in which case the transaction was successful - or
+neither step should happen. 
+Imagine that after the computer did Step 1, the computer crashes 
+(e.g. due to a blackout) before it had a chance to do Step 2. 
+Ideally, when the computer is restarted, either, Step 2 should happen or 
+Step 1 should be "undone". Most Relational Database Management Software
+contains features that ensure that this logic happens correctly.
+</em>
+  </td>
+
+</tr>
+</table>
+
+*(For this class, we will mostly focus on the DDL an DML categories*
+*of commands. Most of our time will be spent studying the numerous*
+*features of the SELECT statement)*
+
+
+<!-- YRTODO - the following was replaced with the table shown above.
+Make sure this is all good before removing this part.
+
+## What is SQL (often pronounced "sequel")
+
+Relational database software uses the "Structured Query Language" 
+(AKA "SQL" - often pronounced as "sequel") to manipulate the 
+contents of the database. Commands in the SQL language are often 
+grouped into the following categories:
+
+*(For this class, we will focus on the first two categories listed below, *
+*i.e. DDL and DML)*
+
+- "**Data Definition Language (DDL)**" commands - these are used to create and modify 
+  the contents of a database - e.g. 
+    
+    + `CREATE DATABASE` - creates a new database that is able to store tables
+    + `CREATE TABLE` - creates a new table in an existing database
+    + `DROP TABLE` - removes an entire table from a database
+    
+- "**Data Manipulation Language (DML)**" commands - these commands manipulate data
+  within existing tables - e.g. 
+    
+    + `SELECT` - retrieves data from database tables. The SELECT statement
+      has many different options that allow the data to be retireved in 
+      very customized formats and 
+      arrangements. E.g. SELECT can be used to summarize data, retrieve only
+      data that has specific attributes, display data in specific order, etc.
+    + `INSERT` - insert rows of data into an existing table
+    + `DELETE` - remove rows of data from a table
+    + `UPDATE` - modifies the contents of the data in a table
+    
+- "**Data Control Language (DCL)**" commands - these are used to specify
+  which users can access which data in the database - e.g.
+    
+    + `GRANT` - used to grant permission to specific users to access specific
+      data in the database.
+    + `REVOKE` - remove permission from specific users to access specific 
+      info in the database.
+
+- "**TCL (Transaction Control Language)**" – Manages transactions (keep reading)
+
+  Most Relational databases offer "transaction control". A transaction
+  is a set of operations that are supposed to either all happen as a group
+  or not happen at all. For example, when processing a money transfer
+  between two bank accounts, the following steps must happen:
+  
+  Step 1: remove money from account 1  
+  Step 2: deposit money in account 2  
+  
+  These two steps are viewed as a "transaction". Either both steps 
+  should happen - in which case the transaction was successful - or
+  neither step should happen. 
+  Imagine that after the computer did Step 1, the computer crashes 
+  (e.g. due to a blackout) before it had a chance to do Step 2. 
+  Ideally, when the computer is restarted, either, Step 2 should happen or 
+  Step 1 should be "undone". Most Relational Database Management Software
+  contains features that ensure that this logic happens correctly.
+  
+  * `START TRANSACTION` - issued before the first command in a transaction
+  * `COMMIT` – Saves changes.
+  * `ROLLBACK` – Reverts changes.
+  * `SAVEPOINT` – Creates checkpoints within transactions.
+
+-->
+
+## Different "flavors" of SQL
+
+Each relational database software product has its own "flavor"
+of the SQL language. You can think of this as different "dialects"
+of the same language. For example the difference between English 
+as it's used in the USA vs as it is used in England.
+
+**ANSI** (American National Standards Institute) publishes a SQL Standard
+that is generally recognized by all relational database
+software programs.
+
+However, most relational database products add additional 
+capabilities and commands to its version of SQL to differentiate it
+from other relational database products in the market.
+
+In this class we will be working with the SQLite version of SQL.
+However, we will try to focus primarily on the standard SQL
+features that are included in all relational database products
+and not on the extensions that are provided only by SQLite. 
+When appropriate, we will try to highlight differences between
+the way that SQLite and other RDBMS products work.
+
+The ANSI standard was first introduced in 1986 and has been reissued
+every few years since then. The following gives a flavor
+of features that were introduced or "deprecated" (keep reading) in different
+versions of the ANSI standard. To "deprecate" a feature means to 
+recommend that it not be used as the feature might *actually* be removed in 
+a future version. 
+
+::: {.callout-note icon="false"}
+### Info about ANSI SQL standard
+**Official ANSI document is not free**:  
+<https://webstore.ansi.org/standards/iso/isoiec90752023-2502159?source=blog&_gl=1>
+
+**Unofficial info**:  
+<https://modern-sql.com/standard>
+:::
+
+::: {.callout-note icon="false" collapse="true"}
+### Click here for summary of what was included in different releases of ANSI SQL
+| SQL Version  | Year  | Key Features Introduced | Deprecated Features |
+|-------------|------|----------------------|---------------------|
+| **SQL-86 (SQL-87)** | 1986/1987 | First ANSI SQL standard, basic SQL syntax (`SELECT`, `INSERT`, `UPDATE`, `DELETE`), table creation, constraints | None |
+| **SQL-89** | 1989 | `GRANT` and `REVOKE` for access control | None |
+| **SQL-92** | 1992 | Expanded data types (`DATE`, `TIME`, `INTERVAL`), subqueries, joins (`INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN`), string pattern matching (`LIKE`) | Some legacy syntax |
+| **SQL:1999** | 1999 | Recursive queries (`WITH RECURSIVE`), OLAP operations (`ROLLUP`, `CUBE`), triggers, procedural constructs (`CASE`, `IF`, `LOOP`), user-defined types (UDTs) | Certain outdated syntax elements |
+| **SQL:2003** | 2003 | Window functions (`OVER`, `PARTITION BY`), XML support, auto-increment (`IDENTITY`, `GENERATED`), `MERGE` statement | Outdated join syntax |
+| **SQL:2006** | 2006 | Full XML data handling, querying, and updates | None |
+| **SQL:2008** | 2008 | `TRUNCATE TABLE`, `FETCH FIRST` (limit control), improvements to `MERGE` | None |
+| **SQL:2011** | 2011 | Temporal tables (`SYSTEM VERSIONING` for time-travel queries) | None |
+| **SQL:2016** | 2016 | JSON support (`JSON_VALUE`, `JSON_QUERY`), row pattern recognition (`MATCH_RECOGNIZE`) | None |
+| **SQL:2019** | 2019 | Polymorphic table functions, new JSON functions and enhancements | None |
+:::
+
+## Non-Relational Databases (AKA NoSQL databases)
 
 NoSQL (or non-relational) databases organize information in formats other than 
 rows and columns. 
@@ -104,53 +373,49 @@ information in a form other than in strict rows and columns.
 
 Some examples are shown below.
 
-### Document databases - e.g. MongoDB
+## Document databases - e.g. MongoDB {#yrDocumentDatabases}
 
 
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#         MongoDb is an example of Database Management software that stores information
-#         in "JSON" notation. Other similar products include CouchDB, Firebase
-#         and Firestore. We will explore more about JSON later in the semester.
-#         However as an example, the above information could be represented in a JSON
-#         file as shown below:
-#
-#           [
-#             {
-#               "name" : "annie",
-#               "friends" : [ "sam" ]
-#             },
-#             {
-#               "name" : "jack",
-#               "friends" : [ "annie" , "mac" , "doug" , "harry" ]
-#             },
-#             {
-#               "name" : "howard",
-#               "friends" : [ "jack" ]
-#             },
-#             {
-#               "name" : "sam",
-#               "friends" : [ ]
-#             },
-#             {
-#               "name" : "mac",
-#               "friends" : [ ]
-#             },
-#             {
-#               "name" : "harry",
-#               "friends" : [ ]
-#             },
-#             {
-#               "name" : "doug",
-#               "friends" : [ ]
-#             }
-#           ]
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MongoDb is an example of Database Management software that stores information
+in "JSON" notation. Other similar products include CouchDB, Firebase
+and Firestore. We will explore more about JSON later in the semester.
+However as an example, the above information could be represented in a JSON
+file as shown below:
+
+```
+           [
+             {
+               "name" : "annie",
+               "friends" : [ "sam", "jack" ]
+             },
+             {
+               "name" : "jack",
+               "friends" : [ "annie" , "mac" , "doug" , "harry" ]
+             },
+             {
+               "name" : "harry",
+               "friends" : [ "jack" ]
+             },
+             {
+               "name" : "sam",
+               "friends" : [ "annie" ]
+             },
+             {
+               "name" : "mac",
+               "friends" : [ "jack" ]
+             },
+             {
+               "name" : "harry",
+               "friends" : [ "jack" ]
+             },
+             {
+               "name" : "doug",
+               "friends" : [ "jack" ]
+             }
+           ]
 ```
 
-### Graph databases - e.g. Neo4J
-
-2. **Graph Databases**  *(mentioned above)*
+## Graph databases - e.g. Neo4J  {#yrGraphDatabases}
 
 Neo4J is an example of a "graph database". These types of databases
 organize their information in a "graph" structure.
@@ -163,28 +428,28 @@ For example:
 ```{mermaid}
 graph TD
     %% Position nodes to match example layout
-    Sam([Sam])
-    Annie([Annie])
-    Mac([Mac])
-    Jack([Jack])
-    Doug([Doug])
-    Harry([Harry])
+    sam([sam])
+    annie([annie])
+    mac([mac])
+    jack([jack])
+    doug([doug])
+    harry([harry])
     
     %% Create bidirectional connections with straight lines
-    Annie <-->|friend| Sam
-    Jack <-->|friend| Annie
-    Jack <-->|friend| Mac
-    Jack <-->|friend| Doug
-    Jack <-->|friend| Harry
+    annie <-->|friend| sam
+    jack <-->|friend| annie
+    jack <-->|friend| mac
+    jack <-->|friend| doug
+    jack <-->|friend| harry
     
     %% Black and white styling
     classDef person fill:white,stroke:black,stroke-width:1px;
-    class Sam,Annie,Mac,Jack,Doug,Harry person;
+    class sam,annie,mac,jack,doug,harry person;
     
     %% Force specific layout
-    Sam ~~~ Annie
-    Mac ~~~ Jack ~~~ Doug
-    Jack ~~~ Harry
+    sam ~~~ annie
+    mac ~~~ jack ~~~ doug
+    jack ~~~ harry
     
     %% Make invisible linkage lines transparent
     linkStyle 5,6,7 stroke:none;
@@ -204,11 +469,16 @@ table and stored in a relational database.
 ```
             name      is_friends_with
             ----      ---------------
+            sam       annie
             annie     sam
+            annie     jack
             jack      annie
             jack      mac
             jack      doug
             jack      harry
+            doug      jack
+            harry     jack
+            mac       jack
 ```
 
 The following is version of the graph also includes "company" nodes and 
@@ -219,40 +489,40 @@ quite complex and be used to store all sorts of information.
 ```{mermaid}
 graph LR
     %% Define nodes with type labels
-    Sam([Person: Sam])
-    Annie([Person: Annie])
-    Mac([Person: Mac])
-    Jack([Person: Jack])
-    Doug([Person: Doug])
-    Harry([Person: Harry])
+    sam([Person: sam])
+    annie([Person: annie])
+    mac([Person: mac])
+    jack([Person: jack])
+    doug([Person: doug])
+    harry([Person: harry])
     Acme([Company: Acme Inc.])
     MikroTek([Company: MikroTek])
     
     %% Friend relationships (bidirectional)
-    Annie <-->|friend| Sam
-    Jack <-->|friend| Annie
-    Jack <-->|friend| Mac
-    Jack <-->|friend| Doug
-    Jack <-->|friend| Harry
+    annie <-->|friend| sam
+    jack <-->|friend| annie
+    jack <-->|friend| mac
+    jack <-->|friend| doug
+    jack <-->|friend| harry
     
     %% Work relationships
-    Sam -->|works at| Acme
-    Annie -->|works at| Acme
-    Mac -->|works at| MikroTek
-    Jack -->|works at| MikroTek
-    Doug -->|works at| MikroTek
+    sam -->|works at| Acme
+    annie -->|works at| Acme
+    mac -->|works at| MikroTek
+    jack -->|works at| MikroTek
+    doug -->|works at| MikroTek
     
     %% Styling for nodes - white background with black borders and text
     classDef person fill:white,stroke:black,stroke-width:1px,color:brown;
     classDef company fill:white,stroke:black,stroke-width:2px,stroke-dasharray:5 2,color:green;
     
     %% Apply styles
-    class Sam,Annie,Mac,Jack,Doug,Harry person;
+    class sam,annie,mac,jack,doug,harry person;
     class Acme,MikroTek company;
 ```
 
 
-### Other types of NoSQL databases
+## Other types of NoSQL databases
 
 <yrAiGen url="chatgpt.com" topic="?" />
 
@@ -262,15 +532,15 @@ popular. We will not go into these in more detail now.
 The main thing that NoSQL databases have in common is that the data is NOT
 stored in a rectangular form (i.e. rows and columns). 
 
-1. **Key-Value Stores**  
-   - Store data as a collection of key-value pairs.  
-   - Fast reads and writes, ideal for caching and session management.  
-   - **Examples:** Redis, Amazon DynamoDB, Riak
+* **Key-Value Stores**  
+  - Store data as a collection of key-value pairs.  
+  - Fast reads and writes, ideal for caching and session management.  
+  - **Examples:** Redis, Amazon DynamoDB, Riak
 
-2. **Column-Family Stores**  
-   - Organize data into columns rather than rows, optimized for analytical queries.  
-   - Designed for high scalability and distributed storage.  
-   - **Examples:** Apache Cassandra, HBase, ScyllaDB
+* **Column-Family Stores**  
+  - Organize data into columns rather than rows, optimized for analytical queries.  
+  - Designed for high scalability and distributed storage.  
+  - **Examples:** Apache Cassandra, HBase, ScyllaDB
 
 
 

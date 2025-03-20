@@ -1,0 +1,14 @@
+title_id,title_name,type,pub_id,pages,price,sales,pubdate
+T01,1977!,history,P01,107,21.99,566,8/1/2000 0:00
+T02,200 Years of German Humor,history,P03,14,19.95,9566,4/1/1998 0:00
+T03,Ask Yor System Administrator,computer,P02,1226,39.95,25667,9/1/2000 0:00
+T04,But I Did It Unconciously,psychology,P01,510,12.99,13001,5/31/1999 0:00
+T05,Exchange of Platitudes,psychology,P01,201,6.95,201440,1/1/2001 0:00
+T06,How About Never?,biography,P01,473,19.95,11320,7/31/2000 0:00
+T07,I Blame My Mother,biography,P03,333,23.95,1500200,10/1/1999 0:00
+T08,Just Wait Until After School,children,P01,86,10,4095,6/1/2001 0:00
+T09,Kiss My Boo Boo,children,P01,22,13.95,5000,5/31/2002 0:00
+T10,Not Without My Fabrerge Egg,biography,P05,NULL,NULL,NULL,NULL
+T11,Perhaps It's a Glandular Problem,psychology,P05,826,7.99,94123,11/30/2000 0:00
+T12,"Spontaneous, Not Annoying",biography,P05,507,12.99,100001,8/31/2000 0:00
+T13,What Are The Civilian Applications?,history,P03,802,29.99,10467,5/31/1999 0:00

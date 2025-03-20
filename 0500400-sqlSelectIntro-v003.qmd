@@ -206,7 +206,7 @@ clauses in the sections below.
 
   Directly analogous to the dplyr print(n=...) function or the dplyr
   slice_head(n=...) function.
-
+  
 ## Order of the clauses is important
 
 A SQL SELECT statement may contain some or all of the above clauses.
@@ -222,6 +222,7 @@ The "keywords" of the language are generally NOT case sensitive.
 However, it is often the convention of many SQL books and references to 
 show SQL keywords in UPPER CASE. We have done that below but it is 
 not strictly necessary.
+
 
 ## Whitespace in SQL commands is ignored
 
@@ -324,7 +325,11 @@ are displayed on an Entity Relationship Diagram.
 # The FROM clause specifies the table (or tables) that contain the data.
 sqldf("SELECT title, first, last
        FROM sales")
+```
 
+## SELECT * FROM ...
+
+```{r}
 # SELECT * in SQL is similar to select(everything()) in dplyr.
 # * is an abbreviation for all of the column names.
 
@@ -527,22 +532,75 @@ sqldf("SELECT count(*), avg(baseInThousands) avgBase, max(baseInThousands) maxBa
 
 ## LIMIT clause
 
+The LIMIT clause is similar to print(n=...) and slice_head(n=...) with dplyr.
+It limits the number of rows returned to the first few
+that would have been returned had the query not included the LIMIT clause.
+
+LIMIT is often used in combination with the ORDER BY clause.
+
+LIMIT must come at the very end of the SQL statement. 
+
+
+
 ```{r}
-# The LIMIT clause is similar to print(n=...) and slice_head(n=...) with dplyr.
-# It limits the number of rows returned to the first few
-# that would have been returned had the query not included the LIMIT clause.
-#
-# The LIMIT clause is usually used with an ORDER BY clause.
 
 sqldf("SELECT *
        FROM sales
        ORDER BY salesInThousands desc
        LIMIT 10")
 
-# Note that the LIMIT clause is not standard SQL - some SQL flavors
-# do not contain a LIMIT clause. However, the LIMIT clause or 
-# something similar is part of many SQL flavors.
 ```
+
+
+### LIMIT <M> &nbsp;&nbsp;&nbsp; vs &nbsp;&nbsp;&nbsp; LIMIT <M> OFFSET <N>
+
+In general the limit clause has two different forms: 
+
+```
+      <SOME SELECT STATEMENT>
+      limit M
+```
+
+(where M is an integer) results in only the first
+M rows of data from what would normally have been displayed 
+had the LIMIT clause not been specified.
+
+``` 
+      <SOME SELECT STATEMENT>
+      limit M offset N
+```
+
+(where both M and N are integers)  
+starts the output from the N+1'th row of what would normally 
+have been displayed without the limit clause and then 
+displays the next M rows of data.
+
+For example: 
+
+```{r}
+# Display the first 3 people
+sqldf("SELECT *
+       FROM sales
+       ORDER BY last, first
+       LIMIT 3")
+
+# Display the next 3 people
+sqldf("SELECT *
+       FROM sales
+       ORDER BY last, first
+       LIMIT 3 OFFSET 3")
+
+# Display the next 3 people
+sqldf("SELECT *
+       FROM sales
+       ORDER BY last, first
+       LIMIT 3 OFFSET 6")
+```
+
+Note that the LIMIT clause is not standard SQL - some SQL flavors
+do not contain a LIMIT clause. However, the LIMIT clause or 
+something similar is part of most SQL flavors.
+
 
 ## DO NOT select both aggregate and non-aggregate data
 
