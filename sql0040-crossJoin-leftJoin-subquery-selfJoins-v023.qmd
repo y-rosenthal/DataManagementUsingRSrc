@@ -34,9 +34,11 @@ that contain the data for the books database.
 ## read in the data
  
 ```{r}
+#| warning: false
+
 # load the packages we'll need
-if (!require(sqldf)) { install.packages("sqldf"); require(sqldf) }
-if (!require(readr)) { install.packages("readr"); require(readr) }
+if (!require(sqldf, quietly=TRUE, warn.conflicts=FALSE)) { install.packages("sqldf"); require(sqldf) }
+if (!require(readr, quietly=TRUE, warn.conflicts=FALSE)) { install.packages("readr"); require(readr) }
 
 # Read in the data for the books database - see the 
 titles = read_csv("data/booksDatabase/titles.csv", na="NULL", show_col_types=FALSE)
@@ -962,17 +964,56 @@ sqldf("   select distinct city, state
 
 ## Subqueries
 
+A "subquery" is a select statement that appears inside of another
+select statement. The larger select statement is often referred to as 
+the "outer query" and the subquery is often referred to as the 
+"inner query". This will become much more understandable after seeing
+some of the examples shown below.
+
+Note that a single outer query may contain several different subqueries. 
+Also note that a subquery may itself contain yet another subquery.
+
+Subqueries are most often found in the SELECT, FROM, WHERE and HAVING 
+clauses of a SQL select statement. The easiest types of subqueries 
+to understand are probably those that
+appear in the WHERE or HAVING clauses of a larger select statement. 
+Below are some examples. We will cover other types of subqueries after these.
+
+### Subqueries in WHERE and HAVING clauses
+
+Subqueries that appear in the WHERE or HAVING clause can be categorized 
+by the "shape" (ie. number of rows and columns that are returned by the 
+subquery).
+
+* subqueries that return just one value (i.e. one row of one column)
+
+  These types of subqueries can be placed anywhere in the outer query that
+  you normally would put a single value (e.g. before or after an operator
+  such as a ">" sign or "-" sign).
+
+* subqueries that return just on column but possibly many rows.  
+
+  These types of subqueries are used to generate "lists" of value that 
+  can appear after the SQL IN operator (see below for an example).
+  
+* subqueries that return any number of rows and any number of columns.
+
+  These types of subqueries may appear after the SQL keyword "EXISTS"
+  which we discuss below.
+
+#### Subqueries that return a single value
+
+In the following example, the subqueries appear after a ">" and after a "<".
+Therefore the subquery MUST return just a single value.
+
+**QUESTION** 
+(a) Show titles whose price is greater than the average price of all titles.
+
+(b) Show titles whose price is less than the average price of all titles.
+
+**ANSWER (a)**
 ```{r}
-###################################################.
-# Subqueries
-####################################################.
-
-#------------------------------------------------------------------------
-# Subqueries that return a single value
-#------------------------------------------------------------------------
-
-# Show titles whose price is greater than the average price of all titles
-
+# Titles whose price is greater than the average price of all titles
 sqldf("select title_name, price
       from titles
       where price > 
@@ -982,21 +1023,42 @@ sqldf("select title_name, price
               )
       order by title_name
       ")
+```
 
-# prove it by determining the avg price of all titles
+**ANSWER (b)**
+```{r}
+# Titles whose price is less than the average price of all titles
+# (same as above answer except we use "<" instead of ">")
+sqldf("select title_name, price
+      from titles
+      where price <
+              (
+                 select avg(price)
+                 from titles
+              )
+      order by title_name
+      ")
+```
+
+Let's show that the above queries actually did their jobs by 
+determining the avg price of all titles.
+
+```{r}
+# average price of all titles
 
 sqldf(" select avg(price)
         from titles
 ")
+```
 
-
-# YOU CANNOT WRITE THIS QUERY WITHOUT USING A SUBQUERY!!!!
-# THE FOLLOWING WILL PRODUCE AN ***ERROR*** SINCE
-# YOU MAY NOT USE AN AGGREGATE FUNCTION SUCH AS AVG
-# INSIDE A WHERE CLAUSE
-# 
-# AGGREGATE FUNCTIONS ARE ONLY ALLOWED INSIDE
-# HAVING AND INSIDE SELECT FOR QUERIES THAT HAVE A GROUP BY
+YOU CANNOT WRITE THE ABOVE QUERIES WITHOUT USING A SUBQUERY!!!!
+THE FOLLOWING WILL PRODUCE AN ***ERROR*** SINCE
+YOU MAY NOT USE AN AGGREGATE FUNCTION SUCH AS AVG
+INSIDE A WHERE CLAUSE
+ 
+```{r}
+#| error: true
+#| warning: true
 
 sqldf("select title_name, price
       from titles
@@ -1005,54 +1067,143 @@ sqldf("select title_name, price
       ")
 ```
 
-### Subquery in SELECT, FROM, WHERE, HAVING
+### Subquery in HAVING clause
+
+These are very similar to subqueries in the WHERE clause:
+
+**Question:**
+
+Show the types of books with the 3 highest avg prices. 
+Sort the results in alphabetical order of the type name.
+
+**ANSWER:**
+
+The following will answer the question but it doesn't put the rows
+in alphabetical order of the name of the type.
 
 ```{r}
-#-----------------------------------------------------------------------------------.
-# A subquery can appear in any of the following clauses in a select statement
-#
-# SELECT    - the subquery must return a single item (i.e. single row single column)
-#
-# FROM - subqueries in the FROM clause may return many rows and many columns.
-#        The subquery is treated as though it were an actual table.
-#        You need to follow the subquery with a 'name' that will be used
-#        as the name of the pseudo-table that is generated by the subquery.
-#        This is similar to the way you can name columns with aliases.
-#
-# WHERE or the HAVING - these subqueries may return the following:
-#
-#         (a)  a single row, single column , i.e. a single value
-#              e.g. a subquery that appears before or after a + sign or a > sign
-#               or anywhere that you'd expect a single value to appear.
-#
-#         (b) possibly many rows of a single column -
-#             after the IN operator
-#
-#         (c) possibly many rows, many columns -
-#             after the EXISTS operator 
-#-----------------------------------------------------------------------------------.
+sqldf("select type, avg(price)
+       from titles
+       group by type
+       order by avg(price) desc
+       limit 3")
+```
+
+To get just the 3 largest average prices, we had to use
+"order by avg(price) desc" combined with "limit 3" to get only the first
+3 rows. However, that leaves the rows in the order of descending avg(price) and
+not in alphabetical order of the type as we had been asked to do.
+
+We can get the rows in the right order by using a subquery as follows:
+
+```{r}
+sqldf("select type, avg(price)
+       from titles
+       group by type
+       HAVING avg(price) >= 
+                 (select avg(price) 
+                  from titles
+                  group by type
+                  order by avg(price) desc
+                  limit 1 offset 2)
+       order by type")
+```
+
+The following is the output of the subquery if it would have been 
+run on its own.
+
+```{r}
+                sqldf("
+                  select avg(price) 
+                  from titles
+                  group by type
+                  order by avg(price) desc
+                  limit 1 offset 2
+                ")
+```
+
+The subquery returns just the 3rd most expensive average price. 
+When this is placed in the having clause of the outer query we 
+get the rows we want without the need to use limit in the outer query.
+We can now order the outer query by the type column instead of by the price.
+
+### Subquery in SELECT, FROM, WHERE, HAVING
+
+Now that you've seen the basic idea of a subquery, let's just reiterate 
+that a subquery can appear in any of the following clauses in a select statement:
+
+```
+ SELECT - the subquery must return a single item (i.e. single row single column)
+
+ FROM - subqueries in the FROM clause may return many rows and many columns.
+        The subquery is treated as though it were an actual table.
+        You need to follow the subquery with a 'name' that will be used
+        as the name of the pseudo-table that is generated by the subquery.
+        This is similar to the way you can name columns with aliases.
+
+ WHERE or the HAVING - these subqueries may return the following:
+
+         (a)  a single row, single column , i.e. a single value
+              e.g. a subquery that appears before or after a + sign or a > sign
+               or anywhere that you'd expect a single value to appear.
+
+         (b) possibly many rows of a single column -
+             after the IN operator
+
+         (c) possibly many rows, many columns -
+             after the EXISTS operator 
 ```
 
 ### subquery in SELECT
 
+Subqueries in the SELECT clause must return a single value (i.e. a 
+single row with a single column).
+
+**QUESTION**: Write a query that shows the title_name, price and the amount the price is above average for those titles whose price is above average.
+
+**ANSWER**
+
 ```{r}
-#----------------------------------------------------------------------
-# Subqueries in the SELECT clause must return a single row, single column.
-#----------------------------------------------------------------------
-
-# QUESTION : 
-# Write a query that shows the title_name, price and the amount the price is above average
-# for those titles whose price is above average.
-
 sqldf("select title_name, price, price - (select avg(price) from titles) as 'amt_above_avg'
       from titles
       where price > (select avg(price) from titles)
       order by title_name
       ")
+```
 
+Note that the subquery was required since you shouldn't mix aggregate functions,
+e.g. avg(price), in the select statement with non-aggregated columns (e.g. title_name).
+If you do, then the avg function implies that you will get the average
+of sevaral prices (i.e. the prices from several rows) being displayed 
+***in a single row of output***. Howver, the non-aggregated columns such as
+title_name cannot be summarized into a single row, so the implication is that
+there should be several rows of output. 
 
-# QUESTION - same as above but also show the average price of all books as a column in the results
+In ANSI SQL this is an error. However, the SQLite flavor of SQL that we are
+using allows this but only returns ONE row of data. This is VERY misleading.
+For example, with a subquery, using sqlite we get the following:
 
+```{r}
+sqldf("select title_name, price, price - avg(price) as 'amt_above_avg'
+      from titles
+      where price > (select avg(price) from titles)
+      order by title_name
+      ")
+```
+Which seems to imply that there is only one row for a book whose price
+is above average. However, as we saw in the correct answer shown above, there
+are actually six such book in our titles table.
+
+Bottom line is that you need to use the version above that has the subquery 
+to answer this question correctly.
+
+### You may have more than one subquery 
+
+**QUESTION**: Same as above but also show the average price of all books as a column in the results.
+
+**ANSWER**
+
+```{r}
 sqldf("select title_name, 
               price,
               (select avg(price) from titles) as avgPriceOfAllBooks,
@@ -1061,14 +1212,15 @@ sqldf("select title_name,
       where price > (select avg(price) from titles)
       order by title_name
       ")
+```
 
+When the query above is processed, the subqueries get run and produce
+the result 18.3875. That value is then plugged into the outer query
+and the outer query is run. The following is what the outer query
+would look like after the result of the subqueries are plugged into the
+outer query. You never have to type this. It is done automatically.
 
-# When the query above is processed, the subqueries get run and produce
-# the result 18.3875. That value is then plugged into the outer query
-# and the outer query is run. The following is what the outer query
-# would look like after the result of the subqueries are plugged into the
-# outer query. You never have to type this. It is done automatically.
-
+```{r}
 sqldf("select title_name, 
               price,
               18.3875 as avgPriceOfAllBooks,
@@ -1121,30 +1273,97 @@ sqldf("select au_fname, au_lname, city
        order by au_lname, au_fname")
 ```
 
-## Correlated Subqueries
+
+### Subqueries in the FROM clause
+
+Subqueries in the FROM clause may return many rows and many columns.
+The subquery is treated as though it were an actual table.
+You need to follow the subquery with a 'name' that will be used
+as the name of the pseudo-table that is generated by the subquery.
+This name is known as an 'alias' for the table.
+This is similar to the way you can name columns with aliases.
+
+**QUESTION**
+
+Show the title, price and type of each book. 
+Also show the max and min and average prices of books of that category as 
+additional columns in the output.
+
+The results should appear as follows.
+
+```{r subqueryFrom-1}
+#| echo: false
+
+sqldf("select title_name, price, titles.type, typeMaxPrice, typeMinPrice, typeAvgPrice
+      from titles JOIN (select type,
+                               max(price) as typeMaxPrice, 
+                               min(price) as typeMinPrice, 
+                               round(avg(price),2) as typeAvgPrice
+                        from titles
+                        group by type) as summaryData
+        
+        ON titles.type = summaryData.type
+        
+      order by title_name")
+```
+
+**ANSWER**
 
 ```{r}
-############################
-# Correlated subqueries
-############################
+#| output: false
+#| ref.label: "subqueryFrom-1"
+```
 
+**Explanation:**
 
-# In a "correlated" subquery, the subquery is executed once for each
-# row in the outer query. 
-# The subquery can refer to the data in the row for the outer query.
-# Notice that in the following query the sub-query
-# refers to the authors.au_id table even thought the from clause in the
-# subquery does NOT include the authors table. This is actually a reference
-# to the row from the authors table that is being processed while the subqery
-# is running. 
-#
-# This subquery will be run again and again for every row that 
-# is processed in the outer query.
-#
-# Notice that the subquery is in the where clause and the order by clause
-# at the end is once again from the outer query.
+The subquery produces the result shown below. 
 
-# Show authors who published more than 2 titles 
+```{r}
+           sqldf("select type,
+                         max(price) as typeMaxPrice, 
+                         min(price) as typeMinPrice, 
+                         round(avg(price),2) as typeAvgPrice
+                  from titles
+                  group by type")
+```
+
+This result is called "summaryData" 
+and is treated as a new table. This is not really a table in the database
+but can be used in the query as though there were such a table in the
+database. 
+
+This new "summaryData table" contains just one row for each type. 
+We can therefore consider the "type" to be the primary key of this new
+"summaryData table. We then to JOIN the titles table with this 
+new "summaryData table" by thinking of the summaryData.type column as 
+the "primary key" of the summaryData table and the title.type column
+as a foreign key in the titles table that references the type column in the
+summaryData table.
+
+The result is that we can mix non-aggregated data (e.g. title_name column)
+with aggregate data (e.g. max, min and avg of prices for each type)
+in the output of the query.
+
+## Correlated Subqueries
+
+In a "correlated" subquery, the subquery is executed once for each
+row in the outer query. 
+The subquery can refer to the data in the row for the outer query.
+Notice that in the following query the sub-query
+refers to the authors.au_id table even thought the from clause in the
+subquery does NOT include the authors table. This is actually a reference
+to the row from the authors table that is being processed while the subqery
+is running. 
+
+This subquery will be run again and again for every row that 
+is processed in the outer query.
+
+Notice that the subquery is in the where clause and the order by clause
+at the end is once again from the outer query.
+
+**Example**: Show authors who published more than 2 titles 
+
+```{r}
 sqldf("select au_fname, au_lname
       from authors
       where 
@@ -1152,8 +1371,12 @@ sqldf("select au_fname, au_lname
           from title_authors
           where authors.au_id = title_authors.au_id) > 2
       order by au_lname, au_fname")
+```
 
+If you want to show the actual count in the output you would
+have to repeat the subquery in the SELECT clause of the outer query.
 
+```{r}
 sqldf("select au_fname, au_lname,
           (select count(*)
           from title_authors
@@ -1164,23 +1387,26 @@ sqldf("select au_fname, au_lname,
           from title_authors
           where authors.au_id = title_authors.au_id) > 2
       order by au_lname, au_fname")
+```
 
 
+You cannot run the subquery from a correlated-subquery on its
+own. It must be part of a larger query. For example the following
+TRIES to run the subquery from the previous example but fails
+with an error
 
-#------------------------------------------------------------------.
-# You cannot run the subquery from a correlated-subquery on its
-# own. It must be part of a larger query. For example the following
-# TRIES to run the subquery from the previous example but fails
-# with an error
-#------------------------------------------------------------------.
+```{r}
+#| error: true
+#| warning: true
 
 sqldf("select count(*)
           from title_authors
           where authors.au_id = title_authors.au_id")  # ERROR - no such column authors.au_id
+```
 
+### A separate inner query is run for every row that is processed in the outer query
 
-# A separate inner query is run for every row that is processed in the outer query
-
+```{r}
 # This is the subquery that is run for the row in the authors for Sarah Buchman
 sqldf("select count(*)
        from title_authors
@@ -1198,68 +1424,67 @@ sqldf("select count(*)
        where 'A03' = title_authors.au_id")
 
 # etc ...
+```
 
 
+#### There are often ways to avoid subqueries
 
+The following is another way to get the same results without using any subqueries.
+Instead of a subquery, the following query uses
+a join and makes use of the group by and having clauses.
 
-
-#------------------------------------------------------------------.
-# The following is another way to get the same results without using any subqueries.
-# Instead of a subquery, the following query uses
-# a join and makes use of the group by and having clauses.
-#------------------------------------------------------------------.
-
+```{r}
 sqldf("select au_fname, au_lname
       from authors join title_authors on authors.au_id = title_authors.au_id
       group by authors.au_id, au_fname, au_lname
       having count(*) > 2
       order by au_lname, au_fname")
+```
 
-#------------------------------------------------------------------.
-# Some people will think that the 1st version (with the subquery)
-# is easier to understand.
-#
-# Some people will think that the 2nd version (with the join, group by, having)
-# is easier to understand.
-#
-# Generally it is a matter of style - they are both valid.
-# (NOTE - As a general rule - you should avoid correlated subqueries if possible
-# as they tend to run slower than other types of queries since the correlated
-# subquery is run many times. This is a rule of thumb but depending on the 
-# exact queries, it is possible that a correlated subquery will run as 
-# fast or faster than alternate queries that return the same results.)
-#
-# HOWEVER
-#
-# If you want to actually see how many books each author wrote, only the 2nd
-# version (without the subquery) will work. See the following. This is exactly the
-# same as the 2nd query above with the addition of
-#
-#            "count(*) as num_titles)"
-#
-# on the first line of the query.
-#------------------------------------------------------------------.
+Some people will think that the 1st version (with the subquery)
+is easier to understand.
 
+Some people will think that the 2nd version (with the join, group by, having)
+is easier to understand.
+
+Generally it is a matter of style - they are both valid.
+
+(NOTE - As a general rule - you should avoid correlated subqueries if possible
+ as they tend to run slower than other types of queries since the correlated
+ subquery is run many times. This is a rule of thumb but depending on the 
+ exact queries, it is possible that a correlated subquery will run as 
+ fast or faster than alternate queries that return the same results.)
+
+HOWEVER
+
+If you want to actually see how many books each author wrote, only the 2nd
+version (without the subquery) will work. See the following. This is exactly the
+same as the 2nd query above with the addition of
+
+```
+            count(*) as num_titles
+```
+
+on the first line of the query.
+
+```{r}
 sqldf("select au_fname, au_lname, count(*) as num_titles 
       from authors join title_authors on authors.au_id = title_authors.au_id
       group by authors.au_id
       having count(*) > 2
       order by au_lname, au_fname")
-
-#------------------------------------------------------------------.
-# You CANNOT add the number of titles to the version with the subquery as
-# the outer query does not have access to ANY information about the titles
-# since the "from" in the outer query only includes the "authors" table. 
-# Therefore the "select" clause in the outer query may only refer
-# to information from the authors table.
-#
-# TAKEAWAY: 
-# When using a subquery in the where or having clauses
-# The only information that can be displayed by the outer query is 
-# info that is available in the tables listed 
-# in the "from" of the outer query. 
-#------------------------------------------------------------------.
 ```
+
+You CANNOT add the number of titles to the version with the subquery as
+the outer query does not have access to ANY information about the titles
+since the "from" in the outer query only includes the "authors" table. 
+Therefore the "select" clause in the outer query may only refer
+to information from the authors table.
+
+**TAKEAWAY**: When using a subquery in the where or having clauses
+The only information that can be displayed by the outer query is 
+info that is available in the tables listed 
+in the "from" of the outer query. 
 
 ## Table aliases with subqueries
 
@@ -1337,6 +1562,9 @@ sqldf("
 ## EXISTS (some subquery)
 
 ```{r}
+#| error: true
+#| warning: true
+
 #-------------------------------------------------------------------------------
 # Using "EXISTS" with correlated subqueries that may or may not return any rows.
 #

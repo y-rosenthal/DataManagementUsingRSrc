@@ -689,6 +689,35 @@ sqldf("select publishers.*, titles.*
 ##########################################################################.
 ```
 
+## COALESCE(item1, item2, ...) returns first item that is not NULL
+
+The SQL coalesce function is a non-aggregate function. It takes multiple
+values as arguments and returns the first argument that is not NULL. If
+all arguments are NULL then COALESCE returns NULL. 
+This offers a very simple way to replace NULLs in the output with 
+something that is more user friendly. For example, above we showed
+how you could use the LEFT JOIN to show publishers who have not published
+any books. The following shows that Tenterhooks press did not publish
+any titles.
+
+```{r}
+sqldf("select pub_name, title_name
+       from publishers left join titles on titles.pub_id = publishers.pub_id
+       order by pub_name")
+```
+
+Instead of displaying NULL for the title_name for Tenterhooks press, it may
+be preferable to display a message indiating that this publisher has
+no associated titles. That is done in the following revised command
+that uses the coalesce function:
+
+```{r}
+sqldf("select pub_name, coalesce(title_name, '((no titles for this publisher))')
+       from publishers left join titles on titles.pub_id = publishers.pub_id
+       order by pub_name")
+```
+
+
 ## SQL set operations (i.e. UNION, EXCEPT, INTERSECT)
 
 ```{r}
@@ -1081,6 +1110,39 @@ sqldf("select title_name,
       ")
 ```
 
+#### Another example - subquery in SELECT
+
+```{r}
+# GOAL: 
+#
+# Show the avg price of each type of book and how much that differs
+# from the overall avg price of all books
+
+# THINKING IT THROUGH: 
+# start with getting the avg price of each type of book
+sqldf("select type, avg(price)
+       from titles
+       group by type
+       order by type
+       ")
+
+# THINKING IT THROUGH: 
+# get overall avg price for all books
+sqldf("select avg(price) from titles")
+
+
+
+# FINAL ANSWER:
+#
+# Put is all together into a single answer with a subquery in the SELECT clause
+
+sqldf("select type, avg(price), avg(price) - (select avg(price) from titles) as 'diff from overall avg'
+       from titles
+       group by type
+       order by type
+       ")
+```
+
 ### subquery after IN can return a single column
 
 ```{r}
@@ -1130,12 +1192,11 @@ sqldf("select au_fname, au_lname, city
 # Correlated subqueries
 ############################
 
-
 # In a "correlated" subquery, the subquery is executed once for each
 # row in the outer query. 
 # The subquery can refer to the data in the row for the outer query.
 # Notice that in the following query the sub-query
-# refers to the authors.au_id table even thought the from clause in the
+# refers to the authors.au_id table even though the from clause in the
 # subquery does NOT include the authors table. This is actually a reference
 # to the row from the authors table that is being processed while the subqery
 # is running. 
@@ -1156,19 +1217,6 @@ sqldf("select au_fname, au_lname
       order by au_lname, au_fname")
 
 
-sqldf("select au_fname, au_lname,
-          (select count(*)
-          from title_authors
-          where authors.au_id = title_authors.au_id) as numTitles
-      from authors
-      where 
-         (select count(*)
-          from title_authors
-          where authors.au_id = title_authors.au_id) > 2
-      order by au_lname, au_fname")
-
-
-
 #------------------------------------------------------------------.
 # You cannot run the subquery from a correlated-subquery on its
 # own. It must be part of a larger query. For example the following
@@ -1180,14 +1228,18 @@ sqldf("select count(*)
           from title_authors
           where authors.au_id = title_authors.au_id")  # ERROR - no such column authors.au_id
 
-
-# A separate inner query is run for every row that is processed in the outer query
+#---------------------------------------------------------------------------.
+# EXAMINING HOW THE CORRELATED SUBQUERY WORKS
+#
+# When processing a correlated subquery, SQL will "under the covers"
+# process a separate inner query for every row that is processed in the 
+# outer query. For example: 
+#---------------------------------------------------------------------------.
 
 # This is the subquery that is run for the row in the authors for Sarah Buchman
 sqldf("select count(*)
        from title_authors
        where 'A01' = title_authors.au_id")
-
 
 # This is the subquery that is run for the row in the authors for Wendy Heydemark
 sqldf("select count(*)
@@ -1200,9 +1252,6 @@ sqldf("select count(*)
        where 'A03' = title_authors.au_id")
 
 # etc ...
-
-
-
 
 
 #------------------------------------------------------------------.
@@ -1248,8 +1297,8 @@ sqldf("select au_fname, au_lname, count(*) as num_titles
       having count(*) > 2
       order by au_lname, au_fname")
 
-#------------------------------------------------------------------.
-# You CANNOT add the number of titles to the version with the subquery as
+#------------------------------------------------------------------------------.
+# You CANNOT simply add the number of titles to the version with the subquery as
 # the outer query does not have access to ANY information about the titles
 # since the "from" in the outer query only includes the "authors" table. 
 # Therefore the "select" clause in the outer query may only refer
@@ -1260,7 +1309,26 @@ sqldf("select au_fname, au_lname, count(*) as num_titles
 # The only information that can be displayed by the outer query is 
 # info that is available in the tables listed 
 # in the "from" of the outer query. 
+#------------------------------------------------------------------------------.
+
+
 #------------------------------------------------------------------.
+# You CAN get the number of books into the output by using yet
+# another subquery in the SELECT clause.
+
+sqldf("select au_fname, au_lname,
+          (select count(*)
+          from title_authors
+          where authors.au_id = title_authors.au_id) as numTitles
+      from authors
+      where 
+         (select count(*)
+          from title_authors
+          where authors.au_id = title_authors.au_id) > 2
+      order by au_lname, au_fname")
+
+
+
 ```
 
 ## Table aliases with subqueries

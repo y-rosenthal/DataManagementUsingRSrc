@@ -171,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ### Single Table queries
 
+<!------------------------------------------------------
+TOPICS: 
+------------------------------------------------------->
 #### Question 1
 
 List all books (title and number sold) that sold more than 100 copies. List the books with the most sales at the top. 
@@ -196,7 +199,7 @@ sqldf("
 ```
 :::
 
-
+<!----------------------------------------------------------->
 
 #### Question 2
 
@@ -224,7 +227,7 @@ sqldf("
 ```
 :::
 
-
+<!----------------------------------------------------------->
 
 #### Question 3
 
@@ -273,6 +276,7 @@ sqldf("
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 4
 
@@ -292,11 +296,11 @@ sqldf("select substr(au_fname,1,1) || '. ' || au_lname  as   'AuthorName',  stat
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q400"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 5
 
@@ -317,7 +321,6 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q500"
 ```
 :::
@@ -346,11 +349,11 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q600"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 7
 
@@ -371,12 +374,12 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q700"
 ```
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 8
 
@@ -396,7 +399,6 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q800"
 ```
 :::
@@ -404,6 +406,7 @@ sqldf("
 
 ### Single table queries with calculated values
 
+<!----------------------------------------------------------->
 
 #### Question 9
 
@@ -423,12 +426,12 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q900"
 ```
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 10
 
@@ -448,7 +451,6 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1000"
 ```
 :::
@@ -457,6 +459,7 @@ sqldf("
 
 These can use aggregate functions but will return at most one row in the output for each “group” of rows as defined in the “group by”
 
+<!----------------------------------------------------------->
 
 #### Question 11
 
@@ -480,12 +483,12 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1100"
 ```
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 12
 
@@ -507,11 +510,11 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1200"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 13
 
@@ -521,7 +524,7 @@ Using the data shown above, the output should be:
 
 ```{r q1300}
 #| echo: false
- 
+#| 
 sqldf("
 		select type, count(*) as '# of long books'
 		from titles
@@ -533,12 +536,12 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1300"
 ```
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 14
 
@@ -555,15 +558,15 @@ sqldf("
 		from titles
 		where pages >= 450
 		group by type
-		having count(*) >= 2        -- this is the only change.
+		having count(*) >= 2;         -- this is the only change.
 ")
 ```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
-NOTE: the only change to the above answer is the addition of the HAVING clause at the end.
+NOTE: the only change to the above answer is   
+      the addition of the HAVING clause at the end.
 ```{r}
-#| output: false
 #| ref.label: "q1400"
 ```
 :::
@@ -571,6 +574,7 @@ NOTE: the only change to the above answer is the addition of the HAVING clause a
 
 ## Multiple table queries with group by 
 
+<!----------------------------------------------------------->
 
 #### Question 15
 
@@ -596,12 +600,12 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1500"
 ```
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 16
 
@@ -613,11 +617,11 @@ Using the data shown above, the output should be:
 #| echo: false
 
 sqldf("
-		select pub_name, sum(pages)
-		from publishers join titles on publishers.pub_id = titles.pub_id
-		group by pub_name
+		select … -- same as previous question
+		from … -- same as previous question
+		group … -- same as previous question
 		having  sum(pages)  >= 1250      -- THIS LINE IS THE ONLY CHANGE 
-		order by sum(pages) desc;
+		order … -- same as previous question 
 ")
 ```
 
@@ -625,11 +629,11 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1600"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 17
 
@@ -651,7 +655,6 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1700"
 ```
 :::
@@ -659,6 +662,7 @@ sqldf("
 
 ## Multiple table queries
 
+<!----------------------------------------------------------->
 
 #### Question 18
 
@@ -681,11 +685,11 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1800"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 19
 
@@ -708,11 +712,11 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q1900"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 20
 
@@ -735,10 +739,18 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q2000"
 ```
 :::
+
+<!----------------------------------------------------------->
+
+<dim style="font-size: 300%"><strong><em>NOTE: I'm in the middle of
+fixing the "collpasablility" of the answers. For the remaining questions
+please understand that the text "Using the data shown above, the output should be:" might seem misplaced and that the answer is written explicitly without the "click for answer" sections working. I hope to finish 
+fixing this functionality soon. (I already fixed questions 1-20 and 46-48.)
+</em></strong></dim>
+
 
 
 #### Question 21
@@ -766,12 +778,12 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q2100"
 ```
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 22
 
@@ -795,12 +807,12 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q2200"
 ```
 :::
 
 
+<!----------------------------------------------------------->
 
 #### Question 23
 
@@ -896,6 +908,9 @@ sqldf(answer3)
 
 
 
+
+<!----------------------------------------------------------->
+
 #### Question 24
 
 List the  publisher name, author's name and phone number for all authors that have written books for the publisher's whose name begins with a letter from A through J.  (HINT: specify the publisher's name twice but only show one of them. In the criteria for one of them list >="A" and in the criteria for the other list <"K").
@@ -918,13 +933,13 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q2400"
 ```
 :::
 
 
 
+<!----------------------------------------------------------->
 
 #### Question 25
 
@@ -947,11 +962,11 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q2500"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 26
 
@@ -976,11 +991,11 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q2600"
 ```
 :::
 
+<!----------------------------------------------------------->
 
 #### Question 27
 
@@ -1002,12 +1017,27 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q2700"
 ```
 :::
 
+<!----------------------------------------------------------->
 
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+##### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
 
 #### Question 28
 
@@ -1015,25 +1045,28 @@ List the publisher name and total revenue for each for each publisher. (Total re
 
 Using the data shown above, the output should be:
 
-```{r q2800}
-#| echo: false
-
-sqldf("
+	ANSWER:
 		select pub_name, sum(sales * price) as 'Total Revenue'
 		from titles join publishers on publishers.pub_id = titles.pub_id
 		group by publishers.pub_id, pub_name	;
-")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q2800"
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 29
 
@@ -1041,27 +1074,29 @@ Modify the previous query to only list those publishers who have at least ten th
 
 Using the data shown above, the output should be:
 
-
-```{r q2900}
-#| echo: false
-
-sqldf("
+	ANSWER:
 		select pub_name, sum(sales * price) as 'Total Revenue'
 		from titles join publishers on publishers.pub_id = titles.pub_id
 		group by publishers.pub_id, pub_name	;
 		having sum(sales * price) >= 10000;
-")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q2900"
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 30
 
@@ -1069,83 +1104,92 @@ List the title and author of each book. For each author for a particular book, l
 
 Using the data shown above, the output should be:
 
-```{r q3000}
-#| echo: false
-
-sqldf("
+	ANSWER:
 		select title_name, au_fname, au_lname, advance
 		from authors join title_authors on authors.au_id = title_authors.au_id 
 		                      join titles on title_authors.title_id = titles.title_id 
 	                	      join royalties on royalties.title_id = titles.title_id;
-")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3000"
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 31
 
 List the title and author of each book. For each author for a particular book, list the total amount in royalties that (s)he got for that book. 
-Hint: the royalty dollars for a particular book is the "price" times the "sales" times the "royalty_rate" times the "royalty_rate". Sort the results so that the authors who made the most royalty dollars are listed at the top. (NOTE: make sure to read the database description at the top of this document to understand the fields ROYALTIES.ROYALTY_RATE and the field TITLE_AUTHORS.royalty_rate).
+Hint: the royalty dollars for a particular book is the "price" times the "sales" times the "royalty_rate" times the "royalty_share". Sort the results so that the authors who made the most royalty dollars are listed at the top. (NOTE: make sure to read the database description at the top of this document to understand the fields ROYALTIES.ROYALTY_RATE and the field TITLE_AUTHORS.ROYALTY_SHARE).
 
 Using the data shown above, the output should be:
 
-
-```{r q3100}
-#| echo: false
-
-sqldf("
-		select title_name, au_fname, au_lname, royalty_rate * royalty_rate * sales * price as  'Total Royalties for Author'
+	ANSWER:
+		select title_name, au_fname, au_lname, royalty_share * royalty_rate * sales * price as  'Total Royalties for Author'
 		from authors join title_authors on authors.au_id = title_authors.au_id 
 		                      join titles on title_authors.title_id = titles.title_id 
-	                	      join royalties on royalties.title_id = titles.title_id;		")
+	                	      join royalties on royalties.title_id = titles.title_id;		
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3100"
+#| ref.label: ""
 ```
 :::
 
-
 #### Question 32
 
-List the name of each author and the total amount of royalty dollars that they received for all of their books (name this column “RoyaltyDollars”).  Hint: the royalty dollars for a particular book is the "price" times the "sales" times the "royalty_rate" times the "royalty_rate". Sort the results so that the authors who made the most royalty dollars are listed at the top. 
+List the name of each author and the total amount of royalty dollars that they received for all of their books (name this column “RoyaltyDollars”).  Hint: the royalty dollars for a particular book is the "price" times the "sales" times the "royalty_rate" times the "royalty_share". Sort the results so that the authors who made the most royalty dollars are listed at the top. 
 
 Using the data shown above, the output should be:
 
-```{r q3200}
-#| echo: false
-
-sqldf("
-		select au_fname, au_lname, sum(royalty_rate * royalty_rate * sales * price)  as  'Total Royalties for Author'
+	ANSWER:
+		select au_fname, au_lname, sum(royalty_share * royalty_rate * sales * price)  as  'Total Royalties for Author'
 		from authors join title_authors on authors.au_id = title_authors.au_id 
 		                      join titles on title_authors.title_id = titles.title_id 
 	                	      join royalties on royalties.title_id = titles.title_id
 		group by authors.au_id, au_fname, au_lname
-		order by sum(royalty_rate * royalty_rate * sales * price)  desc;
-")
+		order by sum(royalty_share * royalty_rate * sales * price)  desc;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3200"
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 33
 
@@ -1153,29 +1197,14 @@ Modify the query from the previous question so that the list only includes autho
 
 Using the data shown above, the output should be:
 
-```{r q3300}
-#| echo: false
-
-sqldf("
-		select au_fname, au_lname, sum(royalty_rate * royalty_rate * sales * price)  as  'Total Royalties for Author'
+	ANSWER:
+		select au_fname, au_lname, sum(royalty_share * royalty_rate * sales * price)  as  'Total Royalties for Author'
 		from authors join title_authors on authors.au_id = title_authors.au_id 
 		                      join titles on title_authors.title_id = titles.title_id 
 	                	      join royalties on royalties.title_id = titles.title_id
 		group by authors.au_id, au_fname, au_lname
-		having sum(royalty_rate * royalty_rate * sales * price) > 50000
-		order by sum(royalty_rate * royalty_rate * sales * price)  desc;
-")
-```
-
-
-::: {.callout-note collapse="true"}
-##### Click for answer
-```{r}
-#| output: false
-#| ref.label: "q3300"
-```
-:::
-
+		having sum(royalty_share * royalty_rate * sales * price) > 50000
+		order by sum(royalty_share * royalty_rate * sales * price)  desc;
 
 <!----------------------------------------------------------->
 
@@ -1183,32 +1212,50 @@ sqldf("
 
 <!----------------------------------------------------------->
 
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+##### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
+
 #### Question 34
 
 Show the title names  and number of pages for those books that are longer than (ie.  more pages) the average length of all books.
 
 Using the data shown above, the output should be:
 
-```{r q3400}
-#| echo: false
-
-sqldf("
+ANSWER:
 	select title_name , pages
 	from titles
 	where pages >= (select avg(pages) from titles);
-")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3400"
+#| ref.label: ""
 ```
 :::
-
-
 
 #### Question 35
 
@@ -1216,28 +1263,30 @@ Show the publisher's name and number of authors who have written books for that 
 
 Using the data shown above, the output should be:
 
-```{r q3500}
-#| echo: false
-
-sqldf("
+ANSWER:
 		select pub_name, count(DISTINCT authors.au_id) as '# of authors'
 		from authors join title_authors on authors.au_id = title_authors.au_id 
 		                      join titles on title_authors.title_id = titles.title_id 
 		                      join publishers on publishers.pub_id = titles.pub_id
 		group by pub_id, pub_name;
-")
+		
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3500"
+#| ref.label: ""
 ```
 :::
-
-		
 
 #### Question 36
 
@@ -1245,10 +1294,7 @@ Show the pub_name and the number of titles published by that publisher. Only inc
 
 Using the data shown above, the output should be:
 
-```{r q3600}
-#| echo: false
-
-sqldf("
+ANSWER:
 	select pub_name, count(*) as 'Number of Titles'
 	from publishers as pub1 join titles on pub1.pub_id = titles.pub_id
 	group by pub1.pub_id, pub_name
@@ -1257,19 +1303,24 @@ sqldf("
 		                      join titles on title_authors.title_id = titles.title_id 
 		                      join publishers as pub2 on pub2.pub_id = titles.pub_id
 		where pub2.pub_id = pub1.pub_id ) ;
-")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3600"
+#| ref.label: ""
 ```
 :::
-
-
 
 #### Question 37
 
@@ -1277,45 +1328,36 @@ Show the names of publishers who did not publish any books (I guess they are jus
 
 Using the data shown above, the output should be:
 
+ANSWER – with a subquery
 
-```{r q3700-ansSubquery}
-#| echo: false
-
-sqldf("
 	select pub_name 
 	from publishers  as   pub1
 	where not exists
 		( select * 
 		from publishers  as pub2  join titles on pub2.pub_id = titles.pub_id
-		where pub2.pub_id = pub1.pub_id )
-")
+		where pub2.pub_id = pub1.pub_id );
+
+ANSWER – with a left join
+	select pub_name from publishes left join titles on publishers.pub_id = titles.pub_id
+	where title_id is NULL;
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
-```{r q3700-ansLeftJoin}
-#| include: false
-
-sqldf("
-	select pub_name from publishers left join titles on publishers.pub_id = titles.pub_id
-	where title_id is NULL
-")
+```{r}
+#| echo: false
+#| ref.label: ""
 ```
-
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
-**ANSWER – with a subquery**
 ```{r}
-#| ref.label: "q3700-ansSubquery"
-```
-
-##### Click for answer
-**ANSWER – with a left join**
-```{r}
-#| ref.label: "q3700-ansLeftJoin"
+#| ref.label: ""
 ```
 :::
-
-
 
 #### Question 38
 
@@ -1325,50 +1367,64 @@ a.	The answer should only include publishers who have published some books.
 
     Using the data shown above, the output should be:
 
-```{r q3800a}
-#| echo: false
 
-sqldf("
+	ANSWER:
 		select pub_name, count(*)
 		from titles join publishers on publishers.pub_id = titles.pub_id
 		group by pub_name
 		order by count(*) desc, pub_name;
-")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3800a"
+#| ref.label: ""
 ```
 :::
 
+<!----------------------------------------------------------->
 
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
+```
+
+::: {.callout-note collapse="true"}
+##### Click for answer
+```{r}
+#| ref.label: ""
+```
+:::
 
 b.	Same as previous question but 
     this time make sure to also include publishers who have published zero books
 
     Using the data shown above, the output should be:
 
-```{r q3800b-ansLeftJoin}
-#| echo: false
-
-sqldf("
+ANSWER:
 		select pub_name, count(titles.title_id)
 		from publishers left join titles on publishers.pub_id = titles.pub_id
 		group by pub_name
 		order by count(*) desc, pub_name;
-")
-```
 
-```{r q3800b-ansUnion}
-#| include: false
+ANSWER – with a UNION – however the previous answer is shorter and more to the point
 
-sqldf("
 	select pub_name , 0  as  NumTitles
-	from publishers left join titles on publishers.pub_id = titles.pub_id
+	from publishes left join titles on publishers.pub_id = titles.pub_id
 	where title_id is NULL 
 
 UNION
@@ -1376,26 +1432,26 @@ UNION
 	select pub_name, count(*) as NumTitles
 	from titles join publishers on publishers.pub_id = titles.pub_id
 	group by pub_name;
-")
+
+## Additional questions 
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
+```
+
+```{r}
+#| echo: false
+#| ref.label: ""
 ```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
-**ANSWER - with a left join**
 ```{r}
-#| ref.label: "q3800b-ansLeftJoin"
+#| ref.label: ""
 ```
-
-**ANSWER – with a UNION**  
-```{r}
-#| ref.label: "q3800b-ansUnion"
-```
-
-
 :::
-
-## Additional questions 
-
 
 #### Question 39
 
@@ -1406,8 +1462,7 @@ Do not show any author/pbulisher names twice.
 
 Using the data shown above, the output should be:
 
-```{r q3900}
-#| echo: false
+**ANSWER**
 
 sqldf("
 select distinct au_fname, au_lname, pub_name, authors.state, publishers.state
@@ -1416,17 +1471,24 @@ from authors join title_authors on authors.au_id = title_authors.au_id
              join publishers on titles.pub_id = publishers.pub_id
 where authors.state = publishers.state
       ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q3900"
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 40
 
@@ -1438,8 +1500,7 @@ Sort the results so that the most expensive books are displayed first.
 
 Using the data shown above, the output should be:
 
-```{r q4000}
-#| echo: false
+**ANSWER**
 
 sqldf("
 select title_name, price * 3.3 as 'price in NIS', price as 'price in USD', type
@@ -1448,17 +1509,24 @@ where type = 'biography' and
       price >= 10 and price <= 20
 order by price desc
       ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q4000"
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 41
 
@@ -1468,40 +1536,33 @@ than the average number of pages for all books.
     
 Using the data shown above, the output should be:
 
-
-
-```{r q4100}
-#| echo: false
-
 sqldf("
 select title_name, price, pages
 from titles
 where price > (select avg(price) from titles) and
       pages < (select avg(pages) from titles)
       ")
+
+sqldf("select avg(price) from titles")
+sqldf("select avg(pages) from titles")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q4100"
-```
-
-The answer above uses the following two "non-correlated" subqueries.
-It might help your understanding of the answer above to see the output
-of the subqueries when they are run by themselves.
-
-```{r}
-# The average price of all books
-sqldf("select avg(price) from titles")
-
-# The average number of pages of all books
-sqldf("select avg(pages) from titles")
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 42
 
@@ -1509,25 +1570,29 @@ Show the authors who have not written any books
 
 Using the data shown above, the output should be:
 
-```{r q4200}
-#| echo: false
-
 sqldf("
 select au_fname, au_lname
 from authors left join title_authors on authors.au_id = title_authors.au_id
 where title_authors.au_id is null
 ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q4200"
+#| ref.label: ""
 ```
 :::
-
 
 #### Question 43
 
@@ -1537,27 +1602,30 @@ Sort the results alphabetically (last name, first name).
 
 Using the data shown above, the output should be:
 
-```{r q4300}
-#| echo: false
-
 sqldf("
 select au_fname, au_lname, count(*)
 from authors join title_authors on authors.au_id = title_authors.au_id
 group by au_fname, au_lname
 having count(*) >= 2
       ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q4300"
+#| ref.label: ""
 ```
 :::
-
-
 
 #### Question 44
 
@@ -1567,10 +1635,6 @@ and only show those authors who wrote at least 2 biographies.
     
 Using the data shown above, the output should be:
 
-
-```{r q4400}
-#| echo: false
-
 sqldf("
 select au_fname, au_lname, count(*)
 from authors join title_authors on authors.au_id = title_authors.au_id
@@ -1579,520 +1643,44 @@ where type = 'biography'
 group by au_fname, au_lname
 having count(*) >= 2
 ")
+
+<!----------------------------------------------------------->
+
+```{r }
+#| echo: false
 ```
 
+```{r}
+#| echo: false
+#| ref.label: ""
+```
 
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
-#| ref.label: "q4400"
+#| ref.label: ""
 ```
 :::
 
+#### Question 45
 
-#### Question 45 - a
-
-Write a query to show the books in the titles table
-for which both the author and the publisher
-have a higher than average price for books they have worked on.
-Sort the rows alphabetically by publisher name. 
-Sort the rows that have the same publisher name by the author's name. 
+Each row of your output should show the name of an author and a publisher.
+The author did not necessarily write a book for that publisher.
+The authors should be those authors whose average book price for books they
+published is above average.
+The publishers should be those publishers whose average book price for books
+they published is above average.
 
 Using the data shown above, the output should be:
 
-```{r q4500b}
-#| echo: false
-
-sqldf("
-select pub_name, au_fname, au_lname, title_name
-from authors join title_authors on authors.au_id = title_authors.au_id
-             join titles on title_authors.title_id = titles.title_id
-             join publishers on titles.pub_id = publishers.pub_id
-where authors.au_id in 
-         (
-           select authors.au_id 
-           from authors join title_authors on authors.au_id = title_authors.au_id
-                        join titles on title_authors.title_id = titles.title_id
-           group by authors.au_id 
-           having avg(price) > (select avg(price) from titles)
-         )
-      and publishers.pub_id in
-         (
-           select publishers.pub_id 
-           from titles join publishers on titles.pub_id = publishers.pub_id
-           group by publishers.pub_id
-           having avg(price) > (select avg(price) from titles)
-         )
-order by pub_name, au_lname, au_fname
-")
-```
-
-::: {.callout-note collapse="true"}
-##### Click for answer - using subqueries in WHERE
-```{r}
-#| ref.label: "q4500b"
-```
-:::
-
-::: {.callout-note collapse="true"}
-##### Click for answer - using subqueries in FROM
-```{r}
-sqldf("
-select pub_name, au_fname, au_lname, title_name
-from    (
-          select authors.*
-          from authors join title_authors on authors.au_id = title_authors.au_id
-                       join titles on title_authors.title_id = titles.title_id
-          group by authors.au_id 
-          having avg(price) > (select avg(price) from titles)
-        ) as highEndAuthors 
-
-      join title_authors on highEndAuthors.au_id = title_authors.au_id
-
-      join titles on title_authors.title_id = titles.title_id
-
-      join 
-        (
-          select publishers.*
-          from titles join publishers on titles.pub_id = publishers.pub_id
-          group by publishers.pub_id
-          having avg(price) > (select avg(price) from titles)
-        )
-      as highEndPublishers on titles.pub_id = highEndPublishers.pub_id
-
-order by pub_name, au_lname, au_fname
-")
-```
-:::
-
-::: {.callout-note collapse="true"}
-##### Click for answer - using Common Table Expressions (CTE)
-You can modify either of the previous queries to use CTE instead of 
-subqueries. The following modifies the previous query.
-```{r}
-sqldf("
-with 
-  highEndAuthors as 
-  (
-    select authors.*
-    from authors join title_authors on authors.au_id = title_authors.au_id
-                 join titles on title_authors.title_id = titles.title_id
-    group by authors.au_id 
-    having avg(price) > (select avg(price) from titles)
-  ),
-
-  highEndPublishers as 
-  (
-    select publishers.*
-    from titles join publishers on titles.pub_id = publishers.pub_id
-    group by publishers.pub_id
-    having avg(price) > (select avg(price) from titles)
-  )
-
-select pub_name, au_fname, au_lname, title_name
-from highEndAuthors join title_authors on highEndAuthors.au_id = title_authors.au_id
-             join titles on title_authors.title_id = titles.title_id
-             join highEndPublishers on titles.pub_id = highEndPublishers.pub_id
-order by pub_name, au_lname, au_fname
-")
-```
-:::
-
-
-#### Question 45 - b
-
-A literary agent is trying to connect authors with publishers who 
-have not worked together before. Write a SQL query to help the agent 
-identify these potential matches. Each row of your output should show the 
-name of a publisher and the name of an author who have NOT worked together yet.
-
-Sort the rows alphabetically by publisher name. For rows that have the same publisher name, sort them by the author's name. 
-
-::: {.callout-note collapse="true"}
-### Click for answer - Method 1: Using EXCEPT
-```{r}
-sqldf("
--- All existing and non-existing publisher/author relationships
-SELECT publishers.pub_name, authors.au_fname, authors.au_lname 
-FROM authors CROSS JOIN publishers
-
-EXCEPT
-
--- Only the existing publisher/author relationships
-SELECT publishers.pub_name, authors.au_fname, authors.au_lname 
-FROM authors JOIN title_authors on authors.au_id = title_authors.au_id
-             JOIN titles on title_authors.title_id = titles.title_id
-             JOIN publishers on titles.pub_id = publishers.pub_id
- 
-ORDER BY pub_name, au_lname, au_fname
-")
-```
-:::
-
-
-::: {.callout-note collapse="true"}
-### Click for answer - Method 2: Using LEFT JOIN 
-```{r}
-sqldf("
-SELECT publishers.pub_id, pub_name, authors.au_id, au_fname, au_lname
-FROM authors CROSS JOIN publishers
-             LEFT JOIN (
-                SELECT DISTINCT title_authors.au_id, titles.pub_id
-                FROM title_authors JOIN titles 
-                                   ON title_authors.title_id = titles.title_id
-             ) AS author_publisher 
-               ON authors.au_id = author_publisher.au_id AND 
-                  publishers.pub_id = author_publisher.pub_id
-WHERE author_publisher.au_id IS NULL
-ORDER BY pub_name, au_lname, au_fname;
-")
-```
-:::
-
-::: {.callout-note collapse="true"}
-### Click for answer - Method 3: Using NOT EXISTS
-```{r}
-sqldf("
-SELECT publishers.pub_id, pub_name, authors.au_id, au_fname, au_lname
-FROM authors CROSS JOIN publishers 
-WHERE NOT EXISTS (
-    -- NOTE 1 - This is a correlated subquery.
-    --
-    -- NOTE 2 - (unrelated to Note 1) With an EXISTS or NOT EXISTS subquery,
-    -- it doesn't make a difference what data is returned by the subquery. 
-    -- As long as ANYTHING is returned the query is considered to 'EXIST'
-    -- Threfore it's more efficient to return as little info as possilble.
-    -- SELECT 1 just returns the number 1 for each row that matches as 
-    -- opposed to returning actual data from the tables. The query would
-    -- work in the exact same way if we said SELECT * (or anything else) 
-    -- it's just for efficiency that we say SELECT 1.
-    SELECT 1 
-    FROM titles JOIN title_authors ON titles.title_id = title_authors.title_id
-    WHERE title_authors.au_id = authors.au_id
-    AND titles.pub_id = publishers.pub_id
-)
-ORDER BY pub_name, au_lname, au_fname;
-")
-```
-:::
-
-
-::: {.callout-note collapse="true"}
-### Click for answer - Method 4: Using NOT IN
-```{r}
-sqldf("
-SELECT publishers.pub_id, pub_name, authors.au_id, au_fname, au_lname
-FROM authors CROSS JOIN publishers
-WHERE (authors.au_id, publishers.pub_id) NOT IN (
-    SELECT title_authors.au_id, titles.pub_id
-    FROM title_authors
-    JOIN titles ON title_authors.title_id = titles.title_id
-)
-ORDER BY pub_name, au_lname, au_fname;
-")
-```
-:::
-
-::: {.callout-note collapse="true"}
-### Click for answer - Method 5: Using Common Table Expressions (CTE)
-Any of the previous queries could be reorganized by using 
-Common Table Expressions (CTE). For example:
-```{r}
-sqldf("
-WITH 
-
-all_pairs AS (
-    SELECT authors.au_id, au_fname, au_lname, publishers.pub_id, pub_name
-    FROM authors CROSS JOIN publishers
-),
-
-existing_pairs AS (
-    SELECT DISTINCT title_authors.au_id, titles.pub_id
-    FROM title_authors JOIN titles ON title_authors.title_id = titles.title_id
-)
-
-SELECT all_pairs.pub_id,   all_pairs.pub_name, all_pairs.au_id, 
-       all_pairs.au_fname, all_pairs.au_lname
-FROM all_pairs
-WHERE NOT EXISTS (
-    SELECT 1 FROM existing_pairs
-    WHERE existing_pairs.au_id = all_pairs.au_id 
-    AND existing_pairs.pub_id = all_pairs.pub_id
-)
-ORDER BY pub_name, au_lname, au_fname;
-")
-```
-:::
-
-
-
-#### Question 45 - c
-
-(continued from the previous question) The literary agent became more 
-selective. He now wants to focus on introducing only those authors 
-who command a higher than average price for their books with 
-publishers who command a higher than average price for their books. 
-
-Write a SQL query to help the agent identify these potential matches. Each row of your output should show the name of a publisher and the name of an author who have NOT worked together yet. The publishers should be those whose average book price is above the average price of all books. Similarly, the authors should be those whose average book price is above the average price of all books. 
-
-Sort the rows alphabetically by publisher name. For rows that have the same publisher name, sort them by the author's name. 
-
-Using the data shown above, the output should be:
-
-```{r q4500c-ansExceptSubqueries}
-#| echo: false
-
-sqldf("
--- These are the potential matchups for highEnd authors/publishers
-select pub_name, au_fname, au_lname
-from (
-        select authors.au_id, au_fname, au_lname
-        from authors join title_authors on authors.au_id = title_authors.au_id
-                     join titles on title_authors.title_id = titles.title_id
-        group by authors.au_id, au_fname, au_lname
-        having avg(price) > 
-                 (select avg(price) from titles)
-     ) as highEndAuthors
-     
-     cross join
-
-     (
-        select publishers.pub_id, pub_name
-        from publishers join titles on publishers.pub_id = titles.pub_id
-        group by publishers.pub_id, pub_name
-        having avg(price) > 
-                  (select avg(price) from titles)
-     ) as highEndPublishers
-
-EXCEPT
-
--- These are the existing publisher/author relationships
-select pub_name , au_fname, au_lname
-from authors join title_authors on authors.au_id = title_authors. au_id
-             join titles on title_authors.title_id = titles.title_id
-             join publishers on titles.pub_id = publishers.pub_id
-
-order by pub_name, au_lname, au_fname
-")
-```
-
-This is a relatively complex query. It might help to build up your answer
-step by step. 
-
-::: {.callout-note collapse="true"}
-##### Click here for some hints
-In order to check your work, it might be helpful to know the following:
-
-* The average selling price of all books is:
-
-  ```{r}
-  sqldf("select avg(price) from titles")
-  ```
-
-* The average selling price of books by different publishers are:
-  (The rows are sorted in decreasing order by average price.)
-
-  ```{r}
-  sqldf("
-  select round(avg(price),2) as 'avg price of publishers books', pub_name
-  from publishers join titles on publishers.pub_id = titles.pub_id
-  group by publishers.pub_id, pub_name
-  order by avg(price) desc, pub_name
-  ")
-  ```
-
-* Therefore the publishers who are potential introduction candidates are 
-  those whose avg book price is higher than average, ie.
-
-  ```{r}
-  sqldf("
-  select pub_name
-  from publishers join titles on publishers.pub_id = titles.pub_id
-  group by publishers.pub_id, pub_name
-  having avg(price) > (select avg(price) from titles)
-  order by avg(price) desc, pub_name
-  ")
-  ```
-  
-* These are the average selling prices of the books for the 
-  various authors 
-  (The rows are sorted in decreasing order by average price.)
-
-  ```{r}
-  sqldf("
-  select round(avg(price),2) as 'avg price of authors books', au_fname,   au_lname
-  from authors join title_authors on authors.au_id = title_authors. au_id
-               join titles on title_authors.title_id = titles.title_id
-  group by authors.au_id, au_fname, au_lname
-  order by avg(price) desc, au_lname, au_fname
-  ")
-  ```
-  
-* Therefore the authors who are potential introduction candidates are 
-  those whose avg book price is higher than average, ie.
-
-  ```{r}
-  sqldf("
-  select au_fname,   au_lname
-  from authors join title_authors on authors.au_id = title_authors. au_id
-               join titles on title_authors.title_id = titles.title_id
-  group by authors.au_id, au_fname, au_lname
-  having avg(price) > (select avg(price) from titles)
-  order by avg(price) desc, au_lname, au_fname
-  ")
-  ```
-:::
-
-
-
-::: {.callout-note collapse="true"}
-##### Click for answer - using EXCEPT with subqueries
-**Answer using EXCEPT with subqueries**
-```{r}
-#| ref.label: "q4500c-ansExceptSubqueries"
-```
-:::
-
-::: {.callout-note collapse="true"}
-##### Click for answer - using EXCEPT with Common Table Expressions (CTE)
-```{r}
-#| echo: false
-
-sqldf("
-WITH
-
-highEndPublishers AS     
-     (
-        select pub_name
-        from publishers join titles on publishers.pub_id = titles.pub_id
-        group by publishers.pub_id, pub_name
-        having avg(price) > 
-                  (select avg(price) from titles)
-     ),
-
-highEndAuthors AS
-    (
-        select au_fname, au_lname
-        from authors join title_authors on authors.au_id = title_authors.au_id
-                     join titles on title_authors.title_id = titles.title_id
-        group by authors.au_id, au_fname, au_lname
-        having avg(price) > 
-                 (select avg(price) from titles)
-     ), 
-
-allExistingRelationships AS
-     (
-        select pub_name , au_fname, au_lname
-        from authors join title_authors on authors.au_id = title_authors. au_id
-                     join titles on title_authors.title_id = titles.title_id
-                     join publishers on titles.pub_id = publishers.pub_id
-     )
-
-select * 
-from highEndPublishers CROSS JOIN highEndAuthors
-
-   EXCEPT
-
-select * 
-from allExistingRelationships
-
-order by pub_name, au_lname, au_fname
-")
-```
-:::
-
-::: {.callout-note collapse="true"}
-##### Click for answer - using NOT EXISTS with subqueries
-```{r}
-sqldf("
-select pub_name, au_fname, au_lname
-from (
-        select authors.au_id, au_fname, au_lname
-        from authors join title_authors on authors.au_id = title_authors.au_id
-                     join titles on title_authors.title_id = titles.title_id
-        group by authors.au_id, au_fname, au_lname
-        having avg(price) > 
-                 (select avg(price) from titles)
-     ) as highEndAuthors
-     
-     cross join
-
-     (
-        select publishers.pub_id, pub_name
-        from publishers join titles on publishers.pub_id = titles.pub_id
-        group by publishers.pub_id, pub_name
-        having avg(price) > 
-                  (select avg(price) from titles)
-     ) as highEndPublishers
-
-where not exists
-     (  -- correlated subquery
-        select 1
-        from authors join title_authors on authors.au_id = title_authors. au_id
-                     join titles on title_authors.title_id = titles.title_id
-                     join publishers on titles.pub_id = publishers.pub_id
-        where publishers.pub_id = highEndPublishers.pub_id and
-              authors.au_id = highEndAuthors.au_id
-     )
-
-order by pub_name, au_lname, au_fname
-")
-```
-:::
-
-::: {.callout-note collapse="true"}
-##### Click for answer - using NOT EXISTS with Common Table Expressions (CTE)**
-```{r}
-sqldf("
-with
-  highEndAuthors as 
-  (
-        select authors.au_id, au_fname, au_lname
-        from authors join title_authors on authors.au_id = title_authors.au_id
-                     join titles on title_authors.title_id = titles.title_id
-        group by authors.au_id, au_fname, au_lname
-        having avg(price) > 
-                 (select avg(price) from titles)
-  ),
-  
-  highEndPublishers as
-  (
-        select publishers.pub_id, pub_name
-        from publishers join titles on publishers.pub_id = titles.pub_id
-        group by publishers.pub_id, pub_name
-        having avg(price) > 
-                  (select avg(price) from titles)
-  ),
-
-  existingRelationships as 
-     (  -- correlated subquery
-        select 1
-        from authors join title_authors on authors.au_id = title_authors. au_id
-                     join titles on title_authors.title_id = titles.title_id
-                     join publishers on titles.pub_id = publishers.pub_id
-        where publishers.pub_id = highEndPublishers.pub_id and
-              authors.au_id = highEndAuthors.au_id
-     )
-  
-select pub_name, au_fname, au_lname
-from highEndAuthors cross join highEndPublishers
-where not exists
-     ( select 1 from existingRelationships )
-
-order by pub_name, au_lname, au_fname
-")
-```
-:::
-
-
+<!----------------------------------------------------------->
 
 #### Question 46
 
 Show the names of the most prolific authors, i.e. the authors 
 who have written the most books. Note that there could be
-several different authors who are "tied" for the most number of books.  
-Sort the names in alphabetical order (last name, first name)
+several different authors who are "tied" for the most number of books 
+written. Sort the names in alphabetical order (last name, first name)
 Also show the au_id and the number of titles that the author wrote.
 
 Using the data shown above, the output should be:
@@ -2191,7 +1779,6 @@ sqldf("
 ::: {.callout-note collapse="true"}
 ##### Click for answer
 ```{r}
-#| output: false
 #| ref.label: "q4700"
 ```
 :::
@@ -2223,7 +1810,6 @@ Answer all parts of this question
       ::: {.callout-note collapse="true"}
       ##### Click for answer
       ```{r}
-      #| output: false
       #| ref.label: "q4800a"
       ```
       :::
@@ -2254,7 +1840,6 @@ Answer all parts of this question
       ::: {.callout-note collapse="true"}
       ##### Click for answer
       ```{r}
-      #| output: false
       #| ref.label: "q4800b"
       ```
       :::
@@ -2328,7 +1913,6 @@ Answer all parts of this question
       ::: {.callout-note collapse="true"}
       ##### Click for answer
       ```{r}
-      #| output: false
       #| ref.label: "q4800c"
       ```
       :::
