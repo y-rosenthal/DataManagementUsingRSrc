@@ -1,0 +1,5 @@
+"PaymentID","PaymentType","PaymentAmount"
+"P001","Credit Card",999.95
+"P002","PayPal",299.98
+"P003","Credit Card",1199.96
+"P004","Cash",749.95

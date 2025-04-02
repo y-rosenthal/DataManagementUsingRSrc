@@ -10,8 +10,16 @@ options(width = 999)
 
 As we learn about databases and SQL we will need to refer to various 
 collections of data (i.e. "tables" of data in SQL terminology). 
-See below for info on how to download and install
-the various collections of data into R.
+
+This section explains how to import data into R for use with SQL and also
+provides the various data files that we will be using in the upcoming SQL
+lessons.
+
+## Different ways to import data for use with SQL
+
+SQL is a language that is used with Relational Database Management SOftware (RDBMS).
+
+
 
 
 ```{r}

@@ -1,0 +1,362 @@
+# <yrChapterNumber>37a. </yrChapterNumber> Working with SQLite databases in R
+
+**NOTE:** This section give a very brief overview for how to work specifically with
+SQLite databases in R. This section gives just enough information to 
+get working. More elaborate coverage for how to work with any type of
+RDBMS (relations database management system software) in R appears in 
+the next section.
+
+## load the DBI , RSQLite and sqldf packages
+
+In order to work with a SQLite database from R we will make use of the following
+packages. 
+
+* DBI (i.e. "DataBase Interface) - this is a package that contains functions for interacting with many
+  different relational database management system (RDBMS) software products. 
+  This same package would be used for communicating with all of the following
+  SQL products:
+  
+  - MySql
+  - Postgres
+  - SQLite
+  - SQL Server
+  - many many others
+
+  This package includes the following "generic" functions
+  
+  - dbConnect()
+  - dbDisconnect()
+  - dbExecute()
+  - many other other functions
+  
+  These "generic functions" provide some basic functionality that for databases.
+  However, the specifics of each RDBMS system are not coded here. Rather 
+  each RDBMS (e.g. MySql, Postgres, SQLite, etc) would have a different 
+  package written just for that RDBMS that understands the specifics of how 
+  that particular package works. 
+
+* RSQLite - this package provides functionality that is needed to work with
+  the SQLite product. It provides functions that understand the specifics
+  for how to work with SQLite databases (as opposed to MySql, Postgres or other
+  competing offerings). You must use this in conjunction with the DBI package.
+  In general, you call the functions from the DBI package which in turn
+  call the functions in the RSQLite package.
+  
+* sqldf - this is the same package we've used before for accessing R 
+  dataframes with SELECT statements. We will use the sqldf function now
+  to work with data that is contained inside an actual SQLite database.
+
+Details for how to use these packages are covered below
+  
+  
+```{r}
+#| warning: false
+
+library(DBI)
+library(RSQLite)
+library(sqldf)
+```
+
+## Housekeeping ... start from a clean slate
+
+The following code simply removes any database that we had from before.
+We just want to start from a clean slate for this presentation:
+
+```{r}
+if(!require(fs)){install.packages("fs");rquire(fs);}
+fs::file_delete("mydb.sqlite")   # remove the mydb.sqlite file
+```
+
+## Connecting to a database
+
+In order to access the data in a SQLite database (or any other 
+RDBMS database) you must create a "connection" object.
+You do that by calling dbConnect()
+
+### RSQLite::SQLite() creates a "driver" for sqlite dbConnect() creates a connection
+
+Remember that the DBI package understands the generic concept of databases
+but the RSQLite package knows about the specifics related to SQLite.
+Therefore we call the RSQLite::SQLite() function to create a 
+"driver" for the SQLite() database. 
+
+A "driver" is a piece of software that knows the specifics of how to use
+a specific pieced of software or hardware. For example when you buy a 
+printer you may need to install "driver" software for your printer
+in order for your computer to know how to use your specific printer's 
+features. Very often these driver software products are already installed 
+for major printer manufacturers on your computer. However, you many 
+need to install an updated driver to get your computer to know how to use
+the new features on your brand new printer. 
+
+We pass the "driver" to the dbConnect function. dbConnect() then returns
+a connection object, that will need to be passed to any other function that
+we use to interface with out database.
+
+```{r}
+# Create a connection to the database.
+# If the database doesn't exist then this will also create the database.
+con = dbConnect(RSQLite::SQLite(), "mydb.sqlite")
+```
+
+### Call dbDisconnect(con) when you are done.
+
+When you are finished using the database you should make 
+sure to call dbDisconnect(con), otherwise the mydb.sqlite file will be 
+considered to be "busy" and you will not be able to remove it or 
+do other similar things with it.
+
+## Running SQL commands in the database with dbExecute and sqldf
+
+We will use the dbExecute to run any type of SQL command (other than SELECT)
+in the database.
+
+We will continue to use the sqldf function specifically 
+for running SELECT statements in the database.
+
+### dbExecute
+
+The dbExecute command will take a SQL command and
+execute it in the database. (NOTE that for SELECT commands we will
+continue to use sqldf instead of dbExecute).
+
+The dbExecute function takes the connection object as its first
+argument and the actual SQL command as its 2nd argument.
+
+The return value of dbExecute is the number of rows that were
+affected by the command. This is mainly an issue for INSERT, UPDATE, DELETE
+and other commands that modify the contents of a table. In the following
+example, we are calling dbExecute to create a table. Therefore
+the function returns 0 since zero rows are affected by the creation of a table.
+
+```{r}
+# To run any SQL command other than SELECT you can use
+# the dbExecute function from the DBI package.
+#
+# You need to supply the connection that you made as
+# the first argument ot the dbExecute function.
+
+dbExecute(conn = con,
+  "create table authors (
+   au_id text,
+   au_fname text,
+   au_lname text)"
+  )
+```
+
+### Use sqldf( SOME_SELECT_STATEMENT, con ) for SELECT statements
+
+As always, you can use the sqldf function to run SELECT statements.
+To run the select against the SQLite database, you 
+must provied the connection variable that you created above
+to the connection argument to sqldf.
+
+Since we haven't inserted any rows into this table yet, the SELECT should
+return a dataframe that contains zero rows.
+
+```{r}
+sqldf("select * from authors", connection = con)
+```
+
+## Inserting data into the database
+
+### Inserting rows into a table
+
+We can use the insert SQL statement to insert a row.
+Remember that the dbExecute function returns the number of rows affected
+by the command. Therefore, if everything works correctly, this call to
+dbExecute should return 1.
+
+```{r}
+dbExecute(con, "insert into authors values('a100','anne','andrews')", connection = con)
+```
+
+We now can see that row in the database.
+
+```{r}
+sqldf("select * from authors", connection = con)
+```
+
+### Dynamically creating an INSERT statement from data.
+
+```{r}
+# Suppose you wanted to insert the following data
+# into a row of the authors table.
+
+authorId = 'a200'
+authorFname = 'bill'
+authorLname = 'bell'
+
+# We can use the following code to build up the following SQL code:
+#
+#    insert into authors values( 'a200' , 'bill' , 'jones' )
+
+insertStatement = paste0(
+                           "insert into authors ",
+                           "values(", 
+                              "'", authorId, "'", "," , 
+                              "'", authorFname, "'", "," , 
+                              "'", authorLname, "'", 
+                           ")"
+                        )
+
+# This is the insert statement that we created.
+insertStatement
+
+# We can now use dbExecute to enter the data into the database
+dbExecute(conn = con, insertStatement)          
+
+# We can now query the database to make sure that the data is there.
+sqldf("select * from authors", connection = con)
+```
+
+### Using parameters with dbExecute()
+
+```{r}
+
+# Perhaps a better way to do this is to use the "params" argument to dbExecute.
+# Using dbExecute, you can allow you SQL statement to take "arguments" (AKA "parameters").
+# To do so, simply type ? marks in the SQL code. Then supply the values to replace
+# the question marks. Those values can be in an R list. 
+#
+# Let's see an example. We can insert a new author with the following code.
+
+# We can pretend that these variables came from an API or any other source of info.
+authorId = 'a300'
+authorFname = 'carie'
+authorLname = 'cox'
+
+# Notice the ? marks and the params argument that contains the actual
+# values to replace the ? marks.
+dbExecute(con, "insert into authors values (?,?,?)",
+          params = list( 'a300' , 'carie' , 'cox' ))
+
+# We can see that we got the new author added.
+sqldf("select * from authors order by au_id", connection = con)
+```
+
+
+## Using an API and dynamically inserting the returned data into a database.
+
+```{r}
+# Suppose that you retrieved some data from an API
+# and that you got the data from the API
+# into an R dataframe by using jsonlite::fromJSON( ... )
+#
+# We will pretend that we did so and got back the following
+# dataframe with these authors.
+
+df = data.frame(authorFirstName = c("dianne","ed", "fran"),
+                authorLastName = c("david", "ellis", "fink"))
+df
+
+# We can use a loop to get the authors names from each row of the 
+# the dataframe into a separate insert statement and then 
+# insert that author's row. 
+
+# If the API didn't return any IDs for these authors,
+# we can create our own IDs inside the loop using R code.
+
+for (rownum in 1:nrow(df)){
+  
+  authorFirstName = df[rownum, "authorFirstName" ]
+  authorLastName = df[rownum, "authorFirstName" ]
+  
+  # Get the largest ID so far and add one to it
+  largestId = sqldf("select max(au_id) from authors")
+  leadingLetters = gsub("[0-9]*$", "", largestId) # Remove the numbers on the right
+  numberPortion = gsub("^[^0-9]*", "", largestId) # Remove the non-numeric characters on the left
+  newId = paste0(leadingLetters, numberPortion+1)
+
+  # Notice the ? marks and the params argument that contains the actual
+  # values to replace the ? marks.
+  dbExecute(con, "insert into authors values (?,?,?)",
+            params = list( authorFirstName , authorLastName , newId ))
+  
+}
+
+# Show that all the rows were added to the database.
+sqldf("select * from authors order by au_id", connection = con)
+
+```
+
+## Using AUTOINCREMENT to create IDs
+
+The AUTOINCREMENT option in the CREATE TABLE statement will automatically
+insert a new unique integer in a new row. This is often very useful for 
+primary key columns. 
+
+The AUTOINCREMENT columns should be INTEGER columns.
+
+Whenever a new row is inserted if the value for the autoincrement column(s) are
+not specified then the value of that column will be one more than the max value
+currently in that column.
+
+To demonstrate this, we will create a new table named titles that 
+contains an INTEGER column named title_id with the "autoincrement" option.
+
+```{r}
+dbExecute(conn = con,
+   "create table titles (
+      title_id integer primary key autoincrement,
+      title_name text,
+      pages integer
+    )"
+)
+```
+
+If we insert a row, but don't supply the title_id, a title_id will automatically 
+be generated. To make this work you must use the form of the SQL INSERT statement
+that specified the names of the columns you are inserting into, for example:
+
+> insert into titles **(title_name, pages)** values('War & Peace', 1000)")
+
+
+```{r}
+dbExecute(conn=con,
+          "insert into titles (title_name, pages) values('War & Peace', 1000)")
+
+sqldf("select * from titles", connection = con)
+
+dbExecute(conn=con,
+          "insert into titles (title_name, pages) values('Harry Potter 1', 800)")
+
+dbExecute(conn=con,
+          "insert into titles (title_name, pages) values('Harry Potter 2', 950)")
+
+# You can see that the title_id column values were automatically generated.
+
+sqldf("select * from titles", connection = con)
+```
+
+If you want to specify an explicit title_id, you still can do so. 
+Any subsequent inserts that don't specify the title_id will continue with 
+the number after the currently largest title_id value.
+
+```{r}
+# Specify a specific title_id value
+dbExecute(conn=con,
+          "insert into titles (title_id, title_name, pages) values(999, 'Harry Potter 3', 950)")
+
+sqldf("select * from titles", connection = con)
+
+# New rows that use an AUTOINCREMENT'ed title_id will continue from there
+dbExecute(conn=con,
+          "insert into titles (title_name, pages) values('Harry Potter 4', 750)")
+
+# See the new rows
+sqldf("select * from titles", connection = con)
+```
+
+## Remember to call dbDisconnect(con) when you're done.
+
+When you are finished using the database you should make 
+sure to call dbDisconnect(con), otherwise the mydb.sqlite file will be 
+considered to be "busy" and you will not be able to remove it or 
+do other similar things with it.
+
+```{r}
+dbDisconnect(con)
+```
+
+

@@ -1,0 +1,5 @@
+pub_id,pub_name,city,state,country
+P001,Abatis Publishers,New York,NY,USA
+P002,Schandenfreude Press,Hamburg,,Germany
+P003,Core Dump Books,San Francisco,CA,USA
+P004,AAA Publishing,Berkeley,CA,USA

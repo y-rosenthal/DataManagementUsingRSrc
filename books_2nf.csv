@@ -1,0 +1,4 @@
+"BookID","Title","Author","Publisher","Category","Price"
+"B001","Database Design","John Smith","TechPress","Database",45.99
+"B002","SQL Basics","John Smith","TechPress","Programming",39.99
+"B003","Network Security","Mary Jones","SecureBooks","Security",52.99

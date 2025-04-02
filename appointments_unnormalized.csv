@@ -1,0 +1,5 @@
+"AppointmentID","PatientID","PatientName","PatientDOB","DoctorID","DoctorName","DoctorSpecialty","DeptID","DeptName","DeptLocation","AppointmentDate","Status"
+"A1001","P101","John Doe","1985-03-12","D201","Dr. Wilson","Cardiology","DP01","Cardiology","Floor 3","2023-06-15","Completed"
+"A1002","P102","Jane Smith","1990-07-22","D202","Dr. Brown","Pediatrics","DP02","Pediatrics","Floor 1","2023-06-16","Scheduled"
+"A1003","P101","John Doe","1985-03-12","D203","Dr. Miller","Orthopedics","DP03","Orthopedics","Floor 2","2023-06-18","Cancelled"
+"A1004","P103","Sam Johnson","1978-11-05","D201","Dr. Wilson","Cardiology","DP01","Cardiology","Floor 3","2023-06-20","Scheduled"

@@ -5,7 +5,7 @@ format:
     toc-depth: 4
 ---
 
-# <yrChapterNumber>(sqlQstns-1)</yrChapterNumber> Database Questions (and Answers)
+# <yrChapterNumber></yrChapterNumber> Database Questions (and Answers)
 
 ```{r}
 #| echo: false

@@ -1,5 +1,53 @@
 ## The "Books Database" {#yrBooksDatabase}
 
+The "books database" is a collection of several tables that contains 
+data relating to books (i.e. "titles"), authors, publishers, etc.
+
+You can download the data for the database in the following ways:
+
+* as a set of several CSV files or  ([see below](#yrBooksSqliteFile))
+
+* as a single sqlite3 database file  ([see below](#yrBooksCsvFiles))
+
+See below for details.
+
+### SQLite file for "Books Database" {#yrBooksSqliteFile}
+
+Click [here](data/booksDatabase/books-v025.sqlite) to download all the 
+data for the books datbase as a single "SQLite" database file. 
+
+To use this file you can do one of the following:
+
+1. Install SQLite software on your computer. There are many such programs 
+   avaiable. I recommend "DB Viewer for SQLite" which is a free
+   open source program. 
+  
+   Website (download from here): <https://sqlitebrowser.org/>
+  
+   Github repository: <https://github.com/sqlitebrowser/sqlitebrowser>
+
+   You can search online for other similar programs for working with sqlite3 files.
+
+2. Free web based tool:
+   <https://y-rosenthal.github.io/yrSqliteViewer/yrSqliteViewer.html> 
+
+   This is a website that lets you upload a sqlite3 file and run
+   SQL Select statements against the data. I created this website myself
+   (with the help of some AI coding assistants). 
+  
+   PROs: you don't need to install anything
+  
+   CONs: currently only works with SQL SELECT statment but not any other 
+   types of sql statements.
+  
+3. See this chapter (in this book)
+   <https://y-rosenthal.github.io/DataManagementUsingR/sql0950-workingWithDatabasesInR-v010.html>
+   for instructions on how to access this database file directly via R 
+   commands.
+
+
+### CSV files for "Books Database" {#yrBooksCsvFiles}
+
 Download the CSV files for the "books database".
 These CSV files together comprise the data for
 the "books database". 

@@ -1,0 +1,5 @@
+"StudentID","StudentName","CourseID","CourseName","InstructorID","InstructorName","InstructorDept","Room","Credits","Grade"
+"S101","Alice Brown","C201","Database Systems","I301","Dr. Smith","Computer Science","R105",3,"A"
+"S102","Bob Green","C201","Database Systems","I301","Dr. Smith","Computer Science","R105",3,"B"
+"S101","Alice Brown","C202","Web Programming","I302","Dr. Johnson","Computer Science","R107",4,"B+"
+"S103","Carol White","C305","Statistics","I405","Dr. Davis","Mathematics","R201",3,"A-"

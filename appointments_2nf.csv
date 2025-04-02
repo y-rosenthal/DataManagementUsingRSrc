@@ -1,0 +1,5 @@
+"AppointmentID","PatientID","DoctorID","AppointmentDate","Status"
+"A1001","P101","D201","2023-06-15","Completed"
+"A1002","P102","D202","2023-06-16","Scheduled"
+"A1003","P101","D203","2023-06-18","Cancelled"
+"A1004","P103","D201","2023-06-20","Scheduled"

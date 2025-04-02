@@ -1,0 +1,4 @@
+"BookID","Title","Author","AuthorEmail","Publisher","PublisherAddress","Category","CategoryDescription","Price"
+"B001","Database Design","John Smith","john@example.com","TechPress","123 Tech St, NY","Database","About database systems",45.99
+"B002","SQL Basics","John Smith","john@example.com","TechPress","123 Tech St, NY","Programming","About programming",39.99
+"B003","Network Security","Mary Jones","mary@example.com","SecureBooks","456 Secure Ave, CA","Security","About security systems",52.99

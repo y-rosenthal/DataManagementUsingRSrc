@@ -46,7 +46,6 @@ authors = read_csv("data/booksDatabase/authors.csv", na="NULL", show_col_types=F
 publishers = read_csv("data/booksDatabase/publishers.csv", na="NULL", show_col_types=FALSE)
 title_authors = read_csv("data/booksDatabase/title_authors.csv", na="NULL", show_col_types=FALSE)
 royalties = read_csv("data/booksDatabase/royalties.csv", na="NULL", show_col_types=FALSE)
-
 ```
 
 ## CROSS JOIN
@@ -1229,6 +1228,40 @@ sqldf("select title_name,
       where price > 18.3875
       order by title_name
       ")
+```
+
+
+#### Another example - subquery in SELECT
+
+```{r}
+# GOAL: 
+#
+# Show the avg price of each type of book and how much that differs
+# from the overall avg price of all books
+
+# THINKING IT THROUGH: 
+# start with getting the avg price of each type of book
+sqldf("select type, avg(price)
+       from titles
+       group by type
+       order by type
+       ")
+
+# THINKING IT THROUGH: 
+# get overall avg price for all books
+sqldf("select avg(price) from titles")
+
+
+
+# FINAL ANSWER:
+#
+# Put is all together into a single answer with a subquery in the SELECT clause
+
+sqldf("select type, avg(price), avg(price) - (select avg(price) from titles) as 'diff from overall avg'
+       from titles
+       group by type
+       order by type
+       ")
 ```
 
 ### subquery after IN can return a single column

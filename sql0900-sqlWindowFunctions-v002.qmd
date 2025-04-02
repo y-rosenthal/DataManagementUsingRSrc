@@ -2,4 +2,14 @@
 
 See the following for more info:
 
-<https://learnsql.com/blog/why-should-i-learn-sql-window-functions/>
+* Intro to SQL Window Functions
+
+  - text
+  
+    + <https://learnsql.com/blog/why-should-i-learn-sql-window-functions/>
+
+  - videos 
+  
+    + SQL Window Functions in 10 minutes (Colt Steele, 2022) <https://www.youtube.com/watch?v=y1KCM8vbYe4>
+  
+    + [SQL Window Functions | Clearly Explained (Maven Analytics, 2024)] <https://www.youtube.com/watch?v=rIcB4zMYMas>

@@ -1,0 +1,5 @@
+"ReservationID","GuestID","GuestName","GuestEmail","GuestPhone","RoomID","RoomType","RoomRate","CheckInDate","CheckOutDate","PaymentID","PaymentType","PaymentAmount"
+"R001","G101","Mark Adams","mark@example.com","555-1111","RM101","Deluxe",199.99,"2023-07-10","2023-07-15","P001","Credit Card",999.95
+"R002","G102","Susan Lee","susan@example.com","555-2222","RM102","Standard",149.99,"2023-07-12","2023-07-14","P002","PayPal",299.98
+"R003","G101","Mark Adams","mark@example.com","555-1111","RM201","Suite",299.99,"2023-08-01","2023-08-05","P003","Credit Card",1199.96
+"R004","G103","Tom Wilson","tom@example.com","555-3333","RM103","Standard",149.99,"2023-07-15","2023-07-20","P004","Cash",749.95

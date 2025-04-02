@@ -1,0 +1,423 @@
+# <yrChapterNumber>41. </yrChapterNumber> Parsing XML using R
+
+```{r}
+#| include: false
+
+# do this so we can open the file later without a path
+require(fs)
+file_copy('data/booksDatabase/books-v025.xml', '.', overwrite=TRUE)
+```
+
+This tutorial explains how to parse XML files in R and transform the data into usable dataframes. We'll work with a books database XML file and create dataframes that mirror common relational database tables.
+
+## What is XML?
+
+XML (eXtensible Markup Language) is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable. XML files use tags to define elements and their attributes, creating a hierarchical structure.
+
+Key components of XML:
+
+-   **Elements**: Defined by tags (e.g., `<book>...</book>`)
+-   **Attributes**: Properties within tags (e.g., `id="B001"`)
+-   **Nesting**: Elements can contain other elements
+-   **Self-closing tags**: Elements with no content (e.g., `<pulitzerPrizeWinner />`)
+
+## Required Packages
+
+For XML processing in R, we'll use the `xml2` package for parsing and the `tidyverse` for data manipulation:
+
+```{r}
+#| message: false
+#| warning: false
+
+# Install packages if needed
+# install.packages(c("xml2", "tidyverse"))
+
+library(xml2)      # For XML parsing
+library(tidyverse) # For data manipulation
+library(dplyr)     # For data transformation
+```
+
+
+## Loading the XML File
+
+First, let's load our XML file:
+
+```{r}
+# Load the XML file
+books_xml <- read_xml("books-v025.xml")
+
+# Quick look at the structure
+xml_structure(books_xml)
+```
+
+The `read_xml()` function from the `xml2` package reads the XML file into R, creating an XML document object that we can query and manipulate.
+
+## Understanding XML Node Selection
+
+To extract data from XML, we need to understand how to select nodes. The `xml2` package provides functions like:
+
+-   `xml_find_all()`: Find all nodes matching an XPath expression
+-   `xml_find_first()`: Find the first node matching an XPath expression
+-   `xml_attr()`: Extract an attribute value
+-   `xml_text()`: Extract the text content
+
+XPath is a query language for selecting nodes in XML documents. Basic XPath patterns include:
+
+-   `/books/book`: All book elements that are children of the books element
+-   `//author`: All author elements anywhere in the document
+-   `/books/book[@id="B001"]`: The book element with attribute id="B001"
+-   `//book/authors/author[@primary="true"]`: All primary authors
+
+## Creating the Dataframes
+
+Now let's create dataframes that mirror the CSV files mentioned. We'll extract the relevant data from the XML and ensure we don't create duplicate entries.
+
+### 1. Publishers Dataframe
+
+Let's start by creating a dataframe for publishers:
+
+```{r}
+# Extract all publisher nodes
+publisher_nodes <- xml_find_all(books_xml, "//publisher")
+
+# Extract book IDs to use as identifiers
+book_ids <- xml_find_all(books_xml, "//book") %>%
+  xml_attr("id")
+
+# Create publishers dataframe
+publishers_df <- tibble(
+  pub_id = character(),
+  pub_name = character(),
+  city = character(),
+  state = character(),
+  country = character()
+)
+
+# Populate publishers dataframe
+for (i in seq_along(publisher_nodes)) {
+  pub_name <- xml_text(publisher_nodes[i])
+  city <- xml_attr(publisher_nodes[i], "city")
+  state <- xml_attr(publisher_nodes[i], "state")
+  country <- xml_attr(publisher_nodes[i], "country")
+  
+  # Check if this publisher is already in the dataframe
+  if (!pub_name %in% publishers_df$pub_name) {
+    # Create a publisher ID (using P prefix instead of B)
+    pub_id <- paste0("P", sprintf("%03d", nrow(publishers_df) + 1))
+    
+    # Add to dataframe
+    publishers_df <- publishers_df %>%
+      add_row(
+        pub_id = pub_id,
+        pub_name = pub_name,
+        city = city,
+        state = state,
+        country = country
+      )
+  }
+}
+
+# Display the publishers dataframe
+publishers_df
+```
+
+### 2. Authors Dataframe
+
+Now, let's create the authors dataframe:
+
+```{r}
+# Extract all author nodes
+author_nodes <- xml_find_all(books_xml, "//author")
+
+# Create authors dataframe
+authors_df <- tibble(
+  au_id = character(),
+  au_fname = character(),
+  au_lname = character(),
+  phone = character(),
+  address = character(),
+  city = character(),
+  state = character(),
+  zip = integer()
+)
+
+# Process each author
+for (i in seq_along(author_nodes)) {
+  # Extract author full name and split into first and last
+  author_full_name <- xml_text(author_nodes[i]) %>%
+    str_trim() %>%
+    str_split(" ") %>%
+    unlist()
+  
+  au_fname <- author_full_name[1]
+  au_lname <- ifelse(length(author_full_name) > 1, author_full_name[2], "")
+  
+  # Extract contact details
+  phone <- xml_find_first(author_nodes[i], "./phone") %>%
+    xml_text()
+  
+  address_node <- xml_find_first(author_nodes[i], "./address")
+  street <- xml_find_first(address_node, "./street") %>% xml_text()
+  city <- xml_find_first(address_node, "./city") %>% xml_text()
+  state <- xml_find_first(address_node, "./state") %>% xml_text()
+  zip <- xml_find_first(address_node, "./zip") %>% xml_text() %>% as.integer()
+  
+  # Check if this author is already in the dataframe
+  # We'll use name and address as a unique identifier
+  already_exists <- FALSE
+  for (j in 1:nrow(authors_df)) {
+    if (authors_df$au_fname[j] == au_fname && 
+        authors_df$au_lname[j] == au_lname && 
+        authors_df$city[j] == city && 
+        authors_df$state[j] == state) {
+      already_exists <- TRUE
+      break
+    }
+  }
+  
+  if (!already_exists) {
+    # Create an author ID
+    au_id <- paste0("A", sprintf("%03d", nrow(authors_df) + 1))
+    
+    # Add to dataframe
+    authors_df <- authors_df %>%
+      add_row(
+        au_id = au_id,
+        au_fname = au_fname,
+        au_lname = au_lname,
+        phone = phone,
+        address = street,
+        city = city,
+        state = state,
+        zip = zip
+      )
+  }
+}
+
+# Display the authors dataframe
+authors_df
+```
+
+### 3. Titles Dataframe
+
+Next, let's create the titles dataframe:
+
+```{r}
+# Extract all book nodes
+book_nodes <- xml_find_all(books_xml, "//book")
+
+# Create titles dataframe
+titles_df <- tibble(
+  title_id = character(),
+  title_name = character(),
+  type = character(),
+  pub_id = character(),
+  pages = numeric(),
+  price = numeric(),
+  sales = numeric(),
+  pubdate = character()
+)
+
+# Process each book
+for (i in seq_along(book_nodes)) {
+  title_id <- xml_attr(book_nodes[i], "id")
+  title_name <- xml_attr(book_nodes[i], "title")
+  book_type <- xml_attr(book_nodes[i], "type")
+  pages <- xml_attr(book_nodes[i], "pages") %>% as.numeric()
+  price <- xml_attr(book_nodes[i], "price") %>% as.numeric()
+  sales <- xml_attr(book_nodes[i], "sales") %>% as.numeric()
+  pubdate <- xml_attr(book_nodes[i], "pubdate")
+  
+  # Find the publisher and get its ID from our publishers dataframe
+  publisher_name <- xml_find_first(book_nodes[i], "./publisher") %>% xml_text()
+  pub_id <- publishers_df %>% 
+    filter(pub_name == publisher_name) %>% 
+    pull(pub_id)
+  
+  # Add to dataframe
+  titles_df <- titles_df %>%
+    add_row(
+      title_id = title_id,
+      title_name = title_name,
+      type = book_type,
+      pub_id = pub_id,
+      pages = pages,
+      price = price,
+      sales = sales,
+      pubdate = pubdate
+    )
+}
+
+# Display the titles dataframe
+titles_df
+```
+
+### 4. Royalties Dataframe
+
+Now, let's extract the royalty information:
+
+```{r}
+# Create royalties dataframe
+royalties_df <- tibble(
+  title_id = character(),
+  advance = numeric(),
+  royalty_rate = numeric()
+)
+
+# Process each book for royalty information
+for (i in seq_along(book_nodes)) {
+  title_id <- xml_attr(book_nodes[i], "id")
+  
+  # Extract royalty information
+  royalty_node <- xml_find_first(book_nodes[i], "./royalty")
+  advance <- xml_attr(royalty_node, "advance") %>% as.numeric()
+  royalty_rate <- xml_attr(royalty_node, "rate") %>% as.numeric()
+  
+  # Add to dataframe
+  royalties_df <- royalties_df %>%
+    add_row(
+      title_id = title_id,
+      advance = advance,
+      royalty_rate = royalty_rate
+    )
+}
+
+# Display the royalties dataframe
+royalties_df
+```
+
+### 5. Title Authors Dataframe
+
+Finally, let's create the title_authors dataframe that links books to authors:
+
+```{r}
+# Create title_authors dataframe
+title_authors_df <- tibble(
+  title_id = character(),
+  au_id = character(),
+  au_order = integer(),
+  royalty_shares = numeric()
+)
+
+# Process each book for author information
+for (i in seq_along(book_nodes)) {
+  title_id <- xml_attr(book_nodes[i], "id")
+  
+  # Extract all authors for this book
+  book_author_nodes <- xml_find_all(book_nodes[i], "./authors/author")
+  
+  for (j in seq_along(book_author_nodes)) {
+    # Extract author information
+    au_order <- xml_attr(book_author_nodes[j], "order") %>% as.integer()
+    royalty_shares <- xml_attr(book_author_nodes[j], "royalty_shares") %>% as.numeric()
+    
+    # Get author name
+    author_full_name <- xml_text(book_author_nodes[j]) %>%
+      str_trim() %>%
+      str_split(" ") %>%
+      unlist()
+    
+    au_fname <- author_full_name[1]
+    au_lname <- ifelse(length(author_full_name) > 1, author_full_name[2], "")
+    
+    # Find the author ID from our authors dataframe
+    au_id <- authors_df %>% 
+      filter(au_fname == au_fname, au_lname == au_lname) %>% 
+      pull(au_id)
+    
+    # Add to dataframe
+    title_authors_df <- title_authors_df %>%
+      add_row(
+        title_id = title_id,
+        au_id = au_id,
+        au_order = au_order,
+        royalty_shares = royalty_shares
+      )
+  }
+}
+
+# Display the title_authors dataframe
+title_authors_df
+```
+
+## Complete Dataset
+
+Now we have created five dataframes that mirror the structure of the CSV files:
+
+1.  `publishers_df`: Information about publishers
+2.  `authors_df`: Information about authors
+3.  `titles_df`: Information about book titles
+4.  `royalties_df`: Information about royalty agreements
+5.  `title_authors_df`: Linking table between books and authors
+
+## Exporting the Dataframes
+
+If you want to save these dataframes as CSV files:
+
+```{r}
+# Export dataframes to CSV
+write_csv(publishers_df, "publishers_extracted.csv")
+write_csv(authors_df, "authors_extracted.csv")
+write_csv(titles_df, "titles_extracted.csv")
+write_csv(royalties_df, "royalties_extracted.csv")
+write_csv(title_authors_df, "title_authors_extracted.csv")
+```
+
+## Common Challenges When Parsing XML
+
+When working with XML files, you may encounter these common challenges:
+
+1.  **Namespace issues**: Some XML files use namespaces that can complicate node selection
+2.  **Encoding problems**: Character encoding can cause issues with special characters
+3.  **Missing data**: Elements or attributes that might be optional
+4.  **Complex hierarchies**: Deeply nested structures that require careful navigation
+
+## Handling Missing Data
+
+Let's modify our approach to handle potential missing data:
+
+```{r}
+# Function to safely extract node text
+safe_xml_text <- function(node, xpath = NULL, default = NA) {
+  if (is.null(xpath)) {
+    result <- tryCatch(
+      xml_text(node),
+      error = function(e) default
+    )
+  } else {
+    found_node <- xml_find_first(node, xpath)
+    result <- if (length(found_node) == 0) default else xml_text(found_node)
+  }
+  return(result)
+}
+
+# Function to safely extract attribute
+safe_xml_attr <- function(node, attr, default = NA) {
+  result <- tryCatch(
+    xml_attr(node, attr),
+    error = function(e) default
+  )
+  if (is.na(result) || result == "") result <- default
+  return(result)
+}
+```
+
+## Advanced XML Operations
+
+For more complex XML operations, you might want to explore:
+
+-   **XPath expressions**: More complex queries to navigate the XML structure
+-   **XML validation**: Validating XML against a schema (DTD or XSD)
+-   **XML transformation**: Using XSLT to transform XML into other formats
+
+## Conclusion
+
+This tutorial has demonstrated how to parse an XML file in R and transform its data into structured dataframes. We've created five separate dataframes that mirror the structure of typical relational database tables, making it easy to work with the data using familiar R tools.
+
+XML parsing is a valuable skill for working with various data sources, including web APIs, configuration files, and legacy data systems.
+
+## References and Further Reading
+
+-   [xml2 package documentation](https://cran.r-project.org/web/packages/xml2/xml2.pdf)
+-   [Introduction to XPath](https://www.w3schools.com/xml/xpath_intro.asp)
+-   [R for Data Science](https://r4ds.had.co.nz/)
