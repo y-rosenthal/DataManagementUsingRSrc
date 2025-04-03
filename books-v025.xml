@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <books>
-  <book id="B001" title="1977!" type="history" pages="107" price="21.99" sales="566" pubdate="2000-08-01">
+  <book id="B001" title="1977!" type="history" pages="107" sales="566" pubdate="2000-08-01">
     <publisher city="New York" state="NY" country="USA">Abatis Publishers</publisher>
+    <formats>
+      <format type="hardcover" price="49.99" />
+      <format type="paperback" price="21.99" />
+    </formats>
     <pulitzerPrizeWinner />
     <royalty advance="10000" rate="0.05" />
     <authors>
@@ -17,8 +21,12 @@
     </authors>
   </book>
   
-  <book id="B002" title="200 Years of German Humor" type="history" pages="14" price="19.95" 
+  <book id="B002" title="200 Years of German Humor" type="history" pages="14" 
         sales="9566" pubdate="1998-04-01">
+    <formats>
+      <format type="hardcover" price="19.95" />
+      <format type="audiobook" price="2.99" />
+    </formats>
     <publisher city="Hamburg" state="" country="Germany">Schandenfreude Press</publisher>
     <royalty advance="1000" rate="0.06" />
     <authors>
@@ -34,8 +42,12 @@
     </authors>
   </book>
   
-  <book id="B003" title="Ask Your System Administrator" type="computer" pages="1226" price="39.95" 
+  <book id="B003" title="Ask Your System Administrator" type="computer" pages="1226" 
         sales="25667" pubdate="2000-09-01">
+    <formats>
+      <format type="hardcover" price="39.99" />
+      <format type="paperback" price="19.99" />
+    </formats>
     <publisher city="San Francisco" state="CA" country="USA">Core Dump Books</publisher>
     <pulitzerPrizeWinner />
     <royalty advance="15000" rate="0.07" />
@@ -52,8 +64,13 @@
     </authors>
   </book>
   
-  <book id="B004" title="But I Did It Unconsciously" type="psychology" pages="510" price="12.99" 
+  <book id="B004" title="But I Did It Unconsciously" type="psychology" pages="510"
         sales="13001" pubdate="1999-05-31">
+	<formats>
+      <format type="paperback" price="12.99" />
+      <format type="ebook" price="4.99" />
+    </formats>
+
     <publisher city="New York" state="NY" country="USA">Abatis Publishers</publisher>
     <royalty advance="20000" rate="0.08" />
     <authors>
@@ -80,6 +97,12 @@
   
   <book id="B005" title="Perhaps It's a Glandular Problem" type="psychology" pages="826" price="7.99" 
         sales="94123" pubdate="2000-11-30">
+    <formats>
+      <format type="hardcover" price="29.99" />
+      <format type="paperback" price="7.99" />
+      <format type="ebook" price="4.99" />
+      <format type="audiobook" price="2.99" />
+    </formats>
     <publisher city="Berkeley" state="CA" country="USA">AAA Publishing</publisher>
     <royalty advance="100000" rate="0.07" />
     <authors>
@@ -112,11 +135,5 @@
         <bio />
       </author>
     </authors>
-    <formats>
-      <format type="hardcover" available="true" price="29.99" />
-      <format type="paperback" available="true" price="7.99" />
-      <format type="ebook" available="true" price="4.99" />
-      <format type="audiobook" available="false" />
-    </formats>
   </book>
 </books>

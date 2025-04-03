@@ -21,6 +21,7 @@ library(DBI)
 library(dplyr)
 library(knitr)
 library(sqldf)
+#library(gt)
 ```
 
 # <yrChapterNumber>38. </yrChapterNumber> Database Normalization
@@ -91,6 +92,7 @@ The following tables are ***not*** in 1st normal form (1NF).
   orders = data.frame(orderNum = c("ord100", "ord200"),
                       products = c("3 apples, 2 plums", "5 apples, 3 pears, 10 plums"))
   
+  #gt(orders) %>% tab_header(title = "orders")
   kable(orders, caption="orders")
   ```
 
@@ -109,6 +111,7 @@ The following tables are ***not*** in 1st normal form (1NF).
                       product1 = c("NULL", "plums"),
                       quantity3 = c("NULL", 10))
   
+  #gt(orders) %>% tab_header(title = "orders")
   kable(orders, caption="orders")
   ```
 
@@ -123,6 +126,7 @@ The following table contains the same data in first normal form:
                       product = c("apples", "plums", "apples", "pears", "plums"),
                       quantity = c(3,2,5,3,10))
 
+  #gt(orders) %>% tab_header(title = "orders")  
   kable(orders, caption="orders")
   ```
 
@@ -233,14 +237,14 @@ structure to avoid duplicating the details for each class:
 #| echo: false
 
 classes = data.frame(
-  crn = c("12100", "14301"),
-  className = c("Intro to IDS", "Database Design"),
   classNum = c("IDS1020", "IDS2040"),
+  className = c("Intro to IDS", "Database Design"),
   credits = c(3,4)
 )
 
 offerings = data.frame(
   crn = c("12100", "12100", "12100", "12100", "14301"),
+  classNum = c("IDS1020","IDS1020","IDS1020","IDS1020","IDS2040"),
   section = c(231, 241, 331, 341, 133),
   room = c("F201", "F201", "F310", "F310", "F250"),
   prof_id = c("P100", "P100", "P200", "P200", "P100")
@@ -256,9 +260,9 @@ professors = data.frame(
 )
 
 
-kable(classes, caption = "classes")
-kable(offerings, caption = "offerings")
-kable(professors, caption = "professors")
+kable(classes, caption = "classes", booktabs=TRUE)
+kable(offerings, caption = "offerings", booktabs=TRUE)
+kable(professors, caption = "professors", booktabs=TRUE)
 ```
 
 #### SQL SELECT to regenerate original "all in one" table
@@ -269,14 +273,14 @@ following SQL query:
 ```{r}
 queryResults = 
   sqldf("
-    select className, classNum, credits, section, room, 
+    select className, classes.classNum, credits, section, room, 
            first || ' ' || last as professor, office, email, tel
-    from classes join offerings on classes.crn = offerings.crn 
+    from classes join offerings on classes.classNum = offerings.classNum 
                  join professors on offerings.prof_id = professors.prof_id
-    order by classNum, section
+    order by classes.classNum, section
   ")
 
-kable(queryResults, caption = "queryResults")
+kable(queryResults, caption = "queryResults", booktabs=TRUE)
 
 ```
 
@@ -473,9 +477,9 @@ course_2nf <- first_normal_form %>%
   distinct()
 
 # Display the 2NF tables
-kable(student_2nf, caption = "student table")
-kable(student_course_2nf, caption = "registration table")
-kable(course_2nf, caption = "course table (2NF but not yet in 3NF)")
+kable(student_2nf, caption = "student table", booktabs=TRUE)
+kable(student_course_2nf, caption = "registration table", booktabs=TRUE)
+kable(course_2nf, caption = "course table (2NF but not yet in 3NF)", booktabs=TRUE)
 ```
 
 ### General rules for how to convert a table to 2NF
@@ -566,8 +570,8 @@ department_3nf <- course_2nf %>%
   distinct()
 
 # Display the 3NF tables
-kable(course_3nf, caption = "Course Table (3NF)")
-kable(department_3nf, caption = "Department Table (3NF)")
+kable(course_3nf, caption = "Course Table (3NF)", booktabs=TRUE)
+kable(department_3nf, caption = "Department Table (3NF)", booktabs=TRUE)
 ```
 
 ## The final design of all tables (i.e. the final table "schema")
@@ -576,10 +580,10 @@ The final 3NF versions of the tables are shown below:
 
 ```{r}
 # Display the 3NF tables
-kable(student_2nf, caption = "student table")
-kable(student_course_2nf, caption = "student_course table")
-kable(course_3nf, caption = "course table")
-kable(department_3nf, caption = "department table")
+kable(student_2nf, caption = "student table", booktabs=TRUE)
+kable(student_course_2nf, caption = "student_course table", booktabs=TRUE)
+kable(course_3nf, caption = "course table", booktabs=TRUE)
+kable(department_3nf, caption = "department table", booktabs=TRUE)
 ```
 
 ### General rules for how to convert a table to 3NF

@@ -1,6 +1,6 @@
 # <yrChapterNumber>37a. </yrChapterNumber> Working with SQLite databases in R
 
-**NOTE:** This section give a very brief overview for how to work specifically with
+**NOTE:** This section contains a brief overview for how to work specifically with
 SQLite databases in R. This section gives just enough information to 
 get working. More elaborate coverage for how to work with any type of
 RDBMS (relations database management system software) in R appears in 
@@ -63,8 +63,8 @@ The following code simply removes any database that we had from before.
 We just want to start from a clean slate for this presentation:
 
 ```{r}
-if(!require(fs)){install.packages("fs");rquire(fs);}
-fs::file_delete("mydb.sqlite")   # remove the mydb.sqlite file
+library(fs)
+file_delete("mydb.sqlite")   # remove the mydb.sqlite file
 ```
 
 ## Connecting to a database
@@ -73,7 +73,7 @@ In order to access the data in a SQLite database (or any other
 RDBMS database) you must create a "connection" object.
 You do that by calling dbConnect()
 
-### RSQLite::SQLite() creates a "driver" for sqlite dbConnect() creates a connection
+### RSQLite::SQLite() creates a "driver" for sqlite, dbConnect() creates a connection
 
 Remember that the DBI package understands the generic concept of databases
 but the RSQLite package knows about the specifics related to SQLite.
@@ -144,12 +144,12 @@ dbExecute(conn = con,
   )
 ```
 
-### Use sqldf( SOME_SELECT_STATEMENT, con ) for SELECT statements
+### Use sqldf( SOME_SELECT_STATEMENT, connection = con ) for SELECT statements
 
 As always, you can use the sqldf function to run SELECT statements.
 To run the select against the SQLite database, you 
-must provied the connection variable that you created above
-to the connection argument to sqldf.
+must provide the connection variable that you created above
+to the connection argument of sqldf.
 
 Since we haven't inserted any rows into this table yet, the SELECT should
 return a dataframe that contains zero rows.
@@ -157,6 +157,59 @@ return a dataframe that contains zero rows.
 ```{r}
 sqldf("select * from authors", connection = con)
 ```
+
+#### **IMPORTANT - "connection=con" (not just "con")**
+
+In the call to sqldf above, notice that we specified the name
+of the connection argument (i.e. `connection=con` not just `con`). 
+If you leave out `connection=`, you will likely get an error as shown here.
+
+```{r}
+sqldf("select * from authors", con)   # ERROR - doesn't include connection=con
+```
+
+The reason for this error is that 
+the connection argument is NOT the second argument to sqldf. The full list of
+arguments for sqldf is listed in the "Usage" section at the top of the 
+help page for sqldf (type ?sqldf).
+
+> **Usage**
+>
+> ```
+> sqldf(x, stringsAsFactors = FALSE,
+>    row.names = FALSE, envir = parent.frame(), 
+>    method = getOption("sqldf.method"),
+>    file.format = list(), dbname, drv = getOption("sqldf.driver"), 
+>    user, password = "", host = "localhost", port,
+>    dll = getOption("sqldf.dll"), connection = getOption("sqldf.connection"),
+>    verbose = isTRUE(getOption("sqldf.verbose")))
+> ```
+
+In the code above that generated the error, `sqldf("select * from authors", con)`, 
+the con object is actually
+being passed to the `stringsAsFactors` argument (which is in fact
+the 2nd argument to sqldf) and **not** to the `connection` argument. 
+The `connection` argument appears much
+later in sqldf's argument list and isn't being passed anything.
+This is why you need to specify `connection=con` and not just `con`.
+
+Notice that the dbExecute function does not have this issue. ?dbExecute
+shows that the name of the argument is conn (not connection) and that 
+conn is the first argument. 
+
+> **Usage**
+> 
+> ```
+> dbExecute(conn, statement, ...)
+> ```
+
+The reason for the inconsistency is probably 
+because the DBI and sqldf packages were developed at different times 
+by different people with different design philosophies.
+Unfortunately, this kind of inconsistency is relatively common in the 
+R ecosystem because it's grown organically with contributions from 
+many different people.
+
 
 ## Inserting data into the database
 
@@ -168,7 +221,7 @@ by the command. Therefore, if everything works correctly, this call to
 dbExecute should return 1.
 
 ```{r}
-dbExecute(con, "insert into authors values('a100','anne','andrews')", connection = con)
+dbExecute(con, "insert into authors values('a100','anne','andrews')")
 ```
 
 We now can see that row in the database.
@@ -187,7 +240,7 @@ authorId = 'a200'
 authorFname = 'bill'
 authorLname = 'bell'
 
-# We can use the following code to build up the following SQL code:
+# We can use the code below to build up the following SQL insert statement:
 #
 #    insert into authors values( 'a200' , 'bill' , 'jones' )
 
@@ -206,22 +259,26 @@ insertStatement
 # We can now use dbExecute to enter the data into the database
 dbExecute(conn = con, insertStatement)          
 
-# We can now query the database to make sure that the data is there.
-sqldf("select * from authors", connection = con)
+# We can query the database to make sure that the data is there.
+sqldf("select * from authors order by au_id", connection = con)
 ```
 
 ### Using parameters with dbExecute()
 
 ```{r}
 
-# Perhaps a better way to do this is to use the "params" argument to dbExecute.
-# Using dbExecute, you can allow you SQL statement to take "arguments" (AKA "parameters").
-# To do so, simply type ? marks in the SQL code. Then supply the values to replace
-# the question marks. Those values can be in an R list. 
+# Another way (arguably a better way) to do this is to use the "params" 
+# argument to dbExecute. To use params, you should type "?" characters 
+# in the SQL command as placeholders for data to be inserted into the 
+# SQL command. The values that you pass to the params argument 
+# will replace the "?" characters. The values that you pass to params
+# should be in an R list.
 #
-# Let's see an example. We can insert a new author with the following code.
+# In the following example, we insert a new author row using this technique.
 
-# We can pretend that these variables came from an API or any other source of info.
+# Let's pretend that these variables came from an API or any other source of info
+# (e.g. a file or user input).
+
 authorId = 'a300'
 authorFname = 'carie'
 authorLname = 'cox'
@@ -229,7 +286,7 @@ authorLname = 'cox'
 # Notice the ? marks and the params argument that contains the actual
 # values to replace the ? marks.
 dbExecute(con, "insert into authors values (?,?,?)",
-          params = list( 'a300' , 'carie' , 'cox' ))
+          params = list( authorId, authorFname, authorLname ))
 
 # We can see that we got the new author added.
 sqldf("select * from authors order by au_id", connection = con)
@@ -247,7 +304,7 @@ sqldf("select * from authors order by au_id", connection = con)
 # dataframe with these authors.
 
 df = data.frame(authorFirstName = c("dianne","ed", "fran"),
-                authorLastName = c("david", "ellis", "fink"))
+                authorLastName = c("davis", "ellis", "fink"))
 df
 
 # We can use a loop to get the authors names from each row of the 
@@ -260,18 +317,18 @@ df
 for (rownum in 1:nrow(df)){
   
   authorFirstName = df[rownum, "authorFirstName" ]
-  authorLastName = df[rownum, "authorFirstName" ]
+  authorLastName = df[rownum, "authorLastName" ]
   
   # Get the largest ID so far and add one to it
-  largestId = sqldf("select max(au_id) from authors")
+  largestId = sqldf("select max(au_id) from authors", connection = con)
   leadingLetters = gsub("[0-9]*$", "", largestId) # Remove the numbers on the right
   numberPortion = gsub("^[^0-9]*", "", largestId) # Remove the non-numeric characters on the left
-  newId = paste0(leadingLetters, numberPortion+1)
+  newId = paste0(leadingLetters, as.numeric(numberPortion) + 100)
 
   # Notice the ? marks and the params argument that contains the actual
   # values to replace the ? marks.
   dbExecute(con, "insert into authors values (?,?,?)",
-            params = list( authorFirstName , authorLastName , newId ))
+            params = list( newId, authorFirstName , authorLastName ))
   
 }
 
@@ -326,7 +383,7 @@ dbExecute(conn=con,
 
 # You can see that the title_id column values were automatically generated.
 
-sqldf("select * from titles", connection = con)
+sqldf("select * from titles order by title_id", connection = con)
 ```
 
 If you want to specify an explicit title_id, you still can do so. 
@@ -338,14 +395,14 @@ the number after the currently largest title_id value.
 dbExecute(conn=con,
           "insert into titles (title_id, title_name, pages) values(999, 'Harry Potter 3', 950)")
 
-sqldf("select * from titles", connection = con)
+sqldf("select * from titles order by title_id", connection = con)
 
 # New rows that use an AUTOINCREMENT'ed title_id will continue from there
 dbExecute(conn=con,
           "insert into titles (title_name, pages) values('Harry Potter 4', 750)")
 
 # See the new rows
-sqldf("select * from titles", connection = con)
+sqldf("select * from titles order by title_id", connection = con)
 ```
 
 ## Remember to call dbDisconnect(con) when you're done.

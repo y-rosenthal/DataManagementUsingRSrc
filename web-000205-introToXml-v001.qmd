@@ -1,5 +1,12 @@
 # <yrChapterNumber>40. </yrChapterNumber> Intro to XML
 
+```{r}
+#| include: false
+
+library(fs)
+fs::file_copy('data/booksDatabase/books-v025.xml','books-v025.xml',overwrite=TRUE)
+```
+
 ## Introduction to XML
 
 XML (eXtensible Markup Language) is a versatile markup language that defines rules for encoding documents in a format that is both human-readable and machine-readable. Unlike HTML, which was designed specifically for web pages, XML is designed to store and transport data.
@@ -33,8 +40,12 @@ Let's examine a sample XML document that will serve as our reference throughout 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <books>
-  <book id="B001" title="1977!" type="history" pages="107" price="21.99" sales="566" pubdate="2000-08-01">
+  <book id="B001" title="1977!" type="history" pages="107" sales="566" pubdate="2000-08-01">
     <publisher city="New York" state="NY" country="USA">Abatis Publishers</publisher>
+    <formats>
+      <format type="hardcover" price="49.99" />
+      <format type="paperback" price="21.99" />
+    </formats>
     <pulitzerPrizeWinner />
     <royalty advance="10000" rate="0.05" />
     <authors>
@@ -50,7 +61,82 @@ Let's examine a sample XML document that will serve as our reference throughout 
     </authors>
   </book>
   
+  <book id="B002" title="200 Years of German Humor" type="history" pages="14" 
+        sales="9566" pubdate="1998-04-01">
+    <formats>
+      <format type="hardcover" price="19.95" />
+      <format type="audiobook" price="2.99" />
+    </formats>
+    <publisher city="Hamburg" state="" country="Germany">Schandenfreude Press</publisher>
+    <royalty advance="1000" rate="0.06" />
+    <authors>
+      <author order="1" royalty_shares="1" primary="true">Sarah Buchman
+        <phone>718-496-7223</phone>
+        <address>
+          <street>75 West 205 St</street>
+          <city>Bronx</city>
+          <state>NY</state>
+          <zip>10468</zip>
+        </address>
+      </author>
+    </authors>
+  </book>
+  
+  <book id="B003" title="Ask Your System Administrator" type="computer" pages="1226" 
+        sales="25667" pubdate="2000-09-01">
+    <formats>
+      <format type="hardcover" price="39.99" />
+      <format type="paperback" price="19.99" />
+    </formats>
+    <publisher city="San Francisco" state="CA" country="USA">Core Dump Books</publisher>
+    <pulitzerPrizeWinner />
+    <royalty advance="15000" rate="0.07" />
+    <authors>
+      <author order="1" royalty_shares="1" primary="true">Christian Kells
+        <phone>212-771-4680</phone>
+        <address>
+          <street>114 Horatio St</street>
+          <city>New York</city>
+          <state>NY</state>
+          <zip>10014</zip>
+        </address>
+      </author>
+    </authors>
+  </book>
+  
+  <book id="B004" title="But I Did It Unconsciously" type="psychology" pages="510"
+        sales="13001" pubdate="1999-05-31">
+	<formats>
+      <format type="paperback" price="12.99" />
+      <format type="ebook" price="4.99" />
+    </formats>
+
+    <publisher city="New York" state="NY" country="USA">Abatis Publishers</publisher>
+    <royalty advance="20000" rate="0.08" />
+    <authors>
+      <author order="1" royalty_shares="0.6" primary="true">Hallie Hull
+        <phone>415-549-4278</phone>
+        <address>
+          <street>3800 Waldo Ave, #14F</street>
+          <city>San Francisco</city>
+          <state>CA</state>
+          <zip>94123</zip>
+        </address>
+      </author>
+      <author order="2" royalty_shares="0.4" primary="false">Klee Hull
+        <phone>415-549-4278</phone>
+        <address>
+          <street>3800 Waldo Ave, #14F</street>
+          <city>San Francisco</city>
+          <state>CA</state>
+          <zip>94123</zip>
+        </address>
+      </author>
+    </authors>
+  </book>
+
   <!-- Additional books omitted for brevity -->
+  
 </books>
 ```
 
@@ -100,10 +186,10 @@ In this example, the `address` element contains four child elements: `street`, `
 Attributes provide additional information about elements and are always specified in the start tag:
 
 ```xml
-<book id="B001" title="1977!" type="history" pages="107" price="21.99" sales="566" pubdate="2000-08-01">
+<book id="B001" title="1977!" type="history" pages="107" sales="566" pubdate="2000-08-01">
 ```
 
-In this example, the `book` element has several attributes: `id`, `title`, `type`, `pages`, `price`, `sales`, and `pubdate`.
+In this example, the `book` element has several attributes: `id`, `title`, `type`, `pages`, `sales`, and `pubdate`.
 
 Attributes must always be quoted, using either single (`'`) or double (`"`) quotes.
 
@@ -116,10 +202,11 @@ Empty elements are elements that don't contain any content. There are two ways t
 Some empty elements contain attributes but no content:
 
 ```xml
-<format type="audiobook" available="false" />
+<format type="audiobook" price="2.99" />
 ```
 
 In this example, the `format` element has attributes but no content. Note the `/` before the closing bracket, which indicates that this is a self-closing tag.
+There is NO end tag for this element.
 
 #### Empty Elements without Attributes
 
@@ -127,7 +214,6 @@ Some empty elements have neither content nor attributes:
 
 ```xml
 <pulitzerPrizeWinner />
-<bio />
 ```
 
 These self-closing tags indicate the presence of an element without any additional information.
@@ -145,7 +231,7 @@ Data in XML can be represented either as attributes or as child elements. Let's 
 The book element uses an attribute-centric approach for its basic information:
 
 ```xml
-<book id="B001" title="1977!" type="history" pages="107" price="21.99" sales="566" pubdate="2000-08-01">
+<book id="B001" title="1977!" type="history" pages="107" sales="566" pubdate="2000-08-01">
 ```
 
 Advantages:
@@ -184,7 +270,8 @@ XML can contain mixed content, where an element contains both text and child ele
 </author>
 ```
 
-In this example, the `author` element contains both the author's name as text content and child elements for contact information.
+In this example, the `author` element contains both the author's name, 
+`Sarah Buchman`, as text content and child elements for contact information.
 
 ## XML Data Modeling Examples
 
@@ -193,7 +280,7 @@ Let's explore some specific modeling examples from our publishing database:
 ### Example 1: Book Information
 
 ```xml
-<book id="B001" title="1977!" type="history" pages="107" price="21.99" sales="566" pubdate="2000-08-01">
+<book id="B001" title="1977!" type="history" pages="107" sales="566" pubdate="2000-08-01">
   <!-- Book contents -->
 </book>
 ```
@@ -233,10 +320,10 @@ This example shows a more complex structure:
 
 ```xml
 <formats>
-  <format type="hardcover" available="true" price="29.99" />
-  <format type="paperback" available="true" price="7.99" />
-  <format type="ebook" available="true" price="4.99" />
-  <format type="audiobook" available="false" />
+  <format type="hardcover" price="29.99" />
+  <format type="paperback" price="7.99" />
+  <format type="ebook" price="4.99" />
+  <format type="audiobook" price="2.99" />
 </formats>
 ```
 
@@ -256,56 +343,32 @@ Based on our examples, here are some best practices for designing XML documents:
 
 5. **Keep it simple**: Only make your XML as complex as it needs to be. Overly complex structures can be difficult to maintain and process.
 
-6. **Document your schema**: Whether using DTD, XML Schema, or RelaxNG, documenting your schema helps others understand your data structure.
+6. **Consider your use case**: The optimal XML design depends on how the data will be used. Consider factors like readability, processing efficiency, and future extensibility.
 
-7. **Consider your use case**: The optimal XML design depends on how the data will be used. Consider factors like readability, processing efficiency, and future extensibility.
+<!--
+7. **Document your schema**: Whether using DTD, XML Schema, or RelaxNG, documenting your schema helps others understand your data structure.
+-->
 
-## Working with XML in Different Programming Languages
+## Working with XML in R
 
-Here are brief examples of how to work with XML in different programming languages:
+You can read XML data into R and process it. The next section goes into
+detail about how to do this. The following is just a simple
+example. 
 
-### R
-
-```r
-# Read XML file
+```{r}
 library(xml2)
-books_xml <- read_xml("books.xml")
+library(magrittr)  # for the %>% pipe operator used below
+
+# Read XML file
+books_xml <- read_xml("books-v025.xml")
 
 # Extract book titles
 book_titles <- xml_find_all(books_xml, "//book") %>%
   xml_attr("title")
 
-# Print the titles
-print(book_titles)
+book_titles
 ```
 
-### Python
-
-```python
-import xml.etree.ElementTree as ET
-
-# Parse XML file
-tree = ET.parse('books.xml')
-root = tree.getroot()
-
-# Print all book titles
-for book in root.findall('./book'):
-    print(book.get('title'))
-```
-
-### JavaScript
-
-```javascript
-// Using browser's DOMParser
-const parser = new DOMParser();
-const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-
-// Get all book titles
-const books = xmlDoc.getElementsByTagName("book");
-for (let i = 0; i < books.length; i++) {
-    console.log(books[i].getAttribute("title"));
-}
-```
 
 ## Conclusion
 
