@@ -1,6 +1,29 @@
 # <yrChapterNumber>45. </yrChapterNumber> CSS Selector Questions
 
-```
+
+## Practice with CSS websites
+
+- Website:  <https://flukeout.github.io/>
+  Notes: CSS game that we played with in class 
+  See the notes for each "level" of the game for instructions on how to 
+  use each CSS Selector.
+  
+- Website: <https://css-speedrun.netlify.app/>   
+  Answers: <https://github.com/Vincenius/css-speedrun>
+
+- Website: <https://css-selector.netlify.app/>  
+  on this page write the selector that correctly selects the one
+  line that contains the words "Select me"
+
+  
+## More examples
+
+You can copy the HTML code below to an HTML file.
+Make sure to use a text editor. Some text editors are
+Notepad on Windows, VS Code - free download for Mac and Windows,
+RStudio (New File - HTML File).
+
+```{r}
 library(rvest)
 
 #########################################################.

@@ -1,6 +1,6 @@
 title_id,title_name,type,pub_id,pages,price,sales,pubdate
-B001,1977!,history,P001,107,21.99,566,2000-08-01
-B002,200 Years of German Humor,history,P002,14,19.95,9566,1998-04-01
-B003,Ask Your System Administrator,computer,P003,1226,39.95,25667,2000-09-01
-B004,But I Did It Unconsciously,psychology,P001,510,12.99,13001,1999-05-31
+B001,1977!,history,P001,107,NA,566,2000-08-01
+B002,200 Years of German Humor,history,P002,14,NA,9566,1998-04-01
+B003,Ask Your System Administrator,computer,P003,1226,NA,25667,2000-09-01
+B004,But I Did It Unconsciously,psychology,P001,510,NA,13001,1999-05-31
 B005,Perhaps It's a Glandular Problem,psychology,P004,826,7.99,94123,2000-11-30

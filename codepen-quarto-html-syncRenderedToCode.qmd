@@ -1,0 +1,324 @@
+---
+title: "Interactive HTML Viewer"
+subtitle: "CodePen-style HTML display and editor"
+engine: knitr
+format: 
+  html:
+    theme: bootstrap
+    toc: true
+    highlight-style: github
+    code-block-bg: "#f8f8f8"
+    embed-resources: true
+    include-in-header:
+      text: |
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+---
+
+## Interactive HTML Viewer
+
+This document demonstrates how to create a CodePen-like interactive HTML viewer that reads content directly from an HTML file and allows for live editing and previewing.
+
+### Loading Content from External HTML File
+
+First, we'll set up JavaScript that loads the HTML file content when the page loads:
+
+```{=html}
+<div class="card shadow-sm mb-5">
+  <div class="card-header bg-primary text-white">
+    <h3 class="card-title mb-0">CodePen-style HTML Explorer</h3>
+    <p class="mb-0 mt-1 small">Click on elements in the preview to find their code in the editor!</p>
+  </div>
+  <div class="card-body p-0">
+    <div class="row g-0">
+      <div class="col-md-6 border-end">
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light border-bottom">
+          <span class="badge bg-primary fs-6">HTML Code</span>
+          <div>
+            <button class="btn btn-sm btn-outline-secondary me-1" id="resetBtn">Reset</button>
+            <button class="btn btn-sm btn-outline-primary" id="runBtn">Run</button>
+          </div>
+        </div>
+        <textarea id="codeEditor" class="form-control border-0 rounded-0" style="height: 500px; font-family: monospace; font-size: 0.9rem; resize: none;">Loading HTML content...</textarea>
+      </div>
+      <div class="col-md-6">
+        <div class="px-3 py-2 bg-light border-bottom">
+          <span class="badge bg-success fs-6">Live Preview</span>
+        </div>
+        <iframe id="previewFrame" class="w-100 border-0" style="height: 500px; background-color: white;"></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="text-muted">Original file: <code>stuffToDo-v003.html</code></span>
+      <div>
+        <a href="stuffToDo-v003.html" download class="btn btn-sm btn-outline-primary me-2">
+          Download HTML
+        </a>
+        <button class="btn btn-sm btn-outline-success" id="copyBtn">
+          Copy Code
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Original HTML content storage
+let originalHtml = '';
+
+// Load the HTML file content
+async function loadHtmlContent() {
+  try {
+    const response = await fetch('stuffToDo-v003.html');
+    originalHtml = await response.text();
+    document.getElementById('codeEditor').value = originalHtml;
+    updatePreview();
+  } catch (error) {
+    console.error('Error loading HTML file:', error);
+    document.getElementById('codeEditor').value = 'Error loading HTML content: ' + error.message;
+  }
+}
+
+// Update the preview iframe with current editor content
+function updatePreview() {
+  const code = document.getElementById('codeEditor').value;
+  const iframe = document.getElementById('previewFrame');
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  
+  iframeDoc.open();
+  iframeDoc.write(code);
+  iframeDoc.close();
+  
+  // After the iframe has loaded, add the interactive connection
+  setTimeout(addInteractiveConnection, 200);
+}
+
+// Add interactive connection between preview and code
+function addInteractiveConnection() {
+  try {
+    const iframe = document.getElementById('previewFrame');
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    const allElements = iframeDoc.querySelectorAll('*');
+    
+    // Add outline and click handlers to all elements
+    allElements.forEach(element => {
+      // Skip the html, head, body elements 
+      if (element.tagName.toLowerCase() === 'html' || 
+          element.tagName.toLowerCase() === 'head' || 
+          element.tagName.toLowerCase() === 'body') {
+        return;
+      }
+      
+      // Add hover effect 
+      element.addEventListener('mouseover', function(e) {
+        e.stopPropagation(); // Prevent parent elements from also triggering
+        this.style.outline = '2px solid rgba(0, 123, 255, 0.5)';
+        this.style.cursor = 'pointer';
+      });
+      
+      element.addEventListener('mouseout', function() {
+        this.style.outline = 'none';
+        this.style.cursor = 'default';
+      });
+      
+      // Add click handler
+      element.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent parent elements from also triggering
+        
+        // Get the element's outerHTML
+        const elementHtml = this.outerHTML;
+        
+        // Clean up the HTML for searching (simplify whitespace)
+        const cleanedElementHtml = elementHtml
+          .replace(/\s+/g, ' ')
+          .replace(/> </g, '><')
+          .trim();
+        
+        // Prepare search pattern options
+        const searchOptions = [
+          cleanedElementHtml,
+          // Try with just the opening tag if the element has children
+          this.children.length > 0 ? 
+            cleanedElementHtml.substring(0, cleanedElementHtml.indexOf('>')+1) : null
+        ].filter(Boolean);
+        
+        // Get the editor content
+        const editorContent = document.getElementById('codeEditor').value;
+        
+        // Try to find the element in the editor content
+        let foundIndex = -1;
+        let foundPattern = '';
+        
+        for (const pattern of searchOptions) {
+          // Convert the pattern to be suitable for searching in HTML code (with HTML entities)
+          const escapedPattern = pattern
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+          
+          const index = editorContent.indexOf(escapedPattern);
+          if (index !== -1) {
+            foundIndex = index;
+            foundPattern = escapedPattern;
+            break;
+          }
+          
+          // Try again without converting entities (for textarea)
+          const index2 = editorContent.indexOf(pattern);
+          if (index2 !== -1) {
+            foundIndex = index2;
+            foundPattern = pattern;
+            break;
+          }
+        }
+        
+        if (foundIndex !== -1) {
+          const editor = document.getElementById('codeEditor');
+          
+          // Set focus to the editor
+          editor.focus();
+          
+          // Set the selection to the found position
+          editor.setSelectionRange(foundIndex, foundIndex + foundPattern.length);
+          
+          // Scroll to the position
+          editor.scrollTop = 0;
+          const lineHeight = 18; // Approximate line height
+          const linesAbove = editorContent.substr(0, foundIndex).split('\n').length - 1;
+          editor.scrollTop = lineHeight * linesAbove - 100; // Scroll a bit above
+          
+          // Highlight effect
+          const originalBackgroundColor = editor.style.backgroundColor;
+          editor.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
+          setTimeout(() => {
+            editor.style.backgroundColor = originalBackgroundColor;
+          }, 1000);
+        }
+      });
+    });
+  } catch (e) {
+    console.error('Error adding interactive connection:', e);
+  }
+}
+
+// Reset editor to original content
+function resetEditor() {
+  document.getElementById('codeEditor').value = originalHtml;
+  updatePreview();
+}
+
+// Copy current editor content to clipboard
+function copyToClipboard() {
+  const codeText = document.getElementById('codeEditor').value;
+  navigator.clipboard.writeText(codeText).then(() => {
+    const copyBtn = document.getElementById('copyBtn');
+    const originalText = copyBtn.innerHTML;
+    copyBtn.innerHTML = 'Copied!';
+    setTimeout(() => {
+      copyBtn.innerHTML = originalText;
+    }, 2000);
+  });
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  loadHtmlContent();
+  
+  document.getElementById('runBtn').addEventListener('click', updatePreview);
+  document.getElementById('resetBtn').addEventListener('click', resetEditor);
+  document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
+  
+  // Auto-update on keyup with debounce
+  let timeout;
+  document.getElementById('codeEditor').addEventListener('keyup', function() {
+    clearTimeout(timeout);
+    timeout = setTimeout(updatePreview, 1000); // 1-second debounce
+  });
+});
+</script>
+```
+
+## How It Works
+
+This CodePen-style HTML viewer works through several key components:
+
+1. **File Loading**: JavaScript fetches the content of `stuffToDo-v003.html` when the page loads
+2. **Interactive Editor**: The textarea allows real-time editing of the HTML
+3. **Live Preview**: The iframe displays the rendered HTML
+4. **Auto-Update**: Changes to the editor update the preview after 1 second of inactivity
+5. **Reset Function**: Returns the editor to the original HTML content
+6. **Download & Copy**: Buttons to download the original file or copy the current code
+
+## Implementation Details
+
+### Key Features
+
+- **Single Source of Truth**: Content is loaded directly from the HTML file
+- **No Duplication**: Avoids hard-coding HTML content in the Quarto document
+- **Interactive Editing**: Make changes and see results immediately
+- **Responsive Design**: Works well on both desktop and mobile
+
+### Code Explanation
+
+The JavaScript performs these main functions:
+
+1. Fetches the HTML file content using the Fetch API
+2. Stores the original content for the reset function
+3. Updates the preview iframe when content changes
+4. Provides clipboard functionality for easy copying
+5. Implements a debounce function to prevent too-frequent updates
+
+### File Requirements
+
+For this implementation to work, you need:
+
+1. The Quarto document (this file)
+2. The target HTML file (`stuffToDo-v003.html`) in the same directory
+
+## Interactive Element Connection
+
+One of the most powerful features of this HTML explorer is the ability to click on elements in the rendered preview and have the corresponding code highlighted in the editor. Here's how it works:
+
+1. Hover over any element in the preview pane to see a blue outline
+2. Click on the element to highlight its code in the editor
+3. The editor will automatically scroll to show the selected element's code
+
+This feature is especially useful for:
+- Understanding how specific parts of the page are structured
+- Quickly finding the code for elements you want to modify
+- Teaching HTML structure to beginners
+
+### How It Works Behind the Scenes
+
+The connection is established through JavaScript that:
+1. Adds event listeners to all elements in the preview iframe
+2. Identifies the HTML code for the clicked element
+3. Finds that same code in the editor
+4. Selects and highlights the matching code
+
+## Additional Download Options
+
+If your HTML references other files (like images), you can add download buttons for those as well:
+
+```{=html}
+<div class="alert alert-info mt-4">
+  <h4 class="alert-heading">Additional Resources</h4>
+  <p>These files are referenced in the HTML and may be needed for full functionality:</p>
+  
+  <div class="d-flex flex-wrap gap-2">
+    <a href="yellowUmbrella.png" download class="btn btn-outline-primary">
+      Download yellowUmbrella.png
+    </a>
+    
+    <a href="google-logo.png" download class="btn btn-outline-primary">
+      Download google-logo.png
+    </a>
+    
+    <a href="html-example-files.zip" download class="btn btn-outline-success">
+      Download All Files (ZIP)
+    </a>
+  </div>
+</div>
+```

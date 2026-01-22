@@ -5,3 +5,55 @@ management of data. For a quick overview of many of
 the topics see the "Topics" section
 in the Appendix.
 
+---
+
+---
+
+---
+
+---
+
+---
+
+
+## \*\*\* ignore the material below \*\*\*
+
+Just in case, you decided to read this anyway ... I'll explain.
+The following "TODO" items are meant as a reminder for me, YR, as I am working
+on this book. It is not intended for you, the student. If you are not 
+me (i.e. YR), you should ignore what it says from here down. I intend to 
+remove this section before the semester starts, but if I don't just ignore it. 
+
+Note that some of the info below appears in other places in the 
+text. If the material below appears in other parts of this 
+book, you should read it where it appears.
+
+<style>
+.yrTodo { 
+  color: red; 
+  font-style: italic;
+  margin-left: 2em;
+  padding-left: 1em;
+  /* font-size: 65%; */
+}
+</style>
+
+<div class="yrTodo">
+{{< include _yr/yrTodo.qmd >}}
+</div>
+
+## 099900-toDo-v001.qmd
+
+The following is the contents of the 099900-toDo-v001.qmd file 
+(also linked as the "Additional topics" entry in the menu at the left).
+
+I put this here as a reminder to me, YR, to add this material
+to the main body of this book. 
+
+
+<div class="yrTodo">
+{{< include 0999000-toDo-v001.qmd >}}
+</div>
+
+
+

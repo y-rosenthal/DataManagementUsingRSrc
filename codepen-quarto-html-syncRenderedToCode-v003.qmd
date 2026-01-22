@@ -1,0 +1,408 @@
+---
+title: "Interactive HTML Viewer with Element Inspection"
+subtitle: "CodePen-style HTML display and editor with enhanced inspection features"
+engine: knitr
+format: 
+  html:
+    theme: bootstrap
+    toc: true
+    highlight-style: github
+    code-block-bg: "#f8f8f8"
+    embed-resources: true
+    include-in-header:
+      text: |
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+---
+
+## Interactive HTML Viewer with Element Inspection
+
+This document demonstrates an enhanced CodePen-like interactive HTML viewer that not only reads content directly from an HTML file but also allows for element inspection and code navigation.
+
+### Enhanced HTML Explorer with Element Inspection
+
+```{=html}
+<div class="card shadow-sm mb-5">
+  <div class="card-header bg-primary text-white">
+    <h3 class="card-title mb-0">Enhanced HTML Explorer</h3>
+  </div>
+  <div class="card-body p-0">
+    <div class="row g-0">
+      <div class="col-md-6 border-end">
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light border-bottom">
+          <span class="badge bg-primary fs-6">HTML Code</span>
+          <div>
+            <button class="btn btn-sm btn-outline-secondary me-1" id="resetBtn">Reset</button>
+            <button class="btn btn-sm btn-outline-primary" id="runBtn">Run</button>
+          </div>
+        </div>
+        <textarea id="codeEditor" class="form-control border-0 rounded-0" style="height: 500px; font-family: monospace; font-size: 0.9rem; resize: none;">Loading HTML content...</textarea>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light border-bottom">
+          <span class="badge bg-success fs-6">Live Preview</span>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="inspectModeToggle">
+            <label class="form-check-label" for="inspectModeToggle">Inspect Mode</label>
+          </div>
+        </div>
+        <div class="position-relative">
+          <div id="elementTooltip" class="position-absolute bg-dark text-light p-2 rounded" style="display: none; z-index: 1000; max-width: 300px; font-size: 0.8rem;"></div>
+          <iframe id="previewFrame" class="w-100 border-0" style="height: 500px; background-color: white;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="text-muted">Original file: <code>stuffToDo-v003.html</code></span>
+      <div>
+        <a href="stuffToDo-v003.html" download class="btn btn-sm btn-outline-primary me-2">
+          Download HTML
+        </a>
+        <button class="btn btn-sm btn-outline-success" id="copyBtn">
+          Copy Code
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-info">
+  <strong>How to use element inspection:</strong>
+  <ol>
+    <li>Toggle "Inspect Mode" to enable element inspection</li>
+    <li>Hover over elements in the preview to see their HTML</li>
+    <li>Click on elements to highlight the corresponding code in the editor</li>
+  </ol>
+</div>
+
+<script>
+// Original HTML content storage
+let originalHtml = '';
+let inspectMode = false;
+
+// Load the HTML file content
+async function loadHtmlContent() {
+  try {
+    const response = await fetch('stuffToDo-v003.html');
+    originalHtml = await response.text();
+    document.getElementById('codeEditor').value = originalHtml;
+    updatePreview();
+  } catch (error) {
+    console.error('Error loading HTML file:', error);
+    document.getElementById('codeEditor').value = 'Error loading HTML content: ' + error.message;
+  }
+}
+
+// Update the preview iframe with current editor content
+function updatePreview() {
+  const code = document.getElementById('codeEditor').value;
+  const iframe = document.getElementById('previewFrame');
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  
+  iframeDoc.open();
+  iframeDoc.write(code);
+  iframeDoc.close();
+  
+  // Add inspection script to iframe after content is loaded
+  setTimeout(() => {
+    setupInspection(iframe);
+  }, 200);
+}
+
+// Reset editor to original content
+function resetEditor() {
+  document.getElementById('codeEditor').value = originalHtml;
+  updatePreview();
+}
+
+// Copy current editor content to clipboard
+function copyToClipboard() {
+  const codeText = document.getElementById('codeEditor').value;
+  navigator.clipboard.writeText(codeText).then(() => {
+    const copyBtn = document.getElementById('copyBtn');
+    const originalText = copyBtn.innerHTML;
+    copyBtn.innerHTML = 'Copied!';
+    setTimeout(() => {
+      copyBtn.innerHTML = originalText;
+    }, 2000);
+  });
+}
+
+// Set up element inspection in the iframe
+function setupInspection(iframe) {
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  const iframeWin = iframe.contentWindow;
+  
+  // Add inspection styles to iframe
+  if (!iframeDoc.getElementById('inspection-styles')) {
+    const style = iframeDoc.createElement('style');
+    style.id = 'inspection-styles';
+    style.textContent = `
+      .highlight-hover { 
+        outline: 2px dashed #ff5722 !important; 
+        outline-offset: 2px !important;
+        cursor: pointer !important;
+      }
+      .highlight-active {
+        outline: 3px solid #2196f3 !important;
+        outline-offset: 2px !important;
+      }
+    `;
+    iframeDoc.head.appendChild(style);
+  }
+  
+  // Remove any existing event listeners
+  const allElements = iframeDoc.querySelectorAll('*');
+  allElements.forEach(element => {
+    element.onmouseover = null;
+    element.onmouseout = null;
+    element.onclick = null;
+  });
+  
+  // Function to get cleaned HTML of an element
+  function getElementHTML(element) {
+    // Clone the element to avoid modifying the original
+    const clonedEl = element.cloneNode(true);
+    
+    // Remove highlight classes
+    clonedEl.classList.remove('highlight-hover', 'highlight-active');
+    
+    // For simplicity, just return the outerHTML
+    // In a more advanced version, we could pretty-print this
+    return clonedEl.outerHTML;
+  }
+  
+  // Function to find and highlight code in editor
+  function findAndHighlightInEditor(html) {
+    const editor = document.getElementById('codeEditor');
+    const editorContent = editor.value;
+    
+    // Simple string representation of the element (for basic search)
+    let searchString = html
+      .replace(/\s+/g, ' ')
+      .replace(/>\s+</g, '><')
+      .trim();
+    
+    // For very complex elements, we might need a more robust method
+    // This simplified approach works for most basic elements
+    
+    // Escape special regex characters but keep the syntax
+    const escapedString = searchString
+      .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      .replace(/\s+/g, '\\s*');
+    
+    try {
+      // Create a pattern with some flexibility for whitespace
+      const pattern = new RegExp(escapedString.replace(/></g, '>\\s*<'), 'i');
+      const match = pattern.exec(editorContent);
+      
+      if (match) {
+        // Highlight the matched text
+        editor.focus();
+        editor.setSelectionRange(match.index, match.index + match[0].length);
+        
+        // Scroll to the position
+        // Calculate line number (rough approximation)
+        const beforeMatch = editorContent.substring(0, match.index);
+        const lineCount = (beforeMatch.match(/\n/g) || []).length;
+        
+        // Scroll to approximate position
+        const lineHeight = 18; // Approximate line height in pixels
+        editor.scrollTop = lineCount * lineHeight - 100; // 100px above for context
+      }
+    } catch (e) {
+      console.error('Error finding element in code:', e);
+    }
+  }
+  
+  // Tooltip element for showing HTML
+  const tooltip = document.getElementById('elementTooltip');
+  
+  // Mouse position tracking for tooltip
+  let mouseX = 0;
+  let mouseY = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    // Update tooltip position if visible
+    if (tooltip.style.display !== 'none') {
+      positionTooltip();
+    }
+  });
+  
+  // Position tooltip near mouse but keep it visible in viewport
+  function positionTooltip() {
+    const rect = iframe.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    
+    let left = mouseX + 15;
+    let top = mouseY + 15;
+    
+    // Keep tooltip within viewport bounds
+    const rightEdge = left + tooltipRect.width;
+    const bottomEdge = top + tooltipRect.height;
+    
+    if (rightEdge > window.innerWidth) {
+      left = window.innerWidth - tooltipRect.width - 10;
+    }
+    
+    if (bottomEdge > window.innerHeight) {
+      top = window.innerHeight - tooltipRect.height - 10;
+    }
+    
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  }
+  
+  // Toggle inspection mode
+  document.getElementById('inspectModeToggle').addEventListener('change', function() {
+    inspectMode = this.checked;
+    
+    if (inspectMode) {
+      // Add event listeners to all elements in iframe
+      allElements.forEach(element => {
+        // Skip html, head, body elements
+        if (element.tagName.toLowerCase() === 'html' || 
+            element.tagName.toLowerCase() === 'head' || 
+            element.tagName.toLowerCase() === 'body') {
+          return;
+        }
+        
+        element.onmouseover = function(e) {
+          if (inspectMode) {
+            e.stopPropagation();
+            this.classList.add('highlight-hover');
+            
+            // Show tooltip with HTML
+            const html = getElementHTML(this);
+            tooltip.textContent = html.length > 300 ? html.substring(0, 300) + '...' : html;
+            tooltip.style.display = 'block';
+            positionTooltip();
+          }
+        };
+        
+        element.onmouseout = function() {
+          if (inspectMode) {
+            this.classList.remove('highlight-hover');
+            tooltip.style.display = 'none';
+          }
+        };
+        
+        element.onclick = function(e) {
+          if (inspectMode) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            // Remove active highlight from all elements
+            allElements.forEach(el => el.classList.remove('highlight-active'));
+            
+            // Add active highlight to this element
+            this.classList.add('highlight-active');
+            
+            // Find and highlight in editor
+            const html = getElementHTML(this);
+            findAndHighlightInEditor(html);
+          }
+        };
+      });
+    } else {
+      // Remove all highlights when inspection mode is disabled
+      allElements.forEach(element => {
+        element.classList.remove('highlight-hover', 'highlight-active');
+      });
+      tooltip.style.display = 'none';
+    }
+  });
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  loadHtmlContent();
+  
+  document.getElementById('runBtn').addEventListener('click', updatePreview);
+  document.getElementById('resetBtn').addEventListener('click', resetEditor);
+  document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
+  
+  // Auto-update on keyup with debounce
+  let timeout;
+  document.getElementById('codeEditor').addEventListener('keyup', function() {
+    clearTimeout(timeout);
+    timeout = setTimeout(updatePreview, 1000); // 1-second debounce
+  });
+});
+</script>
+```
+
+## How It Works
+
+This enhanced HTML viewer adds powerful inspection capabilities to the basic CodePen-like interface:
+
+### Element Inspection Features
+
+1. **Toggle Inspection Mode**: A switch that enables/disables element inspection.
+
+2. **Element Highlighting**:
+   - **Hover Highlighting**: Elements are highlighted with a dashed orange outline when you hover over them.
+   - **Click Highlighting**: Elements are highlighted with a solid blue outline when clicked.
+
+3. **HTML Tooltip**: A tooltip shows the HTML code of the element being hovered over.
+
+4. **Code Navigation**: When clicking an element in the preview, the corresponding code is located and highlighted in the editor.
+
+### Technical Implementation
+
+The implementation uses several techniques:
+
+1. **DOM Manipulation**: Event listeners are added to elements in the iframe to detect hover and click events.
+
+2. **Cross-frame Communication**: The script bridges the gap between the content in the iframe and the parent document.
+
+3. **Code Matching Algorithm**: Uses pattern matching to find the corresponding HTML in the editor.
+
+4. **Visual Feedback**: Styling and tooltips provide immediate visual feedback during inspection.
+
+## Usage Tips
+
+1. **Activate Inspect Mode**: Toggle the "Inspect Mode" switch to start inspecting elements.
+
+2. **Hover to Preview**: Move your cursor over elements in the rendered HTML to see their code in a tooltip.
+
+3. **Click to Navigate**: Click on an element to find and highlight its corresponding code in the editor.
+
+4. **Edit and Run**: Make changes to the code and click "Run" to update the preview.
+
+## Limitations and Considerations
+
+1. **Code Matching Precision**: The code matching algorithm is basic and works best with simpler HTML structures. Complex, nested elements or dynamically generated content might not be perfectly matched.
+
+2. **Performance**: For very large HTML documents, the inspection process might cause some performance impact.
+
+3. **Browser Compatibility**: The implementation uses modern JavaScript features and should work in recent browsers.
+
+## Additional Download Options
+
+If your HTML references other files (like images), you can add download buttons for those as well:
+
+```{=html}
+<div class="alert alert-info mt-4">
+  <h4 class="alert-heading">Additional Resources</h4>
+  <p>These files are referenced in the HTML and may be needed for full functionality:</p>
+  
+  <div class="d-flex flex-wrap gap-2">
+    <a href="yellowUmbrella.png" download class="btn btn-outline-primary">
+      Download yellowUmbrella.png
+    </a>
+    
+    <a href="google-logo.png" download class="btn btn-outline-primary">
+      Download google-logo.png
+    </a>
+    
+    <a href="html-example-files.zip" download class="btn btn-outline-success">
+      Download All Files (ZIP)
+    </a>
+  </div>
+</div>
+```

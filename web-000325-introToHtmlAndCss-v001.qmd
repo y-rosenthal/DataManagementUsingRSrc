@@ -1,0 +1,436 @@
+---
+resources:
+  - yellowUmbrella.png
+  - google-logo.png
+  - stuffToDo-v003.html
+  - stuffToDo-withCss-v002.html
+---
+# <yrChapterNumber>42. </yrChapterNumber> Introduction to HTML and CSS
+
+This tutorial explores the essential HTML and CSS features found in our sample
+page. We'll examine the various elements, tags, attributes, and styling
+techniques that work together to create web pages.
+
+## Sample HTML Page
+
+Below you can see a rendered version of our sample HTML page, followed by the
+complete source code. You can also click the following button to download the
+.html file.  
+
+You can then double click on the downloaded file to view the rendered page
+in your web-browser. You can also edit the downloaded file with the 
+text editor of your choice. After you've made some changes to the .html file
+you can refresh your browser to see the changes. For most browsers, you can
+refresh the page after changing the HTML code by pressing the F5 button 
+(or Fn-F5 for some laptops) or by clicking on the URL and pressing ENTER.
+
+
+<a href="stuffToDo-v003.html" download="stuffToDo-v003.html" class="btn btn-primary btn-sm">Download HTML File</a>
+
+<a href="stuffToDo-v003.html" download="yellowUmbrella.png" class="btn btn-primary btn-sm">Download yellowUmbrella.png image file</a>
+
+<a href="stuffToDo-v003.html" download="google-logo.png" class="btn btn-primary btn-sm">Download google-logo.png image file</a>
+
+
+
+
+::: {.panel-tabset}
+### Rendered Page
+
+<iframe src="stuffToDo-v003.html" width="100%" style="border: 7px double cyan;"></iframe>
+
+::: {.html}
+<script>
+  // Simple but effective approach to resize iframe
+  (function() {
+    // Function to resize iframe with a fixed buffer
+    function resizeIframe(iframe) {
+      console.log(`Resizing iframe: ${iframe.src}`);
+      
+      try {
+        // Access the iframe content
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const height = iframeDoc.body.scrollHeight;
+        console.log(`Content height detected: ${height}px`);
+        
+        // Set height with a modest buffer - adjust if needed
+        iframe.style.height = (height + 50) + 'px';
+        iframe.scrolling = 'no';
+      } catch (e) {
+        console.error(`Cannot access iframe content: ${e.message}`);
+        // Set a reasonable default height
+        iframe.style.height = '2200px';
+      }
+    }
+    
+    // Function to find and resize all iframes
+    function processAllIframes() {
+      const iframes = document.querySelectorAll('iframe');
+      console.log(`Found ${iframes.length} iframes on the page`);
+      
+      iframes.forEach(iframe => {
+        // Add load event handler
+        iframe.onload = function() {
+          console.log(`Iframe loaded: ${iframe.src}`);
+          setTimeout(() => resizeIframe(iframe), 100);
+        };
+        
+        // If already loaded, resize now
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+          setTimeout(() => resizeIframe(iframe), 100);
+        }
+      });
+    }
+    
+    // Run when DOM is ready
+    if (document.readyState !== 'loading') {
+      processAllIframes();
+    } else {
+      document.addEventListener('DOMContentLoaded', processAllIframes);
+    }
+    
+    // Also run after window load
+    window.addEventListener('load', processAllIframes);
+    
+    // Run again after a delay to catch late-loading iframes
+    setTimeout(processAllIframes, 1000);
+  })();
+</script>
+:::
+### Source Code
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| code-fold: show
+#| code-summary: "Show/Hide HTML Source Code"
+
+# Read the HTML file
+html_content <- readLines("stuffToDo-v003.html", warn = FALSE)
+
+# Output the content
+cat(paste(html_content, collapse = "\n"))
+```
+
+:::
+
+## HTML Document Structure
+
+HTML documents follow a specific structure that includes several key components:
+
+### DOCTYPE Declaration
+
+```html
+<!DOCTYPE html>
+```
+
+This declaration tells browsers that the document follows HTML5 standards. It must appear at the very beginning of an HTML document.
+
+### HTML Root Element
+
+```html
+<html lang="en">
+  <!-- content goes here -->
+</html>
+```
+
+The `<html>` element is the root of any HTML document. The `lang` attribute specifies the language of the document, which helps search engines and browsers.
+
+### Head Section
+
+```html
+<head>
+  <meta charset="UTF-8">
+  <title>Sample HTML Page</title>
+  <style>
+    li {margin: 10px;}
+  </style>
+</head>
+```
+
+The `<head>` section contains metadata about the document:
+
+- `<meta charset="UTF-8">`: Specifies the character encoding
+- `<title>`: Sets the page title displayed in the browser tab
+- `<style>`: Contains CSS rules for styling the page
+
+### Body Section
+
+```html
+<body>
+  <!-- visible content goes here -->
+</body>
+```
+
+The `<body>` element contains all content that should be visible in the browser window.
+
+## HTML Text Elements
+
+### Headings
+
+```html
+<h1>About this webpage</h1>
+<h2>Monday</h2>
+<h3>School Stuff</h3>
+```
+
+Heading elements (`<h1>` through `<h6>`) create hierarchical headings of decreasing importance.
+
+### Paragraphs
+
+```html
+<p>Webpages are coded with a combination of three different languages: 
+   HTML, CSS and Javascript.</p>
+```
+
+The `<p>` element creates a paragraph of text.
+
+### Text Formatting
+
+```html
+<strong>style elements</strong>
+<em>css code goes here</em>
+```
+
+- `<strong>`: Makes text bold to indicate importance
+- `<em>`: Applies italic formatting to emphasize text
+
+### Block Quotes
+
+```html
+<blockquote>
+  <!-- quoted content -->
+</blockquote>
+```
+
+The `<blockquote>` element indicates that the enclosed text is an extended quotation.
+
+## HTML Container Elements
+
+### Division
+
+```html
+<div style="background-color: lightgrey; 
+            color: blue;
+            border: 1px solid black;
+            padding: 0px 5px;
+            margin: 0px 5px;">
+  <!-- content goes here -->
+</div>
+```
+
+The `<div>` element is a generic container for other elements, often used with CSS for styling and layout.
+
+### Span
+
+```html
+<span style="color:red;font-size:125%">
+  <!-- inline content -->
+</span>
+```
+
+The `<span>` element is an inline container typically used to apply styles to a portion of text.
+
+## HTML Lists
+
+### Unordered Lists
+
+```html
+<ul>
+  <li>Do math homework</li>
+  <li>Study for Tuesday's English test</li>
+</ul>
+```
+
+The `<ul>` element creates a bulleted list where items are not in any particular order.
+
+### Ordered Lists
+
+```html
+<ol>
+  <li>Buy an umbrella</li>
+  <li>Take the test</li>
+  <li>Make vacation plans</li>
+</ol>
+```
+
+The `<ol>` element creates a numbered list where items have a specific order.
+
+### Nested Lists
+
+Lists can be nested inside other lists for creating hierarchical structures:
+
+```html
+<ul>
+  <li>Item with nested list
+    <ol>
+      <li>First nested item</li>
+      <li>Second nested item</li>
+    </ol>
+  </li>
+</ul>
+```
+
+## HTML Links
+
+```html
+<a href="https://google.com">My favorite search engine <img src="google-logo.png" width="50" alt="Google logo" /></a>
+```
+
+The `<a>` (anchor) element creates hyperlinks. The `href` attribute specifies the URL to link to.
+
+## HTML Images
+
+```html
+<img src="yellowUmbrella.png" width="50" alt="a picture of an umbrella" />
+```
+
+The `<img>` element inserts an image. Key attributes include:
+- `src`: The image file location
+- `width`: The image width
+- `alt`: Alternative text for accessibility
+
+## HTML Tables
+
+While not shown in the sample, tables are structured like this:
+
+```html
+<table>
+  <tr>
+    <th>Header 1</th>
+    <th>Header 2</th>
+  </tr>
+  <tr>
+    <td>Data 1</td>
+    <td>Data 2</td>
+  </tr>
+</table>
+```
+
+- `<table>`: Creates the table container
+- `<tr>`: Defines a table row
+- `<th>`: Creates a table header cell
+- `<td>`: Creates a table data cell
+
+## HTML Horizontal Rules
+
+```html
+<hr />
+<hr width="50%" />
+```
+
+The `<hr>` element creates a horizontal line. In the second example, the `width` attribute makes the line half the width of its container.
+
+## CSS Styling
+
+### Inline CSS
+
+```html
+<div style="background-color: lightgrey; 
+            color: blue;
+            border: 1px solid black;
+            padding: 0px 5px;
+            margin: 0px 5px;">
+```
+
+Inline styles apply CSS directly to an element using the `style` attribute.
+
+### Internal CSS
+
+```html
+<style>
+  li {margin: 10px;}
+</style>
+```
+
+Internal styles use the `<style>` element in the `<head>` section to define rules that apply to multiple elements.
+
+### CSS Properties Demonstrated
+
+1. **Text Properties**
+   - `color`: Sets text color
+   - `font-size`: Controls text size
+
+2. **Box Model Properties**
+   - `margin`: Sets space outside an element
+   - `padding`: Sets space inside an element
+   - `border`: Creates a border around an element
+
+3. **Background Properties**
+   - `background-color`: Sets the element's background color
+
+## HTML Comments
+
+```html
+<!-- This is a comment in HTML -->
+<!--
+  Multi-line comments
+  are also possible
+-->
+```
+
+Comments help document code without affecting the rendered page.
+
+## Cascading Style Sheets (CSS)
+
+CSS is a language that includes "rules" for styling the output with colors, 
+fonts, etc.  See the following html file which includes various css rules
+at the top of the file in the `<style> ... </style>` section.
+
+Read the comments in the code in this file for directions about how 
+CSS rules work.
+
+<a href="stuffToDo-v003.html" download="stuffToDo-withCss-v002.html" class="btn btn-primary btn-sm">Download HTML File</a>
+
+
+::: {.panel-tabset}
+### Rendered Page
+
+<iframe src="stuffToDo-withCss-v002.html" width="100%" style="border: 7px double cyan;"></iframe>
+
+### Source Code
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| code-fold: show
+#| code-summary: "Show/Hide HTML Source Code"
+
+# Read the HTML file
+html_content <- readLines("stuffToDo-withCss-v002.html", warn = FALSE)
+
+# Output the content
+cat(paste(html_content, collapse = "\n"))
+```
+
+:::
+
+* You can see the following website for instructions on how to use various  
+  "css selectors" <https://flukeout.github.io/>
+
+The following websites also provide games for practicing with the CSS 
+selectors that you learned in the above website.
+
+* Website: https://css-speedrun.netlify.app/  
+  Answers: https://github.com/Vincenius/css-speedrun
+
+* Website: https://css-selector.netlify.app/  
+  on this page write the selector that correctly selects the one line that contains the words “Select me”
+
+
+## Additional Resources
+
+For more information on HTML and CSS, check out these resources:
+
+**MDN Web Docs**
+
+- [MDN Web Docs - HTML](https://developer.mozilla.org/en-US/docs/Web/HTML)
+- [MDN Web Docs - CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
+
+**w3schools.com**
+
+- [W3Schools HTML Tutorial](https://www.w3schools.com/html/)
+- [W3Schools CSS Tutorial](https://www.w3schools.com/css/)
+

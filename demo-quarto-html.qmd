@@ -1,0 +1,970 @@
+---
+title: "Comprehensive HTML Display in Quarto"
+subtitle: "Multiple techniques for showing and interacting with HTML files"
+engine: knitr
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    highlight-style: github
+    code-block-bg: "#f8f8f8"
+    code-block-border-left: "#31BAE9"
+    code-fold: false
+    anchor-sections: true
+---
+
+# HTML Display Techniques in Quarto
+
+This document demonstrates various techniques for displaying HTML code in Quarto documents, both as raw code and rendered output. It also shows how to add download functionality for associated files.
+
+## 1. Basic Display Methods
+
+### 1.1 Traditional Comma-Separated Syntax with Tabs {#traditional-tabs}
+
+::: {.panel-tabset}
+
+#### Raw HTML Code
+
+```{html}
+#| echo: true
+#| eval: false
+#| file: "stuffToDo-v003.html"
+#| class-source: "html"
+```
+
+#### Rendered HTML
+
+```{=html}
+<iframe src="stuffToDo-v003.html" width="100%" height="500px" frameborder="0"></iframe>
+```
+
+:::
+
+### 1.2 Modern Pipe Syntax (#|) with Tabs {#pipe-tabs}
+
+::: {.panel-tabset}
+
+#### Raw HTML Code
+
+```{html}
+#| echo: true
+#| eval: false
+#| file: "stuffToDo-v003.html"
+#| class-source: "html"
+```
+
+#### Rendered HTML
+
+```{=html}
+<iframe src="stuffToDo-v003.html" width="100%" height="500px" frameborder="0"></iframe>
+```
+
+:::
+
+## 2. Interactive Toggle Methods
+
+### 2.1 Toggle Button with JavaScript {#toggle-js}
+
+<div class="border p-3 mb-4 rounded">
+  <button id="toggleButton1" class="btn btn-primary mb-2" onclick="toggleView1()">Show Rendered HTML</button>
+  
+  <div id="rawCode1" style="display: block;">
+  ```{html}
+  #| echo: true
+  #| eval: false
+  #| file: "stuffToDo-v003.html"
+  #| class-source: "html"
+  ```
+  </div>
+  
+  <div id="renderedHTML1" style="display: none;">
+  ```{=html}
+  <iframe src="stuffToDo-v003.html" width="100%" height="500px" frameborder="0"></iframe>
+  ```
+  </div>
+</div>
+
+<script>
+function toggleView1() {
+  const rawCode = document.getElementById('rawCode1');
+  const renderedHTML = document.getElementById('renderedHTML1');
+  const button = document.getElementById('toggleButton1');
+  
+  if (rawCode.style.display === 'block') {
+    rawCode.style.display = 'none';
+    renderedHTML.style.display = 'block';
+    button.textContent = 'Show Raw HTML';
+  } else {
+    rawCode.style.display = 'block';
+    renderedHTML.style.display = 'none';
+    button.textContent = 'Show Rendered HTML';
+  }
+}
+</script>
+
+### 2.2 Radio Button Toggle {#radio-toggle}
+
+<div class="border p-3 mb-4 rounded">
+  <div class="mb-2">
+    <label class="me-2"><input type="radio" name="viewMode2" value="raw" checked onclick="setView2('raw')"> Raw HTML</label>
+    <label><input type="radio" name="viewMode2" value="rendered" onclick="setView2('rendered')"> Rendered HTML</label>
+  </div>
+  
+  <div id="rawCode2" style="display: block;">
+  ```{html}
+  #| echo: true
+  #| eval: false
+  #| file: "stuffToDo-v003.html"
+  #| class-source: "html"
+  ```
+  </div>
+  
+  <div id="renderedHTML2" style="display: none;">
+  ```{=html}
+  <iframe src="stuffToDo-v003.html" width="100%" height="500px" frameborder="0"></iframe>
+  ```
+  </div>
+</div>
+
+<script>
+function setView2(mode) {
+  const rawCode = document.getElementById('rawCode2');
+  const renderedHTML = document.getElementById('renderedHTML2');
+  
+  if (mode === 'raw') {
+    rawCode.style.display = 'block';
+    renderedHTML.style.display = 'none';
+  } else {
+    rawCode.style.display = 'none';
+    renderedHTML.style.display = 'block';
+  }
+}
+</script>
+
+## 3. Advanced Display Methods
+
+### 3.1 Side-by-Side Layout {#side-by-side}
+
+<div class="row">
+  <div class="col-md-6">
+    <h4>Raw HTML</h4>
+    ```{html}
+    #| echo: true
+    #| eval: false
+    #| file: "stuffToDo-v003.html"
+    #| class-source: "html"
+    ```
+  </div>
+  <div class="col-md-6">
+    <h4>Rendered HTML</h4>
+    ```{=html}
+    <iframe src="stuffToDo-v003.html" width="100%" height="400px" frameborder="0"></iframe>
+    ```
+  </div>
+</div>
+
+### 3.2 Accordion Layout {#accordion}
+
+<div class="accordion" id="htmlAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Raw HTML Code
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+      <div class="accordion-body">
+        ```{html}
+        #| echo: true
+        #| eval: false
+        #| file: "stuffToDo-v003.html"
+        #| class-source: "html"
+        ```
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Rendered HTML
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+      <div class="accordion-body">
+        ```{=html}
+        <iframe src="stuffToDo-v003.html" width="100%" height="500px" frameborder="0"></iframe>
+        ```
+      </div>
+    </div>
+  </div>
+</div>
+
+### 3.3 Modal Pop-up Display {#modal-popup}
+
+```{html}
+#| echo: true
+#| eval: false
+#| file: "stuffToDo-v003.html"
+#| class-source: "html"
+```
+
+```{=html}
+<div class="mt-3 mb-4">
+  <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#htmlModal">
+    View Rendered HTML in Modal
+  </button>
+</div>
+
+<div class="modal fade" id="htmlModal" tabindex="-1" aria-labelledby="htmlModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="htmlModalLabel">Rendered HTML</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <iframe src="stuffToDo-v003.html" width="100%" height="600px" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### 3.4 Tabbed Interface with Syntax Line Numbers {#tabbed-line-numbers}
+
+::: {.panel-tabset}
+
+#### Raw HTML (with line numbers)
+
+```{html}
+#| echo: true
+#| eval: false
+#| file: "stuffToDo-v003.html"
+#| class-source: "html"
+#| code-line-numbers: true
+```
+
+#### Rendered HTML
+
+```{=html}
+<iframe src="stuffToDo-v003.html" width="100%" height="500px" frameborder="0"></iframe>
+```
+
+:::
+
+## 4. Download Options
+
+### 4.1 Basic Download Buttons {#basic-download}
+
+```{=html}
+<div class="btn-group mb-4">
+  <a href="stuffToDo-v003.html" download class="btn btn-primary">Download HTML File</a>
+  <a href="yellowUmbrella.png" download class="btn btn-secondary">Download Umbrella Image</a>
+  <a href="google-logo.png" download class="btn btn-secondary">Download Google Logo</a>
+</div>
+```
+
+### 4.2 Styled Download Buttons with Icons {#styled-download}
+
+```{=html}
+<div class="mb-4">
+  <p class="mb-2">Download the files used in this example:</p>
+  <div class="d-flex gap-2 flex-wrap">
+    <a href="stuffToDo-v003.html" download class="btn btn-outline-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code" viewBox="0 0 16 16">
+        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+        <path d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708zm-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z"/>
+      </svg>
+      stuffToDo-v003.html
+    </a>
+    <a href="yellowUmbrella.png" download class="btn btn-outline-success">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+        <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zm2.5 4.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h3.793l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793a.5.5 0 0 1 .707 0l.647.647h3.293z"/>
+      </svg>
+      yellowUmbrella.png
+    </a>
+    <a href="google-logo.png" download class="btn btn-outline-danger">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+        <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zm2.5 4.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h3.793l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793a.5.5 0 0 1 .707 0l.647.647h3.293z"/>
+      </svg>
+      google-logo.png
+    </a>
+  </div>
+</div>
+```
+
+### 4.3 Card-Based File Downloads {#card-downloads}
+
+```{=html}
+<div class="row mb-4">
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-header bg-primary text-white">HTML File</div>
+      <div class="card-body">
+        <h5 class="card-title">stuffToDo-v003.html</h5>
+        <p class="card-text">The main HTML file with example code.</p>
+        <a href="stuffToDo-v003.html" download class="btn btn-primary">Download</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-header bg-success text-white">Image File</div>
+      <div class="card-body">
+        <h5 class="card-title">yellowUmbrella.png</h5>
+        <p class="card-text">Yellow umbrella image used in the example.</p>
+        <a href="yellowUmbrella.png" download class="btn btn-success">Download</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-header bg-danger text-white">Image File</div>
+      <div class="card-body">
+        <h5 class="card-title">google-logo.png</h5>
+        <p class="card-text">Google logo image used in the example.</p>
+        <a href="google-logo.png" download class="btn btn-danger">Download</a>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### 4.4 All-in-One Zip Download {#zip-download}
+
+```{=html}
+<div class="alert alert-info mb-4">
+  <p class="mb-2"><strong>Download all files at once:</strong></p>
+  <a href="html-example-files.zip" download class="btn btn-info">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-zip" viewBox="0 0 16 16">
+      <path d="M5 7.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v.938l.4 1.599a1 1 0 0 1-.416 1.074l-.93.62a1 1 0 0 1-1.11 0l-.929-.62a1 1 0 0 1-.415-1.074L5 8.438V7.5zm2 0H6v.938a1 1 0 0 1-.03.243l-.4 1.598.93.62.929-.62-.4-1.598A1 1 0 0 1 7 8.438V7.5z"/>
+      <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+      <path d="M5.5 7.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v.938l.4 1.599a1 1 0 0 1-.416 1.074l-.93.62a1 1 0 0 1-1.11 0l-.929-.62a1 1 0 0 1-.415-1.074L5.5 8.438V7.5z"/>
+    </svg>
+    Download All Files (ZIP)
+  </a>
+  <p class="mt-2 mb-0 small text-muted">Contains: stuffToDo-v003.html, yellowUmbrella.png, and google-logo.png</p>
+</div>
+```
+
+## 5. Additional Approaches
+
+### 5.1 JavaScript-Enhanced Code Highlighting {#js-highlighting}
+
+```{=html}
+<div class="mb-4 border p-3 rounded">
+  <div class="d-flex justify-content-between mb-2">
+    <h4 class="m-0">HTML Code with Enhanced Features</h4>
+    <div>
+      <button id="copyBtn" class="btn btn-sm btn-outline-secondary" onclick="copyCode()">Copy Code</button>
+      <button id="highlightBtn" class="btn btn-sm btn-outline-primary" onclick="toggleHighlight()">Highlight Interesting Parts</button>
+    </div>
+  </div>
+  
+  <pre id="enhancedCode" class="p-3 bg-light border rounded">
+<code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Sample HTML&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    img { max-width: 100%; height: auto; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="container"&gt;
+    &lt;h1&gt;Sample HTML File&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph with some text.&lt;/p&gt;
+    &lt;img src="yellowUmbrella.png" alt="Yellow Umbrella"&gt;
+    &lt;p&gt;Another paragraph with a &lt;a href="https://www.google.com"&gt;link to Google&lt;/a&gt;.&lt;/p&gt;
+    &lt;img src="google-logo.png" alt="Google Logo"&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code>
+  </pre>
+</div>
+
+<script>
+function copyCode() {
+  const codeText = document.querySelector('#enhancedCode code').textContent;
+  navigator.clipboard.writeText(codeText).then(() => {
+    const copyBtn = document.getElementById('copyBtn');
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => {
+      copyBtn.textContent = 'Copy Code';
+    }, 2000);
+  });
+}
+
+function toggleHighlight() {
+  const codeElement = document.querySelector('#enhancedCode code');
+  const highlightBtn = document.getElementById('highlightBtn');
+  
+  if (codeElement.classList.contains('highlighted')) {
+    codeElement.classList.remove('highlighted');
+    highlightBtn.textContent = 'Highlight Interesting Parts';
+    codeElement.innerHTML = codeElement.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/g, '$1');
+  } else {
+    codeElement.classList.add('highlighted');
+    highlightBtn.textContent = 'Remove Highlighting';
+    
+    // Highlight image tags
+    const regex = /(&lt;img src=".*?&gt;)/g;
+    codeElement.innerHTML = codeElement.innerHTML.replace(regex, '<span class="highlight">$1</span>');
+  }
+}
+</script>
+
+<style>
+#enhancedCode {
+  max-height: 400px;
+  overflow-y: auto;
+}
+.highlight {
+  background-color: #ffeb3b;
+  padding: 2px 0;
+}
+</style>
+```
+
+### 5.2 Interactive HTML Explorer {#interactive-explorer}
+
+```{=html}
+<div class="mb-4 border p-3 rounded">
+  <h4>Interactive HTML Explorer</h4>
+  
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-2">
+        <select id="elementSelector" class="form-select" onchange="highlightElement()">
+          <option value="">Select an element to highlight</option>
+          <option value="html">html</option>
+          <option value="head">head</option>
+          <option value="title">title</option>
+          <option value="style">style</option>
+          <option value="body">body</option>
+          <option value="div">div</option>
+          <option value="h1">h1</option>
+          <option value="p">p</option>
+          <option value="img">img</option>
+          <option value="a">a</option>
+        </select>
+      </div>
+      
+      <pre id="explorerCode" class="p-2 bg-light border rounded" style="height: 350px; overflow-y: auto;">
+<code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Sample HTML&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    img { max-width: 100%; height: auto; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="container"&gt;
+    &lt;h1&gt;Sample HTML File&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph with some text.&lt;/p&gt;
+    &lt;img src="yellowUmbrella.png" alt="Yellow Umbrella"&gt;
+    &lt;p&gt;Another paragraph with a &lt;a href="https://www.google.com"&gt;link to Google&lt;/a&gt;.&lt;/p&gt;
+    &lt;img src="google-logo.png" alt="Google Logo"&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code>
+      </pre>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="p-2 bg-light border rounded" style="height: 385px;">
+        <iframe id="explorerPreview" src="stuffToDo-v003.html" width="100%" height="100%" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function highlightElement() {
+  const selectedElement = document.getElementById('elementSelector').value;
+  const codeElement = document.querySelector('#explorerCode code');
+  
+  // Reset
+  codeElement.innerHTML = codeElement.innerHTML.replace(/<span class="explorer-highlight">(.*?)<\/span>/g, '$1');
+  
+  if (selectedElement) {
+    const regex = new RegExp(`(&lt;${selectedElement}[^&]*&gt;.*?&lt;\\/${selectedElement}&gt;)`, 'g');
+    codeElement.innerHTML = codeElement.innerHTML.replace(regex, '<span class="explorer-highlight">$1</span>');
+  }
+}
+</script>
+
+<style>
+.explorer-highlight {
+  background-color: #4caf50;
+  color: white;
+}
+</style>
+```
+
+### 5.3 Progressive Disclosure with "Show More" {#progressive-disclosure}
+
+```{=html}
+<div class="mb-4 border p-3 rounded">
+  <h4>HTML Code with Progressive Disclosure</h4>
+  
+  <div id="shortCode" class="p-2 bg-light border rounded">
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Sample HTML&lt;/title&gt;
+  &lt;!-- CSS styles hidden for brevity --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="container"&gt;
+    &lt;h1&gt;Sample HTML File&lt;/h1&gt;
+    &lt;!-- More content hidden... --&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  </div>
+  
+  <button id="showMoreBtn" class="btn btn-sm btn-secondary mt-2" onclick="toggleShowMore()">Show Full Code</button>
+  
+  <div id="fullCode" class="p-2 bg-light border rounded mt-3" style="display: none;">
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Sample HTML&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    img { max-width: 100%; height: auto; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="container"&gt;
+    &lt;h1&gt;Sample HTML File&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph with some text.&lt;/p&gt;
+    &lt;img src="yellowUmbrella.png" alt="Yellow Umbrella"&gt;
+    &lt;p&gt;Another paragraph with a &lt;a href="https://www.google.com"&gt;link to Google&lt;/a&gt;.&lt;/p&gt;
+    &lt;img src="google-logo.png" alt="Google Logo"&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  </div>
+</div>
+
+<script>
+function toggleShowMore() {
+  const shortCode = document.getElementById('shortCode');
+  const fullCode = document.getElementById('fullCode');
+  const button = document.getElementById('showMoreBtn');
+  
+  if (fullCode.style.display === 'none') {
+    shortCode.style.display = 'none';
+    fullCode.style.display = 'block';
+    button.textContent = 'Show Less';
+  } else {
+    shortCode.style.display = 'block';
+    fullCode.style.display = 'none';
+    button.textContent = 'Show Full Code';
+  }
+}
+</script>
+```
+
+## 6. Method Comparison Chart
+
+| Method | Pros | Cons | Best Used For |
+|--------|------|------|--------------|
+| Traditional Tabs | Simple, familiar interface | Limited customization | Basic tutorials |
+| Modern Pipe Syntax | Cleaner code, better readability | Same limitations as traditional | New Quarto documents |
+| Toggle Button | Interactive, space-efficient | Requires JavaScript | Focused learning |
+| Side-by-Side | Easy comparison | Takes more vertical space | Detailed analysis |
+| Accordion | Compact, progressive | Requires Bootstrap | Comprehensive guides |
+| Modal Pop-up | Focuses attention on rendered output | More complex, requires Bootstrap | Interactive tutorials |
+| Card Downloads | Visually appealing | Takes more space | Multi-file tutorials |
+| Interactive Explorer | Highly educational | More complex to implement | In-depth learning |
+
+## 7. Implementation Notes
+
+### 7.1 Required Dependencies
+
+For the advanced methods (accordions, modals, etc.), you'll need to include Bootstrap in your Quarto document. Add this to your YAML header:
+
+```yaml
+format:
+  html:
+    theme: bootstrap
+    embed-resources: true
+    include-in-header:
+      text: |
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+```
+
+### 7.2 File Organization
+
+For optimal organization of your tutorial files:
+
+```
+my-tutorial/
+├── index.qmd                # Main Quarto document
+├── stuffToDo-v003.html      # HTML sample file
+├── yellowUmbrella.png       # Image referenced in HTML
+├── google-logo.png          # Another image referenced
+├── html-example-files.zip   # ZIP archive of all files
+└── images/                  # Optional folder for tutorial images
+```
+
+### 7.3 Creating the ZIP File
+
+To create the ZIP file for the "Download All Files" option:
+
+```bash
+zip html-example-files.zip stuffToDo-v003.html yellowUmbrella.png google-logo.png
+```
+
+## 8. Dynamic File Preview
+
+This approach uses JavaScript to dynamically load the HTML file content and display it in various ways.
+
+```{=html}
+<div class="border p-3 mb-4 rounded">
+  <h4>Dynamic File Preview</h4>
+  
+  <div class="btn-group mb-3" role="group">
+    <button type="button" class="btn btn-outline-primary active" onclick="switchView('code')">Code View</button>
+    <button type="button" class="btn btn-outline-primary" onclick="switchView('preview')">Preview</button>
+    <button type="button" class="btn btn-outline-primary" onclick="switchView('split')">Split View</button>
+  </div>
+  
+  <div id="dynamicWrapper">
+    <div id="codeView" class="p-2 bg-light border rounded" style="display: block;">
+      <pre><code id="dynamicCode" class="language-html">Loading HTML content...</code></pre>
+    </div>
+    
+    <div id="previewView" style="display: none;">
+      <iframe id="dynamicPreview" src="stuffToDo-v003.html" width="100%" height="400px" frameborder="0"></iframe>
+    </div>
+    
+    <div id="splitView" class="row" style="display: none;">
+      <div class="col-md-6">
+        <pre><code id="splitCode" class="language-html">Loading HTML content...</code></pre>
+      </div>
+      <div class="col-md-6">
+        <iframe id="splitPreview" src="stuffToDo-v003.html" width="100%" height="400px" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Load the HTML file content
+async function loadHtmlContent() {
+  try {
+    const response = await fetch('stuffToDo-v003.html');
+    const text = await response.text();
+    const escapedHtml = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+    
+    document.getElementById('dynamicCode').innerHTML = escapedHtml;
+    document.getElementById('splitCode').innerHTML = escapedHtml;
+  } catch (error) {
+    console.error('Error loading HTML file:', error);
+    document.getElementById('dynamicCode').innerHTML = 'Error loading HTML content.';
+    document.getElementById('splitCode').innerHTML = 'Error loading HTML content.';
+  }
+}
+
+function switchView(view) {
+  // Hide all views
+  document.getElementById('codeView').style.display = 'none';
+  document.getElementById('previewView').style.display = 'none';
+  document.getElementById('splitView').style.display = 'none';
+  
+  // Show selected view
+  if (view === 'code') {
+    document.getElementById('codeView').style.display = 'block';
+  } else if (view === 'preview') {
+    document.getElementById('previewView').style.display = 'block';
+  } else if (view === 'split') {
+    document.getElementById('splitView').style.display = 'flex';
+  }
+  
+  // Update active button
+  const buttons = document.querySelectorAll('#dynamicWrapper .btn');
+  buttons.forEach(button => {
+    button.classList.remove('active');
+    if (button.textContent.toLowerCase().includes(view)) {
+      button.classList.add('active');
+    }
+  });
+}
+
+// Load HTML content when the page loads
+document.addEventListener('DOMContentLoaded', loadHtmlContent);
+</script>
+```
+
+## 9. Code Diff Approach
+
+This approach shows how the HTML file has changed over time or highlights specific parts.
+
+```{=html}
+<div class="border p-3 mb-4 rounded">
+  <h4>HTML Code with Diff Highlighting</h4>
+  
+  <select id="diffOption" class="form-select mb-3" onchange="showDiff()">
+    <option value="images">Highlight Image Tags</option>
+    <option value="styles">Highlight Style Section</option>
+    <option value="links">Highlight Links</option>
+  </select>
+  
+  <div id="diffCode" class="p-2 border rounded">
+    <pre><code class="language-html" id="diffCodeContent">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Sample HTML&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    img { max-width: 100%; height: auto; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="container"&gt;
+    &lt;h1&gt;Sample HTML File&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph with some text.&lt;/p&gt;
+    &lt;img src="yellowUmbrella.png" alt="Yellow Umbrella"&gt;
+    &lt;p&gt;Another paragraph with a &lt;a href="https://www.google.com"&gt;link to Google&lt;/a&gt;.&lt;/p&gt;
+    &lt;img src="google-logo.png" alt="Google Logo"&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </code></pre>
+  </div>
+</div>
+
+<style>
+.diff-add {
+  background-color: #e6ffec;
+  padding: 2px 0;
+}
+.diff-highlight {
+  background-color: #fff8c5;
+  padding: 2px 0;
+}
+</style>
+
+<script>
+function showDiff() {
+  const option = document.getElementById('diffOption').value;
+  const codeElement = document.getElementById('diffCodeContent');
+  const htmlCode = codeElement.innerHTML;
+  
+  // Reset highlighting
+  codeElement.innerHTML = htmlCode.replace(/<span class="diff-highlight">(.*?)<\/span>/g, '$1');
+  
+  if (option === 'images') {
+    codeElement.innerHTML = highlightPattern(codeElement.innerHTML, /(&lt;img.*?&gt;)/g);
+  } else if (option === 'styles') {
+    codeElement.innerHTML = highlightPattern(codeElement.innerHTML, /(&lt;style&gt;.*?&lt;\/style&gt;)/g);
+  } else if (option === 'links') {
+    codeElement.innerHTML = highlightPattern(codeElement.innerHTML, /(&lt;a href.*?&lt;\/a&gt;)/g);
+  }
+}
+
+function highlightPattern(html, pattern) {
+  return html.replace(pattern, '<span class="diff-highlight">$1</span>');
+}
+
+// Initialize diff view
+document.addEventListener('DOMContentLoaded', showDiff);
+</script>
+```
+
+## 10. Integrated CodePen-like Interface
+
+This approach mimics popular code playgrounds like CodePen or JSFiddle.
+
+```{=html}
+<div class="border p-3 mb-4 rounded">
+  <h4>CodePen-like HTML Explorer</h4>
+  
+  <div class="row">
+    <div class="col-md-6">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="badge bg-primary">HTML Code</span>
+        <button class="btn btn-sm btn-outline-secondary" onclick="runCode()">Run &raquo;</button>
+      </div>
+      <textarea id="codepenEditor" class="form-control mb-3" style="height: 300px; font-family: monospace;"><!DOCTYPE html>
+<html>
+<head>
+  <title>My Sample HTML</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    img { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sample HTML File</h1>
+    <p>This is a paragraph with some text.</p>
+    <img src="yellowUmbrella.png" alt="Yellow Umbrella">
+    <p>Another paragraph with a <a href="https://www.google.com">link to Google</a>.</p>
+    <img src="google-logo.png" alt="Google Logo">
+  </div>
+</body>
+</html></textarea>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-1">
+        <span class="badge bg-success">Result</span>
+      </div>
+      <iframe id="codepenResult" class="border w-100" style="height: 300px; background-color: white;"></iframe>
+    </div>
+  </div>
+  
+  <div class="alert alert-info mt-3 mb-0 small">
+    <strong>Note:</strong> The actual images won't display in the result iframe since they would need to be properly referenced.
+    In a real implementation, you'd need to handle asset paths correctly.
+  </div>
+</div>
+
+<script>
+function runCode() {
+  const code = document.getElementById('codepenEditor').value;
+  const iframe = document.getElementById('codepenResult');
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  
+  iframeDoc.open();
+  iframeDoc.write(code);
+  iframeDoc.close();
+}
+
+// Initialize the result iframe
+document.addEventListener('DOMContentLoaded', runCode);
+</script>
+```
+
+## 11. Mobile-Optimized Approach
+
+```{=html}
+<div class="border p-3 mb-4 rounded d-block d-md-none">
+  <h4>Mobile-Optimized View</h4>
+  
+  <div class="accordion" id="mobileAccordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingMobileOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMobileOne" aria-expanded="true" aria-controls="collapseMobileOne">
+          HTML Code
+        </button>
+      </h2>
+      <div id="collapseMobileOne" class="accordion-collapse collapse show" aria-labelledby="headingMobileOne">
+        <div class="accordion-body">
+          <pre><code class="language-html" style="font-size: 0.8rem;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Sample HTML&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    img { max-width: 100%; height: auto; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="container"&gt;
+    &lt;h1&gt;Sample HTML File&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph with some text.&lt;/p&gt;
+    &lt;img src="yellowUmbrella.png" alt="Yellow Umbrella"&gt;
+    &lt;p&gt;Another paragraph with a &lt;a href="https://www.google.com"&gt;link to Google&lt;/a&gt;.&lt;/p&gt;
+    &lt;img src="google-logo.png" alt="Google Logo"&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+          </code></pre>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingMobileTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMobileTwo" aria-expanded="false" aria-controls="collapseMobileTwo">
+          Rendered Preview
+        </button>
+      </h2>
+      <div id="collapseMobileTwo" class="accordion-collapse collapse" aria-labelledby="headingMobileTwo">
+        <div class="accordion-body p-0">
+          <iframe src="stuffToDo-v003.html" width="100%" height="300px" frameborder="0"></iframe>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingMobileThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMobileThree" aria-expanded="false" aria-controls="collapseMobileThree">
+          Download Files
+        </button>
+      </h2>
+      <div id="collapseMobileThree" class="accordion-collapse collapse" aria-labelledby="headingMobileThree">
+        <div class="accordion-body">
+          <div class="d-grid gap-2">
+            <a href="stuffToDo-v003.html" download class="btn btn-primary">HTML File</a>
+            <a href="yellowUmbrella.png" download class="btn btn-success">Umbrella Image</a>
+            <a href="google-logo.png" download class="btn btn-danger">Google Logo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-primary d-none d-md-block">
+  <strong>Note:</strong> The mobile-optimized view is only visible on small screens. Resize your browser window to see it.
+</div>
+```
+
+## 12. Summary and Best Practices
+
+When displaying HTML code samples in Quarto documents, consider the following best practices:
+
+1. **Choose the right display method** based on your audience and content complexity:
+   - Tabbed interfaces for beginners and clear separation
+   - Side-by-side for direct comparison
+   - Interactive methods for engaging tutorials
+
+2. **File organization** 
+   - Keep all related files in a logical directory structure
+   - Use relative paths in your examples
+   - Consider including a ZIP file for easy download of all resources
+
+3. **Accessibility considerations**
+   - Provide clear labels and instructions
+   - Ensure code samples have appropriate contrast for readability
+   - Use descriptive alt text for any images
+
+4. **Mobile optimization**
+   - Test your Quarto document on different screen sizes
+   - Consider using responsive layouts and accordions for mobile users
+   - Adjust font sizes and spacing for small screens
+
+5. **Performance**
+   - Minimize the use of heavy JavaScript when possible
+   - Compress images and other resources
+   - Consider using lazy loading for iframes
+
+By implementing these techniques, you can create professional-quality HTML tutorials in Quarto that effectively show both the code and its rendered output while providing convenient download options for all related files.

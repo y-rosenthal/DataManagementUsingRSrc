@@ -29,7 +29,7 @@ packages.
   - dbExecute()
   - many other other functions
   
-  These "generic functions" provide some basic functionality that for databases.
+  These "generic functions" provide some basic functionality for databases.
   However, the specifics of each RDBMS system are not coded here. Rather 
   each RDBMS (e.g. MySql, Postgres, SQLite, etc) would have a different 
   package written just for that RDBMS that understands the specifics of how 
@@ -78,10 +78,10 @@ You do that by calling dbConnect()
 Remember that the DBI package understands the generic concept of databases
 but the RSQLite package knows about the specifics related to SQLite.
 Therefore we call the RSQLite::SQLite() function to create a 
-"driver" for the SQLite() database. 
+***"driver"*** for the SQLite() database. 
 
-A "driver" is a piece of software that knows the specifics of how to use
-a specific pieced of software or hardware. For example when you buy a 
+A ***"driver"*** is software that knows the specifics of how to use
+a specific software or hardware product. For example when you buy a 
 printer you may need to install "driver" software for your printer
 in order for your computer to know how to use your specific printer's 
 features. Very often these driver software products are already installed 
@@ -89,9 +89,11 @@ for major printer manufacturers on your computer. However, you many
 need to install an updated driver to get your computer to know how to use
 the new features on your brand new printer. 
 
-We pass the "driver" to the dbConnect function. dbConnect() then returns
+The RSQLite() function in the RSQLite package returns a "driver object" that
+contains information about how SQLite software works. 
+We then pass that "driver" to the dbConnect function. dbConnect() then returns
 a connection object, that will need to be passed to any other function that
-we use to interface with out database.
+we use to interface with our database.
 
 ```{r}
 # Create a connection to the database.
@@ -102,26 +104,32 @@ con = dbConnect(RSQLite::SQLite(), "mydb.sqlite")
 ### Call dbDisconnect(con) when you are done.
 
 When you are finished using the database you should make 
-sure to call dbDisconnect(con), otherwise the mydb.sqlite file will be 
+sure to call dbDisconnect(con), otherwise the sqlite file will be 
 considered to be "busy" and you will not be able to remove it or 
 do other similar things with it.
 
 ## Running SQL commands in the database with dbExecute and sqldf
 
-We will use the dbExecute to run any type of SQL command (other than SELECT)
-in the database.
+We will continue to use the `sqldf` function
+for running `SELECT` statements.
+However, we'll use the `dbExecute` function for all other types of SQL commands
+For example, we will use the dbExecute function for the following types
+of commands 
 
-We will continue to use the sqldf function specifically 
-for running SELECT statements in the database.
+- `CREATE TABLE` statements to create a new tables
+- `INSERT` statements to insert new rows
+- `UPDATE` statements to modify existing data
+- `DELETE` statements to delete rows from a table
+- etc...
 
 ### dbExecute
 
-The dbExecute command will take a SQL command and
-execute it in the database. (NOTE that for SELECT commands we will
+The dbExecute command taked a SQL command and
+executed it in the database. (NOTE that for SELECT commands we will
 continue to use sqldf instead of dbExecute).
 
 The dbExecute function takes the connection object as its first
-argument and the actual SQL command as its 2nd argument.
+argument and the actual SQL command as its second argument.
 
 The return value of dbExecute is the number of rows that were
 affected by the command. This is mainly an issue for INSERT, UPDATE, DELETE
@@ -221,10 +229,10 @@ by the command. Therefore, if everything works correctly, this call to
 dbExecute should return 1.
 
 ```{r}
-dbExecute(con, "insert into authors values('a100','anne','andrews')")
+dbExecute(conn = con, "insert into authors values('a100','anne','andrews')")
 ```
 
-We now can see that row in the database.
+Now that row appears when we SELECT the contents of the table.
 
 ```{r}
 sqldf("select * from authors", connection = con)
@@ -242,7 +250,7 @@ authorLname = 'bell'
 
 # We can use the code below to build up the following SQL insert statement:
 #
-#    insert into authors values( 'a200' , 'bill' , 'jones' )
+#    insert into authors values( 'a200' , 'bill' , 'bell' )
 
 insertStatement = paste0(
                            "insert into authors ",
@@ -276,16 +284,19 @@ sqldf("select * from authors order by au_id", connection = con)
 #
 # In the following example, we insert a new author row using this technique.
 
-# Let's pretend that these variables came from an API or any other source of info
-# (e.g. a file or user input).
+# The example below is just to demonstrate to use the params argument. 
+# To keep the example simple, the values (e.g. 'a300', 'carie', etc) are typed
+# explicitly into the code. However, in reality, these values, would come
+# from an API, or a file, interactive user input via readline() as shown
+# below in the #comments
 
-authorId = 'a300'
-authorFname = 'carie'
-authorLname = 'cox'
+authorId = 'a300'       # authorId = readline("Enter author ID: ")
+authorFname = 'carie'   # authorFname = readline("Enter the author's first name: ")
+authorLname = 'cox'     # authorLname = readline("Enter the author's last name: ")
 
 # Notice the ? marks and the params argument that contains the actual
 # values to replace the ? marks.
-dbExecute(con, "insert into authors values (?,?,?)",
+dbExecute(conn = con, "insert into authors values (?,?,?)",
           params = list( authorId, authorFname, authorLname ))
 
 # We can see that we got the new author added.
@@ -327,7 +338,7 @@ for (rownum in 1:nrow(df)){
 
   # Notice the ? marks and the params argument that contains the actual
   # values to replace the ? marks.
-  dbExecute(con, "insert into authors values (?,?,?)",
+  dbExecute(conn = con, "insert into authors values (?,?,?)",
             params = list( newId, authorFirstName , authorLastName ))
   
 }

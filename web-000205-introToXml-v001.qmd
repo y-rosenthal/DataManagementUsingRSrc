@@ -1,4 +1,4 @@
-# <yrChapterNumber>40. </yrChapterNumber> Intro to XML
+# <yrChapterNumber>39. </yrChapterNumber> Intro to XML
 
 ```{r}
 #| include: false
@@ -154,36 +154,123 @@ This tells processing applications that this is an XML document that conforms to
 
 ### Elements
 
-Elements are the building blocks of XML. An element consists of a start tag, content, and an end tag.
+Elements are the building blocks of XML. Elements consist of "tags" (e.g. <book>)
+and content. For example `<book>War & Peace</book>` is all considered one "element".
 
-#### Elements with Start and End Tags
+Tags come in a few different forms. The word between the <angleBrackets> 
+is known as the "name" of the tag. For example:
 
-Most elements have both a start tag and an end tag, with content between them:
+- a *start tag*:
+
+  **<book>** 
+
+- an *end tag* (notice the / before the name):   
+
+  **</book>**
+  
+  *(there must* **NOT** *be a space between the name of the tag and the "/")*
+
+- an *empty tag* (notice the " /" after the name):
+
+  **<pulitzerPrizeWinner />**
+
+  *(It's preferable that there be a space between the name of the tag and the "/"*
+  *to conform with older rules for XML. Newer rules for XML don't require*
+  *this space)*
+
+We will explain more below.
+
+#### Rules for naming tags
+
+Names of tags may ONLY contain
+
+- Letters
+- Numbers
+- Underscore (_)
+- Hyphen (-)
+- Period (.)
+
+Names MAY NOT contain spaces, or other "special characters" like
+like !, @, #, $, %, ^, &, *, (, ), <, >, [, ], /, |, :, ;, ", ', `, ~, =, commas
+
+
+#### Type 1 - Elements with start and end tags, e.g. <state>New York</state>
+
+Most elements have both a start tag and an end tag, with content between them.
+The start tag and end tag must have the same "name" (i.e. the word between the
+tag). Remember that the name of a tag may not contain spaces.
+
+For example:
 
 ```xml
 <phone>718-496-7223</phone>
 ```
 
+Note that all tags are surrounded by <angle brackets> (ie. less than and 
+greater than signs). 
 In our example, most elements follow this pattern, including `<publisher>`, `<phone>`, and `<author>`.
+Element's may consist of a start tag, 
+content, and an end tag. 
 
-#### Nested Elements
+The "content" may be any of the following:
 
-XML elements can be nested within other elements, creating a hierarchical structure:
+- plain text, e.g.
 
-```xml
-<address>
+  ```xml
   <street>75 West 205 St</street>
-  <city>Bronx</city>
-  <state>NY</state>
-  <zip>10468</zip>
-</address>
-```
+  ```
 
-In this example, the `address` element contains four child elements: `street`, `city`, `state`, and `zip`.
+- other elements, e.g.  
+
+  ```xml
+  <address>
+    <street>75 West 205 St</street>
+    <city>Bronx</city>
+    <state>NY</state>
+    <zip>10468</zip>
+  </address>
+  ```
+  
+  The elements inside are known as ***nested elements***, ***inner elements***
+  or ***child elements***.
+  
+  The element outside is known as the ***outer element*** or ***parent element***
+
+  In this example, the `address` element contains four child elements: `street`, `city`, `state`, and `zip`.
+  
+- A combination of text and other elements. 
+  For example the `author` element
+  shown below contains plain text (Sarah Buchman) as 
+  well as other elements. Portions of plain text may appear anywhere in 
+  the outer element.
+  in the
+
+  ```xml
+      <author order="1" royalty_shares="1" primary="true">Sarah Buchman
+        <phone>718-496-7223</phone>
+        <address>
+          <street>75 West 205 St</street>
+          <city>Bronx</city>
+          <state>NY</state>
+          <zip>10468</zip>
+        </address>
+      </author>  
+  ```
+
+
+#### The "root" element
+
+There must be one "root" element for the document that contains everything else.
+In the example above the `<books> ... </books>` element is the root element. It
+contains everything else in the XML document.
 
 ### Attributes
 
-Attributes provide additional information about elements and are always specified in the start tag:
+Attributes provide additional information about elements and are always 
+specified in the start tag.
+Each attribute is written in the form name="value". 
+The "quotes" must surround the value of the attribute. 
+Both 'single quotes' and "double quotes" are valid.
 
 ```xml
 <book id="B001" title="1977!" type="history" pages="107" sales="566" pubdate="2000-08-01">
@@ -191,7 +278,6 @@ Attributes provide additional information about elements and are always specifie
 
 In this example, the `book` element has several attributes: `id`, `title`, `type`, `pages`, `sales`, and `pubdate`.
 
-Attributes must always be quoted, using either single (`'`) or double (`"`) quotes.
 
 ### Empty Elements
 

@@ -18,3 +18,41 @@ will use in this presentation:
 
   [000130-WebscrapingJavascriptSitesWithRselenium-v002.docx](000130-WebscrapingJavascriptSitesWithRselenium-v002.docx)
 
+## Tutorial Video
+
+Most of the material on this page follows the following tutorial
+
+[RSelenium Package in R (Example) | Automate Web Browsers | Introduction & Tutorial for Beginners by Statistics Globe](https://www.youtube.com/watch?v=WRjKyCZsbE4)
+
+
+
+
+## Getting started with RSelenium
+
+Selenium is a standalone product that can be used from Python, R and other 
+languages as well. 
+
+RSelenium is an R package that enables the use of the Selenium product via
+R functions.
+
+Selenium is actually coded in the Java language. You must install Java on 
+your computer in order to get Selenium to work. To do so, download and 
+install Java (i.e. the JRE to be precise) for your computer here:
+
+<https://www.java.com/en/download/>
+
+
+
+### find your version of chrome 
+
+Type this into the chrome browser
+
+> chrome://version
+
+The version number is at the top and looks something like this:
+
+> 135.0.7049.96 (Official Build) (64-bit) (cohort: Stable) 
+
+This is the result on my computer:
+
+![chrome version](files/chromeVersion-v001.png)

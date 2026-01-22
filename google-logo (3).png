@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!-- This is a comment in HTML (and in XML). -->
+<!-- 
+ The "DOCTYPE" is generally found on the first line.
+ 
+ The primary purpose of a DOCTYPE is to tell browser and other 
+ software that use the file which set of rules to follow when 
+ interpreting the document, which is most relevant for SGML and XML-based formats.
+ 
+ The DOCTYPE tells the browser (or other software that uses 
+ the file) what version of HTML or other 
+ language is included in the file.
+ 
+ The DOCTYPE shown above says that this file follows the rules
+ of HTML 5. Starting the HTML 5, the doctype simply needs to say "html".
+ Earlier versions of HTML required much more complex DOCTYPEs.
+ There are other DOCTYPE declarations for other types of files
+ most of which are some sort of XML or similar file type.
+-->
+<html lang="en">
+
+  <head>
+	<!--
+	 The <head> element is used for info
+	 that doesn't show up INSIDE the browser window.
+	 It includes info ABOUT the page
+	-->
+	
+	<!--
+	 The "charcter set" or "charset" describes the types of 
+	 text that can be used in this webpage. 
+	 UTF-8 data may include non-English text as well as
+	 other symbols (e.g. emojis, etc). UTF-8 is the recommended
+	 character set for modern web pages. 
+	 Other values that you might see for charset include the 
+	 following:
+	 UTF-16, US-ASCII, ISO-8859-1, windows-1252
+	-->
+	<meta charset="UTF-8">
+	<title>Sample HTML Page</title>
+    <style>
+      li {margin: 10px;}
+    </style>
+  </head>
+  <body>
+	<!--
+	 The <body> element is used for info that is displayed in 
+     the browser window.
+	-->
+
+	<h1>About this webpage</h1>
+    <div style="background-color: lightgrey; 
+                color: blue;
+                border: 1px solid black;
+                padding: 0px 5px;
+                margin: 0px 5px;">
+                
+        <p>Webpages are coded with a combination of three different languages:
+           HTML, CSS and Javascript. The different languages can be located in different 
+           files. They can also all be combined in a single file with a .html extension.</p>
+           
+        <p>The code for this webpage is located in a single .html file and is
+           intended to introduce how to use various HTML tags and attributes. 
+           In a later lesson we will focus more on CSS and Javascript. 
+           Note that this file contains mostly HTML with a minimal amount of CSS code.
+           There is NO Javascript code in this file.
+           The CSS code appears in the style elements and style attributes found in this page.<br />
+
+           <blockquote>
+           <strong>style elements</strong>:<br />
+           <strong><span style="color:red;font-size:125%;"> &lt;style&gt; <em>css code goes here</em> &lt/style&gt;</span></strong>
+           <br /><br /> 
+           
+           <strong>style attributes</strong>: e.g.<br />
+           <strong><span style="color:red;font-size:125%">&lt;div  style="<em>css code goes here</em>"&gt;...&lt;div&gt</span></strong> and<br />
+           <strong><span style="color:red;font-size:125%">&lt;span  style="<em>css code goes here</em>"&gt;...&lt;span&gt</span></strong>
+           </blockquote>
+        </p>
+
+        <p>To work with this code do the following:</p>        
+           
+        <ul>
+          <li>To <strong><em>see the "rendered page"</em></strong> in a browser, double click
+           on the html filename.</li>
+
+          <li>To <strong><em>edit</em></strong> this code, you must open up this file
+          in a <em>"text editor".</em></li>
+
+          <li>You can also <em><strong>view</strong></em> this code in the browser by
+          doing one of the following things.
+          
+              <ol>
+                <li><strong>"view source"</strong>: right click on a blank section of the 
+                    page and choose <strong>"view source"</strong>
+                    <em>(or something similar - the exact text of the menu choice may be 
+                    different from browser to browser)</em>.
+                    This opens a simple view of the entire HTML file.
+                    
+                <li><strong>"inspect"</strong>: Right click on a any part of the page
+                    and choose <strong>"inspect"</strong>
+                    <em>(or something similar - the exact text of the menu choice may be 
+                    different from browser to browser)</em>.
+                    The inspect option opens the HTML in the "browser tools".
+                    These tools are used by software developers to help 
+                    debug problems with the web page. The HTML will open
+                    to the exact HTML code that is used to "render" the 
+                    portion of the page that you clicked on. 
+                </li>
+              </ol>
+          </li>
+        </ul>
+	</div>
+
+	<hr />
+	
+	<h1>Some links</h1>
+	
+	<p>These are a few of my favorite links:</p>
+	
+	<a href="https://google.com">My favorite search engine</a><br />
+	<a href="https://amazon.com">A good place to buy stuff</a>
+
+
+	<h1>Stuff todo</h1>
+    
+    <p>It would be a good idea for me to get more orgnaized. 
+    Perhaps I should read <a href="https://aimlief.com/organize-your-life">this article</a> . 
+    Here is a list of things that I need to do.
+
+	<!-- This is a comment. 
+		 In HTML, comments start with "less-than sign, --!""
+		 and end with "--, greater than sign". The comments
+		 do NOT affect the way a webpage looks in the browser. 
+		 They are notes to the web developers about the code.
+	-->
+
+
+	<h2>Monday</h2>
+	
+	<h3>School Stuff</h3>
+	<ul>
+	  <li>Do math homework</li>
+	  <li>Study for Tuesday's English test</li>
+	</ul>
+
+	<h3>Other Stuff</h3>
+	<ul>
+	  <li>Pay electric bill</li>
+	  <li>Call Joe to say hi</li>
+	</ul>
+
+	<!-- hr is an "empty tag", i.e. it doesn't have an end tag.
+		 The slash after the hr indicates that it is an empty tag.
+		 The slash is preferred by some but is not strictly required -->
+	<hr />
+
+	<!-- Some HTML tags contain attributes. They appear
+		 inside either a start tag or an empty tag. 
+		 End tags never contain attributes.
+		 
+		 Attributes specify options for the tag. 
+		 For example, the following horizontal line will 
+		 only be 50% of the browser's page width. -->
+	<hr width="50%" />
+
+	<h2>Tuesday</h2>
+	<ol>
+	  <li>
+		Buy an umbrella
+		<img
+		  src="yellowUmbrella.png"
+		  width="50"
+		  alt="a picture of an umbrella"
+		/>
+	  </li>
+	  <li>Take the test</li>
+	  <li>Make vacation plans</li>
+	  <li>relax after a full night of studying</li>
+	</ol>
+    
+    
+ <h1>Tables in HTML</h1>
+
+<p>Tables are useful for displaying data in rows and columns. Here's an example of a simple HTML table that organizes our to-do items:</p>
+
+<table style="border-collapse: collapse; width: 80%; margin: 20px 5px;">
+  <tr>
+    <th style="border: 1px solid black; padding: 8px; background-color: lightgrey; text-align: left;">Day</th>
+    <th style="border: 1px solid black; padding: 8px; background-color: lightgrey; text-align: left;">School Stuff</th>
+    <th style="border: 1px solid black; padding: 8px; background-color: lightgrey; text-align: left;">Other Stuff</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Monday</td>
+    <td style="border: 1px solid black; padding: 8px;">
+      <ul>
+        <li>Do math homework</li>
+        <li>Study for Tuesday's English test</li>
+      </ul>
+    </td>
+    <td style="border: 1px solid black; padding: 8px;">
+      <ul>
+        <li>Pay electric bill</li>
+        <li>Call Joe to say hi</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tuesday</td>
+    <td style="border: 1px solid black; padding: 8px;">
+      <ul>
+        <li>Take the test</li>
+      </ul>
+    </td>
+    <td style="border: 1px solid black; padding: 8px;">
+      <ol>
+        <li>Buy an umbrella
+          <div style="margin-top: 5px;">
+            <img src="yellowUmbrella.png" width="50" alt="a picture of an umbrella" />
+          </div>
+        </li>
+        <li>Make vacation plans</li>
+        <li>Relax after a full night of studying</li>
+      </ol>
+    </td>
+  </tr>
+</table>
+
+<!-- 
+  The table element creates the table structure.
+  <tr> defines a table row.
+  <th> defines a table header cell.
+  <td> defines a regular table data cell.
+  
+  Notice how table cells can contain complex HTML elements:
+  - Unordered lists (ul)
+  - Ordered lists (ol)
+  - Images (img)
+  - Divs and other structural elements
+  
+  The style attributes above add borders, spacing, and colors
+  to make the table more readable. In a real-world scenario,
+  you would typically use CSS in the <style> section or in a
+  separate CSS file instead of inline styles.
+-->
+
+<p>As you can see, table cells can contain more than just text. They can include lists, images, links, and even other HTML elements, allowing for rich and complex data presentation.</p>   
+  </body>
+</html>

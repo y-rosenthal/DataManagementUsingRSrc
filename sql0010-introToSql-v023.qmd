@@ -101,7 +101,7 @@ arranges its data in rows and columns.
 ### The sqldf R package
 
 # Using the sqldf R package ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 SQL is NOT an "R" concept ... however we can use SQL in R via 
 the sqldf package.
 
@@ -112,7 +112,7 @@ we will learn.
 
 ```{r}
 # install and load (i.e. require) the sqldf package 
-if(!require(sqldf)){install.packages("sqldf");require(sqldf);}
+if(!require(sqldf, quietly=TRUE, warn.conflicts=FALSE)){install.packages("sqldf");require(sqldf);}
 ```
 
 ## data for this part of the tutorial
