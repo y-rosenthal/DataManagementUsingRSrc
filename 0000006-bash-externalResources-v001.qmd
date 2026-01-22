@@ -1,0 +1,53 @@
+# <yrChapterNumber>3. </yrChapterNumber> Intro to Bash - external resources
+
+This section of the book focuses on intro to the "Bash Shell" command line
+interface program. The links below are from external sources. You can use
+this to supplement the material in this book.
+
+
+## Ryans Tutorials 
+
+The following tutorial provides an intro to using Bash. The title of this
+tutorial is "Linux Tutorial" as Bash is commonly used on the 
+Linux operating system. However, this tutorial also applies to using Bash on 
+the Mac and on Windows.
+
+<https://ryanstutorials.net/linuxtutorial/>
+
+Most of the information that we covered before the midterm can be found
+in the first 8 sections of this tutorial. Links are below along with some
+of my own comments. Please use the notes on this website to study for 
+the midterm.
+
+- [The Command Line - What is it, how does it work and how do I get to one.](https://ryanstutorials.net/linuxtutorial/commandline.php)
+
+- [Basic Navigation - An introduction to the Linux directory system and how to get around it.](https://ryanstutorials.net/linuxtutorial/navigation.php)
+
+- [More About Files - Find out some interesting characteristics of files and directories in a Linux environment.](https://ryanstutorials.net/linuxtutorial/aboutfiles.php)
+
+- [Manual Pages - Learn how to make the most of the Linux commands you are learning.](https://ryanstutorials.net/linuxtutorial/manual.php)
+
+  You should know how to read the contents of a "man page".
+
+  Note that the "man" command isn't installed by default on posit.cloud nor 
+  on Mac or Windows Bash environments. However, you can search online for
+  any man page, (e.g. google for man ls).
+
+  Alternatively , you can access the man pages here:
+  <https://man7.org/linux/man-pages/dir_section_1.html>
+
+- [File Manipulation - How to make, remove, rename, copy and move files and directories.](https://ryanstutorials.net/linuxtutorial/filemanipulation.php)
+
+- You are NOT responsible for the "vi" editor. "vi" is a text editor 
+  that is commonly found in most Bash environments. 
+  While it is useful to know, vi can be a bit confusing for new users.
+  [Vi Text Editor - Discover a powerful Linux based text editor.](https://ryanstutorials.net/linuxtutorial/vi.php)
+
+- [Wildcards - Also referred to as globbing, this is a means to refer to several files in one go.](https://ryanstutorials.net/linuxtutorial/wildcards.php)
+
+- WILF ONLY (we learned the basic concepts about how to understand the 
+  first column of info that is output by the "ls -l" command. You are NOT
+  responsible for the chmod command that is described here.)  
+  [Permissions - Learn to identify and change the permissions of files and directories and what the consequences of these are.](https://ryanstutorials.net/linuxtutorial/permissions.php)
+
+  

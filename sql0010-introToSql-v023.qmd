@@ -1,4 +1,4 @@
-# <yrChapterNumber>30. </yrChapterNumber> Intro to Relational Databases and SQL ***(no dplyr required)***
+# <yrChapterNumber>31. </yrChapterNumber> Intro to Relational Databases and SQL ***(no dplyr required)***
 
 ```{r}
 #| include: false

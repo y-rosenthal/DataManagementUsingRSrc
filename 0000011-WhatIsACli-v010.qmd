@@ -1,4 +1,4 @@
-# <yrChapterNumber>22. </yrChapterNumber> Intro to Command Line Interfaces (CLIs)
+# <yrChapterNumber>4. </yrChapterNumber> Intro to Command Line Interfaces (CLIs)
 
 ## WHAT IS A COMMAND LINE INTERFACE (CLI)?
 

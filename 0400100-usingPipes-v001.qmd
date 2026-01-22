@@ -1,4 +1,4 @@
-# <yrChapterNumber>10. </yrChapterNumber> Using pipes, i.e. %>% and |>
+# <yrChapterNumber>14. </yrChapterNumber> Using pipes, i.e. %>% and |>
 
 ## Intro to the "pipe", i.e. %>% from the magrittr package
 

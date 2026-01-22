@@ -1,4 +1,4 @@
-# <yrChapterNumber>14. </yrChapterNumber> Creating, editing and validating JSON files
+# <yrChapterNumber>18. </yrChapterNumber> Creating, editing and validating JSON files
 
 You can create JSON files with any text editor (e.g. Notepad, VSCode, the RStudio editor, etc.) Many text editors will help you with editing JSON files. For example, VSCode displays different JSON datatypes (see below) in different colors and highlights any errors that appear in the JSON format (such as missing commas, missing quotes, etc). This helps you correct the errors to make sure that the JSON is "valid". 
 

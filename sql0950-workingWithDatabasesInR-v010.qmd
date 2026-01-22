@@ -1,4 +1,4 @@
-# <yrChapterNumber>37b. </yrChapterNumber> Working directly with databases in R
+# <yrChapterNumber>39. </yrChapterNumber> Working directly with databases in R
 
 **NOTE:** The previous section gave a brief overview for how to work specifically with
 SQLite databases in R. This section goes into more detail about how to work

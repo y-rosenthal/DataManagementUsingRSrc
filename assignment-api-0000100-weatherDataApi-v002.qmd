@@ -53,7 +53,7 @@ or the [old instructions](assignment-api-0000100-weatherDataApi-v001.html).
     
 </div>
 
-# <yrChapterNumber>18. </yrChapterNumber> assignment - weather API
+# <yrChapterNumber>22. </yrChapterNumber> assignment - weather API
 
 <style>
 h4 { font-weight: bold; font-size: 1.2em; }

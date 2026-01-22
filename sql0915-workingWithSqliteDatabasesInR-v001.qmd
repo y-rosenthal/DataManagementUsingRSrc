@@ -1,4 +1,4 @@
-# <yrChapterNumber>37a. </yrChapterNumber> Working with SQLite databases in R
+# <yrChapterNumber>38. </yrChapterNumber> Working with SQLite databases in R
 
 **NOTE:** This section contains a brief overview for how to work specifically with
 SQLite databases in R. This section gives just enough information to 

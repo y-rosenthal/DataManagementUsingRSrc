@@ -1,4 +1,4 @@
-# <yrChapterNumber>25. </yrChapterNumber> dplyr - getting and viewing the data
+# <yrChapterNumber>26. </yrChapterNumber> dplyr - getting and viewing the data
 
 The dplyr R package is part of the tidyverse family of packages.
 It is used to "slice and dice" tibbles to get exactly the 

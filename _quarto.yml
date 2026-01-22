@@ -26,107 +26,108 @@ book:
       chapters:
       - intro00100-operatingSystems.qmd  # yrChapterNumber 1
       - intro00120-files.qmd             # yrChapterNumber 2
-      - intro00130-chromeExtensions.qmd  # yrChapterNumber 3
 
+    - part: Intro to Bash
+      chapters:
+      #- 0000013-IntroToTheBashCli-v009.qmd
+      - 0000006-bash-externalResources-v001.qmd # yrChapterNumber 3
+      - 0000011-WhatIsACli-v010.qmd      # yrChapterNumber 4
+      - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 5
+      - 0000025-introToBash-v007.qmd      # yrChapterNumber 6
+      
     - part: Into to Coding With AI
       chapters:
-      - ai-000100-overview.qmd           # yrChapterNumber 4
-      - aiCoding00100-overview.qmd       # yrChapterNumber 5
+      - ai-000100-overview.qmd           # yrChapterNumber 7
+      - aiCoding00100-overview.qmd       # yrChapterNumber 8
+      - intro00130-chromeExtensions.qmd  # yrChapterNumber 9
     
     - part: Intro to R packages
       chapters:
-      - 0000022-InstallingRPackages-v003.qmd  # yrChapterNumber 6
+      - 0000022-InstallingRPackages-v003.qmd  # yrChapterNumber 10
       
     - part: Intro to Quarto
       chapters:
-      - 0000017-introToQuarto-v001.qmd        # yrChapterNumber 7
+      - 0000017-introToQuarto-v001.qmd        # yrChapterNumber 11
       
     - part: Intro to tidyverse
       chapters:
-      - 0400050-whatIsTidyverse-v001.qmd      # yrChapterNumber 8
-      - 0400050-tibbles-v001.qmd      # yrChapterNumber 9
-      - 0400100-usingPipes-v001.qmd      # yrChapterNumber 10
-      - 0400200-stringr-tutorials-v003.qmd      # yrChapterNumber 11
+      - 0400050-whatIsTidyverse-v001.qmd      # yrChapterNumber 12
+      - 0400050-tibbles-v001.qmd      # yrChapterNumber 13
+      - 0400100-usingPipes-v001.qmd      # yrChapterNumber 14
+      - 0400200-stringr-tutorials-v003.qmd      # yrChapterNumber 15
       
     - part: Working with files
       chapters:
-      - 0000055-workingWithFiles.qmd      # yrChapterNumber 12
+      - 0000055-workingWithFiles.qmd      # yrChapterNumber 16
       
     - part: JSON data and APIs
       chapters:
-      - 0000075-whatIsJsonData.qmd      # yrChapterNumber 13
-      - 0000080-editingAndValidatingJsonFiles.qmd      # yrChapterNumber 14
-      - 0000085-jsonDataTypes.qmd      # yrChapterNumber 15
-      - 0000090-usingJsonInR.qmd      # yrChapterNumber 16
+      - 0000075-whatIsJsonData.qmd      # yrChapterNumber 17
+      - 0000080-editingAndValidatingJsonFiles.qmd      # yrChapterNumber 18
+      - 0000085-jsonDataTypes.qmd      # yrChapterNumber 19
+      - 0000090-usingJsonInR.qmd      # yrChapterNumber 20
       #- 0000088-nestedDataframes.qmd      # yrChapterNumber 17
-      - 0000093-jsonParsingPractice-v001.qmd      # yrChapterNumber 17
-      - assignment-api-0000100-weatherDataApi-v002.qmd      # yrChapterNumber 18
+      - 0000093-jsonParsingPractice-v001.qmd      # yrChapterNumber 21
+      - assignment-api-0000100-weatherDataApi-v002.qmd      # yrChapterNumber 22
       
     - part: Regular Expressions
       chapters:
-      - 0200200-a-introToRegularExpressions-v036.qmd      # yrChapterNumber 19
+      - 0200200-a-introToRegularExpressions-v036.qmd      # yrChapterNumber 23
       #- 0200200-b-introToRegularExpressions-v036.qmd      # yrChapterNumber 20
       #- 0200200-c-introToRegularExpressions-v036.qmd      # yrChapterNumber 21
       #- 0200200-d-introToRegularExpressions-v036.qmd      # yrChapterNumber 22
       #- 0200200-e-introToRegularExpressions-v036.qmd      # yrChapterNumber 23
       #- 0200200-f-introToRegularExpressions-v036.qmd      # yrChapterNumber 24
-      - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 20
-      - 0990100-cleaningData-v001.qmd # yrChapterNumber 21
+      - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 24
+      - 0990100-cleaningData-v001.qmd # yrChapterNumber 25
 
-    - part: Bash
-      chapters:
-      #- 0000013-IntroToTheBashCli-v009.qmd
-      - 0000011-WhatIsACli-v010.qmd      # yrChapterNumber 22
-      - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 23
-      - 0000025-introToBash-v007.qmd      # yrChapterNumber 24
-      
     - part: Intro to dplyr
       chapters:
-      - 0500100-a-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
-      - 0500100-b-tdyvrsDplyr-v005.qmd      # yrChapterNumber 26
+      - 0500100-a-tdyvrsDplyr-v005.qmd      # yrChapterNumber 26
+      - 0500100-b-tdyvrsDplyr-v005.qmd      # yrChapterNumber 27
       
     - part: Relational databases and SQL
       chapters:
-      - sql0014-theBooksDatabase-v001.qmd # get the data # yrChapterNumber 27
-      - sql0006-introToDatabases-v023.qmd # db and dbms - copied from introToSQL # yrChapterNumber 28
-      - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 29
-      - sql0010-introToSql-v023.qmd       # NO dplyr knowledge # yrChapterNumber 30
-      - sql0035-workingWithMultipleTables-v012.qmd # inner joins - renumbered from sql0020 # yrChapterNumber 31
-      - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd # yrChapterNumber 32
-      - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
+      - sql0014-theBooksDatabase-v001.qmd # get the data # yrChapterNumber 28
+      - sql0006-introToDatabases-v023.qmd # db and dbms - copied from introToSQL # yrChapterNumber 29
+      - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 30
+      - sql0010-introToSql-v023.qmd       # NO dplyr knowledge # yrChapterNumber 31
+      - sql0035-workingWithMultipleTables-v012.qmd # inner joins - renumbered from sql0020 # yrChapterNumber 32
+      - sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd # yrChapterNumber 33
+      - sql0040-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 34
       #- sql0040-a-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
       #- sql0040-b-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
       #- sql0040-c-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
       #- sql0040-d-crossJoin-leftJoin-subquery-selfJoins-v023.qmd # yrChapterNumber 33
-      - sql0050-commonTableExpressions-v001.qmd    # NEW # yrChapterNumber 34
-      - sql0200-otherSqlCommands-v002.qmd          # EDIT THIS  # yrChapterNumber 35
-      - sql0900-sqlWindowFunctions-v002.qmd        # NEW # yrChapterNumber 36
-      - sql0915-workingWithSqliteDatabasesInR-v001.qmd # yrChapterNumber 37a
-      - sql0950-workingWithDatabasesInR-v010.qmd # yrChapterNumber 37b
-      - sql0935-dbNormalization-v001.qmd           # yrChapterNumber 37
+      - sql0050-commonTableExpressions-v001.qmd    # NEW # yrChapterNumber 35
+      - sql0200-otherSqlCommands-v002.qmd          # EDIT THIS  # yrChapterNumber 36
+      - sql0900-sqlWindowFunctions-v002.qmd        # NEW # yrChapterNumber 37
+      - sql0915-workingWithSqliteDatabasesInR-v001.qmd # yrChapterNumber 38
+      - sql0950-workingWithDatabasesInR-v010.qmd # yrChapterNumber 39
+      - sql0935-dbNormalization-v001.qmd           # yrChapterNumber 40
       #- 0600100-introToDb-v001.qmd # yrChapterNumber 38
 #       - 0500500-tdyvrsDbplyr-v002.qmd # TODO - look at the code from 0500100-tdyvrsDplyr-v0001.qmd for dbplyr
 #        - 83spr23/sqlNotes/sql0010-introToSql-v023.qmd
-      - sql3000-sqlQuestions-v001.qmd # yrChapterNumber 38
+      - sql3000-sqlQuestions-v001.qmd # yrChapterNumber 41
     
     - part: Web Scraping
       chapters:
-      - web-000205-introToXml-v001.qmd # yrChapterNumber 39
-      - web-000220-parsingXmUsingR-v001.qmd # yrChapterNumber 40
-      - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 41
-      - web-000325-introToHtmlAndCss-v001.qmd # yrChapterNumber 42
-      - web-000400-webscrapingContinued-015.qmd # yrChapterNumber 43
-      - web-000130-WebscrapingJavascriptSites-v004.qmd # yrChapterNumber 44
+      - web-000205-introToXml-v001.qmd # yrChapterNumber 42
+      - web-000220-parsingXmUsingR-v001.qmd # yrChapterNumber 43
+      - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 44
+      - web-000325-introToHtmlAndCss-v001.qmd # yrChapterNumber 45
+      - web-000400-webscrapingContinued-015.qmd # yrChapterNumber 46
+      - web-000130-WebscrapingJavascriptSites-v004.qmd # yrChapterNumber 47
       #- web-000420-practiceWithWebScraping-v001.qmd
-      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 45
+      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 48
       
     - part: Git and Github
       chapters: 
-      - github-000700-markdownGithubVsQuarto.qmd # yrChapterNumber 46
+      - github-000700-markdownGithubVsQuarto.qmd # yrChapterNumber 49
       
     - part: visualizations with ggplot2
       chapters:
-        - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 47
+        - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 50
     
 #      
 #    - part: 0300100-excelAndR-v001.qmd
@@ -139,11 +140,11 @@ book:
 #    - part: 0999000-appendices-v001.qmd
     - part: Appendices
       chapters:
-        - 0000100-topics-v001.qmd # yrChapterNumber 48
-        - 0000200-bibliography-v001.qmd # yrChapterNumber 49
-        - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 50
-        - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 51
-        - 0999000-toDo-v001.qmd # yrChapterNumber 52
+        - 0000100-topics-v001.qmd # yrChapterNumber 51
+        - 0000200-bibliography-v001.qmd # yrChapterNumber 52
+        - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 53
+        - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 54
+        - 0999000-toDo-v001.qmd # yrChapterNumber 55
 #    - intro.qmd
 #    - summary.qmd
 #    - references.qmd

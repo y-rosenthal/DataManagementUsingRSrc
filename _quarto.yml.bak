@@ -26,12 +26,20 @@ book:
       chapters:
       - intro00100-operatingSystems.qmd  # yrChapterNumber 1
       - intro00120-files.qmd             # yrChapterNumber 2
-      - intro00130-chromeExtensions.qmd  # yrChapterNumber 3
 
+    - part: Intro to Bash
+      chapters:
+      #- 0000013-IntroToTheBashCli-v009.qmd
+      - 0000006-bash-externalResources-v001.qmd # yrChapterNumber 3
+      - 0000011-WhatIsACli-v010.qmd      # yrChapterNumber 22
+      - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 23
+      - 0000025-introToBash-v007.qmd      # yrChapterNumber 24
+      
     - part: Into to Coding With AI
       chapters:
-      - ai-000100-overview.qmd           # yrChapterNumber 4
-      - aiCoding00100-overview.qmd       # yrChapterNumber 5
+      - ai-000100-overview.qmd           # yrChapterNumber 3
+      - aiCoding00100-overview.qmd       # yrChapterNumber 4
+      - intro00130-chromeExtensions.qmd  # yrChapterNumber 5
     
     - part: Intro to R packages
       chapters:
@@ -73,13 +81,6 @@ book:
       - 000260-PracticeWithRegulaExpressions-v003.qmd      # yrChapterNumber 20
       - 0990100-cleaningData-v001.qmd # yrChapterNumber 21
 
-    - part: Bash
-      chapters:
-      #- 0000013-IntroToTheBashCli-v009.qmd
-      - 0000011-WhatIsACli-v010.qmd      # yrChapterNumber 22
-      - 0000013-HowToRunTheBashShellCli-v011.qmd      # yrChapterNumber 23
-      - 0000025-introToBash-v007.qmd      # yrChapterNumber 24
-      
     - part: Intro to dplyr
       chapters:
       - 0500100-a-tdyvrsDplyr-v005.qmd      # yrChapterNumber 25
@@ -103,30 +104,30 @@ book:
       - sql0900-sqlWindowFunctions-v002.qmd        # NEW # yrChapterNumber 36
       - sql0915-workingWithSqliteDatabasesInR-v001.qmd # yrChapterNumber 37a
       - sql0950-workingWithDatabasesInR-v010.qmd # yrChapterNumber 37b
-      - sql0935-dbNormalization-v001.qmd           # yrChapterNumber 38
+      - sql0935-dbNormalization-v001.qmd           # yrChapterNumber 37
       #- 0600100-introToDb-v001.qmd # yrChapterNumber 38
 #       - 0500500-tdyvrsDbplyr-v002.qmd # TODO - look at the code from 0500100-tdyvrsDplyr-v0001.qmd for dbplyr
 #        - 83spr23/sqlNotes/sql0010-introToSql-v023.qmd
-      - sql3000-sqlQuestions-v001.qmd # yrChapterNumber 39
+      - sql3000-sqlQuestions-v001.qmd # yrChapterNumber 38
     
     - part: Web Scraping
       chapters:
-      - web-000205-introToXml-v001.qmd # yrChapterNumber 40
-      - web-000220-parsingXmUsingR-v001.qmd # yrChapterNumber 41
-      - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 42
-      - web-000325-introToHtmlAndCss-v001.qmd # yrChapterNumber 43
-      - web-000400-webscrapingContinued-015.qmd # yrChapterNumber 44
-      - web-000130-WebscrapingJavascriptSites-v004.qmd # yrChapterNumber 45
+      - web-000205-introToXml-v001.qmd # yrChapterNumber 39
+      - web-000220-parsingXmUsingR-v001.qmd # yrChapterNumber 40
+      - web-000300-internetArchitecture-v001.qmd # yrChapterNumber 41
+      - web-000325-introToHtmlAndCss-v001.qmd # yrChapterNumber 42
+      - web-000400-webscrapingContinued-015.qmd # yrChapterNumber 43
+      - web-000130-WebscrapingJavascriptSites-v004.qmd # yrChapterNumber 44
       #- web-000420-practiceWithWebScraping-v001.qmd
-      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 46
+      - web-000420-practiceWithWebScraping-v001-ANSWERS-v002.qmd # yrChapterNumber 45
       
     - part: Git and Github
       chapters: 
-      - github-000700-markdownGithubVsQuarto.qmd # yrChapterNumber 47
+      - github-000700-markdownGithubVsQuarto.qmd # yrChapterNumber 46
       
     - part: visualizations with ggplot2
       chapters:
-        - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 48
+        - 050050-tdyvrsGgplot2-v0001.qmd      # yrChapterNumber 47
     
 #      
 #    - part: 0300100-excelAndR-v001.qmd
@@ -139,11 +140,11 @@ book:
 #    - part: 0999000-appendices-v001.qmd
     - part: Appendices
       chapters:
-        - 0000100-topics-v001.qmd # yrChapterNumber 49
-        - 0000200-bibliography-v001.qmd # yrChapterNumber 50
-        - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 51
-        - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 52
-        - 0999000-toDo-v001.qmd # yrChapterNumber 531
+        - 0000100-topics-v001.qmd # yrChapterNumber 48
+        - 0000200-bibliography-v001.qmd # yrChapterNumber 49
+        - 0000300-whereToFindDatasets-v001.qmd # yrChapterNumber 50
+        - 0000310-whereToFindApis-v001.qmd # yrChapterNumber 51
+        - 0999000-toDo-v001.qmd # yrChapterNumber 52
 #    - intro.qmd
 #    - summary.qmd
 #    - references.qmd

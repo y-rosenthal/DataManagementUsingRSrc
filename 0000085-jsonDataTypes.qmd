@@ -1,4 +1,4 @@
-# <yrChapterNumber>15. </yrChapterNumber> DATA TYPES IN JSON
+# <yrChapterNumber>19. </yrChapterNumber> DATA TYPES IN JSON
 
 Individual pieces of data in a JSON file must be one of the following simple
 data types: string, number, boolean and null (these are described in the

@@ -24,7 +24,7 @@ library(sqldf)
 #library(gt)
 ```
 
-# <yrChapterNumber>37. </yrChapterNumber> Database Normalization
+# <yrChapterNumber>40. </yrChapterNumber> Database Normalization
 
 The same data can be arranged in a database in many different ways. 
 This section describes how to intelligently arrange your data in a 

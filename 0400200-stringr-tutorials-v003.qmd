@@ -1,4 +1,4 @@
-# <yrChapterNumber>11. </yrChapterNumber> stringr tutorial
+# <yrChapterNumber>15. </yrChapterNumber> stringr tutorial
 
 This is an overview of the stringr package that is part of the "tidyverse"
 family of packages.  The info in this section comes from this youtube playlist:

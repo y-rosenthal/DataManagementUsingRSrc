@@ -1,4 +1,4 @@
-# <yrChapterNumber>26. </yrChapterNumber> dplyr verbs - select, filter, etc.
+# <yrChapterNumber>27. </yrChapterNumber> dplyr verbs - select, filter, etc.
 
 ```{r}
 #| include: false

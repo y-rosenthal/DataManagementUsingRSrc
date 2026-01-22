@@ -5,7 +5,7 @@ resources:
   - stuffToDo-v003.html
   - stuffToDo-withCss-v002.html
 ---
-# <yrChapterNumber>42. </yrChapterNumber> Introduction to HTML and CSS
+# <yrChapterNumber>45. </yrChapterNumber> Introduction to HTML and CSS
 
 This tutorial explores the essential HTML and CSS features found in our sample
 page. We'll examine the various elements, tags, attributes, and styling

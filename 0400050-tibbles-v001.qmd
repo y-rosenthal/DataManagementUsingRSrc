@@ -1,4 +1,4 @@
-# <yrChapterNumber>9. </yrChapterNumber> tibbles and tribbles
+# <yrChapterNumber>13. </yrChapterNumber> tibbles and tribbles
 
 ## Introduction to Tibbles
 ```{r}

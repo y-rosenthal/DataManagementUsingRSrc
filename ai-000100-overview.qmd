@@ -1,4 +1,4 @@
-# <yrChapterNumber>4. </yrChapterNumber> AI in Everyday Use
+# <yrChapterNumber>7. </yrChapterNumber> AI in Everyday Use
 
 Artificial Intelligence (AI) has made significant advancements in 
 recent years, with Large Language Models (LLMs) (e.g. chatgpt) and generative AI leading the way in transforming how we interact with data and technology. Below, we explore some key areas where AI is making an impact. Many or most of these tools can be used for free (sometimes
