@@ -5,16 +5,9 @@ management of data. For a quick overview of many of
 the topics see the "Topics" section
 in the Appendix.
 
----
 
----
-
----
-
----
-
----
-
+:::  {.callout-note collapse="true"}
+### Click here to see TODO items for this website - (Students should IGNORE THIS)
 
 ## \*\*\* ignore the material below \*\*\*
 
@@ -42,6 +35,7 @@ book, you should read it where it appears.
 {{< include _yr/yrTodo.qmd >}}
 </div>
 
+
 ## 099900-toDo-v001.qmd
 
 The following is the contents of the 099900-toDo-v001.qmd file 
@@ -54,6 +48,6 @@ to the main body of this book.
 <div class="yrTodo">
 {{< include 0999000-toDo-v001.qmd >}}
 </div>
-
+:::
 
 
