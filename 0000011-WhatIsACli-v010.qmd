@@ -1,6 +1,4 @@
-# <yrChapterNumber>4. </yrChapterNumber> Intro to Command Line Interfaces (CLIs)
-
-## WHAT IS A COMMAND LINE INTERFACE (CLI)?
+# <yrChapterNumber>4. </yrChapterNumber> Command Line Interfaces (CLI)
 
 Modern computers and the programs that they run allow you to click and
 drag icons, use menus, open many programs at once, etc. It\'s hard to
@@ -20,7 +18,7 @@ as a \"Command Line Interface\" or CLI.
 
 For day to day casual computer work, it may be hard to understand why
 anyone would use a CLI instead of a modern GUI interface. Using a CLI
-requires memorizing many different seemingly arcane commands instead of
+requires memorizing many different arcane commands instead of
 just \"pointing and clicking\" on what you want. Why would anyone want
 to do that?
 
