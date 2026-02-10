@@ -44,7 +44,7 @@ Example:
 For example,
 
 - The "full path" 
-`/Users/yrosenth/myFiles/personal/work/endOfMonthReport.txt` identifies the following file
+`/home/yitz/myFiles/personal/work/endOfMonthReport.txt` identifies the following file
 
   * the file is named "endOfMonthReport.txt" (the last part of the path)
  
@@ -56,12 +56,14 @@ For example,
   
   * which is in a folder named "myFiles"  
   
-  * which is in  a folder named "yrosenth"  
+  * which is in  a folder named "yitz"  
   
-  * which is in a folder named "Users". 
+  * which is in a folder named "home". 
   
-  * The folder "Users" is in the "root" folder (i.e. the "highest" level folder - 
+  * The folder "home" is in the "root" folder (i.e. the "highest" level folder - 
     see above) on the computer.
+    
+  * The "root" folder is a folder simply named "/"
 
 ### two different files with the same names
 
@@ -74,20 +76,20 @@ two different files with the same name, "budget.xlsx".
 The full path helps you tell the two files apart by showing exactly where each 
 file is located. 
 
-- Full path 1: /Users/Joe/work/budget.xlsx
+- Full path 1: /home/Joe/work/budget.xlsx
 
   * This file is named "budget.xlsx". 
   * It is in the "work" folder, 
   * which is in the folder named "Joe"  
-  * which is in the folder name "Users"
+  * which is in the folder name "home"
   * which is in the "root" (i.e. /) folder ([see above](#yr-full-path))
 
-- Full path 2: /Users/Sue/personal/budget.xlsx
+- Full path 2: /home/Sue/personal/budget.xlsx
 
   * This file is also named "budget.xlsx".
   * It is in the "personal" folder
   * which is in the folder named "Sue"
-  * which is in the "Users" folder
+  * which is in the "home" folder
   * which is in the "root" (i.e. /) folder ([see above](#yr-full-path))
 
 ## "relative paths" vs "full paths"
@@ -109,6 +111,8 @@ with a "/". We'll learn more about relative paths later and how they differ
 from full paths.
 
 
+
+
 ### Mac and Linux style paths VS Windows style paths
 
 Mac and Linux systems use forward slashes (/) as path separators - i.e. 
@@ -116,7 +120,7 @@ see the paths above, eg. /home/Joe/work/budget.xlsx
 
 Windows traditionally uses backslashes (\\) as separators, like this:
 
-\\\\Users\\\\Joe\\\\work\\\\budget.xlsx
+\\\\home\\\\Joe\\\\work\\\\budget.xlsx
 
 Note that R understands the Linux/Mac style paths (with forward slashes) even on Windows. 
 It is recommended therefore to always use Linux/Mac style paths in R code
@@ -127,10 +131,20 @@ if you need to use Windows-style paths in R, you must use double backslashes (\\
 e.g.
 
 ```
-dir_tree("\\Users\\Joe\\work")
+dir_tree("\\home\\Joe\\work")
 ```
 
-### Windows drive letters
+### /home/joe (Mac,Linux) vs /Users/joe (Win)
+
+On Mac, Windows and Linux, a user's has a special folder known as their
+"home directory" or "User folder" that contains all of their files and folders.
+
+On Mac and Linux the "home directory" is usually named `/home/USER_NAME` (e.g. `/home/joe`)
+
+On Windows, the User folder is usually named `/Users/USER_NAME` (e.g. `/Users/joe`)
+
+
+### Windows drive letters 
 
 Windows systems use letters (like C:, D:) at the start of paths to represent different drives or storage devices. The C: drive is typically your main hard drive where Windows is installed. Other letters might be additional hard drives, USB drives, or network drives.
 
@@ -163,15 +177,15 @@ For example the following
 shows the contents of a folder located at the specified full path.
 
 ```{r}
-dir("/Users/yrosenth/Downloads/myFiles/personal")
+dir("/home/yitz/Downloads/myFiles/personal")
 ```
 
 The following shows the contents of the `school` and `work` folders that
 are located inside the `personal` folder shown above.
 
 ```{r}
-dir("/Users/yrosenth/Downloads/myFiles/personal/school")
-dir("/Users/yrosenth/Downloads/myFiles/personal/work")
+dir("/home/yitz/Downloads/myFiles/personal/school")
+dir("/home/yitz/Downloads/myFiles/personal/work")
 ```
 
 
@@ -194,7 +208,7 @@ path of your choice.
 
 ```{r}
 # set the working directory
-setwd("/Users/yrosenth/Downloads/myFiles")
+setwd("/home/yitz/Downloads/myFiles")
 
 # show that it worked
 getwd()
@@ -206,7 +220,7 @@ dir()
 
 # Since the working directory is currently 
 #
-#    /Users/yrosenth/Downloads/myFiles
+#    /home/yitz/Downloads/myFiles
 #
 # the above call to 
 #
@@ -214,9 +228,9 @@ dir()
 # 
 # without a path is the same as the following call to
 #
-#    dir("/Users/yrosenth/Downloads/myFiles")
+#    dir("/home/yitz/Downloads/myFiles")
 
-dir("/Users/yrosenth/Downloads/myFiles")
+dir("/home/yitz/Downloads/myFiles")
 ```
 
 ### Specifying a pattern to dir
@@ -226,14 +240,17 @@ Later we will learn more about "regular expressions".
 ### Summary - different ways of using dir function:
 
 ```{r}
+# set the working directory
+setwd("/home/yitz/Downloads/myFiles")
+
 # list everything in the "working directory"
 dir()  
 
 # list everything in the specified directory
-dir("/Users/yrosenth/Downloads/myFiles/work")  
+dir("/home/yitz/Downloads/myFiles/mixOfFiles")  
 
 # list only files and folders containing .xlsx in the name
-dir("/Users/yrosenth/Downloads/myFiles/work", pattern = ".xlsx")  
+dir("/home/yitz/Downloads/myFiles/mixOfFiles", pattern = ".xlsx")  
 ```
 
 

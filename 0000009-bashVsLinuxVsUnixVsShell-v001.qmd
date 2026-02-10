@@ -1,0 +1,18 @@
+# <yrChapterNumber>5. </yrChapterNumber> Terminology: Bash vs Linux vs Unix vs Shell
+
+When
+## \"Bash commands\" or \"Linux commands\" ? 
+
+Technically, many of the commands that you run in Bash are actually
+\"Linux\" commands (or Unix commands). Therefore when searching online
+for information, it is often more appropriate to use the words \"Linux
+command\" in your search instead of \"Bash command\". As we said above,
+the Bash shell, is only one of many CLIs that are available on Linux.
+However, the majority of commands we will learn are able to be used with
+ANY Linux CLI and not just Bash.
+
+In addition to being able to use Bash on Apple Mac, you can also access
+many of the vast majority of these \"Linux\" commands on Mac. (Remember
+that Linux and Mac are both derived from the Unix operating system).
+Similarly, when you install a Bash environment on Windows, it will
+include many of these \"Linux\" programs too.

@@ -64,6 +64,106 @@ data = read.csv("data3.csv")
 names(data) = c("author","score","body")
 ```
 
+## Setting up the package for use
+
+### Download the code with install.packages() function
+
+Before using functions from any package, you must install the package using
+the install.packages() function (see more below).
+
+The install.packages() function, downloads the code for the R 
+package(s) to your computer from a "repository" known as 
+CRAN - the Comprehensive R Archive Network. CRAN is actually supported by 
+different websites that are funded and managed by different institutions.
+Each of these sources of package info is known as a CRAN "mirror".
+If you don't specify where the the install.packages function should get the 
+package, a window might popup asking your to choose a "CRAN mirror". 
+Alternatively, you can specify the mirror you want in the **repos** argument
+directly in the call to install.packages. This is what we do below.
+
+You can install the stringr package with the following command.
+
+```{r}
+# The following is the list of major CRAN mirrors. You do NOT need to do this 
+# part. It is done for this website since the code to generate this website
+# is NOT run interactively and if a popup should appear asking us to choose 
+# a "mirror" the website would not be generated correctly. Therefore we
+# use this code to specify a list of mirror from which install.packages()
+# can choose one. If the first one is not available (e.g. it is "down") then
+# install.packages() will try the 2nd one, etc.
+
+CRANrepos = c(
+    "https://mirror.las.iastate.edu/CRAN/",       # Iowa State University, Iowa
+    "http://ftp.ussg.iu.edu/CRAN/",               # Indiana University, Indiana
+    "https://repo.miserver.it.umich.edu/cran/", # University of Michigan
+    "https://cran.wustl.edu/",              # Washington University, Missouri
+    "https://archive.linux.duke.edu/cran/",     # Duke University, NC
+    "https://cran.case.edu/",                   # Case Western Reserve University, OH
+    "https://ftp.osuosl.org/pub/cran/",         # Oregon State University
+    "http://lib.stat.cmu.edu/R/CRAN/",    # Carnegie Mellon University, PA
+    "https://cran.mirrors.hoobly.com/",         # Hoobly Classifieds, PA
+    "https://mirrors.nics.utk.edu/cran/") # Nat. Inst. 4 Computational Sci, TN
+
+# NOTE: If you are running this command interactively you can leave out the
+# repos argument.
+install.packages("stringr", repos=CRANrepos)
+```
+
+<em>
+**Note** that stringr is part of the `tidyverse` family of packages.
+You can install any tidyverse package by itself or install the entire 
+set of tidyverse packages with the command `install.packages("tidyverse")`
+</em>
+
+### Calling functions from stringr
+
+At this point the code is downloaded to your computer. 
+You can now use the functions in stringr but you will have to prefix each
+call to a function with `stringr::`
+
+For example the stringr::str_length() function returns the length of the 
+strings (i.e. character values) that are passed to it. 
+
+```{r}
+stuff = c("Hi", "there.", "How are you?")
+stringr::str_length(stuff)
+```
+
+Notice that I must include `stringr::`
+
+```{r}
+#| warning: true
+#| error: true
+
+# Determine the length of each value in the vector
+stuff = c("Hi", "there.", "How are you?")
+str_length(stuff)
+
+```
+
+### library(stringr)  or   require(stringr)
+
+You can use the library or require commands to avoid needing to write stringr::
+
+```{r}
+#| warning: true
+#| error: true
+
+library(stringr)   # require(stringr) will also work 
+
+stuff = c("Hi", "there.", "How are you?")
+str_length(stuff)
+```
+
+
+<em>
+**Note** that stringr is part of the `tidyverse` family of packages.
+If you've already installed the entire tidyverser set of packages
+with `install.packages("tidyverse")` you could then call `library(tidyverse)`
+to "load" the entire tidyverse into your R session.
+</em>
+
+
 ## stringr: Basic String Manipulation
 
 ```{r}
