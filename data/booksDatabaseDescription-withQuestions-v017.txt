@@ -1,0 +1,334 @@
+﻿Practice SQL Questions (Books Database)
+Contents
+Overview	1
+Descriptions of each table	2
+The data	3
+Database Diagrams - i.e. Entity Relationship Diagrams (ERD)	4
+Microsoft format	5
+"Crows Foot" format	5
+Questions	6
+Single Table queries	6
+Single table queries with aggregate functions but no "group by"  (i.e. these will return EXACTLY one row for each query).	6
+Single table queries with calculated values	6
+Single table queries with "group by". These can use aggregate functions but will return at most one row in the output for each "group" of rows as 
+defined in the "group by"	7
+Multiple table queries with group by	7
+Multiple table queries	7
+Subqueries, outer joins, unions and other stuff ...	9
+
+
+Overview
+A "relational database" is a collection of one or more "tables" that contain data about a particular topic. Each "table" contains rows and columns of data 
+(very similar to an R dataframes). 
+
+This file contains a description of a "relational database" that contains information about books. The data is spread among five different tables where 
+each table contains a specific subset of the data. The tables are: "titles", "authors", "publishers", "royalties" and "title_authors". See the following sections 
+for more information.
+
+SQL (i.e. Structured Query Language) is a standard programming language used for manipulating the contents of "relational databases". Using SQL 
+commands, you can retrieve data from a database in all sorts of custom arrangements (see more in the examples below). 
+
+At the end of this file are numerous questions that ask you to write SQL code to retrieve data from the books database in a very specific ways.
+
+NOTE: 
+The terminology used to describe relational databases can be confusing because different books and tutorials refer to the same concepts by different 
+names. For example, "tables" are sometimes alternatively called "entities" or "objects". The names of the "columns" in a table are sometimes referred to 
+as "fields" or "attributes" of the table.
+
+
+
+
+
+
+Descriptions of each table
+The following shows the names of the tables and columns (AKA fileds) in each table.  
+For each column, the name of the column is shown as well as the type of data in the column and a description of the data.
+The actual data in the tables is shown in the next section.
+authors table:   
+ 
+This table stores one row for each author. 
+
+ 
+
+
+publishers table:  
+ 
+This table stores one row for each publisher.
+
+ 
+
+titles table:  
+ 
+This table stores one row for each book (AKA title).
+
+ 
+
+
+title_authors table:  
+ 
+Each row in this table represents a relationship between an author 
+and a book that (s)he wrote. If a book has 3 authors, there will be 3 
+rows in this table for that book. This table has a composite primary 
+key (title_id, au_id). The "royalty_share" field represents the 
+percent of the royalties that this author receives. If there is only one 
+author for a book then this will be 1. If there are two authors for the 
+book, the "royalty_share" could be the same for both or it could be 
+different (e.g. 0.6 and 0.4).
+
+ 
+
+
+royalties table:  
+ 
+This table the information about royalties that the publisher will pay 
+to the author(s) of a book. "advance" is the fixed amount that the 
+publisher pays the author when (s)he starts to write the book. 
+"royalty_rate" is a decimal value that contains the percent of each 
+book's sale price that is paid to the author(s). If there is more than 
+one author then the royalties and advaces are split between them
+
+ 
+
+
+
+
+The data
+Authors: 
+ 
+ 
+
+
+Title_Authors: 
+ 
+  
+
+Titles: 
+
+ 
+
+
+
+
+Royalties: 
+ 
+ 
+Publishers: 
+ 
+ 
+
+
+Database Diagrams - i.e. Entity Relationship Diagrams (ERD)
+The tables in a relational database contain references to each other in the form of primary keys and foreign keys. The structure of the tables and the details of these relationships are captured in diagrams 
+known as an "Entity Relationship Diagrams" (or ERD) - a "table" is also known as an "entity".  Entity Relationship Diagrams come in several different formats. Some formats are more popular, some are 
+less popular. Each format basically describes the same information. However, some formats include slightly more information than others.
+
+Below are two different formats of Entity Relationship Diagrams (ERD) for the "books database". The 1st diagram below shows the ERD in a format that was made popular by Microsoft software. The 2nd 
+diagram below is a more popular format for ERDs. It is known as a "crows foot diagram". The name "crows foot" comes from the symbol  (which looks like the foot of a bird) which often appears on 
+this type of diagram. The crows foot diagram includes one additional piece of information that is not found on the Microsoft version.  Crows-foot notation is very popular and every symbol should be 
+understood. See these page for more information about the crows foot notation:
+https://vertabelo.com/blog/crow-s-foot-notation/
+https://www.freecodecamp.org/news/crows-foot-notation-relationship-symbols-and-how-to-read-diagrams/
+
+ 
+The Microsoft format of the diagram and the Crows foot format are only two of several different forms of "Entity Relationship Diagrams". There are other variations on this type of diagram. See this page 
+for an overview of various other formats for ERD's:  https://www.gleek.io/blog/er-symbols-notations
+
+Each "box" in a database diagram, also known as an "Entity Relationshiop Diagram (ERD)", represents one of the tables in the database. The name of the table appears at the top of the box.  The other 
+words in each box are the names of the columns in that table. The actual rows of data are NOT shown in the diagram.
+
+The lines that are drawn between the tables show how the tables "relate" to each other.
+
+
+
+
+
+
+Microsoft format
+
+ 
+
+ 
+ 
+
+"Crows Foot" format
+ 
+There can only be ONE primary key in a table, however, a single primary key may contain more than one field.  
+PK stands for "primary key". The primary key for a table that contains two or more PK fields is known as a "composite primary key". 
+ 
+A table MAY contain more than one foreign key. FK1, FK2, etc. identify different foreign keys in the same table. 
+ 
+ 
+
+
+Questions
+Create the following queries for the "books" database. For each query make sure to only include those tables that are necessary to answer the question.   NOTE: the answers shown below are just some 
+possible answers. For some questions there may be more than one possible answer. 
+
+
+Single Table queries 
+
+1.	List all books (title and number sold) that sold more than 1000 copies. List the books with the most sales at the top. 
+
+2.	List all authors who are live either in NY or CA and whose last name begins with a "K".  
+
+3.	List the first and last names of all authors whose last name starts with a letter from A through J   
+(HINT: In the where clause, make sure that the first letter of the last name is both  >="A" and also <"K") 
+(HINT: another possible solution is to use the LIKE several times - once for A, once for B, once for C, etc up to J. Each LIKE should be separated from the others by OR's) 
+
+4.	For each author, show their first initial, followed by a period and a space, followed by their last name. In the 2nd column show the author's state. Show the column heading for the first column as 
+'AuthorName'.  Order the results in alphabetical order based on the full name of the person. 
+
+5.	Show the titles of all books. Also show the length of the title, i.e. how many characters, including spaces and punctuation. Display the 2nd column with the name 'TitleLength'.  Sort the output so 
+that the shortest titles are listed first. If two titles are the same length then sort those titles alphabetically.  
+
+
+Single table queries with aggregate functions but no "group by"  (i.e. these will return EXACTLY one row for each query).  
+
+6.	List the average price of all books. 
+
+7.	List the average price of history books. 
+
+8.	List the number of pages in the longest and shortest books (don't list the actual title of the book). 
+ 
+
+Single table queries with calculated values
+
+9.	List the title_name and total revenue for each book. (Revenue for a book is the number sold times the price of the book.) 
+
+10.	List title of each book and the sale price for the book where the sale price is 10% off of the original price. 
+
+
+Single table queries with "group by". These can use aggregate functions but will return at most one row in the output for each "group" of rows as defined in the "group by" 
+
+11.	For each "type" of book (e.g. biography, children, etc) list the number of pages in the shortest book of that type and the number of pages in the longest book of that type. Sort the results 
+alphabetically by the type of book. 
+
+12.	List the types of books (e.g. history, biography, etc) and the average price of those books for which the average price of books in that category is at least $12.00. 
+
+13.	OOPS ... this question is exactly the same as the previous question. That was an oversight. Don't do this question. I left it in this document since I didn't want to change the numbers of the 
+later questions (I'll remove this in a later edition of this document). 
+ 
+List the types of books (e.g. history, biography, etc) and the average price of those books for which the average price of books in that category is at least $12.00. 
+ 
+
+ 
+
+14.	For each type of book (e.g. biography, children, etc), show the number of those books that are 450 pages or longer. The column heading should be '# of long books'. If there are no titles of a 
+particular type that are so long, then don't show that type at all. 
+ 
+		
+15.	Modify the answer to the previous question so that only those types for which there are at least 2 long books are displayed. 
+ 
+
+Multiple table queries with group by 
+
+16.	For each publisher, list the name of the publisher and total number of pages that the publisher has published in all their books (ie. add up all the pages in all books for each publisher). Show the 
+publishers who have published the most pages at the top of the result list. 
+
+17.	Modify the previous query so that only publishers who have published at least 1250 pages will show up. 
+ 
+
+18.	List each publisher's name and the numbers of pages in their longest and shortest books. Sort the results by the publisher's name. 
+ 
+
+Multiple table queries 
+
+19.	List the authors first and last names, the author's state, the title name, the publisher name and the publishers state for all books. 
+
+20.	List the title, number of pages, authors first and last names and author's state for all books that are longer than 150 pages and whose author lives in NY or CA. 
+
+21.	List the authors first and last names, the author's state, the title name, the publisher name and the publishers state only for those books where the author and publisher are from the same state. 
+(HINT: specify authors.state [note: there is a period between author and state] in the criteria for the publisher's state). 
+
+22.	List the title and authors of all books published by "Abatis Publishers" sort the results in alphabetical order by title and then by the au_order column. Do NOT show that au_order column in the 
+output. 
+
+23.	List the publisher name, author name, and title name for all books that have at least 100 pages and that sold at least 200 copies. Sort the results in alphabetical order first by publisher and then by 
+author. 
+
+24.	List authors first and last names and the titles they wrote for publishers whose name (ie. the publisher's name) begins with "A", "B" or "C" 
+
+25.	List the  publisher name, author's name and phone number for all authors that have written books for the publisher's whose name begins with a letter from A through J.  (HINT: specify the 
+publisher's name twice but only show one of them. In the criteria for one of them list >="A" and in the criteria for the other list <"K"). 
+
+26.	List the titles of all books and the number of authors for the book (NOT the actual author names). Sort the results so that the books with the most authors appear on top. All books that have the 
+same number of authors should be listed in alphabetical order.
+
+27.	List the titles of all books that have 2 or more authors and that are longer than 50 pages. 
+
+28.	List all publishers and the number of books that the publisher has published (not the actual titles, just the number of books). Sort the list so that the publisher with the most books appears on top. 
+
+29.	List the publisher name and total revenue for each for each publisher. (Total revenue for a publisher is the total revenue for all books published by that publisher. Revenue for a book is the 
+number sold times the price of the book.)
+
+30.	Modify the previous query to only list those publishers who have at least ten thousand dollars in total revenue. 
+
+31.	List the title and author of each book. For each author for a particular book, list the amount of the "advance" that (s)he got for that book.
+
+32.	List the title and author of each book. For each author for a particular book, list the total amount in royalties that (s)he got for that book.  
+Hint: the royalty dollars for a particular book is the "price" times the "sales" times the "royalty_rate" times the "royalty_share". Sort the results so that the authors who made the most royalty 
+dollars are listed at the top. (NOTE: make sure to read the database description at the top of this document to understand the fields ROYALTIES.ROYALTY_RATE and the field 
+TITLE_AUTHORS.ROYALTY_SHARE). 
+ 
+
+33.	List the name of each author and the total amount of royalty dollars that they received for all of their books (name this column "RoyaltyDollars").  Hint: the royalty dollars for a particular book 
+is the "price" times the "sales" times the "royalty_rate" times the "royalty_share". Sort the results so that the authors who made the most royalty dollars are listed at the top.  
+
+34.	Modify the query from the previous question so that the list only includes authors who made more than $50,000.00 in royalties. 
+
+ 
+Subqueries, outer joins, unions and other stuff ...
+35.	Show the title names  and number of pages for those books that are longer than (ie.  more pages) the average length of all books. 
+
+36.	Show the publisher's name and number of authors who have written books for that publisher: 
+		
+37.	Show the pub_name and the number of titles published by that publisher. Only include publishers for whom at least 5 authors have worked.  
+
+38.	Show the names of publishers who did not publish any books (I guess they are just getting started :) ) 
+
+39.	List the name of each publisher and the total number of books that each publisher has published. Sort the results so that the publishers who published the most books appear at the top. If two or 
+more publishers published the same number of books then they should be listed in alphabetical order. 
+
+a.	The answer should only include publisher who have published some books. 
+
+b.	This time make sure to also include publishers who have published zero books 
+
+    
+Additional questions 
+
+40.	Show the names of the authors and the publishers who published their books.  
+Only show those authors/publishers where the author lives in the same state as the publisher who published the book. 
+Do not show any author/pbulisher names twice. 
+
+41.	The exchange rate for NIS/USD (i.e. New Israeli Shekel / US Dollar) is 3.3. 
+Write a query that shows the titles and prices for biographies that cost between 10 and 20 dollars.  
+Show two columns for the prices. One column for USD and one column for NIS.  
+Name the columns "price in USD" and "price in NIS". 
+Sort the results so that the most expensive books are displayed first. 
+
+42.	Show those titles for which the price of the book is greater than the average price of all books and the number of pages of the book is less than the average number of pages for all books.  
+
+43.	Show the authors who have not written any books 
+
+44.	In each row show an author's name and the number of books that author wrote. 
+Only show those authors who wrote at least two books. 
+Sort the results alphabetically (last name, first name). 
+
+45.	Same as previous question. However, this time, only show those authors who wrote biographies, the count of the number of biographies they wrote and only show those authors who wrote at 
+least 2 biographies. 
+
+46.	Suppose this database is being used by a literary agent who matches up publishers and authors for future projects. 
+The agent is trying to figure out the authors he works with who might be a good match for the publishers he works with. 
+The agent thinks that authors who write books that sell for an above average price are good matches for publishers who publish books that sell for an above average price.  
+The agent wants to see a list of the potential match-ups between such authors and such publishers. 
+Write a query that does the following: 
+	Each row of your output should show the name of an author and a publisher. 
+	The author may have, or may not have, already written a book for that publisher. 
+	The authors should be those authors whose average book price for books they wrote is above the average price of all books in the database. 
+	The publishers should be those publishers whose average book price for books they published is above the average price of all books in the database. 
+
+47.	Same as above, except  
+	The authors should be those authors who have written at least one book for which the price is above the average price of books of the same type. 
+
+Page 1 of 1
+

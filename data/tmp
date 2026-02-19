@@ -1,0 +1,3 @@
+select * from titles;
+SELECT *
+  FROM publishers;
