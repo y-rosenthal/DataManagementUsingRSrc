@@ -24,3 +24,6 @@
 !/inProgressWork/
 !/todo/
 !/_yr/
+!/data/
+
+**/*.quarto_ipynb
