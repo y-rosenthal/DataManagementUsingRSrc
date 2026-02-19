@@ -1,0 +1,15 @@
+## TODO - add these topics to the text
+
+- binary vs text (ascii, unicode)
+ 
+- structured data vs unstructured data
+
+- structured textual data
+
+  - html, xml, css
+  - md (different flavors
+  - JSON
+  - YAML
+  - TOML
+
+
