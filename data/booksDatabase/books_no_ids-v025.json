@@ -1,0 +1,458 @@
+{
+  "comments": {
+	"aboutThisSection", "This section would normally have been in 'comments' eg. preceded by # or something similar, however, standard JSON does not allow for comments."
+    "author": "This file was genererated by claude.ai and modified slightly by me (Prof. Rosenthal)",
+	"creationDate": "April 2, 2025"
+	"aiChatUrl": "https://claude.ai/chat/e69cddac-cd94-4950-a03e-634482cbb990"
+	"aiChatTitle": "Convert books db to json and xml"
+  },
+  "books": [
+    {
+      "title": "1977!",
+      "type": "history",
+      "pages": 107,
+      "price": 21.99,
+      "sales": 566,
+      "pubdate": "8/1/2000 0:00",
+      "publisher": {
+        "name": "Abatis Publishers",
+        "city": "New York",
+        "state": "NY",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 10000,
+        "royalty_rate": 0.05
+      },
+      "authors": [
+        {
+          "fname": "Sarah",
+          "lname": "Buchman",
+          "phone": "718-496-7223",
+          "address": "75 West 205 St",
+          "city": "Bronx",
+          "state": "NY",
+          "zip": 10468,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "200 Years of German Humor",
+      "type": "history",
+      "pages": 14,
+      "price": 19.95,
+      "sales": 9566,
+      "pubdate": "4/1/1998 0:00",
+      "publisher": {
+        "name": "Schandenfreude Press",
+        "city": "Hamburg",
+        "state": "NULL",
+        "country": "Germany"
+      },
+      "royalty": {
+        "advance": 1000,
+        "royalty_rate": 0.06
+      },
+      "authors": [
+        {
+          "fname": "Sarah",
+          "lname": "Buchman",
+          "phone": "718-496-7223",
+          "address": "75 West 205 St",
+          "city": "Bronx",
+          "state": "NY",
+          "zip": 10468,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "Ask Yor System Administrator",
+      "type": "computer",
+      "pages": 1226,
+      "price": 39.95,
+      "sales": 25667,
+      "pubdate": "9/1/2000 0:00",
+      "publisher": {
+        "name": "Core Dump Books",
+        "city": "San Francisco",
+        "state": "CA",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 15000,
+        "royalty_rate": 0.07
+      },
+      "authors": [
+        {
+          "fname": "Christian",
+          "lname": "Kells",
+          "phone": "212-771-4680",
+          "address": "114 Horatio St",
+          "city": "New York",
+          "state": "NY",
+          "zip": 10014,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "But I Did It Unconciously",
+      "type": "psychology",
+      "pages": 510,
+      "price": 12.99,
+      "sales": 13001,
+      "pubdate": "5/31/1999 0:00",
+      "publisher": {
+        "name": "Abatis Publishers",
+        "city": "New York",
+        "state": "NY",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 20000,
+        "royalty_rate": 0.08
+      },
+      "authors": [
+        {
+          "fname": "Hallie",
+          "lname": "Hull",
+          "phone": "415-549-4278",
+          "address": "3800 Waldo Ave, #14F",
+          "city": "San Francisco",
+          "state": "CA",
+          "zip": 94123,
+          "order": 1,
+          "royalty_shares": 0.6
+        },
+        {
+          "fname": "Klee",
+          "lname": "Hull",
+          "phone": "415-549-4278",
+          "address": "3800 Waldo Ave, #14F",
+          "city": "San Francisco",
+          "state": "CA",
+          "zip": 94123,
+          "order": 2,
+          "royalty_shares": 0.4
+        }
+      ]
+    },
+    {
+      "title": "Exchange of Platitudes",
+      "type": "psychology",
+      "pages": 201,
+      "price": 6.95,
+      "sales": 201440,
+      "pubdate": "1/1/2001 0:00",
+      "publisher": {
+        "name": "Abatis Publishers",
+        "city": "New York",
+        "state": "NY",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 100000,
+        "royalty_rate": 0.09
+      },
+      "authors": [
+        {
+          "fname": "Klee",
+          "lname": "Hull",
+          "phone": "415-549-4278",
+          "address": "3800 Waldo Ave, #14F",
+          "city": "San Francisco",
+          "state": "CA",
+          "zip": 94123,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "How About Never?",
+      "type": "biography",
+      "pages": 473,
+      "price": 19.95,
+      "sales": 11320,
+      "pubdate": "7/31/2000 0:00",
+      "publisher": {
+        "name": "Abatis Publishers",
+        "city": "New York",
+        "state": "NY",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 20000,
+        "royalty_rate": 0.08
+      },
+      "authors": [
+        {
+          "fname": "Wendy",
+          "lname": "Heydemark",
+          "phone": "303-986-7020",
+          "address": "2922 Baseline Rd",
+          "city": "Boulder",
+          "state": "CO",
+          "zip": 80303,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "I Blame My Mother",
+      "type": "biography",
+      "pages": 333,
+      "price": 23.95,
+      "sales": 1500200,
+      "pubdate": "10/1/1999 0:00",
+      "publisher": {
+        "name": "Schandenfreude Press",
+        "city": "Hamburg",
+        "state": "NULL",
+        "country": "Germany"
+      },
+      "royalty": {
+        "advance": 1000000,
+        "royalty_rate": 0.11
+      },
+      "authors": [
+        {
+          "fname": "Wendy",
+          "lname": "Heydemark",
+          "phone": "303-986-7020",
+          "address": "2922 Baseline Rd",
+          "city": "Boulder",
+          "state": "CO",
+          "zip": 80303,
+          "order": 1,
+          "royalty_shares": 0.5
+        },
+        {
+          "fname": "Klee",
+          "lname": "Hull",
+          "phone": "415-549-4278",
+          "address": "3800 Waldo Ave, #14F",
+          "city": "San Francisco",
+          "state": "CA",
+          "zip": 94123,
+          "order": 2,
+          "royalty_shares": 0.5
+        }
+      ]
+    },
+    {
+      "title": "Just Wait Until After School",
+      "type": "children",
+      "pages": 86,
+      "price": 10,
+      "sales": 4095,
+      "pubdate": "6/1/2001 0:00",
+      "publisher": {
+        "name": "Abatis Publishers",
+        "city": "New York",
+        "state": "NY",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 0,
+        "royalty_rate": 0.04
+      },
+      "authors": [
+        {
+          "fname": "Harvey",
+          "lname": "Kellsey",
+          "phone": "650-836-7128",
+          "address": "390 Serra Mall",
+          "city": "Palo Alto",
+          "state": "CA",
+          "zip": 94305,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "Kiss My Boo Boo",
+      "type": "children",
+      "pages": 22,
+      "price": 13.95,
+      "sales": 5000,
+      "pubdate": "5/31/2002 0:00",
+      "publisher": {
+        "name": "Abatis Publishers",
+        "city": "New York",
+        "state": "NY",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 0,
+        "royalty_rate": 0.05
+      },
+      "authors": [
+        {
+          "fname": "Harvey",
+          "lname": "Kellsey",
+          "phone": "650-836-7128",
+          "address": "390 Serra Mall",
+          "city": "Palo Alto",
+          "state": "CA",
+          "zip": 94305,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "Not Without My Fabrerge Egg",
+      "type": "biography",
+      "pages": "NULL",
+      "price": "NULL",
+      "sales": "NULL",
+      "pubdate": "NULL",
+      "publisher": {
+        "name": "AAA Publishing",
+        "city": "Berkeley",
+        "state": "CA",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": "NULL",
+        "royalty_rate": "NULL"
+      },
+      "authors": [
+        {
+          "fname": "Wendy",
+          "lname": "Heydemark",
+          "phone": "303-986-7020",
+          "address": "2922 Baseline Rd",
+          "city": "Boulder",
+          "state": "CO",
+          "zip": 80303,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "Perhaps It's a Glandular Problem",
+      "type": "psychology",
+      "pages": 826,
+      "price": 7.99,
+      "sales": 94123,
+      "pubdate": "11/30/2000 0:00",
+      "publisher": {
+        "name": "AAA Publishing",
+        "city": "Berkeley",
+        "state": "CA",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 100000,
+        "royalty_rate": 0.07
+      },
+      "authors": [
+        {
+          "fname": "Harvey",
+          "lname": "Kellsey",
+          "phone": "650-836-7128",
+          "address": "390 Serra Mall",
+          "city": "Palo Alto",
+          "state": "CA",
+          "zip": 94305,
+          "order": 1,
+          "royalty_shares": 0.4
+        },
+        {
+          "fname": "Hallie",
+          "lname": "Hull",
+          "phone": "415-549-4278",
+          "address": "3800 Waldo Ave, #14F",
+          "city": "San Francisco",
+          "state": "CA",
+          "zip": 94123,
+          "order": 2,
+          "royalty_shares": 0.3
+        },
+        {
+          "fname": "Klee",
+          "lname": "Hull",
+          "phone": "415-549-4278",
+          "address": "3800 Waldo Ave, #14F",
+          "city": "San Francisco",
+          "state": "CA",
+          "zip": 94123,
+          "order": 3,
+          "royalty_shares": 0.3
+        }
+      ]
+    },
+    {
+      "title": "Spontaneous, Not Annoying",
+      "type": "biography",
+      "pages": 507,
+      "price": 12.99,
+      "sales": 100001,
+      "pubdate": "8/31/2000 0:00",
+      "publisher": {
+        "name": "AAA Publishing",
+        "city": "Berkeley",
+        "state": "CA",
+        "country": "USA"
+      },
+      "royalty": {
+        "advance": 50000,
+        "royalty_rate": 0.09
+      },
+      "authors": [
+        {
+          "fname": "Wendy",
+          "lname": "Heydemark",
+          "phone": "303-986-7020",
+          "address": "2922 Baseline Rd",
+          "city": "Boulder",
+          "state": "CO",
+          "zip": 80303,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    },
+    {
+      "title": "What Are The Civilian Applications?",
+      "type": "history",
+      "pages": 802,
+      "price": 29.99,
+      "sales": 10467,
+      "pubdate": "5/31/1999 0:00",
+      "publisher": {
+        "name": "Schandenfreude Press",
+        "city": "Hamburg",
+        "state": "NULL",
+        "country": "Germany"
+      },
+      "royalty": {
+        "advance": 20000,
+        "royalty_rate": 0.06
+      },
+      "authors": [
+        {
+          "fname": "Sarah",
+          "lname": "Buchman",
+          "phone": "718-496-7223",
+          "address": "75 West 205 St",
+          "city": "Bronx",
+          "state": "NY",
+          "zip": 10468,
+          "order": 1,
+          "royalty_shares": 1
+        }
+      ]
+    }
+  ]
+}

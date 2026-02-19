@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<books>
+  <book id="B001" title="1977!" type="history" pages="107" sales="566" pubdate="2000-08-01">
+    <publisher city="New York" state="NY" country="USA">Abatis Publishers</publisher>
+    <formats>
+      <format type="hardcover" price="49.99" />
+      <format type="paperback" price="21.99" />
+    </formats>
+    <pulitzerPrizeWinner />
+    <royalty advance="10000" rate="0.05" />
+    <authors>
+      <author order="1" royalty_shares="1" primary="true">Sarah Buchman
+        <phone>718-496-7223</phone>
+        <address>
+          <street>75 West 205 St</street>
+          <city>Bronx</city>
+          <state>NY</state>
+          <zip>10468</zip>
+        </address>
+      </author>
+    </authors>
+  </book>
+  
+  <book id="B002" title="200 Years of German Humor" type="history" pages="14" 
+        sales="9566" pubdate="1998-04-01">
+    <formats>
+      <format type="hardcover" price="19.95" />
+      <format type="audiobook" price="2.99" />
+    </formats>
+    <publisher city="Hamburg" state="" country="Germany">Schandenfreude Press</publisher>
+    <royalty advance="1000" rate="0.06" />
+    <authors>
+      <author order="1" royalty_shares="1" primary="true">Sarah Buchman
+        <phone>718-496-7223</phone>
+        <address>
+          <street>75 West 205 St</street>
+          <city>Bronx</city>
+          <state>NY</state>
+          <zip>10468</zip>
+        </address>
+      </author>
+    </authors>
+  </book>
+  
+  <book id="B003" title="Ask Your System Administrator" type="computer" pages="1226" 
+        sales="25667" pubdate="2000-09-01">
+    <formats>
+      <format type="hardcover" price="39.99" />
+      <format type="paperback" price="19.99" />
+    </formats>
+    <publisher city="San Francisco" state="CA" country="USA">Core Dump Books</publisher>
+    <pulitzerPrizeWinner />
+    <royalty advance="15000" rate="0.07" />
+    <authors>
+      <author order="1" royalty_shares="1" primary="true">Christian Kells
+        <phone>212-771-4680</phone>
+        <address>
+          <street>114 Horatio St</street>
+          <city>New York</city>
+          <state>NY</state>
+          <zip>10014</zip>
+        </address>
+      </author>
+    </authors>
+  </book>
+  
+  <book id="B004" title="But I Did It Unconsciously" type="psychology" pages="510"
+        sales="13001" pubdate="1999-05-31">
+	<formats>
+      <format type="paperback" price="12.99" />
+      <format type="ebook" price="4.99" />
+    </formats>
+
+    <publisher city="New York" state="NY" country="USA">Abatis Publishers</publisher>
+    <royalty advance="20000" rate="0.08" />
+    <authors>
+      <author order="1" royalty_shares="0.6" primary="true">Hallie Hull
+        <phone>415-549-4278</phone>
+        <address>
+          <street>3800 Waldo Ave, #14F</street>
+          <city>San Francisco</city>
+          <state>CA</state>
+          <zip>94123</zip>
+        </address>
+      </author>
+      <author order="2" royalty_shares="0.4" primary="false">Klee Hull
+        <phone>415-549-4278</phone>
+        <address>
+          <street>3800 Waldo Ave, #14F</street>
+          <city>San Francisco</city>
+          <state>CA</state>
+          <zip>94123</zip>
+        </address>
+      </author>
+    </authors>
+  </book>
+  
+  <book id="B005" title="Perhaps It's a Glandular Problem" type="psychology" pages="826" price="7.99" 
+        sales="94123" pubdate="2000-11-30">
+    <formats>
+      <format type="hardcover" price="29.99" />
+      <format type="paperback" price="7.99" />
+      <format type="ebook" price="4.99" />
+      <format type="audiobook" price="2.99" />
+    </formats>
+    <publisher city="Berkeley" state="CA" country="USA">AAA Publishing</publisher>
+    <royalty advance="100000" rate="0.07" />
+    <authors>
+      <author order="1" royalty_shares="0.4" primary="true">Harvey Kellsey
+        <phone>650-836-7128</phone>
+        <address>
+          <street>390 Serra Mall</street>
+          <city>Palo Alto</city>
+          <state>CA</state>
+          <zip>94305</zip>
+        </address>
+      </author>
+      <author order="2" royalty_shares="0.3" primary="false">Hallie Hull
+        <phone>415-549-4278</phone>
+        <address>
+          <street>3800 Waldo Ave, #14F</street>
+          <city>San Francisco</city>
+          <state>CA</state>
+          <zip>94123</zip>
+        </address>
+      </author>
+      <author order="3" royalty_shares="0.3" primary="false">Klee Hull
+        <phone>415-549-4278</phone>
+        <address>
+          <street>3800 Waldo Ave, #14F</street>
+          <city>San Francisco</city>
+          <state>CA</state>
+          <zip>94123</zip>
+        </address>
+        <bio />
+      </author>
+    </authors>
+  </book>
+</books>

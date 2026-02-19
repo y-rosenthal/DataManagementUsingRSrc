@@ -1,0 +1,137 @@
+-- This is the code that we worked through in class today.
+--
+-- Comments in SQLite start with two dashes (i.e. this is all in a comment)
+--
+-- We used the sqlfiddle.com website to demonstrate these commands.
+-- One of the nice things about sqlfiddle.com is that it saves all of 
+-- the commands you ran during a sqlfiddle session on the website
+-- using a unique url.  You can access the specific commands we worked on today directly
+-- in sqlfiddle at the following url:
+--
+--     http://sqlfiddle.com/#!7/122bb
+--
+--
+--
+-- The documentation for the various statements we learned about are
+-- on the sqlitetutorial.net website
+--   create table:    https://www.sqlitetutorial.net/sqlite-create-table/
+--   insert:          https://www.sqlitetutorial.net/sqlite-insert/
+--   update:          https://www.sqlitetutorial.net/sqlite-update/
+--   delete:          https://www.sqlitetutorial.net/sqlite-delete/
+--
+--
+-- The documentation for the update statement is here:
+
+
+
+CREATE TABLE groups (
+   group_id INTEGER PRIMARY KEY,
+   name TEXT NOT NULL
+);
+
+insert into groups (group_id, name) values (1, 'friends');
+insert into groups (group_id, name) values (2, 'work');
+insert into groups (group_id, name) values (3, 'family');
+insert into groups (group_id, name) values (4, 'other');
+
+
+
+
+CREATE TABLE contacts (
+	contact_id integer PRIMARY KEY,
+    title  varchar(10) NULL,
+	first_name text NOT NULL,
+	last_name text NOT NULL,
+	email text NOT NULL UNIQUE,
+	phone text NULL UNIQUE,
+    comments varchar(100) NULL DEFAULT 'my friend'
+);
+
+insert into contacts (contact_id, title, first_name, last_name, email, phone, comments) 
+values ( 1 , 'dr.', 'joe' , 'smith' , 'joe@gmail.com' , '555-555-1212', 'moms dr');
+
+insert into contacts (contact_id, first_name, last_name, email, phone) 
+values ( 2 , 'alice' , 'jones' , 'alice@gmail.com' , '111-111-1111');
+
+insert into contacts (contact_id, first_name, last_name, email, phone) 
+values ( 3 , 'mike' , 'jackson' , 'mike@hotmail.com' , '555-333-1111');
+
+insert into contacts (contact_id, first_name, last_name, email, phone) 
+values ( 4 , 'shiela' , 'smith' , 'shiela@hotmail.com' , NULL);
+
+insert into contacts (contact_id, first_name, last_name, email, phone) 
+values ( 5 ,  'amy' , 'cohen' , 'amy@hotmail.com' , NULL);
+
+
+
+
+CREATE TABLE contact_groups(
+   contact_id INTEGER,
+   group_id INTEGER,
+   PRIMARY KEY (contact_id, group_id),
+   FOREIGN KEY (contact_id) 
+      REFERENCES contacts (contact_id) 
+         ON DELETE CASCADE 
+         ON UPDATE NO ACTION,
+   FOREIGN KEY (group_id) 
+      REFERENCES groups (group_id) 
+         ON DELETE CASCADE 
+         ON UPDATE NO ACTION
+);
+
+
+
+
+insert into contact_groups (contact_id, group_id) values (1, 4);
+insert into contact_groups (contact_id, group_id) values (2, 1);
+insert into contact_groups (contact_id, group_id) values (2, 2);
+insert into contact_groups (contact_id, group_id) values (3, 2);
+insert into contact_groups (contact_id, group_id) values (3, 3);
+insert into contact_groups (contact_id, group_id) values (4, 1);
+insert into contact_groups (contact_id, group_id) values (5, 3);
+
+
+
+
+
+
+
+select * from contacts;
+
+select first_name, last_name from contacts order by last_name, first_name;
+
+select * from contacts where phone is NULL;
+
+-- show all names and the group that they are in
+-- sort the results by group name and then by the persons name
+select groups.name, first_name, last_name
+from groups join contact_groups on groups.group_id = contact_groups.group_id
+            join contacts on contact_groups.contact_id = contacts.contact_id
+order by groups.name, last_name, first_name;
+
+
+select * from contacts
+order by contact_id;
+
+update contacts
+set last_name = 'jackson'
+where contact_id = 2;
+
+select * from contacts
+order by contact_id;
+
+delete from contacts
+where contact_id in (2,5);
+
+select * from contacts
+order by contact_id;
+
+delete from contact_groups
+where contact_id = 5;
+
+
+
+
+
+
+
