@@ -1048,7 +1048,7 @@ Using the data shown above, the output should be:
 sqldf("
 		select pub_name, sum(sales * price) as 'Total Revenue'
 		from titles join publishers on publishers.pub_id = titles.pub_id
-		group by publishers.pub_id, pub_name	;
+		group by publishers.pub_id, pub_name	
 		having sum(sales * price) >= 10000;
 ")
 ```
