@@ -19,13 +19,13 @@ in the first 8 sections of this tutorial. Links are below along with some
 of my own comments. Please use the notes on this website to study for 
 the midterm.
 
-- [The Command Line - What is it, how does it work and how do I get to one.](https://ryanstutorials.net/linuxtutorial/commandline.php)
+- [The Command Line - What is it, how does it work and how do I get to one.](https://ryanstutorials.net/linuxtutorial/commandline.php){target="yrOtherTab"}
 
-- [Basic Navigation - An introduction to the Linux directory system and how to get around it.](https://ryanstutorials.net/linuxtutorial/navigation.php)
+- [Basic Navigation - An introduction to the Linux directory system and how to get around it.](https://ryanstutorials.net/linuxtutorial/navigation.php){target="yrOtherTab"}
 
-- [More About Files - Find out some interesting characteristics of files and directories in a Linux environment.](https://ryanstutorials.net/linuxtutorial/aboutfiles.php)
+- [More About Files - Find out some interesting characteristics of files and directories in a Linux environment.](https://ryanstutorials.net/linuxtutorial/aboutfiles.php){target="yrOtherTab"}
 
-- [Manual Pages - Learn how to make the most of the Linux commands you are learning.](https://ryanstutorials.net/linuxtutorial/manual.php)
+- [Manual Pages - Learn how to make the most of the Linux commands you are learning.](https://ryanstutorials.net/linuxtutorial/manual.php){target="yrOtherTab"}
 
   You should know how to read the contents of a "man page".
 
@@ -34,20 +34,17 @@ the midterm.
   any man page, (e.g. google for man ls).
 
   Alternatively , you can access the man pages here:
-  <https://man7.org/linux/man-pages/dir_section_1.html>
+  <https://man7.org/linux/man-pages/dir_section_1.html>{target="yrOtherTab"}
 
-- [File Manipulation - How to make, remove, rename, copy and move files and directories.](https://ryanstutorials.net/linuxtutorial/filemanipulation.php)
+- [File Manipulation - How to make, remove, rename, copy and move files and directories.](https://ryanstutorials.net/linuxtutorial/filemanipulation.php){target="yrOtherTab"}
 
 - You are NOT responsible for the "vi" editor. "vi" is a text editor 
   that is commonly found in most Bash environments. 
   While it is useful to know, vi can be a bit confusing for new users.
-  [Vi Text Editor - Discover a powerful Linux based text editor.](https://ryanstutorials.net/linuxtutorial/vi.php)
+  [Vi Text Editor - Discover a powerful Linux based text editor.](https://ryanstutorials.net/linuxtutorial/vi.php){target="yrOtherTab"}
 
-- [Wildcards - Also referred to as globbing, this is a means to refer to several files in one go.](https://ryanstutorials.net/linuxtutorial/wildcards.php)
+- [Wildcards - Also referred to as globbing, this is a means to refer to several files in one go.](https://ryanstutorials.net/linuxtutorial/wildcards.php){target="yrOtherTab"}
 
-- WILF ONLY (we learned the basic concepts about how to understand the 
-  first column of info that is output by the "ls -l" command. You are NOT
-  responsible for the chmod command that is described here.)  
-  [Permissions - Learn to identify and change the permissions of files and directories and what the consequences of these are.](https://ryanstutorials.net/linuxtutorial/permissions.php)
+- [Permissions - Learn to identify and change the permissions of files and directories and what the consequences of these are.](https://ryanstutorials.net/linuxtutorial/permissions.php){target="yrOtherTab"}
 
   
