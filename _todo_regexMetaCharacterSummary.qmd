@@ -1,0 +1,44 @@
+REGEX "meta-characters"
+
+^     start the pattern at the beginning of the text
+.     matches any single character (the same as ? in the wildcard "language" in Bash)
+$     end the pattern at the end of the text
+
+
+NOTE:   ^ and $ together are known as "anchors". Because the "anchor" the pattern to the
+        beginning (ie for ^) or the end (i.e. for $) of the text being searched.
+
+
+
+Pattern:    ^p.y$
+Meaning:    any text that starts with p
+            followed by a single character
+            folled by a y (which is the end of the text being searched)
+
+
+*     a * that comes after part of a pattern means to repeat that part of the pattern zero or more times
+
+EXMAPLES
+
+Pattern:   ^p.*y$       # in this example the * modifies the . (i.e. zero or more . meta characters)
+Meaning:   start the text with a p (^p)
+           any character - zero or more times (.*)
+           end the text with a y (y$)
+
+Pattern:   ^pa*y$        #  in this example, the * modifies the "a"  (i.e. zero or more a's)
+Matches:   py     # zero a's
+           pay    # one a
+           paay   # two a's
+           paaay  # etc ...
+
+
+NOTE - the following "character classes" (i.e. [bracketed characters]) is the same notation for BOTH
+Bash's wildcard language for matching filenames as well as for REGEX patterns for matching data
+
+[abc]      matches exactly one a,b or c
+[a-f]      same as [abcdef]
+[A-F]      same as [ABCDEF]
+[0-9]      same as [0123456789]
+[a-fq0-3]  same as [abcdefq0123]
+[^abc]     any single character that is NOT an a,b or c (that include any single letter, digit or symbol, e.g. d,e,0,1,?,!,space, etc)
+    `

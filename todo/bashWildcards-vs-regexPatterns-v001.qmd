@@ -1,0 +1,188 @@
+# Bash -- Wildcard Patterns
+
+1.   Used only to match names of files/folders that are used with a Bash command
+2.   To be considered a match, the pattern must match the entire
+     file/folder name.
+
+## Symbols (Wildcards)
+
+### `*`
+
+-   Matches zero or more characters
+
+### `?`
+
+-   Matches exactly one character
+
+### `[abc]`
+
+-   Matches exactly one of `a`, `b`, or `c`
+
+### Character Classes
+
+-   `[a-d]` → same as `[abcd]`
+-   `[0-9]` → same as `[0123456789]`
+-   `[a-d0-2]` → same as `[abcd012]`
+-   `[^a-c]` → any single character other than `a`, `b`, or `c`
+
+------------------------------------------------------------------------
+
+## Example Files
+
+    apple.md
+    Apple2.md
+    a1myHw
+    appleX.md
+    apple99.md
+    booksAddress.docx
+    duesAddress.md
+    appleX.md
+    apple99.md
+    why?.txt
+    why2.txt
+
+------------------------------------------------------------------------
+
+## Example Commands
+
+```bash
+ls a*
+ls apple?.md
+ls why?.txt
+ls why??.txt
+ls apple[xyz].md
+ls apple[^xyz].md
+```
+
+------------------------------------------------------------------------
+
+# Regular Expressions
+
+-   Used to match patterns in actual data (not filenames)
+-   Used in many different contexts and languages:
+    -   Bash commands (e.g., `grep`)
+    -   R code (searching contents of a vector)
+    -   Text editors (e.g., RStudio, VS Code, vim, others)
+    -   Many languages (e.g., Python, Java, etc.)
+
+------------------------------------------------------------------------
+
+## Definition
+
+A regular expression pattern identifies a piece of text that contains a
+portion of text that matches the pattern. Specifically:
+
+- In R the grep function identifies entries in a vector that contain text
+  which match the regex pattern.
+
+- In Bash, the grep command identifies lines in a file that contain text
+  which match the regex pattern.
+------------------------------------------------------------------------
+
+## Symbols (Meta-characters)
+
+### Anchors
+
+-   `^`
+    -   Appears at the beginning of a pattern\
+    -   Forces (anchors) the pattern to match only at the beginning of
+        the text
+-   `$`
+    -   Appears at the end of a pattern\
+    -   Forces (anchors) the pattern to match only at the end of the
+        text
+
+------------------------------------------------------------------------
+
+### Repetition
+
+-   `*`
+    -   Repeat the previous part of the pattern zero or more times
+-   `+`
+    -   Repeat the previous part of the pattern one or more times
+
+------------------------------------------------------------------------
+
+## Examples
+
+
+```{r}
+if(!require(stringr)){install.packages("stringr");require(stringr);}
+
+# show all elements in the vector that contain
+# - p anywhere in the text:                   p
+# - followed by any single character:         .
+# - followed by a y:                          y
+# - (there may be any text before the p or after the y)
+grep("p.y",words,value=TRUE)
+
+
+# show all elements in the vector that contain
+# - p at the very beginning of the text:      ^p
+# - followed by any single character:         .
+# - followed by a y at the end of the text:   y$
+# - there may be any text before the p or after the y
+grep("^p.y$", words, value=TRUE)
+
+# show all elements in the vector that contain
+# - p anywhere in the text:                   p
+# - followed by any single character:         .
+# - followed by a y at the end of the text:   y$
+grep("p.y$", words, value=TRUE)
+
+# show all text that starts with a p
+grep("^p.*", words, value=TRUE)   # a p at the beggining following by anything
+
+# show all text that ends with a y
+grep(".*y$", words, value=TRUE)   # all words that end with y
+
+# show all text that contain two vowels in a row
+grep("[aeiou][aeiou]", words, value=TRUE)
+
+# The grep function can be used for real data processing and searching.
+# By contrast, the stringr::str_view function is used to help learn about how 
+# regular expressions work. It is not really useful for actual data processing.
+#
+# The output of str_view surrounds the actual text that matched the 
+# pattern with <angleBrackets>. This helps you learn how 
+# regular expressions work.
+#
+# The following highlights the actual vowels the actual vowels
+# that matched within the text by surrounding the matching vowels 
+# with <angleBrackets>. 
+stringr::str_view(words,"[aeiou][aeiou]")
+
+# Note that the above command only showed the first 20 matches. 
+# To see all the matches you can "pipe" the output into the
+# print(n=___) function, where ____ should be filled in with the number
+# of rows to view. In the following example, Inf stands for Infinity and
+# is used to show ALL of the matches - even if there are many of them.
+stringr::str_view(words,"[aeiou][aeiou]") |> print(n=Inf)
+
+# Show all entries in the vector that end with two vowels
+grep("[aeiou][aeiou]$", words, value=TRUE)
+
+
+# A * modifies the previous part of the pattern to mean "match ZERO or more
+# of the previous part of the pattern". The following example shows
+# all entries in the vector that contain with two or more vowels in a row.
+# 
+# The [a-e]* means zero or more vowels ... so the pattern works like this.
+#
+#   [a-e]               matches a single vowel anywhere in the text
+#   [a-e]               immediately followed by a 2nd vowel
+#   [a-e]*              immediately followed by zero or more additional vowels
+
+str_view(words, "[a-e][a-e][a-e]*") |> print(n=Inf) # * means repeat previous part of pattern zero or more times
+
+# A + modifies the previous part of the pattern to mean "match ONE or more
+# of the previous part of the pattern". The following example shows
+# all entries in the vector that contain with two or more vowels in a row.
+# 
+# The [a-e]+ means ONE or more vowels ... so the pattern works like this.
+#
+#   [a-e]               matches a single vowel anywhere in the text
+#   [a-e]+              immediately followed by ONE or more additional vowels
+
+str_view(words, "[a-e][a-e]+") |> print(n=Inf) # same exact results: + means one or more times
+```

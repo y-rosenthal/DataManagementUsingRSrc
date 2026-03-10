@@ -1,0 +1,93 @@
+# Summary of wildcard symbols in Bash
+
+A wildcard is a "pattern" that's used to identify multiple files.
+The pattern can include any the special symbols described below.
+
+
+
+1. an asterisk *
+
+For example:
+
+```
+$ ls todo*  # This lists all files that start with "todo" regardless of what comes after that.
+```
+
+For example, this pattern will match all of the following files:
+
+todo
+todoToday
+todo1
+
+This pattern will NOT match the following
+
+mytodo    # todo doesn't come at the beginning of the text
+Todo      # Bash is case-sensitive - this name has a CAPITAL T but the pattern has a lowercase t.
+
+
+
+
+2. A question mark - i.e. ?
+   matches any single character - however, that character MUST be there.
+
+
+3. A "character class" is enclosed in [square brackets]. It matches exactly
+   one of the characters that appears between the brackets.
+
+   [abc] matches exactly one a,b or c
+   [a-f]   same as [abcdef]
+   [A-F]   same as [ABCDEF]
+   [0-9]   same as [0123456789]
+
+4. A "negated" character class has a ^ as the first character in the [brackets].
+   The ^ changes the meaning of the pattern to mean - match a single character
+   that is NOT in the [brackets]
+
+   [^abc]  means any single character that is NOT a,b,c
+
+   Example:
+
+   ```bash
+   ls -l [^abc]*    # matches every file that does NOT start with an a,b or c
+   ```
+
+
+
+
+
+   Importnat point about wildcards :
+   The pattern must match the ENTIRE filename
+
+4. combining different wildcards in a single pattern:
+
+   m[eoxyz]n* matches
+
+   m       = any file that starts wiht an m
+   [eoxyz] = has a 2nd character that is one of e,o,x,y,z
+   n       = has a 3rd character that is an n
+   *       = may have additional characters (but that's not necessary)
+
+
+
+
+In Bash the command
+less FILENAME
+
+or
+
+more FILENAME
+
+shows the file one page at a time.
+Use the following commands to navigate withing the less/more output
+
+space - moves ahead one page
+b     - moves back one page
+ENTER  - moves ahead one line
+h      - shows help about how to get around in the output
+q      - "quits" the more/less command and puts you back in Bash
+
+
+
+grep SOME_PATTERN SOME_FILE
+searches for text that matches the pattern in the file.
+All lines that match the pattern will be displayed on the screen.
