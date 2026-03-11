@@ -57,7 +57,32 @@ arranges its data in rows and columns.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
+## The data for this page:
+
+You can download the data for the work on this page below. This file
+is a sqlite database file.
+
+
 ## What software do I need to use SQL?
+
+There are many different software packages that can be used to 
+learn SQL. These different packages each have a learning curve of their own
+beyond the raw SQL language. Our focus is to study the SQL language.
+The following are just two of many, many options.
+
+### yrSqliteViewer 
+
+This is an extremely simple option for getting to work with SQL without much
+fuss. This option makes use of SQLite database files.
+
+The yrSqliteViewer.html file is a webpage that is installed locally on your
+computer. You can download it from here. You can also download some sample
+data from the same page.
+Scroll to the bottom of this page for instructions.
+
+<https://github.com/y-rosenthal/yrSqliteViewer>
+
+### Running SQL commands from the R programming language
 
 ```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,7 +106,7 @@ arranges its data in rows and columns.
 # However, the underlying SQL language that is used by all of these 
 # different software packages tends to be very, very similar. 
 # 
-# For this class we will be using R to learn the basic SQL commands.
+# You can use the R programming language to process SQL commands.
 # The sqldf package in R includes the sqldf function that takes a single
 # character value. The value is expected to be a valid SQL command. 
 # Instead of referring to database "tables" the sqldf function interprets
@@ -98,7 +123,7 @@ arranges its data in rows and columns.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-### The sqldf R package
+#### The sqldf R package
 
 # Using the sqldf R package ####
 
@@ -115,21 +140,29 @@ we will learn.
 if(!require(sqldf, quietly=TRUE, warn.conflicts=FALSE)){install.packages("sqldf");require(sqldf);}
 ```
 
-## data for this part of the tutorial
+## Data for this part of the tutorial
 
 ```{r}
 #| include: FALSE
 
 file.copy(from="data/grades.csv", to=".")
 file.copy(from="data/sqlbolt_tables-v007.RData", to=".")
+file.copy(from="data/sqlbolt_tables.sqlite", to=".")
 ```
 
 You can download the data for this tutorial from the following files.
 
+### Use this one file if you're using yrSqliteViewer to access the data
+
+- [sqlbolt_tables.sqlite](sqlbolt_tables.sqlite)
+  
+
+### Use these files if you're using R to access the data
+
 - [grades.csv](grades.csv)
   This is a .csv file. You can read the contents of the file into R 
   with the read.csv function as shown below.
-  
+
 - [sqlbolt_tables-v007.RData](sqlbolt_tables-v007.RData)
   This is a .RData file. You can read the contents of the file into R 
   with the load function as shown below.
@@ -141,7 +174,7 @@ grades = read.csv("grades.csv", na.strings=c("", "NULL", "NA"))
 load("sqlbolt_tables-v007.RData")
 ```
 
-Below are the contents of these tables:
+### Contents of the tables:
 
 ::: {.callout-note collapse="true"}
 #### Click here to see the **grades** table
@@ -221,7 +254,7 @@ NOTES:
    The sqldf package that we will be using is case-INsensitve (i.e. case does
    NOT matter) for everything EXCEPT for table names (i.e. dataframe names).
 
-## How to use the R sqldf() function
+## Note for R users: How to use the R sqldf() function
 
 The sqldf function accepts a single argument that is expected to 
 be a SQL SELECT command - e.g. `sqldf( SOME_SQL_COMMAND )`.  
@@ -253,7 +286,7 @@ sqldf("select * from grades")   # display the entire grades table
 ```
 
 
-## capturing the output of sqldf in an R variable
+## Note for R users: capturing the output of sqldf in an R variable
 
 In R, when using the sqldf function, you can capture the output of sqldf
 in another variable. This simply creates a new R dataframe (which in sqldf
@@ -286,7 +319,7 @@ of storing the output of a SELECT statement in a new table is different
 from SQL product to SQL product. 
 
 
-## A note about case-sensitivity in sqldf()
+## Note for R users: A note about case-sensitivity in sqldf()
 
 As mentioned above, sqldf is case-INsensitive regarding parts of the
 command OTHER THAN the table names (i.e. the dataframe names).
@@ -1048,7 +1081,7 @@ sqldf("select 3 as curve, student, test1, test1 + 3 as curved_test1 from grades"
 ```
 
 
-## Reminder - how NA works in R
+## Note for R users: Reminder - how NA works in R
 
 **NOTE**: 
 

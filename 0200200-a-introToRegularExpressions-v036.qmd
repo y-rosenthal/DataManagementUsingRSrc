@@ -1288,25 +1288,31 @@ grep("[tT][,.!?]", addresses, value=TRUE)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-## WORD BOUNDRIES:  \b
+## WORD BOUNDRIES:  `\b`
+
+`\b` matches a "word boundary"   (remember in R use `\\b`)
+
+You can use this before a pattern, e.g. `\bSOME_PATTERN` 
+(or in R code use double backslash: `\\bSOME_PATTERN`)
+to mean that the pattern must match at the beginning of a word 
+that is in the text - see examples below.
+
+<em>
+(This is similar to but NOT the same as `^SOME_PATTERN`
+`^SOME_PATTERN` means that the the pattern must match at the beginning of
+the entire character value.)
+</em>
+
+You can also use `SOME_PATTERN\b` to mean that the pattern must
+come at the end of a word - see examples below.
+
+Note that a "word boundary" is not a particular character such as a 
+space or comma, but rather is a position in the text. 
+
+NOTE - a "word" may include letters, digits or underscores (see the discussion 
+of the `\w` and `\W` metacharacters above.)
 
 ```{r}
-# WORD BOUNDRIES:  \b ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# \b matches a "word boundary"   (remember in R use \\b)
-# 
-# You can use this before a pattern to mean that the pattern must
-# come at the beginning of a word - see examples below.
-#
-# You can use this after a pattern to mean that the pattern must
-# come at the end of a word - see examples below.
-#
-# Note that a "word boundary" is not a particular character such as a 
-# space or comma, but rather is a position in the text. 
-#
-# NOTE - a "word" may include letters, digits or underscores
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 heWords = c("he", "here", "there", "the", "who was she?", "headache")
 heWords
 
@@ -1318,8 +1324,138 @@ grep ("he\\b", heWords, value=TRUE)  # "he" "the" "who was she?" (NOT "here","th
 
 # Example: match only the word "he"
 grep ("\\bhe\\b", heWords, value=TRUE)  # "he"
+```
 
 
+# YRSTART
+
+<!--
+```{r}
+if(!require(stringr)){install.packages("stringr");require(stringr);}
+```
+-->
+
+## Examples using word breaks (i.e. \\b)
+
+```{r}
+# Some data for our examples
+stuff = c("She, sells",
+          "grey seashells of all shades",
+          "by the seashore",
+          "the man with gray hair said hello",
+          "why must he smile",
+          "no one want heartache but a little happens sometimes",
+          "joe laughed (hehe) at his own thoughts"
+          )
+
+# Match text that contains a word that STARTS with "he"
+str_view(stuff, "\\bhe")
+
+# Match text that contains a word that ENDS with "he"
+str_view(stuff, "he\\b")
+
+# Match text that contains the word "he"
+str_view(stuff, "\\bhe\\b")
+```
+
+## Practice 
+
+### QUESTION 
+
+Write a regex that matches words such as "heartache" 
+and "headache" that start and end 
+with "he". However, the word "he" should not match.
+
+In other words, the letters, "he" must appear 
+twice - once in the beginning,
+and once at the end of the word (therefore, the word "he"
+should NOT be considered a match).
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER
+str_view(stuff, "\\bhe[A-Za-z]*he\\b")
+```
+:::
+
+### QUESTION
+
+Modify the previous answer so that the regex
+also matches "he".
+
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER 
+str_view(stuff, "\\bhe([A-Za-z]*he)*\\b")
+```
+:::
+
+## The | (i.e. or) symbol
+
+
+### QUESTION
+
+Write a regex to match words that have "he" at the beginning.
+Do not match words that only have "he" in the middle of 
+a word.
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER
+
+# Hint - use the | symbol to allow for multiple patterns
+str_view(stuff, "\\bhe|he\\b")
+```
+:::
+
+### Order of operations in R with |
+
+
+The answer to the previous question also works with 
+(parentheses) around each regex option. However, as shown
+above the (parentheses) are not necessary in this case.
+
+```{r}
+str_view(stuff, "(\\bhe)|(he\\b)")
+```
+
+Parentheses become necessary when you want to use | in
+the middle of a larger pattern. For example:
+
+
+# QUESTION
+
+Write a regex that matches the words "grey" or "gray" with 
+either spelling. Keep the regex as short as possible.
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER
+
+sentences = c("blue skies are ahead",
+              "it's going to be a grey day",
+              "oragne you glad i didn't say orange",
+              "the man with gray hair said hello")
+
+
+# Hint - use the | symbol to allow for multiple patterns
+str_view(sentences, "gr(e|a)y")
+
+# Of course this works also but the answer above is shorter
+str_view(sentences, "grey|gray")
+```
+:::
+
+
+
+# YREND
+
+```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # You can use \b with more complicated patterns too.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
