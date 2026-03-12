@@ -1298,7 +1298,8 @@ to mean that the pattern must match at the beginning of a word
 that is in the text - see examples below.
 
 <em>
-(This is similar to but NOT the same as `^SOME_PATTERN`
+Compare this with `^SOME_PATTERN` which means, match the pattern that 
+appears at the beginning of the text.
 `^SOME_PATTERN` means that the the pattern must match at the beginning of
 the entire character value.)
 </em>
