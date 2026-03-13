@@ -1,5 +1,13 @@
 # <yrChapterNumber>25. </yrChapterNumber> "Cleaning" data
 
+```{r}
+#| echo: false
+#| output: false
+
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
+
 Often data comes to us in a "messy" format. One of the "less glamorous" but
 very important jobs of anyone
 working with data is to know how to "clean up" "messy" data. In other words
@@ -38,6 +46,22 @@ expenses = tribble(
   "R. Patel Ph.D",     "21/2/23",      "75",            "office suppl.",   "notebooks",
   "Garcia, Maria Jr.", "Feb 22, 2023", "$120.00",       "food",            "team dinner",
   "Dr. Evans",         "3/01/2023",    "95.99",         "Office Stuff",    "supplies",
+  "Brown, Tom",        "2/15/2023",    "42.50",         "food",            "dinner meeting",
+  "  Williams, Kate  ","02/15/2023",   "$89.99",        "office supplies", "toner cartridge",
+  "robert james lee",  "2023/02/15",   "75",            "Office Stuff",    NA,
+  "mike green jr.",  "2023/02/15",     "500",           "OFFICE SUPPLIES",    NA,
+  "Dr. B. Wilson",     "15/2/2023",    "two hundred",   "FOOD",            "NA",
+  "Dr Smith",          "2/15/23",      "2,345.67",      "office suppl.",   "monitor",
+  "R. Brown Jr",       "March 2, 2023","750",           "Office supplies", "filing cabinet",
+  "Martinez, Ana Sr.", "Feb 15, 2023", "$48.75",        "LUNCH",           "---",
+  "Johnson,Mary",      "3/22/2023",    "63.45",         "food",            "team lunch",
+  "Cooper,  Sam",       "03/22/2023",   "$156.00",      "office supplies", "office decoration",
+  "peter michael wu",  "2023-03-22",   "50",            "Office Stuff",    NA,
+  "Dr. C. Taylor",     "2/3/2023",     "one thousand",  "FOOD",            "NA",
+  "Drake Wilson",        "3/14/24",      "500",         "Office supplies", "printer",
+  "Dr Chen",           "3/2/23",       "3,456.78",      "office suppl.",   "laptop",
+  "T. Wilson Jr",      "Jun 27 2024",  "500",           "Office supplies", "printer",
+  "Rodriguez, Eva Sr.","Mar 22, 2023", "$92.45",        "LUNCH",           "---",
 )
 
 as.data.frame(expenses)
@@ -109,225 +133,379 @@ The solution below uses base R (grep, grepl, sub, gsub, strsplit, toupper, tolow
 #| label: cleanUp-solution
 #| class-output: cleanup-table-scroll
 
-# --- Helper: remove periods and trim; returns character of same length ---
+# =============================================================================
+# STRING HELPERS
+# =============================================================================
 
-# gsub(pattern, replacement, x): returns char vector with all matches replaced
-strip_periods <- function(x) gsub("\\.", "", trimws(x))
+# strip_periods(text)
+#   Arguments:  text  = character vector (e.g. "Dr.", "J. Smith")
+#   Returns:    character vector of same length with periods removed and
+#               leading/trailing spaces trimmed.
+#   Example:    strip_periods("  J. ")  ->  "J"
+strip_periods <- function(text) {
+  gsub("\\.", "", trimws(text))
+}
 
-# --- Helper: parse one employee string into title, first, middle, last, suffix ---
+# to_sentence_case(text)
+#   Arguments:  text = single string (e.g. "mike david", "O'BRIEN")
+#   Returns:    string with first letter of each word uppercase, rest lowercase (Sentence case).
+#               Returns NA unchanged if text is NA; empty string returned as-is.
+#   Example:    to_sentence_case("mike david harris")  ->  "Mike David Harris"
+to_sentence_case <- function(text) {
+  if (is.na(text) || nchar(trimws(text)) == 0) return(text)
+  words <- strsplit(trimws(text), "\\s+")[[1]]
+  capped <- paste0(toupper(substring(words, 1, 1)), tolower(substring(words, 2)))
+  paste(capped, collapse = " ")
+}
 
-# Returns list with employeeTitle, employeeFirst, employeeMiddle, employeeLast, employeeSuffix, employeeFullName.
+# =============================================================================
+# NAME PARSING — split into small functions by format
+# =============================================================================
 
-# Names are stored without periods (e.g. J not J.).
-parse_one_employee <- function(s) {
-  s <- trimws(s)
-  title <- NA_character_
-  suffix <- NA_character_
+# has_suffix(namePart)
+#   Arguments:  namePart = single string, no leading/trailing title (e.g. "Jones Jr")
+#   Returns:    TRUE if name ends with a suffix like Jr, Sr, III, II, IV.
+#   Example:    has_suffix("Jones Jr")  ->  TRUE
+# Regex: one or more spaces, then (Jr or Sr or III or II or IV), then optional spaces at end.
+suffix_regex <- paste0(
+  "\\s+",           # one or more spaces before suffix
+  "(Jr\\.?|Sr\\.?|III|II|IV)",  # suffix (optional period after Jr/Sr)
+  "\\s*$"           # optional spaces at end of string
+)
+has_suffix <- function(namePart) {
+  grepl(suffix_regex, namePart, ignore.case = TRUE)
+}
 
-  # Extract suffix from end (Jr, Sr, III, II, IV)
-  if (grepl("\\s+(Jr\\.?|Sr\\.?|III|II|IV)\\s*$", s, ignore.case = TRUE)) {
-
-    # sub(pattern, replacement, x): replaces first match; \\1 is first capture group
-    suffix <- sub(".*\\s+(Jr\\.?|Sr\\.?|III|II|IV)\\s*$", "\\1", s, ignore.case = TRUE)
-    suffix <- strip_periods(suffix)
-    s <- sub("\\s+(Jr\\.?|Sr\\.?|III|II|IV)\\s*$", "", s, ignore.case = TRUE)
-    s <- trimws(s)
+# extract_suffix(namePart)
+#   Arguments:  namePart = string that may end with a suffix
+#   Returns:    list of two: suffix (string or NA), and nameWithSuffixRemoved (string).
+#   Example:    extract_suffix("Conway, Ella Sr.")  ->  list(suffix = "Sr", nameWithSuffixRemoved = "Conway, Ella")
+extract_suffix <- function(namePart) {
+  if (!has_suffix(namePart)) {
+    return(list(suffix = NA, nameWithSuffixRemoved = trimws(namePart)))
   }
+  suffix <- sub(paste0(".*", suffix_regex), "\\1", namePart, ignore.case = TRUE)
+  nameWithoutSuffix <- sub(suffix_regex, "", namePart, ignore.case = TRUE)
+  list(suffix = strip_periods(suffix), nameWithSuffixRemoved = trimws(nameWithoutSuffix))
+}
 
-  # Extract trailing title (e.g. Ph.D)
-  if (grepl("\\s+Ph\\.?D\\.?\\s*$", s, ignore.case = TRUE)) {
-    if (!is.na(title) && title != "") title <- paste0(title, " ") else title <- ""
-    title <- paste0(title, sub(".*\\s+(Ph\\.?D\\.?)\\s*$", "\\1", s, ignore.case = TRUE))
-    title <- strip_periods(title)
-    s <- sub("\\s+Ph\\.?D\\.?\\s*$", "", s, ignore.case = TRUE)
-    s <- trimws(s)
+# has_trailing_title(namePart)
+#   Arguments:  namePart = string that might end with "Ph.D" or "PhD"
+#   Returns:    TRUE if it ends with that.
+trailing_phd_regex <- paste0(
+  "\\s+",           # space before Ph.D
+  "Ph\\.?D\\.?",    # Ph.D or PhD (periods optional)
+  "\\s*$"           # optional spaces at end
+)
+has_trailing_title <- function(namePart) {
+  grepl(trailing_phd_regex, namePart, ignore.case = TRUE)
+}
+
+# extract_trailing_phd(namePart)
+#   Returns:  list(titlePart = "PhD" or NA, nameWithTitleRemoved = string).
+extract_trailing_phd <- function(namePart) {
+  if (!has_trailing_title(namePart)) {
+    return(list(titlePart = NA, nameWithTitleRemoved = trimws(namePart)))
   }
+  tit <- sub(paste0(".*", trailing_phd_regex), "\\1", namePart, ignore.case = TRUE)
+  nameWithout <- sub(trailing_phd_regex, "", namePart, ignore.case = TRUE)
+  list(titlePart = strip_periods(tit), nameWithTitleRemoved = trimws(nameWithout))
+}
 
-  # Extract leading title (Dr, Mr, Ms, Mrs)
-  if (grepl("^(Dr\\.?|Mr\\.?|Ms\\.?|Mrs\\.?)\\s+", s, ignore.case = TRUE)) {
-    tit <- sub("^(Dr\\.?|Mr\\.?|Ms\\.?|Mrs\\.?)\\s+.*", "\\1", s, ignore.case = TRUE)
-    tit <- strip_periods(tit)
-    title <- if (is.na(title) || title == "") tit else paste0(tit, " ", title)
-    s <- sub("^(Dr\\.?|Mr\\.?|Ms\\.?|Mrs\\.?)\\s+", "", s, ignore.case = TRUE)
-    s <- trimws(s)
+# has_leading_title(namePart)
+#   TRUE if name starts with Dr, Mr, Ms, Mrs (with optional period).
+leading_title_regex <- paste0(
+  "^(Dr\\.?|Mr\\.?|Ms\\.?|Mrs\\.?)",  # title at start
+  "\\s+"                               # at least one space after
+)
+has_leading_title <- function(namePart) {
+  grepl(leading_title_regex, namePart, ignore.case = TRUE)
+}
+
+# extract_leading_title(namePart)
+#   Returns:  list(titlePart = "Dr" or NA, nameWithTitleRemoved = string).
+extract_leading_title <- function(namePart) {
+  if (!has_leading_title(namePart)) {
+    return(list(titlePart = NA, nameWithTitleRemoved = trimws(namePart)))
   }
-  if (is.na(title) || title == "") title <- NA_character_
+  tit <- sub(paste0(leading_title_regex, ".*"), "\\1", namePart, ignore.case = TRUE)
+  nameWithout <- sub(leading_title_regex, "", namePart, ignore.case = TRUE)
+  list(titlePart = strip_periods(tit), nameWithTitleRemoved = trimws(nameWithout))
+}
 
-  # Parse name part: "Last, First" or "First Middle Last"
+# parse_name_last_comma_first(namePart)
+#   For names like "Last, First" or "Last, First Middle".
+#   Arguments:  namePart = string containing exactly one comma
+#   Returns:    list(first =, middle =, last =). Periods stripped from each.
+parse_name_last_comma_first <- function(namePart) {
+  parts <- strsplit(namePart, ",\\s*")[[1]]
+  last <- strip_periods(trimws(parts[1]))
+  firstAndMiddle <- strsplit(trimws(parts[2]), "\\s+")[[1]]
+  first <- strip_periods(firstAndMiddle[1])
+  middle <- if (length(firstAndMiddle) >= 2) strip_periods(firstAndMiddle[2]) else NA
+  list(first = first, middle = middle, last = last)
+}
 
-  # strsplit(x, split): returns list of char vectors
-  parts <- strsplit(s, ",\\s*")[[1]]
-  if (length(parts) >= 2) {
-    last <- strip_periods(trimws(parts[1]))
-    first_mid <- strsplit(trimws(parts[2]), "\\s+")[[1]]
-    first <- if (length(first_mid) >= 1) strip_periods(first_mid[1]) else NA_character_
-    middle <- if (length(first_mid) >= 2) strip_periods(first_mid[2]) else NA_character_
+# parse_name_first_last(namePart)
+#   For names like "First Last", "First Middle Last", or just "Last".
+#   Arguments:  namePart = string with no comma
+#   Returns:    list(first =, middle =, last =).
+parse_name_first_last <- function(namePart) {
+  words <- strsplit(trimws(namePart), "\\s+")[[1]]
+  if (length(words) == 1) {
+    list(first = NA, middle = NA, last = strip_periods(words[1]))
+  } else if (length(words) == 2) {
+    list(first = strip_periods(words[1]), middle = NA, last = strip_periods(words[2]))
   } else {
-    words <- strsplit(s, "\\s+")[[1]]
-    if (length(words) == 1) {
-      first <- NA_character_; middle <- NA_character_; last <- strip_periods(words[1])
-    } else if (length(words) == 2) {
-      first <- strip_periods(words[1]); middle <- NA_character_; last <- strip_periods(words[2])
-    } else if (length(words) >= 3) {
-      first <- strip_periods(words[1]); middle <- strip_periods(words[2])
-      last <- paste(strip_periods(words[3:length(words)]), collapse = " ")
-    } else {
-      first <- NA_character_; middle <- NA_character_; last <- NA_character_
-    }
+    first <- strip_periods(words[1])
+    middle <- strip_periods(words[2])
+    last <- paste(strip_periods(words[3:length(words)]), collapse = " ")
+    list(first = first, middle = middle, last = last)
   }
+}
 
-  # Build full name (paste non-NA components)
-  full_parts <- c(title, first, middle, last, suffix)
-  full_parts <- full_parts[!is.na(full_parts) & full_parts != ""]
+# parse_one_employee(employeeName)
+#   Arguments:  employeeName = one raw employee string (e.g. "Dr. A. Davis", "Schwartz, Joe")
+#   Returns:    list with employeeTitle, employeeFirst, employeeMiddle, employeeLast,
+#               employeeSuffix, employeeFullName. All name parts without periods.
+#   Example:    parse_one_employee("Conway, Ella Sr.")  ->  first=Ella, last=Conway, suffix=Sr, title=NA
+parse_one_employee <- function(employeeName) {
+  raw <- trimws(employeeName)
+  outSuffix <- extract_suffix(raw)
+  raw <- outSuffix$nameWithSuffixRemoved
+  outPhd <- extract_trailing_phd(raw)
+  title <- outPhd$titlePart
+  raw <- outPhd$nameWithTitleRemoved
+  outLead <- extract_leading_title(raw)
+  if (!is.na(outLead$titlePart)) {
+    title <- if (is.na(title) || title == "") outLead$titlePart else paste0(outLead$titlePart, " ", title)
+  }
+  raw <- outLead$nameWithTitleRemoved
+  if (is.na(title) || title == "") title <- NA
 
-  # paste(..., collapse): concatenates into one string; returns character
-  employeeFullName <- paste(full_parts, collapse = " ")
+  if (length(strsplit(raw, ",\\s*")[[1]]) >= 2) {
+    parsed <- parse_name_last_comma_first(raw)
+  } else {
+    parsed <- parse_name_first_last(raw)
+  }
+  first <- to_sentence_case(parsed$first)
+  middle <- to_sentence_case(parsed$middle)
+  last <- to_sentence_case(parsed$last)
+  suffix <- outSuffix$suffix
+
+  fullParts <- c(title, first, middle, last, suffix)
+  fullParts <- fullParts[!is.na(fullParts) & fullParts != ""]
+  employeeFullName <- paste(fullParts, collapse = " ")
+
   list(employeeTitle = title, employeeFirst = first, employeeMiddle = middle,
        employeeLast = last, employeeSuffix = suffix, employeeFullName = employeeFullName)
 }
 
-# --- Parse employee column into 6 columns (no data lost) ---
-
-# lapply(X, FUN): applies FUN to each element; returns list. do.call(rbind, ...): binds rows.
-parse_employee_column <- function(x) {
-  rows <- lapply(x, parse_one_employee)
-
-  # unlist(r) keeps names; rbind gives matrix with correct colnames
+# parse_employee_column(employeeNames)
+#   Arguments:  employeeNames = character vector of raw employee strings
+#   Returns:    data frame with columns employeeFullName, employeeTitle, employeeFirst,
+#               employeeMiddle, employeeLast, employeeSuffix.
+parse_employee_column <- function(employeeNames) {
+  rows <- lapply(employeeNames, parse_one_employee)
   out <- as.data.frame(do.call(rbind, lapply(rows, unlist)), stringsAsFactors = FALSE)
-
-  # Reorder so employeeFullName is first (paste of the rest)
   out <- out[c("employeeFullName", "employeeTitle", "employeeFirst", "employeeMiddle", "employeeLast", "employeeSuffix")]
   out
 }
 
-# --- Helper: parse date string to "yyyy-mm-dd" ---
+# =============================================================================
+# DATE PARSING
+# =============================================================================
 
-# Handles m/d/y, d/m/y, yyyy-mm-dd, "Mon dd, yyyy". Returns NA if unparseable.
-parse_date_flex <- function(x) {
-  x <- trimws(x)
-  out <- character(length(x))
-  for (i in seq_along(x)) {
-    s <- x[i]
+# is_iso_date(dateStr)
+#   Returns TRUE if string is already yyyy-mm-dd (e.g. "2023-01-19").
+iso_date_regex <- paste0(
+  "^[0-9]{4}",      # 4 digits at start (year)
+  "-",
+  "[0-9]{1,2}",     # 1 or 2 digits (month)
+  "-",
+  "[0-9]{1,2}$"     # 1 or 2 digits at end (day)
+)
+is_iso_date <- function(dateStr) {
+  grepl(iso_date_regex, trimws(dateStr))
+}
 
-    # Already ISO
-    if (grepl("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", s)) {
-      out[i] <- s
-      next
-    }
+# is_month_name_date(dateStr)
+#   Returns TRUE for strings like "Jan 19, 2023" or "January 19, 2023".
+month_name_date_regex <- paste0(
+  "^[A-Za-z]+",     # month name (letters)
+  "\\s+",
+  "[0-9]{1,2}",     # day
+  ",\\s*",
+  "[0-9]{2,4}$"     # 2- or 4-digit year
+)
+is_month_name_date <- function(dateStr) {
+  grepl(month_name_date_regex, trimws(dateStr))
+}
 
-    # Month name: "Jan 19, 2023"
-
-    # grepl(pattern, x): returns logical; TRUE where pattern matches
-    if (grepl("^[A-Za-z]+\\s+[0-9]{1,2},\\s*[0-9]{2,4}$", s)) {
-
-      # as.Date(character, format): returns Date; %b = abbreviated month
-      d <- as.Date(s, format = "%b %d, %Y")
-      if (is.na(d)) d <- as.Date(s, format = "%B %d, %Y")
-
-      # format(x, format): formats (e.g. Date) as character; returns character vector
-      out[i] <- format(d, "%Y-%m-%d")
-      next
-    }
-
-    # Numeric: split on / or - into day, month, year components
-
-    # strsplit(x, split): returns list of char vectors; [[1]] gets first element
-    date_parts <- strsplit(s, "[/-]")[[1]]
-    if (length(date_parts) != 3) { out[i] <- NA_character_; next }
-    b1 <- as.integer(date_parts[1]); b2 <- as.integer(date_parts[2]); b3 <- as.integer(date_parts[3])
-
-    # Year: 4-digit value, or 2-digit in last position (USA/European)
-    if (nchar(date_parts[1]) == 4) {
-      y <- b1; m <- b2; d <- b3
-    } else if (nchar(date_parts[3]) == 4) {
-      y <- b3
-      if (b1 > 12) { d <- b1; m <- b2 } else if (b2 > 12) { m <- b1; d <- b2 } else { m <- b1; d <- b2 }
-    } else {
-      y <- 2000 + (b3 - 2000) %% 100
-      if (b1 > 12) { d <- b1; m <- b2 } else if (b2 > 12) { m <- b1; d <- b2 } else { m <- b1; d <- b2 }
-    }
-
-    # sprintf(fmt, ...): returns character vector with formatted output
-    out[i] <- sprintf("%04d-%02d-%02d", y, m, d)
+# parse_one_date(dateStr)
+#   Arguments:  dateStr = one date string in any of the supported formats
+#   Returns:    string "yyyy-mm-dd" or NA if unparseable.
+#   Example:    parse_one_date("1/19/2023")  ->  "2023-01-19"
+parse_one_date <- function(dateStr) {
+  s <- trimws(dateStr)
+  if (is_iso_date(s)) return(s)
+  if (is_month_name_date(s)) {
+    d <- as.Date(s, format = "%b %d, %Y")
+    if (is.na(d)) d <- as.Date(s, format = "%B %d, %Y")
+    return(format(d, "%Y-%m-%d"))
   }
-  out
+  date_parts <- strsplit(s, "[/-]")[[1]]
+  if (length(date_parts) != 3) return(NA)
+  n1 <- as.integer(date_parts[1])
+  n2 <- as.integer(date_parts[2])
+  n3 <- as.integer(date_parts[3])
+  len1 <- nchar(date_parts[1])
+  len3 <- nchar(date_parts[3])
+  if (len1 == 4) {
+    y <- n1; m <- n2; d <- n3
+  } else if (len3 == 4) {
+    y <- n3
+    if (n1 > 12) { d <- n1; m <- n2 } else if (n2 > 12) { m <- n1; d <- n2 } else { m <- n1; d <- n2 }
+  } else {
+    y <- 2000 + (n3 - 2000) %% 100
+    if (n1 > 12) { d <- n1; m <- n2 } else if (n2 > 12) { m <- n1; d <- n2 } else { m <- n1; d <- n2 }
+  }
+  sprintf("%04d-%02d-%02d", y, m, d)
 }
 
-# --- Helper: convert amount string to numeric ---
-
-# Removes $ and commas; handles written "five hundred", "two hundred".
-word_to_number <- function(w) {
-  w <- tolower(trimws(w))
-
-  # Simple lookup for common words in this data
-  if (grepl("^five\\s*hundred", w)) return(500)
-  if (grepl("^two\\s*hundred", w)) return(200)
-  if (grepl("^one\\s*hundred", w)) return(100)
-  NA_real_
+# parse_dates(dateStrings)
+#   Arguments:  dateStrings = character vector of date strings
+#   Returns:    character vector of same length, each element "yyyy-mm-dd" or NA.
+parse_dates <- function(dateStrings) {
+  sapply(trimws(dateStrings), parse_one_date)
 }
 
-clean_amount <- function(x) {
-  x <- trimws(x)
-  out <- numeric(length(x))
+# =============================================================================
+# AMOUNT, CATEGORY, COMMENTS
+# =============================================================================
+
+# word_to_number(word)
+#   Arguments:  word = string with a number in words (e.g. "five hundred", "twenty-one",
+#               "one thousand two hundred thirty-four"). Hyphens and "and" are allowed.
+#   Returns:    numeric value, or NA if the string is not a recognized number phrase.
+#   Examples:   word_to_number("five hundred") -> 500; word_to_number("twenty-one") -> 21;
+#               word_to_number("one thousand two hundred thirty four") -> 1234.
+#   Supports:   zero–nine, ten–nineteen, twenty–ninety, hundred, thousand, million.
+word_to_number <- function(word) {
+  w <- tolower(trimws(word))
+  w <- gsub("-", " ", w)
+  w <- gsub("\\band\\b", " ", w)
+  words <- strsplit(w, "\\s+")[[1]]
+  words <- words[words != ""]
+  if (length(words) == 0) return(NA)
+
+  ones <- c(zero = 0, one = 1, two = 2, three = 3, four = 4, five = 5, six = 6, seven = 7, eight = 8, nine = 9)
+  teens <- c(ten = 10, eleven = 11, twelve = 12, thirteen = 13, fourteen = 14, fifteen = 15,
+             sixteen = 16, seventeen = 17, eighteen = 18, nineteen = 19)
+  tens <- c(twenty = 20, thirty = 30, forty = 40, fifty = 50, sixty = 60, seventy = 70, eighty = 80, ninety = 90)
+
+  total <- 0
+  current <- 0
+  i <- 1
+  while (i <= length(words)) {
+    x <- words[i]
+    if (x %in% names(ones)) {
+      current <- current + ones[x]
+      i <- i + 1
+    } else if (x %in% names(teens)) {
+      current <- current + teens[x]
+      i <- i + 1
+    } else if (x %in% names(tens)) {
+      current <- current + tens[x]
+      i <- i + 1
+    } else if (x == "hundred") {
+      if (current == 0) current <- 1
+      current <- current * 100
+      i <- i + 1
+    } else if (x == "thousand") {
+      if (current == 0) current <- 1
+      total <- total + current * 1000
+      current <- 0
+      i <- i + 1
+    } else if (x == "million") {
+      if (current == 0) current <- 1
+      total <- total + current * 1000000
+      current <- 0
+      i <- i + 1
+    } else {
+      return(NA)
+    }
+  }
+  total + current
+}
+
+# clean_amounts(amountStrings)
+#   Arguments:  amountStrings = character vector (e.g. "$27.00", "1,234.56", "five hundred")
+#   Returns:    numeric vector. Removes $ and commas; converts word amounts when possible.
+clean_amounts <- function(amountStrings) {
+  x <- trimws(amountStrings)
+  result <- numeric(length(x))
   for (i in seq_along(x)) {
-    s <- x[i]
-
-    # gsub(pattern, replacement, x): returns char vector, all matches replaced
-    s <- gsub("[$,]", "", s)
+    s <- gsub("[$,]", "", x[i])
     s <- trimws(s)
     if (grepl("^[0-9.]+$", s)) {
-      out[i] <- as.numeric(s)
+      result[i] <- as.numeric(s)
     } else {
-      out[i] <- word_to_number(x[i])
+      result[i] <- word_to_number(x[i])
     }
   }
-  out
+  result
 }
 
-# --- Helper: standardize category (lowercase, fix abbreviations) ---
-
-clean_category <- function(x) {
-
-  # tolower(x): returns character vector in lowercase
-  x <- tolower(trimws(x))
-
-  # sub(pattern, replacement, x): replaces first match
-  x <- sub("\\boffice\\s+suppl\\.?\\s*$", "office supplies", x)
-  x <- sub("\\boffice\\s+stuff\\s*$", "office supplies", x)
-  x <- sub("\\blunch\\s*$", "food", x)
+# clean_categories(categoryStrings)
+#   Arguments:  categoryStrings = character vector (e.g. "FOOD", "office suppl.")
+#   Returns:    character vector, lowercase, with abbreviations normalized
+#               (e.g. "office suppl." and "Office Stuff" -> "office supplies", "LUNCH" -> "food").
+office_suppl_regex <- paste0(
+  "\\boffice\\s+suppl\\.?\\s*$"   # "office suppl" or "office suppl." at end of string
+)
+office_stuff_regex <- "\\boffice\\s+stuff\\s*$"
+lunch_regex <- "\\blunch\\s*$"
+clean_categories <- function(categoryStrings) {
+  x <- tolower(trimws(categoryStrings))
+  x <- sub(office_suppl_regex, "office supplies", x)
+  x <- sub(office_stuff_regex, "office supplies", x)
+  x <- sub(lunch_regex, "food", x)
   x
 }
 
-# --- Helper: standardize comments (NA for empty/placeholder) ---
-
-clean_comments <- function(x) {
-  x <- trimws(as.character(x))
-
-  # Replace placeholder strings with NA
-  x[grepl("^(---|NA|n/a)$", x, ignore.case = TRUE)] <- NA_character_
-  x[x == ""] <- NA_character_
+# clean_comments(commentStrings)
+#   Arguments:  commentStrings = character vector; can contain placeholders like "---", "NA"
+#   Returns:    character vector; placeholders and empty strings replaced with NA.
+placeholder_regex <- "^(---|NA|n/a)$"
+clean_comments <- function(commentStrings) {
+  x <- trimws(as.character(commentStrings))
+  x[grepl(placeholder_regex, x, ignore.case = TRUE)] <- NA
+  x[x == ""] <- NA
   x
 }
 
-# --- Main function ---
+# =============================================================================
+# MAIN CLEANUP
+# =============================================================================
 
-# cleanUp(df): expects a dataframe with columns employee, date, amount, category, comments;
-
-# returns a dataframe with employee split into employeeFullName, employeeTitle, employeeFirst,
-# employeeMiddle, employeeLast, employeeSuffix (no periods in names), plus cleaned date, amount, category, comments.
-cleanUp <- function(df) {
-  df <- as.data.frame(df, stringsAsFactors = FALSE)
+# cleanUp(expensesDF)
+#   Arguments:  expensesDF = data frame with columns employee, date, amount, category, comments
+#   Returns:    data frame with employee replaced by employeeFullName, employeeTitle,
+#               employeeFirst, employeeMiddle, employeeLast, employeeSuffix; and with
+#               date, amount, category, comments cleaned to consistent formats.
+#   Example:    cleanUp(expenses)  ->  wide table with cleaned columns
+cleanUp <- function(expensesDF) {
+  df <- as.data.frame(expensesDF, stringsAsFactors = FALSE)
   emp <- parse_employee_column(df$employee)
   df$employee <- NULL
   df <- cbind(emp, df)
-  df$date     <- parse_date_flex(df$date)
-  df$amount   <- clean_amount(df$amount)
-  df$category <- clean_category(df$category)
+  df$date     <- parse_dates(df$date)
+  df$amount   <- clean_amounts(df$amount)
+  df$category <- clean_categories(df$category)
   df$comments <- clean_comments(df$comments)
   df
 }
-
-# Example: clean the expenses data
 
 cleanUp(expenses)
 ```
