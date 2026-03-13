@@ -189,6 +189,21 @@ extract_suffix <- function(namePart) {
   list(suffix = strip_periods(suffix), nameWithSuffixRemoved = trimws(nameWithoutSuffix))
 }
 
+# normalize_suffix(suffix)
+#   Arguments:  suffix = string (e.g. "jr", "SR", "iii") or NA
+#   Returns:    correctly cased suffix: "Jr", "Sr", "II", "III", "IV", or NA if not recognized.
+#   Example:    normalize_suffix("jr")  ->  "Jr"
+normalize_suffix <- function(suffix) {
+  if (is.na(suffix) || trimws(suffix) == "") return(NA)
+  s <- tolower(trimws(suffix))
+  if (s %in% c("jr", "jr.")) return("Jr")
+  if (s %in% c("sr", "sr.")) return("Sr")
+  if (s == "ii") return("II")
+  if (s == "iii") return("III")
+  if (s == "iv") return("IV")
+  suffix
+}
+
 # has_trailing_title(namePart)
 #   Arguments:  namePart = string that might end with "Ph.D" or "PhD"
 #   Returns:    TRUE if it ends with that.
@@ -291,7 +306,7 @@ parse_one_employee <- function(employeeName) {
   first <- to_sentence_case(parsed$first)
   middle <- to_sentence_case(parsed$middle)
   last <- to_sentence_case(parsed$last)
-  suffix <- outSuffix$suffix
+  suffix <- normalize_suffix(outSuffix$suffix)
 
   fullParts <- c(title, first, middle, last, suffix)
   fullParts <- fullParts[!is.na(fullParts) & fullParts != ""]
