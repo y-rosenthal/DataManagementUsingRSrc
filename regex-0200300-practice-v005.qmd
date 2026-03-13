@@ -87,7 +87,8 @@ cat("There are a total of ", nrow(expenses), " rows. The following is
 head(expenses, 10)
 ```
 
-- Inconsistencies with the name entries
+- Inconsistencies with the `employee` column entries
+
   * some names are in "first last" (e.g. "Sue Smith") format and 
     some names are in "last, first" format (e.g. "Brown, Tom")
   * some names are capitalized, some aren't
@@ -101,7 +102,8 @@ head(expenses, 10)
   * possibly other inconsistencies ...
 
   
-- Inconsistencies with dates
+- Inconsistencies with `date` column
+
   * some dates are in mm/dd/yyyy format (USA style)
   * some dates are in dd/mm/yyyy format (European style)
   * some dates are in yyyy-mm-dd format (standard for many computer systems)
@@ -110,6 +112,7 @@ head(expenses, 10)
   * possibly other inconsistencies ...
 
 - Inconsistencies in the `amount` column
+
   * some values have $ signs, some don't, 
   * some have commas (e.g. 1,234.56) some don't
   * some are missing the cents (e.g. "75")
@@ -117,11 +120,13 @@ head(expenses, 10)
   * possibly other inconsistencies ...
 
 - Inconsistencies in the `category` column
+
   * the same categories are written differently (e.g. "food" vs "FOOD", 
     "office supplies" vs "Office suppl." vs "OFFICE STUFF")
   * possibly other inconsistencies ...
 
 - Inconsistencies in the `comments` column
+
   * blanks are expressed differently: NA vs "NA" vs "---".
   
     Note that in this column, other differences are more forgivable since 
@@ -155,37 +160,109 @@ For each question:
        "Jr."). Make sure that you allow for any number of spaces between the 
        comma and the first name (including if there aren't any spaces).
 
-::: {.callout-note collapse="true"}
-### Click here for answer
-```{r}
-answer = 
-  grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
-cat(answer, sep="\n")
-```
-:::
+       <!-- generate answer but don't show this code -->
+       ```{r}
+       #| label: answer-1a
+       #| echo: false
+       #| output: false
+      
+       answer = 
+         grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
+       ```
 
-    b) Modify your answer to show only names that are strictly in last, first form (without a suffix) 
+       Given the data above, your output should show the following:
+       
+       <!-- show the values output by the answer code -->
+       ```{r}
+       #| echo: false
+       cat(answer, sep = "\n")
+       ```
+
+       ::: {.callout-note collapse="true"}
+       ### Click here for answer
+       <!-- show how to generate answer -->
+       ```{r}
+       #| ref.label: answer-1a
+       #| echo: true
+       ```
+       <!-- show the output -->
+       ```{r}
+       cat(answer, sep="\n")
+       ```
+       :::
+
+    b) Modify your answer to show only names that are strictly in  
+       last, first form (without a suffix) 
+
+       <!-- generate answer but don't show this code -->
+       ```{r}
+       #| label: answer-1b
+       #| echo: false
+       #| output: false
+      
+       answer = 
+         grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
+       ```
+
+       Given the data above, your output should show the following:
+       
+       <!-- show the values output by the answer code -->
+       ```{r}
+       #| echo: false
+       cat(answer, sep = "\n")
+       ```
+
+       ::: {.callout-note collapse="true"}
+       ### Click here for answer
+       <!-- show how to generate answer -->
+       ```{r}
+       #| ref.label: answer-1b
+       #| echo: true
+       ```
+       <!-- show the output -->
+       ```{r}
+       cat(answer, sep="\n")
+       ```
+       :::
+
    
-::: {.callout-note collapse="true"}
-### Click here for answer
-```{r}
-answer = 
-  grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
-cat(answer, sep="\n")
-```
-:::
 
 2. Write R code using regex to display only names that begin with "Dr" (with or without a period).
    Make sure that you don't display names (e.g. "Drake Wilson") that begin with Dr 
    but who aren't doctors.
 
-::: {.callout-note collapse="true"}
-### Click here for answer
-```{r}
-answer = grep("^Dr[. ]", expenses$employee, value=TRUE)
-cat(answer, sep="\n")
-```
-:::
+
+   <!-- generate answer but don't show this code -->
+   ```{r}
+   #| label: answer-2
+   #| echo: false
+   #| output: false
+      
+   answer = 
+      grep("^Dr[. ]", expenses$employee, value=TRUE)
+   ```
+
+   Given the data above, your output should show the following:
+       
+   <!-- show the values output by the answer code -->
+   ```{r}
+   #| echo: false
+   cat(answer, sep = "\n")
+   ```
+
+   ::: {.callout-note collapse="true"}
+   ### Click here for answer
+   <!-- show how to generate answer -->
+   ```{r}
+   #| ref.label: answer-2
+   #| echo: true
+   ```
+   <!-- show the output -->
+   ```{r}
+   cat(answer, sep="\n")
+   ```
+   :::
+
 
 3. Write R code using regex to identify all names that are completely lowercase (no capitalization).
 

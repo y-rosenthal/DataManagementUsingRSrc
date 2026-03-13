@@ -184,21 +184,47 @@ click here to see the full data set
 10   robert james lee   2023/02/15           75    Office Stuff              &lt;NA&gt;</code></pre>
 </div>
 </div>
-<p><strong>Inconsistencies with employee names</strong></p>
 <ul>
-<li><p>some names are in “first last” format (e.g.&nbsp;“Sue Smith”)<br>
-and some names are in “last, first” format (e.g.&nbsp;“Brown, Tom”)</p></li>
-<li><p>Some names are Capitalized Properly, and some names aren’t (e.g.&nbsp;“schwartz, joe”) e.g.&nbsp;</p></li>
-<li><p>Numerous other formats, some are missing first names, some use periods, some don’t, etc.</p></li>
-</ul>
-<p><strong>Inconsistencies with dates, amounts, category columns</strong></p>
-<p>The other columns have similar inconsistencies in formatting the data</p>
+<li><p>Inconsistencies with the <code>employee</code> column entries</p>
 <ul>
-<li><p>date column: The following are all different forms of the exact same date.<br>
-1/19/2023 , 2023-10-19 , 19/01/23 There are yet other forms.</p></li>
-<li><p>amount column: Some values have $ signs, some don’t, some have commas (e.g.&nbsp;1,234.56) some don’t, some are missing the cents (e.g.&nbsp;“75”), some are written in words (e.g.&nbsp;“five hundred”)</p></li>
-<li><p>category column: the same categories are written differently (e.g.&nbsp;“food” vs “FOOD”, “office supplies” vs “Office suppl.” vs “OFFICE STUFF” etc.</p></li>
-<li><p>comments column: blanks are expressed differently: NA vs “NA” vs “—”. Note that in this column, other differences are more forgivable since comments are by their very nature written by people differently and are not expected to be in a standard form. However, there should be a standard way to express that there are no comments for a given row.</p></li>
+<li>some names are in “first last” (e.g.&nbsp;“Sue Smith”) format and some names are in “last, first” format (e.g.&nbsp;“Brown, Tom”)</li>
+<li>some names are capitalized, some aren’t</li>
+<li>some names have middle include middle names, some don’t</li>
+<li>some names include titles, some don’t</li>
+<li>some names include a title, e.g.&nbsp;Dr.&nbsp;, while some don’t</li>
+<li>some of the titles contain a period after the title, some don’t</li>
+<li>some names include a suffix (e.g.&nbsp;Jr), some don’t</li>
+<li>some names are missing first names</li>
+<li>some names use periods (e.g.&nbsp;J. Thompson), some don’t</li>
+<li>possibly other inconsistencies …</li>
+</ul></li>
+<li><p>Inconsistencies with <code>date</code> column</p>
+<ul>
+<li>some dates are in mm/dd/yyyy format (USA style)</li>
+<li>some dates are in dd/mm/yyyy format (European style)</li>
+<li>some dates are in yyyy-mm-dd format (standard for many computer systems)</li>
+<li>some dates use 4 digit years, some use 2 digit years</li>
+<li>some dates have a leading zero for single digit days or months</li>
+<li>possibly other inconsistencies …</li>
+</ul></li>
+<li><p>Inconsistencies in the <code>amount</code> column</p>
+<ul>
+<li>some values have $ signs, some don’t,</li>
+<li>some have commas (e.g.&nbsp;1,234.56) some don’t</li>
+<li>some are missing the cents (e.g.&nbsp;“75”)</li>
+<li>some are written in words (e.g.&nbsp;“five hundred”)</li>
+<li>possibly other inconsistencies …</li>
+</ul></li>
+<li><p>Inconsistencies in the <code>category</code> column</p>
+<ul>
+<li>the same categories are written differently (e.g.&nbsp;“food” vs “FOOD”, “office supplies” vs “Office suppl.” vs “OFFICE STUFF”)</li>
+<li>possibly other inconsistencies …</li>
+</ul></li>
+<li><p>Inconsistencies in the <code>comments</code> column</p>
+<ul>
+<li><p>blanks are expressed differently: NA vs “NA” vs “—”.</p>
+<p>Note that in this column, other differences are more forgivable since comments are by their very nature written by people differently and are not expected to be in a standard form. However, there should be a standard way to express that there are no comments for a given row.</p></li>
+</ul></li>
 </ul>
 </section>
 </section>
@@ -212,9 +238,28 @@ and some names are in “last, first” format (e.g.&nbsp;“Brown, Tom”)</p><
 <ol type="1">
 <li><p>Answer all parts</p>
 <ol type="a">
-<li>Write R code using regex to identify all names that are in “last, first” format (e.g., “Schwartz, Joe”, including those with suffixes like “Sr.” or “Jr.”). Make sure that you allow for any number of spaces between the comma and the first name (including if there aren’t any spaces).</li>
-</ol></li>
-</ol>
+<li><p>Write R code using regex to identify all names that are in “last, first” format (e.g., “Schwartz, Joe”, including those with suffixes like “Sr.” or “Jr.”). Make sure that you allow for any number of spaces between the comma and the first name (including if there aren’t any spaces).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>schwartz, joe
+Conway, Ella Sr.
+Brown, Tom
+Martinez, Ana Sr.
+Johnson,Mary
+Cooper,  Sam
+Rodriguez, Eva Sr.
+Chen, Wei
+Garcia, Maria Jr.
+Brown, Tom
+Martinez, Ana Sr.
+Johnson,Mary
+Cooper,  Sam
+Rodriguez, Eva Sr.</code></pre>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -227,10 +272,14 @@ Click here for answer
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+,.+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+,.+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>schwartz, joe
 Conway, Ella Sr.
@@ -250,8 +299,24 @@ Rodriguez, Eva Sr.</code></pre>
 </div>
 </div>
 </div>
+</div></li>
+<li><p>Modify your answer to show only names that are strictly in<br>
+last, first form (without a suffix)</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>schwartz, joe
+Brown, Tom
+Johnson,Mary
+Cooper,  Sam
+Chen, Wei
+Brown, Tom
+Johnson,Mary
+Cooper,  Sam</code></pre>
 </div>
-<pre><code>b) Modify your answer to show only names that are strictly in last, first form (without a suffix) </code></pre>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -264,10 +329,14 @@ Click here for answer
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+, *[a-zA-Z]+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+, *[a-zA-Z]+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>schwartz, joe
 Brown, Tom
@@ -281,10 +350,27 @@ Cooper,  Sam</code></pre>
 </div>
 </div>
 </div>
+</div></li>
+</ol></li>
+<li><p>Write R code using regex to display only names that begin with “Dr” (with or without a period). Make sure that you don’t display names (e.g.&nbsp;“Drake Wilson”) that begin with Dr but who aren’t doctors.</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Dr. A. Davis
+Dr Jones
+Dr. B. Wilson
+Dr Smith
+Dr. C. Taylor
+Dr Chen
+Dr. Evans
+Dr. B. Wilson
+Dr Smith
+Dr. C. Taylor
+Dr Chen</code></pre>
 </div>
-<ol start="2" type="1">
-<li>Write R code using regex to display only names that begin with “Dr” (with or without a period). Make sure that you don’t display names (e.g.&nbsp;“Drake Wilson”) that begin with Dr but who aren’t doctors.</li>
-</ol>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -297,9 +383,14 @@ Click here for answer
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> <span class="fu">grep</span>(<span class="st">"^Dr[. ]"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">grep</span>(<span class="st">"^Dr[. ]"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Dr. A. Davis
 Dr Jones
@@ -316,8 +407,7 @@ Dr Chen</code></pre>
 </div>
 </div>
 </div>
-</div>
-<ol start="3" type="1">
+</div></li>
 <li><p>Write R code using regex to identify all names that are completely lowercase (no capitalization).</p></li>
 <li><p>Write R code using regex to identify all names that include a middle name or middle initial.</p></li>
 <li><p>Write R code using regex to identify all names that have a suffix (Sr.&nbsp;or Jr., with or without the period).</p></li>
