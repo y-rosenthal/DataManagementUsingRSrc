@@ -1,57 +1,26 @@
 # Regular Expression Practice - Cleaning Data
 
-## Instructions
 
-In this assignment, you'll practice using regular expressions to identify and clean messy data. The dataset below contains employee expense records with various inconsistencies in formatting.
-For example:
+```{r}
+#| echo: false
+#| output: false
 
-**Inconsistencies with employee names**
+# dataframes should display in the following width without "wrapping"
+options(width = 999)
+```
 
-- some names are in "first last" format (e.g. "Sue Smith")   
-  and some names are in "last, first" format (e.g. "Brown, Tom")
+## Introduction - about the data
 
-- Some names are Capitalized Properly, and some names aren't (e.g. "schwartz, joe")
-  e.g.   
-  
-- Numerous other formats, some are missing first names, some use periods, some don't,
-  etc. 
+In this assignment, you'll practice using regular expressions to identify and clean messy data. The dataset below contains employee expense records with various inconsistencies in formatting. ***Some*** of the inconsistencies are described below
+the data.
 
-**Inconsistencies with dates, amounts, category columns**
+### Employee expenses data
 
-The other columns have similar inconsistencies in formatting the data
+Click on the link below to see the full dataset.
+The first few rows of data are shown below the link.
 
-- date column: The following are all different forms of the exact same date.   
-  1/19/2023 , 2023-10-19 , 19/01/23
-  There are yet other forms. 
-
-- amount column:  Some values have $ signs, some don't, some have commas (e.g. 1,234.56)
-  some don't, some are missing the cents (e.g. "75"), some are written in words
-  (e.g. "five hundred")
-  
-- category column: the same categories are written differently 
-  (e.g. "food" vs "FOOD", "office supplies" vs "Office suppl." vs "OFFICE STUFF"
-  etc.
-  
-- comments column: blanks are expressed differently: NA vs "NA" vs "---".
-  Note that in this column, other differences are more forgivable since 
-  comments are by their very nature written by people differently and are 
-  not expected to be in a standard form. However, there should be a standard
-  way to express that there are no comments for a given row.
-
-Your task is to write R code using regular expressions to identify different patterns in the data.
-
-You may use any of the regex functions we covered in class:
-- `grep()`: Find patterns and return matching indices or values
-- `grepl()`: Find patterns and return TRUE/FALSE for each element
-- `sub()`: Replace the first occurrence of a pattern
-- `gsub()`: Replace all occurrences of a pattern
-- `strsplit()`: Split strings based on a pattern
-
-For each question:
-1. First try to solve it yourself
-2. If you get stuck, try to break down the pattern you're looking for into smaller pieces
-3. Test your solution with the sample data to make sure it catches all cases
-
+::: {.callout-note collapse="true"}
+## click here to see the full data set
 ```{r}
 library(tibble)
 expenses = tribble(
@@ -78,11 +47,104 @@ expenses = tribble(
   "Drake Wilson",        "3/14/24",      "500",         "Office supplies", "printer",
   "Dr Chen",           "3/2/23",       "3,456.78",      "office suppl.",   "laptop",
   "T. Wilson Jr",      "Jun 27 2024",  "500",           "Office supplies", "printer",
-  "Rodriguez, Eva Sr.","Mar 22, 2023", "$92.45",        "LUNCH",           "---"
+  "Rodriguez, Eva Sr.","Mar 22, 2023", "$92.45",        "LUNCH",           "---",
+    "Pat Williams",      "2/20/2023",    "150",           "travel",          "train ticket",
+  "Chen, Wei",         "20/02/2023",   "$89.50",        "Travel",          "hotel",
+  "jennifer ann martinez", "2023-02-21", "42",          "FOOD",            NA,
+  "Ms. B. Kim",        "21/2/2023",    "two hundred",  "office supplies", "stapler",
+  "J. Thompson",      "2/21/23",      "2,500.00",      "TRAVEL",          "flight",
+  "R. Patel Ph.D",     "21/2/23",      "75",            "office suppl.",   "notebooks",
+  "Garcia, Maria Jr.", "Feb 22, 2023", "$120.00",       "food",            "team dinner",
+  "Dr. Evans",         "3/01/2023",    "95.99",         "Office Stuff",    "supplies",
+  "Thompson III",      "3/05/2023",    "200",           "travel",          "conference",
+  "Brown, Tom",        "2/15/2023",    "42.50",         "food",            "dinner meeting",
+  "  Williams, Kate  ","02/15/2023",   "$89.99",        "office supplies", "toner cartridge",
+  "robert james lee",  "2023/02/15",   "75",            "Office Stuff",    NA,
+  "mike green jr.",  "2023/02/15",     "500",           "OFFICE SUPPLIES",    NA,
+  "Dr. B. Wilson",     "15/2/2023",    "two hundred",   "FOOD",            "NA",
+  "Dr Smith",          "2/15/23",      "2,345.67",      "office suppl.",   "monitor",
+  "R. Brown Jr",       "March 2, 2023","750",           "Office supplies", "filing cabinet",
+  "Martinez, Ana Sr.", "Feb 15, 2023", "$48.75",        "LUNCH",           "---",
+  "Johnson,Mary",      "3/22/2023",    "63.45",         "food",            "team lunch",
+  "Cooper,  Sam",       "03/22/2023",   "$156.00",      "office supplies", "office decoration",
+  "peter michael wu",  "2023-03-22",   "50",            "Office Stuff",    NA,
+  "Dr. C. Taylor",     "2/3/2023",     "one thousand",  "FOOD",            "NA",
+  "Drake Wilson",        "3/14/24",      "500",         "Office supplies", "printer",
+  "Dr Chen",           "3/2/23",       "3,456.78",      "office suppl.",   "laptop",
+  "T. Wilson Jr",      "Jun 27 2024",  "500",           "Office supplies", "printer",
+  "Rodriguez, Eva Sr.","Mar 22, 2023", "$92.45",        "LUNCH",           "---",
+
 )
+expenses = as.data.frame(expenses)
+```
+:::
+
+
+```{r}
+numrows = 10
+cat("There are a total of ", nrow(expenses), " rows. The following is 
+    just the first ", numrows, " rows.", sep="")
+head(expenses, 10)
 ```
 
-## Questions
+- Inconsistencies with the name entries
+  * some names are in "first last" (e.g. "Sue Smith") format and 
+    some names are in "last, first" format (e.g. "Brown, Tom")
+  * some names are capitalized, some aren't
+  * some names have middle include middle names, some don't
+  * some names include titles, some don't
+  * some names include a title, e.g. Dr. , while some don't
+  * some of the titles contain a period after the title, some don't
+  * some names include a suffix (e.g. Jr), some don't
+  * some names are missing first names
+  * some names use periods (e.g. J. Thompson), some don't
+  * possibly other inconsistencies ...
+
+  
+- Inconsistencies with dates
+  * some dates are in mm/dd/yyyy format (USA style)
+  * some dates are in dd/mm/yyyy format (European style)
+  * some dates are in yyyy-mm-dd format (standard for many computer systems)
+  * some dates use 4 digit years, some use 2 digit years
+  * some dates have a leading zero for single digit days or months
+  * possibly other inconsistencies ...
+
+- Inconsistencies in the `amount` column
+  * some values have $ signs, some don't, 
+  * some have commas (e.g. 1,234.56) some don't
+  * some are missing the cents (e.g. "75")
+  * some are written in words (e.g. "five hundred")
+  * possibly other inconsistencies ...
+
+- Inconsistencies in the `category` column
+  * the same categories are written differently (e.g. "food" vs "FOOD", 
+    "office supplies" vs "Office suppl." vs "OFFICE STUFF")
+  * possibly other inconsistencies ...
+
+- Inconsistencies in the `comments` column
+  * blanks are expressed differently: NA vs "NA" vs "---".
+  
+    Note that in this column, other differences are more forgivable since 
+    comments are by their very nature written by people differently and are 
+    not expected to be in a standard form. However, there should be a standard
+    way to express that there are no comments for a given row.
+
+
+## Questions - PART I
+
+Your task is to write R code using regular expressions to identify different patterns in the data.
+
+You may use any of the regex functions we covered in class:
+- `grep()`: Find patterns and return matching indices or values
+- `grepl()`: Find patterns and return TRUE/FALSE for each element
+- `sub()`: Replace the first occurrence of a pattern
+- `gsub()`: Replace all occurrences of a pattern
+- `strsplit()`: Split strings based on a pattern
+
+For each question:
+1. First try to solve it yourself
+2. If you get stuck, try to break down the pattern you're looking for into smaller pieces
+3. Test your solution with the sample data to make sure it catches all cases
 
 ### Name Format Questions
 
@@ -96,7 +158,9 @@ expenses = tribble(
 ::: {.callout-note collapse="true"}
 ### Click here for answer
 ```{r}
-grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
+answer = 
+  grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
+cat(answer, sep="\n")
 ```
 :::
 
@@ -105,7 +169,9 @@ grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
 ::: {.callout-note collapse="true"}
 ### Click here for answer
 ```{r}
-grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
+answer = 
+  grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
+cat(answer, sep="\n")
 ```
 :::
 
@@ -115,9 +181,10 @@ grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
 
 ::: {.callout-note collapse="true"}
 ### Click here for answer
-   ```{r}
-   grep("^Dr[. ]", expenses$employee, value=TRUE)
-   ```
+```{r}
+answer = grep("^Dr[. ]", expenses$employee, value=TRUE)
+cat(answer, sep="\n")
+```
 :::
 
 3. Write R code using regex to identify all names that are completely lowercase (no capitalization).

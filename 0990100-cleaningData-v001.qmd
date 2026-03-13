@@ -46,6 +46,7 @@ expenses = tribble(
   "R. Patel Ph.D",     "21/2/23",      "75",            "office suppl.",   "notebooks",
   "Garcia, Maria Jr.", "Feb 22, 2023", "$120.00",       "food",            "team dinner",
   "Dr. Evans",         "3/01/2023",    "95.99",         "Office Stuff",    "supplies",
+  "Thompson III",      "3/05/2023",    "200",           "travel",          "conference",
   "Brown, Tom",        "2/15/2023",    "42.50",         "food",            "dinner meeting",
   "  Williams, Kate  ","02/15/2023",   "$89.99",        "office supplies", "toner cartridge",
   "robert james lee",  "2023/02/15",   "75",            "Office Stuff",    NA,
@@ -166,26 +167,26 @@ to_sentence_case <- function(text) {
 #   Arguments:  namePart = single string, no leading/trailing title (e.g. "Jones Jr")
 #   Returns:    TRUE if name ends with a suffix like Jr, Sr, III, II, IV.
 #   Example:    has_suffix("Jones Jr")  ->  TRUE
-# Regex: one or more spaces, then (Jr or Sr or III or II or IV), then optional spaces at end.
-suffix_regex <- paste0(
-  "\\s+",           # one or more spaces before suffix
-  "(Jr\\.?|Sr\\.?|III|II|IV)",  # suffix (optional period after Jr/Sr)
-  "\\s*$"           # optional spaces at end of string
-)
+# Suffix pattern: one of Jr/Sr/III/II/IV at end. Require at least one space before suffix
+# so that "Thompson III" correctly captures "III" (R's regex can otherwise match "II" inside "III").
+suffix_pattern <- "(Jr\\.?|Sr\\.?|III|II|IV)"
+suffix_at_end_regex <- paste0("\\s+", suffix_pattern, "\\s*$")
 has_suffix <- function(namePart) {
-  grepl(suffix_regex, namePart, ignore.case = TRUE)
+  grepl(suffix_at_end_regex, namePart, ignore.case = TRUE)
 }
 
 # extract_suffix(namePart)
 #   Arguments:  namePart = string that may end with a suffix
 #   Returns:    list of two: suffix (string or NA), and nameWithSuffixRemoved (string).
 #   Example:    extract_suffix("Conway, Ella Sr.")  ->  list(suffix = "Sr", nameWithSuffixRemoved = "Conway, Ella")
+#   Uses two groups (name)(suffix) so the suffix is captured correctly; space before suffix required.
 extract_suffix <- function(namePart) {
   if (!has_suffix(namePart)) {
     return(list(suffix = NA, nameWithSuffixRemoved = trimws(namePart)))
   }
-  suffix <- sub(paste0(".*", suffix_regex), "\\1", namePart, ignore.case = TRUE)
-  nameWithoutSuffix <- sub(suffix_regex, "", namePart, ignore.case = TRUE)
+  # Two groups: everything before the suffix, and the suffix. Requiring \s+ before suffix fixes III vs II.
+  nameWithoutSuffix <- sub(paste0("^(.*)\\s+", suffix_pattern, "\\s*$"), "\\1", namePart, ignore.case = TRUE)
+  suffix <- sub(paste0("^.*\\s+", suffix_pattern, "\\s*$"), "\\1", namePart, ignore.case = TRUE)
   list(suffix = strip_periods(suffix), nameWithSuffixRemoved = trimws(nameWithoutSuffix))
 }
 
