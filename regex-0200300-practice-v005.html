@@ -84,6 +84,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="regular-expression-practice---cleaning-data" class="level1">
 <h1>Regular Expression Practice - Cleaning Data</h1>
+<style>
+/* Style all level-4 headings */
+h4 {
+  background-color: #f2f2f2;   /* light grey */
+  padding: 0.4em 0.6em;
+  margin-left: -1rem;          /* extend to container edges */
+  margin-right: -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+</style>
 <section id="introduction---about-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="introduction---about-the-data">Introduction - about the data</h2>
 <p>In this assignment, you’ll practice using regular expressions to identify and clean messy data. The dataset below contains employee expense records with various inconsistencies in formatting. <strong><em>Some</em></strong> of the inconsistencies are described below the data.</p>
@@ -228,17 +239,16 @@ click here to see the full data set
 </ul>
 </section>
 </section>
-<section id="questions---part-i" class="level2">
-<h2 class="anchored" data-anchor-id="questions---part-i">Questions - PART I</h2>
+<section id="questions---part-i-writing-code" class="level2">
+<h2 class="anchored" data-anchor-id="questions---part-i-writing-code">Questions - PART I (writing code)</h2>
 <p>Your task is to write R code using regular expressions to identify different patterns in the data.</p>
 <p>You may use any of the regex functions we covered in class: - <code>grep()</code>: Find patterns and return matching indices or values - <code>grepl()</code>: Find patterns and return TRUE/FALSE for each element - <code>sub()</code>: Replace the first occurrence of a pattern - <code>gsub()</code>: Replace all occurrences of a pattern - <code>strsplit()</code>: Split strings based on a pattern</p>
 <p>For each question: 1. First try to solve it yourself 2. If you get stuck, try to break down the pattern you’re looking for into smaller pieces 3. Test your solution with the sample data to make sure it catches all cases</p>
 <section id="name-format-questions" class="level3">
 <h3 class="anchored" data-anchor-id="name-format-questions">Name Format Questions</h3>
-<ol type="1">
-<li><p>Answer all parts</p>
-<ol type="a">
-<li><p>Write R code using regex to identify all names that are in “last, first” format (e.g., “Schwartz, Joe”, including those with suffixes like “Sr.” or “Jr.”). Make sure that you allow for any number of spaces between the comma and the first name (including if there aren’t any spaces).</p>
+<section id="question-1a" class="level4">
+<h4 class="anchored" data-anchor-id="question-1a">Question 1a</h4>
+<p>Write R code using regex to identify all names that are in “last, first” format (e.g., “Schwartz, Joe”, including those with suffixes like “Sr.” or “Jr.”). Make sure that you allow for any number of spaces between the comma and the first name (including if there aren’t any spaces).</p>
 <!-- generate answer but don't show this code -->
 <p>Given the data above, your output should show the following:</p>
 <!-- show the values output by the answer code -->
@@ -275,7 +285,7 @@ Click here for answer
 <!-- show how to generate answer -->
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+,.+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+,.+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- show the output -->
 <div class="cell">
@@ -299,8 +309,11 @@ Rodriguez, Eva Sr.</code></pre>
 </div>
 </div>
 </div>
-</div></li>
-<li><p>Modify your answer to show only names that are strictly in<br>
+</div>
+</section>
+<section id="question-1b" class="level4">
+<h4 class="anchored" data-anchor-id="question-1b">Question 1b</h4>
+<p>Modify your answer to show only names that are strictly in<br>
 last, first form (without a suffix)</p>
 <!-- generate answer but don't show this code -->
 <p>Given the data above, your output should show the following:</p>
@@ -332,7 +345,7 @@ Click here for answer
 <!-- show how to generate answer -->
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+, *[a-zA-Z]+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"^[a-zA-Z]+, *[a-zA-Z]+$"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- show the output -->
 <div class="cell">
@@ -350,9 +363,11 @@ Cooper,  Sam</code></pre>
 </div>
 </div>
 </div>
-</div></li>
-</ol></li>
-<li><p>Write R code using regex to display only names that begin with “Dr” (with or without a period). Make sure that you don’t display names (e.g.&nbsp;“Drake Wilson”) that begin with Dr but who aren’t doctors.</p>
+</div>
+</section>
+<section id="question-2" class="level4">
+<h4 class="anchored" data-anchor-id="question-2">Question 2</h4>
+<p>Write R code using regex to display only names that begin with “Dr” (with or without a period). Make sure that you don’t display names (e.g.&nbsp;“Drake Wilson”) that begin with Dr but who aren’t doctors.</p>
 <!-- generate answer but don't show this code -->
 <p>Given the data above, your output should show the following:</p>
 <!-- show the values output by the answer code -->
@@ -386,7 +401,7 @@ Click here for answer
 <!-- show how to generate answer -->
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">grep</span>(<span class="st">"^Dr[. ]"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^Dr[. ]"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- show the output -->
 <div class="cell">
@@ -407,52 +422,1974 @@ Dr Chen</code></pre>
 </div>
 </div>
 </div>
-</div></li>
-<li><p>Write R code using regex to identify all names that are completely lowercase (no capitalization).</p></li>
-<li><p>Write R code using regex to identify all names that include a middle name or middle initial.</p></li>
-<li><p>Write R code using regex to identify all names that have a suffix (Sr.&nbsp;or Jr., with or without the period).</p></li>
-</ol>
+</div>
+</section>
+<section id="question-3" class="level4">
+<h4 class="anchored" data-anchor-id="question-3">Question 3</h4>
+<p>Write R code using regex to identify all names that are completely lowercase (no capitalization).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>schwartz, joe
+mike david harris
+robert james lee
+mike green jr.
+peter michael wu
+jennifer ann martinez
+robert james lee
+mike green jr.
+peter michael wu</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"^[a-z][a-z. ,]*$"</span>, <span class="fu">trimws</span>(expenses<span class="sc">$</span>employee), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>schwartz, joe
+mike david harris
+robert james lee
+mike green jr.
+peter michael wu
+jennifer ann martinez
+robert james lee
+mike green jr.
+peter michael wu</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-4" class="level4">
+<h4 class="anchored" data-anchor-id="question-4">Question 4</h4>
+<p>Write R code using regex to identify all names that include a middle name or middle initial.</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>mike david harris
+Dr. A. Davis
+S. Jones Jr
+Conway, Ella Sr.
+robert james lee
+mike green jr.
+Dr. B. Wilson
+R. Brown Jr
+Martinez, Ana Sr.
+peter michael wu
+Dr. C. Taylor
+T. Wilson Jr
+Rodriguez, Eva Sr.
+jennifer ann martinez
+Ms. B. Kim
+R. Patel Ph.D
+Garcia, Maria Jr.
+robert james lee
+mike green jr.
+Dr. B. Wilson
+R. Brown Jr
+Martinez, Ana Sr.
+peter michael wu
+Dr. C. Taylor
+T. Wilson Jr
+Rodriguez, Eva Sr.</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"( [A-Za-z]</span><span class="sc">\\</span><span class="st">. |([^ ]+ ){2,}[^ ]+)"</span>, expenses<span class="sc">$</span>employee, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mike david harris
+Dr. A. Davis
+S. Jones Jr
+Conway, Ella Sr.
+robert james lee
+mike green jr.
+Dr. B. Wilson
+R. Brown Jr
+Martinez, Ana Sr.
+peter michael wu
+Dr. C. Taylor
+T. Wilson Jr
+Rodriguez, Eva Sr.
+jennifer ann martinez
+Ms. B. Kim
+R. Patel Ph.D
+Garcia, Maria Jr.
+robert james lee
+mike green jr.
+Dr. B. Wilson
+R. Brown Jr
+Martinez, Ana Sr.
+peter michael wu
+Dr. C. Taylor
+T. Wilson Jr
+Rodriguez, Eva Sr.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-5" class="level4">
+<h4 class="anchored" data-anchor-id="question-5">Question 5</h4>
+<p>Write R code using regex to identify all names that have a suffix (Sr.&nbsp;or Jr., with or without the period).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>S. Jones Jr
+Conway, Ella Sr.
+R. Brown Jr
+Martinez, Ana Sr.
+T. Wilson Jr
+Rodriguez, Eva Sr.
+Garcia, Maria Jr.
+R. Brown Jr
+Martinez, Ana Sr.
+T. Wilson Jr
+Rodriguez, Eva Sr.</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"(Jr</span><span class="sc">\\</span><span class="st">.?|Sr</span><span class="sc">\\</span><span class="st">.?) *$"</span>, <span class="fu">trimws</span>(expenses<span class="sc">$</span>employee), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>S. Jones Jr
+Conway, Ella Sr.
+R. Brown Jr
+Martinez, Ana Sr.
+T. Wilson Jr
+Rodriguez, Eva Sr.
+Garcia, Maria Jr.
+R. Brown Jr
+Martinez, Ana Sr.
+T. Wilson Jr
+Rodriguez, Eva Sr.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="date-format-questions" class="level3">
 <h3 class="anchored" data-anchor-id="date-format-questions">Date Format Questions</h3>
-<ol start="6" type="1">
-<li><p>Write R code using regex to identify dates in the MM/DD/YYYY format (with or without leading zeros), ensuring valid months (1-12) and days (1-31).</p></li>
-<li><p>Write R code using regex to identify dates in the European format (DD/MM/YYYY or DD/MM/YY), ensuring valid days and months.</p></li>
-<li><p>Write R code using regex to identify dates in ISO format (YYYY-MM-DD).</p></li>
-<li><p>Write R code using regex to identify dates that use written month names (e.g., “Jan 19, 2023”, “Feb 15, 2023”).</p></li>
-</ol>
+<section id="question-6" class="level4">
+<h4 class="anchored" data-anchor-id="question-6">Question 6</h4>
+<p>Write R code using regex to identify dates in the MM/DD/YYYY format (with or without leading zeros), ensuring valid months (1-12) and days (1-31).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>1/19/2023
+01/19/2023
+1/19/23
+2/15/2023
+02/15/2023
+2/15/23
+3/22/2023
+03/22/2023
+2/3/2023
+3/14/24
+3/2/23
+2/20/2023
+2/21/23
+3/01/2023
+3/05/2023
+2/15/2023
+02/15/2023
+2/15/23
+3/22/2023
+03/22/2023
+2/3/2023
+3/14/24
+3/2/23</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"^(0?[1-9]|1[0-2])/(0?[1-9]|[12][0-9]|3[01])/([0-9]{4}|[0-9]{2})$"</span>, expenses<span class="sc">$</span>date, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1/19/2023
+01/19/2023
+1/19/23
+2/15/2023
+02/15/2023
+2/15/23
+3/22/2023
+03/22/2023
+2/3/2023
+3/14/24
+3/2/23
+2/20/2023
+2/21/23
+3/01/2023
+3/05/2023
+2/15/2023
+02/15/2023
+2/15/23
+3/22/2023
+03/22/2023
+2/3/2023
+3/14/24
+3/2/23</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-7" class="level4">
+<h4 class="anchored" data-anchor-id="question-7">Question 7</h4>
+<p>Write R code using regex to identify dates in the European format (DD/MM/YYYY or DD/MM/YY), ensuring valid days and months.</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>19/1/2023
+19/01/23
+15/2/2023
+2/3/2023
+3/2/23
+20/02/2023
+21/2/2023
+21/2/23
+3/01/2023
+3/05/2023
+15/2/2023
+2/3/2023
+3/2/23</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/([0-9]{4}|[0-9]{2})$"</span>, expenses<span class="sc">$</span>date, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>19/1/2023
+19/01/23
+15/2/2023
+2/3/2023
+3/2/23
+20/02/2023
+21/2/2023
+21/2/23
+3/01/2023
+3/05/2023
+15/2/2023
+2/3/2023
+3/2/23</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-8" class="level4">
+<h4 class="anchored" data-anchor-id="question-8">Question 8</h4>
+<p>Write R code using regex to identify dates in ISO format (YYYY-MM-DD).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>2023-01-19
+2023-03-22
+2023-02-21
+2023-03-22</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"</span>, expenses<span class="sc">$</span>date, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2023-01-19
+2023-03-22
+2023-02-21
+2023-03-22</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-9" class="level4">
+<h4 class="anchored" data-anchor-id="question-9">Question 9</h4>
+<p>Write R code using regex to identify dates that use written month names (e.g., “Jan 19, 2023”, “Feb 15, 2023”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Jan 19, 2023
+March 2, 2023
+Feb 15, 2023
+Jun 27 2024
+Mar 22, 2023
+Feb 22, 2023
+March 2, 2023
+Feb 15, 2023
+Jun 27 2024
+Mar 22, 2023</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">grep</span>(<span class="st">"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* [0-9]{1,2},? [0-9]{4}"</span>, expenses<span class="sc">$</span>date, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Jan 19, 2023
+March 2, 2023
+Feb 15, 2023
+Jun 27 2024
+Mar 22, 2023
+Feb 22, 2023
+March 2, 2023
+Feb 15, 2023
+Jun 27 2024
+Mar 22, 2023</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="amount-format-questions" class="level3">
 <h3 class="anchored" data-anchor-id="amount-format-questions">Amount Format Questions</h3>
-<ol start="10" type="1">
-<li><p>Write R code using regex to identify amounts that include a dollar sign (e.g., “$27.00”, “$156.00”).</p></li>
-<li><p>Write R code using regex to identify amounts that are written out in words (e.g., “five hundred”, “one thousand”).</p></li>
-<li><p>Write R code using regex to identify amounts that include thousand separators (commas) (e.g., “1,234.56”, “2,345.67”).</p></li>
-<li><p>Write R code using regex to identify amounts that are whole numbers without decimal places (e.g., “25”, “1000”).</p></li>
-</ol>
+<section id="question-10" class="level4">
+<h4 class="anchored" data-anchor-id="question-10">Question 10</h4>
+<p>Write R code using regex to identify amounts that include a dollar sign (e.g., “$27.00”, “$156.00”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>$27.00
+$35.23
+$89.99
+$48.75
+$156.00
+$92.45
+$89.50
+$120.00
+$89.99
+$48.75
+$156.00
+$92.45</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">$"</span>, expenses<span class="sc">$</span>amount, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$27.00
+$35.23
+$89.99
+$48.75
+$156.00
+$92.45
+$89.50
+$120.00
+$89.99
+$48.75
+$156.00
+$92.45</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-11" class="level4">
+<h4 class="anchored" data-anchor-id="question-11">Question 11</h4>
+<p>Write R code using regex to identify amounts that are written out in words (e.g., “five hundred”, “one thousand”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>five hundred
+two hundred
+one thousand
+two hundred
+two hundred
+one thousand</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[a-z ]+$"</span>, expenses<span class="sc">$</span>amount, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>five hundred
+two hundred
+one thousand
+two hundred
+two hundred
+one thousand</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-12" class="level4">
+<h4 class="anchored" data-anchor-id="question-12">Question 12</h4>
+<p>Write R code using regex to identify amounts that include thousand separators (commas) (e.g., “1,234.56”, “2,345.67”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>1,234.56
+2,345.67
+3,456.78
+2,500.00
+2,345.67
+3,456.78</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">",[0-9]{3}"</span>, expenses<span class="sc">$</span>amount, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1,234.56
+2,345.67
+3,456.78
+2,500.00
+2,345.67
+3,456.78</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-13" class="level4">
+<h4 class="anchored" data-anchor-id="question-13">Question 13</h4>
+<p>Write R code using regex to identify amounts that are whole numbers without decimal places (e.g., “25”, “1000”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>25
+1000
+75
+500
+750
+50
+500
+500
+150
+42
+75
+200
+75
+500
+750
+50
+500
+500</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[0-9]+$"</span>, expenses<span class="sc">$</span>amount, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>25
+1000
+75
+500
+750
+50
+500
+500
+150
+42
+75
+200
+75
+500
+750
+50
+500
+500</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="category-format-questions" class="level3">
 <h3 class="anchored" data-anchor-id="category-format-questions">Category Format Questions</h3>
-<ol start="14" type="1">
-<li><p>Write R code using regex to identify categories that are entirely uppercase (e.g., “FOOD”, “LUNCH”).</p></li>
-<li><p>Write R code using regex to identify all variations of “office supplies” (including abbreviated forms and different capitalizations).</p></li>
-</ol>
+<section id="question-14" class="level4">
+<h4 class="anchored" data-anchor-id="question-14">Question 14</h4>
+<p>Write R code using regex to identify categories that are entirely uppercase (e.g., “FOOD”, “LUNCH”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>FOOD
+LUNCH
+OFFICE SUPPLIES
+FOOD
+LUNCH
+OFFICE STUFF
+FOOD
+LUNCH
+FOOD
+TRAVEL
+OFFICE SUPPLIES
+FOOD
+LUNCH
+FOOD
+LUNCH</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"^[A-Z ]+$"</span>, expenses<span class="sc">$</span>category, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>FOOD
+LUNCH
+OFFICE SUPPLIES
+FOOD
+LUNCH
+OFFICE STUFF
+FOOD
+LUNCH
+FOOD
+TRAVEL
+OFFICE SUPPLIES
+FOOD
+LUNCH
+FOOD
+LUNCH</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-15" class="level4">
+<h4 class="anchored" data-anchor-id="question-15">Question 15</h4>
+<p>Write R code using regex to identify all variations of “office supplies” (including abbreviated forms and different capitalizations).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>office supplies
+Office Stuff
+office suppl.
+Office supplies
+office supplies
+Office Stuff
+OFFICE SUPPLIES
+office suppl.
+Office supplies
+office supplies
+OFFICE STUFF
+Office supplies
+office suppl.
+Office supplies
+office supplies
+office suppl.
+Office Stuff
+office supplies
+Office Stuff
+OFFICE SUPPLIES
+office suppl.
+Office supplies
+office supplies
+Office Stuff
+Office supplies
+office suppl.
+Office supplies</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"office (suppl|stuff|supplies)"</span>, expenses<span class="sc">$</span>category, <span class="at">ignore.case=</span><span class="cn">TRUE</span>, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>office supplies
+Office Stuff
+office suppl.
+Office supplies
+office supplies
+Office Stuff
+OFFICE SUPPLIES
+office suppl.
+Office supplies
+office supplies
+OFFICE STUFF
+Office supplies
+office suppl.
+Office supplies
+office supplies
+office suppl.
+Office Stuff
+office supplies
+Office Stuff
+OFFICE SUPPLIES
+office suppl.
+Office supplies
+office supplies
+Office Stuff
+Office supplies
+office suppl.
+Office supplies</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="comment-format-questions" class="level3">
 <h3 class="anchored" data-anchor-id="comment-format-questions">Comment Format Questions</h3>
-<ol start="16" type="1">
-<li><p>Write R code using regex to identify comments that are either NA, “NA”, or consist entirely of dashes (e.g “—” and “—–”).</p></li>
-<li><p>Write R code using regex to identify comments that describe meetings (containing words like “lunch”, “dinner”, “client”, “team”).</p></li>
-</ol>
+<section id="question-16" class="level4">
+<h4 class="anchored" data-anchor-id="question-16">Question 16</h4>
+<p>Write R code using regex to identify comments that are either NA, “NA”, or consist entirely of dashes (e.g “—” and “—–”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>NA
+NA
+---
+NA
+NA
+NA
+---
+NA
+NA
+---
+NA
+NA
+NA
+NA
+---
+NA
+NA
+---</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cmt = as.character(expenses$comments)</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co">#idx = is.na(expenses$comments) | grepl("^NA$", cmt) | grepl("^[-]+$", cmt)</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>tf <span class="ot">=</span> <span class="fu">is.na</span>(expenses<span class="sc">$</span>comments) <span class="sc">|</span> </span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">grepl</span>(<span class="st">"^NA$"</span>, expenses<span class="sc">$</span>comments) <span class="sc">|</span> </span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>     <span class="fu">grepl</span>(<span class="st">"^[-]+$"</span>, expenses<span class="sc">$</span>comments)</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> expenses<span class="sc">$</span>comments[tf]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NA
+NA
+---
+NA
+NA
+NA
+---
+NA
+NA
+---
+NA
+NA
+NA
+NA
+---
+NA
+NA
+---</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-17" class="level4">
+<h4 class="anchored" data-anchor-id="question-17">Question 17</h4>
+<p>Write R code using regex to identify comments that describe meetings (containing words like “lunch”, “dinner”, “client”, “team”).</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>lunch with client
+dinner meeting
+team lunch
+team dinner
+dinner meeting
+team lunch</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> </span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span>(<span class="st">"(lunch|dinner|client|team)"</span>, expenses<span class="sc">$</span>comments, <span class="at">ignore.case=</span><span class="cn">TRUE</span>, <span class="at">value=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lunch with client
+dinner meeting
+team lunch
+team dinner
+dinner meeting
+team lunch</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="challenge-questions" class="level3">
 <h3 class="anchored" data-anchor-id="challenge-questions">Challenge Questions</h3>
-<ol start="18" type="1">
-<li><p>Write R code using regex to extract just the last name from any name format in the employee column. Your solution should work for all name formats in the dataset.</p></li>
-<li><p>Write R code using regex to convert all dates to YYYY-MM-DD format, regardless of their original format. Your solution should handle all date formats in the dataset.</p></li>
-<li><p>Write R code using regex to standardize all amounts to a decimal number format (e.g., “1234.56”), removing dollar signs, commas, and converting written amounts to numbers.</p></li>
-</ol>
+<section id="question-18" class="level4">
+<h4 class="anchored" data-anchor-id="question-18">Question 18</h4>
+<p>Write R code using regex to extract just the last name from any name format in the employee column. Your solution should work for all name formats in the dataset.</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Smith
+schwartz
+harris
+Davis
+Jones
+Jones
+Conway
+Brown
+Williams
+lee
+green
+Wilson
+Smith
+Brown
+Martinez
+Johnson
+Cooper
+wu
+Taylor
+Wilson
+Chen
+Wilson
+Rodriguez
+Williams
+Chen
+martinez
+Kim
+Thompson
+Patel
+Garcia
+Evans
+Thompson
+Brown
+Williams
+lee
+green
+Wilson
+Smith
+Brown
+Martinez
+Johnson
+Cooper
+wu
+Taylor
+Wilson
+Chen
+Wilson
+Rodriguez</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">=</span> <span class="fu">trimws</span>(expenses<span class="sc">$</span>employee)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Strip trailing suffixes (Jr, Sr, Ph.D, III, II, IV) so "last word" is the surname (case-insensitive)</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>suffix_pat <span class="ot">=</span> <span class="st">"</span><span class="sc">\\</span><span class="st">s*(Jr</span><span class="sc">\\</span><span class="st">.?|Sr</span><span class="sc">\\</span><span class="st">.?|Ph</span><span class="sc">\\</span><span class="st">.?D</span><span class="sc">\\</span><span class="st">.?|III|IV|II)</span><span class="sc">\\</span><span class="st">s*$"</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>name_clean <span class="ot">=</span> <span class="fu">trimws</span>(<span class="fu">sub</span>(suffix_pat, <span class="st">""</span>, name, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>last_name <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"^[^,]+,"</span>, name),</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trimws</span>(<span class="fu">sub</span>(<span class="st">"^([^,]+),.*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, name)),</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sub</span>(<span class="st">".*</span><span class="sc">\\</span><span class="st">s+([^ ]+)$"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, name_clean))</span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove any suffix from last_name (e.g. "Smith Jr" in comma format)</span></span>
+<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> <span class="fu">trimws</span>(<span class="fu">sub</span>(suffix_pat, <span class="st">""</span>, last_name, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Smith
+schwartz
+harris
+Davis
+Jones
+Jones
+Conway
+Brown
+Williams
+lee
+green
+Wilson
+Smith
+Brown
+Martinez
+Johnson
+Cooper
+wu
+Taylor
+Wilson
+Chen
+Wilson
+Rodriguez
+Williams
+Chen
+martinez
+Kim
+Thompson
+Patel
+Garcia
+Evans
+Thompson
+Brown
+Williams
+lee
+green
+Wilson
+Smith
+Brown
+Martinez
+Johnson
+Cooper
+wu
+Taylor
+Wilson
+Chen
+Wilson
+Rodriguez</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
+<section id="question-19" class="level4">
+<h4 class="anchored" data-anchor-id="question-19">Question 19</h4>
+<p>Write R code using regex to convert all dates to YYYY-MM-DD format, regardless of their original format. Your solution should handle all date formats in the dataset.</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>2023-01-19
+2023-01-19
+NA
+NA
+23-01-19
+NA
+NA
+2023-02-15
+2023-02-15
+NA
+NA
+NA
+23-02-15
+NA
+NA
+2023-03-22
+2023-03-22
+NA
+2023-02-03
+24-03-14
+23-03-02
+NA
+NA
+2023-02-20
+NA
+NA
+NA
+23-02-21
+NA
+NA
+2023-03-01
+2023-03-05
+2023-02-15
+2023-02-15
+NA
+NA
+NA
+23-02-15
+NA
+NA
+2023-03-22
+2023-03-22
+NA
+2023-02-03
+24-03-14
+23-03-02
+NA
+NA</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> <span class="fu">format</span>(</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.Date</span>(expenses<span class="sc">$</span>date,</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tryFormats =</span> <span class="fu">c</span>(<span class="st">"%Y-%m-%d"</span>, <span class="st">"%m/%d/%Y"</span>, <span class="st">"%m/%d/%y"</span>, <span class="st">"%d/%m/%Y"</span>, <span class="st">"%d/%m/%y"</span>,</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"%B %d, %Y"</span>, <span class="st">"%b %d, %Y"</span>, <span class="st">"%B %d %Y"</span>, <span class="st">"%b %d %Y"</span>, <span class="st">"%Y/%m/%d"</span>)),</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"%Y-%m-%d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2023-01-19
+2023-01-19
+NA
+NA
+23-01-19
+NA
+NA
+2023-02-15
+2023-02-15
+NA
+NA
+NA
+23-02-15
+NA
+NA
+2023-03-22
+2023-03-22
+NA
+2023-02-03
+24-03-14
+23-03-02
+NA
+NA
+2023-02-20
+NA
+NA
+NA
+23-02-21
+NA
+NA
+2023-03-01
+2023-03-05
+2023-02-15
+2023-02-15
+NA
+NA
+NA
+23-02-15
+NA
+NA
+2023-03-22
+2023-03-22
+NA
+2023-02-03
+24-03-14
+23-03-02
+NA
+NA</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="question-20" class="level4">
+<h4 class="anchored" data-anchor-id="question-20">Question 20</h4>
+<p>Write R code using regex to standardize all amounts to a decimal number format (e.g., “1234.56”), removing dollar signs, commas, and converting written amounts to numbers.</p>
+<!-- generate answer but don't show this code -->
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  59.99
+  27.00
+  25.00
+ 500.00
+1234.56
+1000.00
+  35.23
+  42.50
+  89.99
+  75.00
+ 500.00
+ 200.00
+2345.67
+ 750.00
+  48.75
+  63.45
+ 156.00
+  50.00
+1000.00
+ 500.00
+3456.78
+ 500.00
+  92.45
+ 150.00
+  89.50
+  42.00
+ 200.00
+2500.00
+  75.00
+ 120.00
+  95.99
+ 200.00
+  42.50
+  89.99
+  75.00
+ 500.00
+ 200.00
+2345.67
+ 750.00
+  48.75
+  63.45
+ 156.00
+  50.00
+1000.00
+ 500.00
+3456.78
+ 500.00
+  92.45</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>amt <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">"[$,]"</span>, <span class="st">""</span>, expenses<span class="sc">$</span>amount)</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>amt <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">"one thousand"</span>, <span class="st">"1000"</span>, amt, <span class="at">ignore.case=</span><span class="cn">TRUE</span>)</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>amt <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">"five hundred"</span>, <span class="st">"500"</span>, amt, <span class="at">ignore.case=</span><span class="cn">TRUE</span>)</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>amt <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">"two hundred"</span>, <span class="st">"200"</span>, amt, <span class="at">ignore.case=</span><span class="cn">TRUE</span>)</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>answer <span class="ot">=</span> <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">as.numeric</span>(amt), <span class="dv">2</span>), <span class="at">nsmall=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- show the output -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(answer, <span class="at">sep=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  59.99
+  27.00
+  25.00
+ 500.00
+1234.56
+1000.00
+  35.23
+  42.50
+  89.99
+  75.00
+ 500.00
+ 200.00
+2345.67
+ 750.00
+  48.75
+  63.45
+ 156.00
+  50.00
+1000.00
+ 500.00
+3456.78
+ 500.00
+  92.45
+ 150.00
+  89.50
+  42.00
+ 200.00
+2500.00
+  75.00
+ 120.00
+  95.99
+ 200.00
+  42.50
+  89.99
+  75.00
+ 500.00
+ 200.00
+2345.67
+ 750.00
+  48.75
+  63.45
+ 156.00
+  50.00
+1000.00
+ 500.00
+3456.78
+ 500.00
+  92.45</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="questions---part-ii-project" class="level2">
+<h2 class="anchored" data-anchor-id="questions---part-ii-project">Questions - PART II (project)</h2>
+<p>Write a function named cleanup that takes the dataframe as an argument and returns a cleaned dataframe. Each column should have a consistent format for all columns. Do not lose any data in the process.</p>
+<p>Split the <code>employee</code> column into the following fields (and remove the original single <code>employee</code> column):</p>
+<ul>
+<li><strong>employeeFullName</strong> — a paste of all the name components below (title, first, middle, last, suffix)</li>
+<li><strong>employeeTitle</strong> — e.g.&nbsp;Dr, Ms (no period)</li>
+<li><strong>employeeFirst</strong> — first name or initial</li>
+<li><strong>employeeMiddle</strong> — middle name or initial (NA if none)</li>
+<li><strong>employeeLast</strong> — last name or initial</li>
+<li><strong>employeeSuffix</strong> — e.g.&nbsp;Sr, Jr (no period; NA if none)</li>
+</ul>
+<p>Leave out periods from all name parts (e.g.&nbsp;<code>J.</code> becomes <code>J</code>, <code>Dr.</code> becomes <code>Dr</code>).<br>
+All other columns (date, amount, category, comments) should be cleaned to a consistent structure as before.</p>
+<style>
+/* Scrollable box for wide table output: horizontal slider, no wrapping */
+.cleanup-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+}
+.cleanup-table-scroll pre {
+  white-space: pre;
+  margin: 0;
+}
+</style>
+<p>Given the data above, your output should show the following:</p>
+<!-- show the values output by the answer code -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cleanup</span>(expenses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        employeeFullName employeeTitle employeeFirst employeeMiddle employeeLast employeeSuffix       date  amount        category          comments
+1              Sue Smith          &lt;NA&gt;           Sue           &lt;NA&gt;        Smith           &lt;NA&gt; 2023-01-19   59.99            food lunch with client
+2           Joe Schwartz          &lt;NA&gt;           Joe           &lt;NA&gt;     Schwartz           &lt;NA&gt; 2023-01-19   27.00 office supplies paper for printer
+3      Mike David Harris          &lt;NA&gt;          Mike          David       Harris           &lt;NA&gt; 2023-01-19   25.00 office supplies              &lt;NA&gt;
+4             Dr A Davis            Dr             A           &lt;NA&gt;        Davis           &lt;NA&gt; 2023-01-19  500.00            food              &lt;NA&gt;
+5               Dr Jones            Dr          &lt;NA&gt;           &lt;NA&gt;        Jones           &lt;NA&gt; 2023-01-19 1234.56 office supplies            chairs
+6             S Jones Jr          &lt;NA&gt;             S           &lt;NA&gt;        Jones             Jr 2023-01-19 1000.00 office supplies              desk
+7         Ella Conway Sr          &lt;NA&gt;          Ella           &lt;NA&gt;       Conway             Sr 2023-01-19   35.23            food              &lt;NA&gt;
+8              Tom Brown          &lt;NA&gt;           Tom           &lt;NA&gt;        Brown           &lt;NA&gt; 2023-02-15   42.50            food    dinner meeting
+9          Kate Williams          &lt;NA&gt;          Kate           &lt;NA&gt;     Williams           &lt;NA&gt; 2023-02-15   89.99 office supplies   toner cartridge
+10      Robert James Lee          &lt;NA&gt;        Robert          James          Lee           &lt;NA&gt; 2023-02-15   75.00 office supplies              &lt;NA&gt;
+11         Mike Green Jr          &lt;NA&gt;          Mike           &lt;NA&gt;        Green             Jr 2023-02-15  500.00 office supplies              &lt;NA&gt;
+12           Dr B Wilson            Dr             B           &lt;NA&gt;       Wilson           &lt;NA&gt; 2023-02-15  200.00            food              &lt;NA&gt;
+13              Dr Smith            Dr          &lt;NA&gt;           &lt;NA&gt;        Smith           &lt;NA&gt; 2023-02-15 2345.67 office supplies           monitor
+14            R Brown Jr          &lt;NA&gt;             R           &lt;NA&gt;        Brown             Jr 2023-03-02  750.00 office supplies    filing cabinet
+15       Ana Martinez Sr          &lt;NA&gt;           Ana           &lt;NA&gt;     Martinez             Sr 2023-02-15   48.75            food              &lt;NA&gt;
+16          Mary Johnson          &lt;NA&gt;          Mary           &lt;NA&gt;      Johnson           &lt;NA&gt; 2023-03-22   63.45            food        team lunch
+17            Sam Cooper          &lt;NA&gt;           Sam           &lt;NA&gt;       Cooper           &lt;NA&gt; 2023-03-22  156.00 office supplies office decoration
+18      Peter Michael Wu          &lt;NA&gt;         Peter        Michael           Wu           &lt;NA&gt; 2023-03-22   50.00 office supplies              &lt;NA&gt;
+19           Dr C Taylor            Dr             C           &lt;NA&gt;       Taylor           &lt;NA&gt; 2023-02-03 1000.00            food              &lt;NA&gt;
+20          Drake Wilson          &lt;NA&gt;         Drake           &lt;NA&gt;       Wilson           &lt;NA&gt; 2024-03-14  500.00 office supplies           printer
+21               Dr Chen            Dr          &lt;NA&gt;           &lt;NA&gt;         Chen           &lt;NA&gt; 2023-03-02 3456.78 office supplies            laptop
+22           T Wilson Jr          &lt;NA&gt;             T           &lt;NA&gt;       Wilson             Jr       &lt;NA&gt;  500.00 office supplies           printer
+23      Eva Rodriguez Sr          &lt;NA&gt;           Eva           &lt;NA&gt;    Rodriguez             Sr 2023-03-22   92.45            food              &lt;NA&gt;
+24          Pat Williams          &lt;NA&gt;           Pat           &lt;NA&gt;     Williams           &lt;NA&gt; 2023-02-20  150.00          travel      train ticket
+25              Wei Chen          &lt;NA&gt;           Wei           &lt;NA&gt;         Chen           &lt;NA&gt; 2023-02-20   89.50          travel             hotel
+26 Jennifer Ann Martinez          &lt;NA&gt;      Jennifer            Ann     Martinez           &lt;NA&gt; 2023-02-21   42.00            food              &lt;NA&gt;
+27              Ms B Kim            Ms             B           &lt;NA&gt;          Kim           &lt;NA&gt; 2023-02-21  200.00 office supplies           stapler
+28            J Thompson          &lt;NA&gt;             J           &lt;NA&gt;     Thompson           &lt;NA&gt; 2023-02-21 2500.00          travel            flight
+29               R Patel          &lt;NA&gt;             R           &lt;NA&gt;        Patel           &lt;NA&gt; 2023-02-21   75.00 office supplies         notebooks
+30       Maria Garcia Jr          &lt;NA&gt;         Maria           &lt;NA&gt;       Garcia             Jr 2023-02-22  120.00            food       team dinner
+31              Dr Evans            Dr          &lt;NA&gt;           &lt;NA&gt;        Evans           &lt;NA&gt; 2023-03-01   95.99 office supplies          supplies
+32          Thompson III          &lt;NA&gt;          &lt;NA&gt;           &lt;NA&gt;     Thompson            III 2023-03-05  200.00          travel        conference
+33             Tom Brown          &lt;NA&gt;           Tom           &lt;NA&gt;        Brown           &lt;NA&gt; 2023-02-15   42.50            food    dinner meeting
+34         Kate Williams          &lt;NA&gt;          Kate           &lt;NA&gt;     Williams           &lt;NA&gt; 2023-02-15   89.99 office supplies   toner cartridge
+35      Robert James Lee          &lt;NA&gt;        Robert          James          Lee           &lt;NA&gt; 2023-02-15   75.00 office supplies              &lt;NA&gt;
+36         Mike Green Jr          &lt;NA&gt;          Mike           &lt;NA&gt;        Green             Jr 2023-02-15  500.00 office supplies              &lt;NA&gt;
+37           Dr B Wilson            Dr             B           &lt;NA&gt;       Wilson           &lt;NA&gt; 2023-02-15  200.00            food              &lt;NA&gt;
+38              Dr Smith            Dr          &lt;NA&gt;           &lt;NA&gt;        Smith           &lt;NA&gt; 2023-02-15 2345.67 office supplies           monitor
+39            R Brown Jr          &lt;NA&gt;             R           &lt;NA&gt;        Brown             Jr 2023-03-02  750.00 office supplies    filing cabinet
+40       Ana Martinez Sr          &lt;NA&gt;           Ana           &lt;NA&gt;     Martinez             Sr 2023-02-15   48.75            food              &lt;NA&gt;
+41          Mary Johnson          &lt;NA&gt;          Mary           &lt;NA&gt;      Johnson           &lt;NA&gt; 2023-03-22   63.45            food        team lunch
+42            Sam Cooper          &lt;NA&gt;           Sam           &lt;NA&gt;       Cooper           &lt;NA&gt; 2023-03-22  156.00 office supplies office decoration
+43      Peter Michael Wu          &lt;NA&gt;         Peter        Michael           Wu           &lt;NA&gt; 2023-03-22   50.00 office supplies              &lt;NA&gt;
+44           Dr C Taylor            Dr             C           &lt;NA&gt;       Taylor           &lt;NA&gt; 2023-02-03 1000.00            food              &lt;NA&gt;
+45          Drake Wilson          &lt;NA&gt;         Drake           &lt;NA&gt;       Wilson           &lt;NA&gt; 2024-03-14  500.00 office supplies           printer
+46               Dr Chen            Dr          &lt;NA&gt;           &lt;NA&gt;         Chen           &lt;NA&gt; 2023-03-02 3456.78 office supplies            laptop
+47           T Wilson Jr          &lt;NA&gt;             T           &lt;NA&gt;       Wilson             Jr       &lt;NA&gt;  500.00 office supplies           printer
+48      Eva Rodriguez Sr          &lt;NA&gt;           Eva           &lt;NA&gt;    Rodriguez             Sr 2023-03-22   92.45            food              &lt;NA&gt;</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click here for one possible solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- show how to generate answer -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="co"># STRING HELPERS</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="co"># strip_periods(text)</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  text  = character vector (e.g. "Dr.", "J. Smith")</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    character vector of same length with periods removed and</span></span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a><span class="co">#               leading/trailing spaces trimmed.</span></span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    strip_periods("  J. ")  -&gt;  "J"</span></span>
+<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a>strip_periods <span class="ot">&lt;-</span> <span class="cf">function</span>(text) {</span>
+<span id="cb92-11"><a href="#cb92-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">""</span>, <span class="fu">trimws</span>(text))</span>
+<span id="cb92-12"><a href="#cb92-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-13"><a href="#cb92-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-14"><a href="#cb92-14" aria-hidden="true" tabindex="-1"></a><span class="co"># to_sentence_case(text)</span></span>
+<span id="cb92-15"><a href="#cb92-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  text = single string (e.g. "mike david", "O'BRIEN")</span></span>
+<span id="cb92-16"><a href="#cb92-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    string with first letter of each word uppercase, rest lowercase (Sentence case).</span></span>
+<span id="cb92-17"><a href="#cb92-17" aria-hidden="true" tabindex="-1"></a><span class="co">#               Returns NA unchanged if text is NA; empty string returned as-is.</span></span>
+<span id="cb92-18"><a href="#cb92-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    to_sentence_case("mike david harris")  -&gt;  "Mike David Harris"</span></span>
+<span id="cb92-19"><a href="#cb92-19" aria-hidden="true" tabindex="-1"></a>to_sentence_case <span class="ot">&lt;-</span> <span class="cf">function</span>(text) {</span>
+<span id="cb92-20"><a href="#cb92-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(text) <span class="sc">||</span> <span class="fu">nchar</span>(<span class="fu">trimws</span>(text)) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(text)</span>
+<span id="cb92-21"><a href="#cb92-21" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(<span class="fu">trimws</span>(text), <span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb92-22"><a href="#cb92-22" aria-hidden="true" tabindex="-1"></a>  capped <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">toupper</span>(<span class="fu">substring</span>(words, <span class="dv">1</span>, <span class="dv">1</span>)), <span class="fu">tolower</span>(<span class="fu">substring</span>(words, <span class="dv">2</span>)))</span>
+<span id="cb92-23"><a href="#cb92-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(capped, <span class="at">collapse =</span> <span class="st">" "</span>)</span>
+<span id="cb92-24"><a href="#cb92-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-25"><a href="#cb92-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-26"><a href="#cb92-26" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-27"><a href="#cb92-27" aria-hidden="true" tabindex="-1"></a><span class="co"># NAME PARSING — split into small functions by format</span></span>
+<span id="cb92-28"><a href="#cb92-28" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-29"><a href="#cb92-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-30"><a href="#cb92-30" aria-hidden="true" tabindex="-1"></a><span class="co"># has_suffix(namePart)</span></span>
+<span id="cb92-31"><a href="#cb92-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  namePart = single string, no leading/trailing title (e.g. "Jones Jr")</span></span>
+<span id="cb92-32"><a href="#cb92-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    TRUE if name ends with a suffix like Jr, Sr, III, II, IV.</span></span>
+<span id="cb92-33"><a href="#cb92-33" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    has_suffix("Jones Jr")  -&gt;  TRUE</span></span>
+<span id="cb92-34"><a href="#cb92-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Suffix pattern: one of Jr/Sr/III/II/IV at end. Require at least one space before suffix</span></span>
+<span id="cb92-35"><a href="#cb92-35" aria-hidden="true" tabindex="-1"></a><span class="co"># so that "Thompson III" correctly captures "III" (R's regex can otherwise match "II" inside "III").</span></span>
+<span id="cb92-36"><a href="#cb92-36" aria-hidden="true" tabindex="-1"></a>suffix_pattern <span class="ot">&lt;-</span> <span class="st">"(Jr</span><span class="sc">\\</span><span class="st">.?|Sr</span><span class="sc">\\</span><span class="st">.?|III|II|IV)"</span></span>
+<span id="cb92-37"><a href="#cb92-37" aria-hidden="true" tabindex="-1"></a>suffix_at_end_regex <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>, suffix_pattern, <span class="st">"</span><span class="sc">\\</span><span class="st">s*$"</span>)</span>
+<span id="cb92-38"><a href="#cb92-38" aria-hidden="true" tabindex="-1"></a>has_suffix <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-39"><a href="#cb92-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grepl</span>(suffix_at_end_regex, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-40"><a href="#cb92-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-41"><a href="#cb92-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-42"><a href="#cb92-42" aria-hidden="true" tabindex="-1"></a><span class="co"># extract_suffix(namePart)</span></span>
+<span id="cb92-43"><a href="#cb92-43" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  namePart = string that may end with a suffix</span></span>
+<span id="cb92-44"><a href="#cb92-44" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    list of two: suffix (string or NA), and nameWithSuffixRemoved (string).</span></span>
+<span id="cb92-45"><a href="#cb92-45" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    extract_suffix("Conway, Ella Sr.")  -&gt;  list(suffix = "Sr", nameWithSuffixRemoved = "Conway, Ella")</span></span>
+<span id="cb92-46"><a href="#cb92-46" aria-hidden="true" tabindex="-1"></a><span class="co">#   Uses two groups (name)(suffix) so the suffix is captured correctly; space before suffix required.</span></span>
+<span id="cb92-47"><a href="#cb92-47" aria-hidden="true" tabindex="-1"></a>extract_suffix <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-48"><a href="#cb92-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">has_suffix</span>(namePart)) {</span>
+<span id="cb92-49"><a href="#cb92-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">suffix =</span> <span class="cn">NA</span>, <span class="at">nameWithSuffixRemoved =</span> <span class="fu">trimws</span>(namePart)))</span>
+<span id="cb92-50"><a href="#cb92-50" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-51"><a href="#cb92-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Two groups: everything before the suffix, and the suffix. Requiring \s+ before suffix fixes III vs II.</span></span>
+<span id="cb92-52"><a href="#cb92-52" aria-hidden="true" tabindex="-1"></a>  nameWithoutSuffix <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="fu">paste0</span>(<span class="st">"^(.*)</span><span class="sc">\\</span><span class="st">s+"</span>, suffix_pattern, <span class="st">"</span><span class="sc">\\</span><span class="st">s*$"</span>), <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-53"><a href="#cb92-53" aria-hidden="true" tabindex="-1"></a>  suffix <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="fu">paste0</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">s+"</span>, suffix_pattern, <span class="st">"</span><span class="sc">\\</span><span class="st">s*$"</span>), <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-54"><a href="#cb92-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">suffix =</span> <span class="fu">strip_periods</span>(suffix), <span class="at">nameWithSuffixRemoved =</span> <span class="fu">trimws</span>(nameWithoutSuffix))</span>
+<span id="cb92-55"><a href="#cb92-55" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-56"><a href="#cb92-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-57"><a href="#cb92-57" aria-hidden="true" tabindex="-1"></a><span class="co"># normalize_suffix(suffix)</span></span>
+<span id="cb92-58"><a href="#cb92-58" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  suffix = string (e.g. "jr", "SR", "iii") or NA</span></span>
+<span id="cb92-59"><a href="#cb92-59" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    correctly cased suffix: "Jr", "Sr", "II", "III", "IV", or NA if not recognized.</span></span>
+<span id="cb92-60"><a href="#cb92-60" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    normalize_suffix("jr")  -&gt;  "Jr"</span></span>
+<span id="cb92-61"><a href="#cb92-61" aria-hidden="true" tabindex="-1"></a>normalize_suffix <span class="ot">&lt;-</span> <span class="cf">function</span>(suffix) {</span>
+<span id="cb92-62"><a href="#cb92-62" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(suffix) <span class="sc">||</span> <span class="fu">trimws</span>(suffix) <span class="sc">==</span> <span class="st">""</span>) <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb92-63"><a href="#cb92-63" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">trimws</span>(suffix))</span>
+<span id="cb92-64"><a href="#cb92-64" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (s <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"jr"</span>, <span class="st">"jr."</span>)) <span class="fu">return</span>(<span class="st">"Jr"</span>)</span>
+<span id="cb92-65"><a href="#cb92-65" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (s <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"sr"</span>, <span class="st">"sr."</span>)) <span class="fu">return</span>(<span class="st">"Sr"</span>)</span>
+<span id="cb92-66"><a href="#cb92-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (s <span class="sc">==</span> <span class="st">"ii"</span>) <span class="fu">return</span>(<span class="st">"II"</span>)</span>
+<span id="cb92-67"><a href="#cb92-67" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (s <span class="sc">==</span> <span class="st">"iii"</span>) <span class="fu">return</span>(<span class="st">"III"</span>)</span>
+<span id="cb92-68"><a href="#cb92-68" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (s <span class="sc">==</span> <span class="st">"iv"</span>) <span class="fu">return</span>(<span class="st">"IV"</span>)</span>
+<span id="cb92-69"><a href="#cb92-69" aria-hidden="true" tabindex="-1"></a>  suffix</span>
+<span id="cb92-70"><a href="#cb92-70" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-71"><a href="#cb92-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-72"><a href="#cb92-72" aria-hidden="true" tabindex="-1"></a><span class="co"># has_trailing_title(namePart)</span></span>
+<span id="cb92-73"><a href="#cb92-73" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  namePart = string that might end with "Ph.D" or "PhD"</span></span>
+<span id="cb92-74"><a href="#cb92-74" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    TRUE if it ends with that.</span></span>
+<span id="cb92-75"><a href="#cb92-75" aria-hidden="true" tabindex="-1"></a>trailing_phd_regex <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb92-76"><a href="#cb92-76" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>,           <span class="co"># space before Ph.D</span></span>
+<span id="cb92-77"><a href="#cb92-77" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Ph</span><span class="sc">\\</span><span class="st">.?D</span><span class="sc">\\</span><span class="st">.?"</span>,    <span class="co"># Ph.D or PhD (periods optional)</span></span>
+<span id="cb92-78"><a href="#cb92-78" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\\</span><span class="st">s*$"</span>           <span class="co"># optional spaces at end</span></span>
+<span id="cb92-79"><a href="#cb92-79" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb92-80"><a href="#cb92-80" aria-hidden="true" tabindex="-1"></a>has_trailing_title <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-81"><a href="#cb92-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grepl</span>(trailing_phd_regex, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-82"><a href="#cb92-82" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-83"><a href="#cb92-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-84"><a href="#cb92-84" aria-hidden="true" tabindex="-1"></a><span class="co"># extract_trailing_phd(namePart)</span></span>
+<span id="cb92-85"><a href="#cb92-85" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:  list(titlePart = "PhD" or NA, nameWithTitleRemoved = string).</span></span>
+<span id="cb92-86"><a href="#cb92-86" aria-hidden="true" tabindex="-1"></a>extract_trailing_phd <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-87"><a href="#cb92-87" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">has_trailing_title</span>(namePart)) {</span>
+<span id="cb92-88"><a href="#cb92-88" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">titlePart =</span> <span class="cn">NA</span>, <span class="at">nameWithTitleRemoved =</span> <span class="fu">trimws</span>(namePart)))</span>
+<span id="cb92-89"><a href="#cb92-89" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-90"><a href="#cb92-90" aria-hidden="true" tabindex="-1"></a>  tit <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="fu">paste0</span>(<span class="st">".*"</span>, trailing_phd_regex), <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-91"><a href="#cb92-91" aria-hidden="true" tabindex="-1"></a>  nameWithout <span class="ot">&lt;-</span> <span class="fu">sub</span>(trailing_phd_regex, <span class="st">""</span>, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-92"><a href="#cb92-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">titlePart =</span> <span class="fu">strip_periods</span>(tit), <span class="at">nameWithTitleRemoved =</span> <span class="fu">trimws</span>(nameWithout))</span>
+<span id="cb92-93"><a href="#cb92-93" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-94"><a href="#cb92-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-95"><a href="#cb92-95" aria-hidden="true" tabindex="-1"></a><span class="co"># has_leading_title(namePart)</span></span>
+<span id="cb92-96"><a href="#cb92-96" aria-hidden="true" tabindex="-1"></a><span class="co">#   TRUE if name starts with Dr, Mr, Ms, Mrs (with optional period).</span></span>
+<span id="cb92-97"><a href="#cb92-97" aria-hidden="true" tabindex="-1"></a>leading_title_regex <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb92-98"><a href="#cb92-98" aria-hidden="true" tabindex="-1"></a>  <span class="st">"^(Dr</span><span class="sc">\\</span><span class="st">.?|Mr</span><span class="sc">\\</span><span class="st">.?|Ms</span><span class="sc">\\</span><span class="st">.?|Mrs</span><span class="sc">\\</span><span class="st">.?)"</span>,  <span class="co"># title at start</span></span>
+<span id="cb92-99"><a href="#cb92-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>                               <span class="co"># at least one space after</span></span>
+<span id="cb92-100"><a href="#cb92-100" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb92-101"><a href="#cb92-101" aria-hidden="true" tabindex="-1"></a>has_leading_title <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-102"><a href="#cb92-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grepl</span>(leading_title_regex, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-103"><a href="#cb92-103" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-104"><a href="#cb92-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-105"><a href="#cb92-105" aria-hidden="true" tabindex="-1"></a><span class="co"># extract_leading_title(namePart)</span></span>
+<span id="cb92-106"><a href="#cb92-106" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:  list(titlePart = "Dr" or NA, nameWithTitleRemoved = string).</span></span>
+<span id="cb92-107"><a href="#cb92-107" aria-hidden="true" tabindex="-1"></a>extract_leading_title <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-108"><a href="#cb92-108" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">has_leading_title</span>(namePart)) {</span>
+<span id="cb92-109"><a href="#cb92-109" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">titlePart =</span> <span class="cn">NA</span>, <span class="at">nameWithTitleRemoved =</span> <span class="fu">trimws</span>(namePart)))</span>
+<span id="cb92-110"><a href="#cb92-110" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-111"><a href="#cb92-111" aria-hidden="true" tabindex="-1"></a>  tit <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="fu">paste0</span>(leading_title_regex, <span class="st">".*"</span>), <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-112"><a href="#cb92-112" aria-hidden="true" tabindex="-1"></a>  nameWithout <span class="ot">&lt;-</span> <span class="fu">sub</span>(leading_title_regex, <span class="st">""</span>, namePart, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-113"><a href="#cb92-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">titlePart =</span> <span class="fu">strip_periods</span>(tit), <span class="at">nameWithTitleRemoved =</span> <span class="fu">trimws</span>(nameWithout))</span>
+<span id="cb92-114"><a href="#cb92-114" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-115"><a href="#cb92-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-116"><a href="#cb92-116" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_name_last_comma_first(namePart)</span></span>
+<span id="cb92-117"><a href="#cb92-117" aria-hidden="true" tabindex="-1"></a><span class="co">#   For names like "Last, First" or "Last, First Middle".</span></span>
+<span id="cb92-118"><a href="#cb92-118" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  namePart = string containing exactly one comma</span></span>
+<span id="cb92-119"><a href="#cb92-119" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    list(first =, middle =, last =). Periods stripped from each.</span></span>
+<span id="cb92-120"><a href="#cb92-120" aria-hidden="true" tabindex="-1"></a>parse_name_last_comma_first <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-121"><a href="#cb92-121" aria-hidden="true" tabindex="-1"></a>  parts <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(namePart, <span class="st">",</span><span class="sc">\\</span><span class="st">s*"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb92-122"><a href="#cb92-122" aria-hidden="true" tabindex="-1"></a>  last <span class="ot">&lt;-</span> <span class="fu">strip_periods</span>(<span class="fu">trimws</span>(parts[<span class="dv">1</span>]))</span>
+<span id="cb92-123"><a href="#cb92-123" aria-hidden="true" tabindex="-1"></a>  firstAndMiddle <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(<span class="fu">trimws</span>(parts[<span class="dv">2</span>]), <span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb92-124"><a href="#cb92-124" aria-hidden="true" tabindex="-1"></a>  first <span class="ot">&lt;-</span> <span class="fu">strip_periods</span>(firstAndMiddle[<span class="dv">1</span>])</span>
+<span id="cb92-125"><a href="#cb92-125" aria-hidden="true" tabindex="-1"></a>  middle <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">length</span>(firstAndMiddle) <span class="sc">&gt;=</span> <span class="dv">2</span>) <span class="fu">strip_periods</span>(firstAndMiddle[<span class="dv">2</span>]) <span class="cf">else</span> <span class="cn">NA</span></span>
+<span id="cb92-126"><a href="#cb92-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">first =</span> first, <span class="at">middle =</span> middle, <span class="at">last =</span> last)</span>
+<span id="cb92-127"><a href="#cb92-127" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-128"><a href="#cb92-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-129"><a href="#cb92-129" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_name_first_last(namePart)</span></span>
+<span id="cb92-130"><a href="#cb92-130" aria-hidden="true" tabindex="-1"></a><span class="co">#   For names like "First Last", "First Middle Last", or just "Last".</span></span>
+<span id="cb92-131"><a href="#cb92-131" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  namePart = string with no comma</span></span>
+<span id="cb92-132"><a href="#cb92-132" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    list(first =, middle =, last =).</span></span>
+<span id="cb92-133"><a href="#cb92-133" aria-hidden="true" tabindex="-1"></a>parse_name_first_last <span class="ot">&lt;-</span> <span class="cf">function</span>(namePart) {</span>
+<span id="cb92-134"><a href="#cb92-134" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(<span class="fu">trimws</span>(namePart), <span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb92-135"><a href="#cb92-135" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(words) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb92-136"><a href="#cb92-136" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">first =</span> <span class="cn">NA</span>, <span class="at">middle =</span> <span class="cn">NA</span>, <span class="at">last =</span> <span class="fu">strip_periods</span>(words[<span class="dv">1</span>]))</span>
+<span id="cb92-137"><a href="#cb92-137" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">length</span>(words) <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb92-138"><a href="#cb92-138" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">first =</span> <span class="fu">strip_periods</span>(words[<span class="dv">1</span>]), <span class="at">middle =</span> <span class="cn">NA</span>, <span class="at">last =</span> <span class="fu">strip_periods</span>(words[<span class="dv">2</span>]))</span>
+<span id="cb92-139"><a href="#cb92-139" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb92-140"><a href="#cb92-140" aria-hidden="true" tabindex="-1"></a>    first <span class="ot">&lt;-</span> <span class="fu">strip_periods</span>(words[<span class="dv">1</span>])</span>
+<span id="cb92-141"><a href="#cb92-141" aria-hidden="true" tabindex="-1"></a>    middle <span class="ot">&lt;-</span> <span class="fu">strip_periods</span>(words[<span class="dv">2</span>])</span>
+<span id="cb92-142"><a href="#cb92-142" aria-hidden="true" tabindex="-1"></a>    last <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">strip_periods</span>(words[<span class="dv">3</span><span class="sc">:</span><span class="fu">length</span>(words)]), <span class="at">collapse =</span> <span class="st">" "</span>)</span>
+<span id="cb92-143"><a href="#cb92-143" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">first =</span> first, <span class="at">middle =</span> middle, <span class="at">last =</span> last)</span>
+<span id="cb92-144"><a href="#cb92-144" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-145"><a href="#cb92-145" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-146"><a href="#cb92-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-147"><a href="#cb92-147" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_one_employee(employeeName)</span></span>
+<span id="cb92-148"><a href="#cb92-148" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  employeeName = one raw employee string (e.g. "Dr. A. Davis", "Schwartz, Joe")</span></span>
+<span id="cb92-149"><a href="#cb92-149" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    list with employeeTitle, employeeFirst, employeeMiddle, employeeLast,</span></span>
+<span id="cb92-150"><a href="#cb92-150" aria-hidden="true" tabindex="-1"></a><span class="co">#               employeeSuffix, employeeFullName. All name parts without periods.</span></span>
+<span id="cb92-151"><a href="#cb92-151" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    parse_one_employee("Conway, Ella Sr.")  -&gt;  first=Ella, last=Conway, suffix=Sr, title=NA</span></span>
+<span id="cb92-152"><a href="#cb92-152" aria-hidden="true" tabindex="-1"></a>parse_one_employee <span class="ot">&lt;-</span> <span class="cf">function</span>(employeeName) {</span>
+<span id="cb92-153"><a href="#cb92-153" aria-hidden="true" tabindex="-1"></a>  raw <span class="ot">&lt;-</span> <span class="fu">trimws</span>(employeeName)</span>
+<span id="cb92-154"><a href="#cb92-154" aria-hidden="true" tabindex="-1"></a>  outSuffix <span class="ot">&lt;-</span> <span class="fu">extract_suffix</span>(raw)</span>
+<span id="cb92-155"><a href="#cb92-155" aria-hidden="true" tabindex="-1"></a>  raw <span class="ot">&lt;-</span> outSuffix<span class="sc">$</span>nameWithSuffixRemoved</span>
+<span id="cb92-156"><a href="#cb92-156" aria-hidden="true" tabindex="-1"></a>  outPhd <span class="ot">&lt;-</span> <span class="fu">extract_trailing_phd</span>(raw)</span>
+<span id="cb92-157"><a href="#cb92-157" aria-hidden="true" tabindex="-1"></a>  title <span class="ot">&lt;-</span> outPhd<span class="sc">$</span>titlePart</span>
+<span id="cb92-158"><a href="#cb92-158" aria-hidden="true" tabindex="-1"></a>  raw <span class="ot">&lt;-</span> outPhd<span class="sc">$</span>nameWithTitleRemoved</span>
+<span id="cb92-159"><a href="#cb92-159" aria-hidden="true" tabindex="-1"></a>  outLead <span class="ot">&lt;-</span> <span class="fu">extract_leading_title</span>(raw)</span>
+<span id="cb92-160"><a href="#cb92-160" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(outLead<span class="sc">$</span>titlePart)) {</span>
+<span id="cb92-161"><a href="#cb92-161" aria-hidden="true" tabindex="-1"></a>    title <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.na</span>(title) <span class="sc">||</span> title <span class="sc">==</span> <span class="st">""</span>) outLead<span class="sc">$</span>titlePart <span class="cf">else</span> <span class="fu">paste0</span>(outLead<span class="sc">$</span>titlePart, <span class="st">" "</span>, title)</span>
+<span id="cb92-162"><a href="#cb92-162" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-163"><a href="#cb92-163" aria-hidden="true" tabindex="-1"></a>  raw <span class="ot">&lt;-</span> outLead<span class="sc">$</span>nameWithTitleRemoved</span>
+<span id="cb92-164"><a href="#cb92-164" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(title) <span class="sc">||</span> title <span class="sc">==</span> <span class="st">""</span>) title <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb92-165"><a href="#cb92-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-166"><a href="#cb92-166" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">strsplit</span>(raw, <span class="st">",</span><span class="sc">\\</span><span class="st">s*"</span>)[[<span class="dv">1</span>]]) <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
+<span id="cb92-167"><a href="#cb92-167" aria-hidden="true" tabindex="-1"></a>    parsed <span class="ot">&lt;-</span> <span class="fu">parse_name_last_comma_first</span>(raw)</span>
+<span id="cb92-168"><a href="#cb92-168" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb92-169"><a href="#cb92-169" aria-hidden="true" tabindex="-1"></a>    parsed <span class="ot">&lt;-</span> <span class="fu">parse_name_first_last</span>(raw)</span>
+<span id="cb92-170"><a href="#cb92-170" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-171"><a href="#cb92-171" aria-hidden="true" tabindex="-1"></a>  first <span class="ot">&lt;-</span> <span class="fu">to_sentence_case</span>(parsed<span class="sc">$</span>first)</span>
+<span id="cb92-172"><a href="#cb92-172" aria-hidden="true" tabindex="-1"></a>  middle <span class="ot">&lt;-</span> <span class="fu">to_sentence_case</span>(parsed<span class="sc">$</span>middle)</span>
+<span id="cb92-173"><a href="#cb92-173" aria-hidden="true" tabindex="-1"></a>  last <span class="ot">&lt;-</span> <span class="fu">to_sentence_case</span>(parsed<span class="sc">$</span>last)</span>
+<span id="cb92-174"><a href="#cb92-174" aria-hidden="true" tabindex="-1"></a>  suffix <span class="ot">&lt;-</span> <span class="fu">normalize_suffix</span>(outSuffix<span class="sc">$</span>suffix)</span>
+<span id="cb92-175"><a href="#cb92-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-176"><a href="#cb92-176" aria-hidden="true" tabindex="-1"></a>  fullParts <span class="ot">&lt;-</span> <span class="fu">c</span>(title, first, middle, last, suffix)</span>
+<span id="cb92-177"><a href="#cb92-177" aria-hidden="true" tabindex="-1"></a>  fullParts <span class="ot">&lt;-</span> fullParts[<span class="sc">!</span><span class="fu">is.na</span>(fullParts) <span class="sc">&amp;</span> fullParts <span class="sc">!=</span> <span class="st">""</span>]</span>
+<span id="cb92-178"><a href="#cb92-178" aria-hidden="true" tabindex="-1"></a>  employeeFullName <span class="ot">&lt;-</span> <span class="fu">paste</span>(fullParts, <span class="at">collapse =</span> <span class="st">" "</span>)</span>
+<span id="cb92-179"><a href="#cb92-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-180"><a href="#cb92-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">employeeTitle =</span> title, <span class="at">employeeFirst =</span> first, <span class="at">employeeMiddle =</span> middle,</span>
+<span id="cb92-181"><a href="#cb92-181" aria-hidden="true" tabindex="-1"></a>       <span class="at">employeeLast =</span> last, <span class="at">employeeSuffix =</span> suffix, <span class="at">employeeFullName =</span> employeeFullName)</span>
+<span id="cb92-182"><a href="#cb92-182" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-183"><a href="#cb92-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-184"><a href="#cb92-184" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_employee_column(employeeNames)</span></span>
+<span id="cb92-185"><a href="#cb92-185" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  employeeNames = character vector of raw employee strings</span></span>
+<span id="cb92-186"><a href="#cb92-186" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    data frame with columns employeeFullName, employeeTitle, employeeFirst,</span></span>
+<span id="cb92-187"><a href="#cb92-187" aria-hidden="true" tabindex="-1"></a><span class="co">#               employeeMiddle, employeeLast, employeeSuffix.</span></span>
+<span id="cb92-188"><a href="#cb92-188" aria-hidden="true" tabindex="-1"></a>parse_employee_column <span class="ot">&lt;-</span> <span class="cf">function</span>(employeeNames) {</span>
+<span id="cb92-189"><a href="#cb92-189" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> <span class="fu">lapply</span>(employeeNames, parse_one_employee)</span>
+<span id="cb92-190"><a href="#cb92-190" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(rows, unlist)), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb92-191"><a href="#cb92-191" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> out[<span class="fu">c</span>(<span class="st">"employeeFullName"</span>, <span class="st">"employeeTitle"</span>, <span class="st">"employeeFirst"</span>, <span class="st">"employeeMiddle"</span>, <span class="st">"employeeLast"</span>, <span class="st">"employeeSuffix"</span>)]</span>
+<span id="cb92-192"><a href="#cb92-192" aria-hidden="true" tabindex="-1"></a>  out</span>
+<span id="cb92-193"><a href="#cb92-193" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-194"><a href="#cb92-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-195"><a href="#cb92-195" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-196"><a href="#cb92-196" aria-hidden="true" tabindex="-1"></a><span class="co"># DATE PARSING</span></span>
+<span id="cb92-197"><a href="#cb92-197" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-198"><a href="#cb92-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-199"><a href="#cb92-199" aria-hidden="true" tabindex="-1"></a><span class="co"># is_iso_date(dateStr)</span></span>
+<span id="cb92-200"><a href="#cb92-200" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns TRUE if string is already yyyy-mm-dd (e.g. "2023-01-19").</span></span>
+<span id="cb92-201"><a href="#cb92-201" aria-hidden="true" tabindex="-1"></a>iso_date_regex <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb92-202"><a href="#cb92-202" aria-hidden="true" tabindex="-1"></a>  <span class="st">"^[0-9]{4}"</span>,      <span class="co"># 4 digits at start (year)</span></span>
+<span id="cb92-203"><a href="#cb92-203" aria-hidden="true" tabindex="-1"></a>  <span class="st">"-"</span>,</span>
+<span id="cb92-204"><a href="#cb92-204" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[0-9]{1,2}"</span>,     <span class="co"># 1 or 2 digits (month)</span></span>
+<span id="cb92-205"><a href="#cb92-205" aria-hidden="true" tabindex="-1"></a>  <span class="st">"-"</span>,</span>
+<span id="cb92-206"><a href="#cb92-206" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[0-9]{1,2}$"</span>     <span class="co"># 1 or 2 digits at end (day)</span></span>
+<span id="cb92-207"><a href="#cb92-207" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb92-208"><a href="#cb92-208" aria-hidden="true" tabindex="-1"></a>is_iso_date <span class="ot">&lt;-</span> <span class="cf">function</span>(dateStr) {</span>
+<span id="cb92-209"><a href="#cb92-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grepl</span>(iso_date_regex, <span class="fu">trimws</span>(dateStr))</span>
+<span id="cb92-210"><a href="#cb92-210" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-211"><a href="#cb92-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-212"><a href="#cb92-212" aria-hidden="true" tabindex="-1"></a><span class="co"># is_month_name_date(dateStr)</span></span>
+<span id="cb92-213"><a href="#cb92-213" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns TRUE for strings like "Jan 19, 2023" or "January 19, 2023".</span></span>
+<span id="cb92-214"><a href="#cb92-214" aria-hidden="true" tabindex="-1"></a>month_name_date_regex <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb92-215"><a href="#cb92-215" aria-hidden="true" tabindex="-1"></a>  <span class="st">"^[A-Za-z]+"</span>,     <span class="co"># month name (letters)</span></span>
+<span id="cb92-216"><a href="#cb92-216" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>,</span>
+<span id="cb92-217"><a href="#cb92-217" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[0-9]{1,2}"</span>,     <span class="co"># day</span></span>
+<span id="cb92-218"><a href="#cb92-218" aria-hidden="true" tabindex="-1"></a>  <span class="st">",</span><span class="sc">\\</span><span class="st">s*"</span>,</span>
+<span id="cb92-219"><a href="#cb92-219" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[0-9]{2,4}$"</span>     <span class="co"># 2- or 4-digit year</span></span>
+<span id="cb92-220"><a href="#cb92-220" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb92-221"><a href="#cb92-221" aria-hidden="true" tabindex="-1"></a>is_month_name_date <span class="ot">&lt;-</span> <span class="cf">function</span>(dateStr) {</span>
+<span id="cb92-222"><a href="#cb92-222" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grepl</span>(month_name_date_regex, <span class="fu">trimws</span>(dateStr))</span>
+<span id="cb92-223"><a href="#cb92-223" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-224"><a href="#cb92-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-225"><a href="#cb92-225" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_one_date(dateStr)</span></span>
+<span id="cb92-226"><a href="#cb92-226" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  dateStr = one date string in any of the supported formats</span></span>
+<span id="cb92-227"><a href="#cb92-227" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    string "yyyy-mm-dd" or NA if unparseable.</span></span>
+<span id="cb92-228"><a href="#cb92-228" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    parse_one_date("1/19/2023")  -&gt;  "2023-01-19"</span></span>
+<span id="cb92-229"><a href="#cb92-229" aria-hidden="true" tabindex="-1"></a>parse_one_date <span class="ot">&lt;-</span> <span class="cf">function</span>(dateStr) {</span>
+<span id="cb92-230"><a href="#cb92-230" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">trimws</span>(dateStr)</span>
+<span id="cb92-231"><a href="#cb92-231" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is_iso_date</span>(s)) <span class="fu">return</span>(s)</span>
+<span id="cb92-232"><a href="#cb92-232" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is_month_name_date</span>(s)) {</span>
+<span id="cb92-233"><a href="#cb92-233" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(s, <span class="at">format =</span> <span class="st">"%b %d, %Y"</span>)</span>
+<span id="cb92-234"><a href="#cb92-234" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.na</span>(d)) d <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(s, <span class="at">format =</span> <span class="st">"%B %d, %Y"</span>)</span>
+<span id="cb92-235"><a href="#cb92-235" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">format</span>(d, <span class="st">"%Y-%m-%d"</span>))</span>
+<span id="cb92-236"><a href="#cb92-236" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-237"><a href="#cb92-237" aria-hidden="true" tabindex="-1"></a>  date_parts <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(s, <span class="st">"[/-]"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb92-238"><a href="#cb92-238" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(date_parts) <span class="sc">!=</span> <span class="dv">3</span>) <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb92-239"><a href="#cb92-239" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(date_parts[<span class="dv">1</span>])</span>
+<span id="cb92-240"><a href="#cb92-240" aria-hidden="true" tabindex="-1"></a>  n2 <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(date_parts[<span class="dv">2</span>])</span>
+<span id="cb92-241"><a href="#cb92-241" aria-hidden="true" tabindex="-1"></a>  n3 <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(date_parts[<span class="dv">3</span>])</span>
+<span id="cb92-242"><a href="#cb92-242" aria-hidden="true" tabindex="-1"></a>  len1 <span class="ot">&lt;-</span> <span class="fu">nchar</span>(date_parts[<span class="dv">1</span>])</span>
+<span id="cb92-243"><a href="#cb92-243" aria-hidden="true" tabindex="-1"></a>  len3 <span class="ot">&lt;-</span> <span class="fu">nchar</span>(date_parts[<span class="dv">3</span>])</span>
+<span id="cb92-244"><a href="#cb92-244" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (len1 <span class="sc">==</span> <span class="dv">4</span>) {</span>
+<span id="cb92-245"><a href="#cb92-245" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> n1; m <span class="ot">&lt;-</span> n2; d <span class="ot">&lt;-</span> n3</span>
+<span id="cb92-246"><a href="#cb92-246" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (len3 <span class="sc">==</span> <span class="dv">4</span>) {</span>
+<span id="cb92-247"><a href="#cb92-247" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> n3</span>
+<span id="cb92-248"><a href="#cb92-248" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (n1 <span class="sc">&gt;</span> <span class="dv">12</span>) { d <span class="ot">&lt;-</span> n1; m <span class="ot">&lt;-</span> n2 } <span class="cf">else</span> <span class="cf">if</span> (n2 <span class="sc">&gt;</span> <span class="dv">12</span>) { m <span class="ot">&lt;-</span> n1; d <span class="ot">&lt;-</span> n2 } <span class="cf">else</span> { m <span class="ot">&lt;-</span> n1; d <span class="ot">&lt;-</span> n2 }</span>
+<span id="cb92-249"><a href="#cb92-249" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb92-250"><a href="#cb92-250" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="dv">2000</span> <span class="sc">+</span> (n3 <span class="sc">-</span> <span class="dv">2000</span>) <span class="sc">%%</span> <span class="dv">100</span></span>
+<span id="cb92-251"><a href="#cb92-251" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (n1 <span class="sc">&gt;</span> <span class="dv">12</span>) { d <span class="ot">&lt;-</span> n1; m <span class="ot">&lt;-</span> n2 } <span class="cf">else</span> <span class="cf">if</span> (n2 <span class="sc">&gt;</span> <span class="dv">12</span>) { m <span class="ot">&lt;-</span> n1; d <span class="ot">&lt;-</span> n2 } <span class="cf">else</span> { m <span class="ot">&lt;-</span> n1; d <span class="ot">&lt;-</span> n2 }</span>
+<span id="cb92-252"><a href="#cb92-252" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-253"><a href="#cb92-253" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%04d-%02d-%02d"</span>, y, m, d)</span>
+<span id="cb92-254"><a href="#cb92-254" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-255"><a href="#cb92-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-256"><a href="#cb92-256" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_dates(dateStrings)</span></span>
+<span id="cb92-257"><a href="#cb92-257" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  dateStrings = character vector of date strings</span></span>
+<span id="cb92-258"><a href="#cb92-258" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    character vector of same length, each element "yyyy-mm-dd" or NA.</span></span>
+<span id="cb92-259"><a href="#cb92-259" aria-hidden="true" tabindex="-1"></a>parse_dates <span class="ot">&lt;-</span> <span class="cf">function</span>(dateStrings) {</span>
+<span id="cb92-260"><a href="#cb92-260" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(<span class="fu">trimws</span>(dateStrings), parse_one_date)</span>
+<span id="cb92-261"><a href="#cb92-261" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-262"><a href="#cb92-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-263"><a href="#cb92-263" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-264"><a href="#cb92-264" aria-hidden="true" tabindex="-1"></a><span class="co"># AMOUNT, CATEGORY, COMMENTS</span></span>
+<span id="cb92-265"><a href="#cb92-265" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-266"><a href="#cb92-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-267"><a href="#cb92-267" aria-hidden="true" tabindex="-1"></a><span class="co"># word_to_number(word)</span></span>
+<span id="cb92-268"><a href="#cb92-268" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  word = string with a number in words (e.g. "five hundred", "twenty-one",</span></span>
+<span id="cb92-269"><a href="#cb92-269" aria-hidden="true" tabindex="-1"></a><span class="co">#               "one thousand two hundred thirty-four"). Hyphens and "and" are allowed.</span></span>
+<span id="cb92-270"><a href="#cb92-270" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    numeric value, or NA if the string is not a recognized number phrase.</span></span>
+<span id="cb92-271"><a href="#cb92-271" aria-hidden="true" tabindex="-1"></a><span class="co">#   Examples:   word_to_number("five hundred") -&gt; 500; word_to_number("twenty-one") -&gt; 21;</span></span>
+<span id="cb92-272"><a href="#cb92-272" aria-hidden="true" tabindex="-1"></a><span class="co">#               word_to_number("one thousand two hundred thirty four") -&gt; 1234.</span></span>
+<span id="cb92-273"><a href="#cb92-273" aria-hidden="true" tabindex="-1"></a><span class="co">#   Supports:   zero–nine, ten–nineteen, twenty–ninety, hundred, thousand, million.</span></span>
+<span id="cb92-274"><a href="#cb92-274" aria-hidden="true" tabindex="-1"></a>word_to_number <span class="ot">&lt;-</span> <span class="cf">function</span>(word) {</span>
+<span id="cb92-275"><a href="#cb92-275" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">trimws</span>(word))</span>
+<span id="cb92-276"><a href="#cb92-276" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"-"</span>, <span class="st">" "</span>, w)</span>
+<span id="cb92-277"><a href="#cb92-277" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">band</span><span class="sc">\\</span><span class="st">b"</span>, <span class="st">" "</span>, w)</span>
+<span id="cb92-278"><a href="#cb92-278" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(w, <span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb92-279"><a href="#cb92-279" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> words[words <span class="sc">!=</span> <span class="st">""</span>]</span>
+<span id="cb92-280"><a href="#cb92-280" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(words) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb92-281"><a href="#cb92-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-282"><a href="#cb92-282" aria-hidden="true" tabindex="-1"></a>  ones <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">zero =</span> <span class="dv">0</span>, <span class="at">one =</span> <span class="dv">1</span>, <span class="at">two =</span> <span class="dv">2</span>, <span class="at">three =</span> <span class="dv">3</span>, <span class="at">four =</span> <span class="dv">4</span>, <span class="at">five =</span> <span class="dv">5</span>, <span class="at">six =</span> <span class="dv">6</span>, <span class="at">seven =</span> <span class="dv">7</span>, <span class="at">eight =</span> <span class="dv">8</span>, <span class="at">nine =</span> <span class="dv">9</span>)</span>
+<span id="cb92-283"><a href="#cb92-283" aria-hidden="true" tabindex="-1"></a>  teens <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">ten =</span> <span class="dv">10</span>, <span class="at">eleven =</span> <span class="dv">11</span>, <span class="at">twelve =</span> <span class="dv">12</span>, <span class="at">thirteen =</span> <span class="dv">13</span>, <span class="at">fourteen =</span> <span class="dv">14</span>, <span class="at">fifteen =</span> <span class="dv">15</span>,</span>
+<span id="cb92-284"><a href="#cb92-284" aria-hidden="true" tabindex="-1"></a>             <span class="at">sixteen =</span> <span class="dv">16</span>, <span class="at">seventeen =</span> <span class="dv">17</span>, <span class="at">eighteen =</span> <span class="dv">18</span>, <span class="at">nineteen =</span> <span class="dv">19</span>)</span>
+<span id="cb92-285"><a href="#cb92-285" aria-hidden="true" tabindex="-1"></a>  tens <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">twenty =</span> <span class="dv">20</span>, <span class="at">thirty =</span> <span class="dv">30</span>, <span class="at">forty =</span> <span class="dv">40</span>, <span class="at">fifty =</span> <span class="dv">50</span>, <span class="at">sixty =</span> <span class="dv">60</span>, <span class="at">seventy =</span> <span class="dv">70</span>, <span class="at">eighty =</span> <span class="dv">80</span>, <span class="at">ninety =</span> <span class="dv">90</span>)</span>
+<span id="cb92-286"><a href="#cb92-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-287"><a href="#cb92-287" aria-hidden="true" tabindex="-1"></a>  total <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb92-288"><a href="#cb92-288" aria-hidden="true" tabindex="-1"></a>  current <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb92-289"><a href="#cb92-289" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb92-290"><a href="#cb92-290" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (i <span class="sc">&lt;=</span> <span class="fu">length</span>(words)) {</span>
+<span id="cb92-291"><a href="#cb92-291" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> words[i]</span>
+<span id="cb92-292"><a href="#cb92-292" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">%in%</span> <span class="fu">names</span>(ones)) {</span>
+<span id="cb92-293"><a href="#cb92-293" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> current <span class="sc">+</span> ones[x]</span>
+<span id="cb92-294"><a href="#cb92-294" aria-hidden="true" tabindex="-1"></a>      i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb92-295"><a href="#cb92-295" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">%in%</span> <span class="fu">names</span>(teens)) {</span>
+<span id="cb92-296"><a href="#cb92-296" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> current <span class="sc">+</span> teens[x]</span>
+<span id="cb92-297"><a href="#cb92-297" aria-hidden="true" tabindex="-1"></a>      i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb92-298"><a href="#cb92-298" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">%in%</span> <span class="fu">names</span>(tens)) {</span>
+<span id="cb92-299"><a href="#cb92-299" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> current <span class="sc">+</span> tens[x]</span>
+<span id="cb92-300"><a href="#cb92-300" aria-hidden="true" tabindex="-1"></a>      i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb92-301"><a href="#cb92-301" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">==</span> <span class="st">"hundred"</span>) {</span>
+<span id="cb92-302"><a href="#cb92-302" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (current <span class="sc">==</span> <span class="dv">0</span>) current <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb92-303"><a href="#cb92-303" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> current <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb92-304"><a href="#cb92-304" aria-hidden="true" tabindex="-1"></a>      i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb92-305"><a href="#cb92-305" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">==</span> <span class="st">"thousand"</span>) {</span>
+<span id="cb92-306"><a href="#cb92-306" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (current <span class="sc">==</span> <span class="dv">0</span>) current <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb92-307"><a href="#cb92-307" aria-hidden="true" tabindex="-1"></a>      total <span class="ot">&lt;-</span> total <span class="sc">+</span> current <span class="sc">*</span> <span class="dv">1000</span></span>
+<span id="cb92-308"><a href="#cb92-308" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb92-309"><a href="#cb92-309" aria-hidden="true" tabindex="-1"></a>      i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb92-310"><a href="#cb92-310" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">==</span> <span class="st">"million"</span>) {</span>
+<span id="cb92-311"><a href="#cb92-311" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (current <span class="sc">==</span> <span class="dv">0</span>) current <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb92-312"><a href="#cb92-312" aria-hidden="true" tabindex="-1"></a>      total <span class="ot">&lt;-</span> total <span class="sc">+</span> current <span class="sc">*</span> <span class="dv">1000000</span></span>
+<span id="cb92-313"><a href="#cb92-313" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb92-314"><a href="#cb92-314" aria-hidden="true" tabindex="-1"></a>      i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb92-315"><a href="#cb92-315" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb92-316"><a href="#cb92-316" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb92-317"><a href="#cb92-317" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb92-318"><a href="#cb92-318" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-319"><a href="#cb92-319" aria-hidden="true" tabindex="-1"></a>  total <span class="sc">+</span> current</span>
+<span id="cb92-320"><a href="#cb92-320" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-321"><a href="#cb92-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-322"><a href="#cb92-322" aria-hidden="true" tabindex="-1"></a><span class="co"># clean_amounts(amountStrings)</span></span>
+<span id="cb92-323"><a href="#cb92-323" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  amountStrings = character vector (e.g. "$27.00", "1,234.56", "five hundred")</span></span>
+<span id="cb92-324"><a href="#cb92-324" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    numeric vector. Removes $ and commas; converts word amounts when possible.</span></span>
+<span id="cb92-325"><a href="#cb92-325" aria-hidden="true" tabindex="-1"></a>clean_amounts <span class="ot">&lt;-</span> <span class="cf">function</span>(amountStrings) {</span>
+<span id="cb92-326"><a href="#cb92-326" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">trimws</span>(amountStrings)</span>
+<span id="cb92-327"><a href="#cb92-327" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(x))</span>
+<span id="cb92-328"><a href="#cb92-328" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(x)) {</span>
+<span id="cb92-329"><a href="#cb92-329" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[$,]"</span>, <span class="st">""</span>, x[i])</span>
+<span id="cb92-330"><a href="#cb92-330" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> <span class="fu">trimws</span>(s)</span>
+<span id="cb92-331"><a href="#cb92-331" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"^[0-9.]+$"</span>, s)) {</span>
+<span id="cb92-332"><a href="#cb92-332" aria-hidden="true" tabindex="-1"></a>      result[i] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(s)</span>
+<span id="cb92-333"><a href="#cb92-333" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb92-334"><a href="#cb92-334" aria-hidden="true" tabindex="-1"></a>      result[i] <span class="ot">&lt;-</span> <span class="fu">word_to_number</span>(x[i])</span>
+<span id="cb92-335"><a href="#cb92-335" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb92-336"><a href="#cb92-336" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb92-337"><a href="#cb92-337" aria-hidden="true" tabindex="-1"></a>  result</span>
+<span id="cb92-338"><a href="#cb92-338" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-339"><a href="#cb92-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-340"><a href="#cb92-340" aria-hidden="true" tabindex="-1"></a><span class="co"># clean_categories(categoryStrings)</span></span>
+<span id="cb92-341"><a href="#cb92-341" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  categoryStrings = character vector (e.g. "FOOD", "office suppl.")</span></span>
+<span id="cb92-342"><a href="#cb92-342" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    character vector, lowercase, with abbreviations normalized</span></span>
+<span id="cb92-343"><a href="#cb92-343" aria-hidden="true" tabindex="-1"></a><span class="co">#               (e.g. "office suppl." and "Office Stuff" -&gt; "office supplies", "LUNCH" -&gt; "food").</span></span>
+<span id="cb92-344"><a href="#cb92-344" aria-hidden="true" tabindex="-1"></a>office_suppl_regex <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb92-345"><a href="#cb92-345" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\\</span><span class="st">boffice</span><span class="sc">\\</span><span class="st">s+suppl</span><span class="sc">\\</span><span class="st">.?</span><span class="sc">\\</span><span class="st">s*$"</span>   <span class="co"># "office suppl" or "office suppl." at end of string</span></span>
+<span id="cb92-346"><a href="#cb92-346" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb92-347"><a href="#cb92-347" aria-hidden="true" tabindex="-1"></a>office_stuff_regex <span class="ot">&lt;-</span> <span class="st">"</span><span class="sc">\\</span><span class="st">boffice</span><span class="sc">\\</span><span class="st">s+stuff</span><span class="sc">\\</span><span class="st">s*$"</span></span>
+<span id="cb92-348"><a href="#cb92-348" aria-hidden="true" tabindex="-1"></a>lunch_regex <span class="ot">&lt;-</span> <span class="st">"</span><span class="sc">\\</span><span class="st">blunch</span><span class="sc">\\</span><span class="st">s*$"</span></span>
+<span id="cb92-349"><a href="#cb92-349" aria-hidden="true" tabindex="-1"></a>clean_categories <span class="ot">&lt;-</span> <span class="cf">function</span>(categoryStrings) {</span>
+<span id="cb92-350"><a href="#cb92-350" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">trimws</span>(categoryStrings))</span>
+<span id="cb92-351"><a href="#cb92-351" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">sub</span>(office_suppl_regex, <span class="st">"office supplies"</span>, x)</span>
+<span id="cb92-352"><a href="#cb92-352" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">sub</span>(office_stuff_regex, <span class="st">"office supplies"</span>, x)</span>
+<span id="cb92-353"><a href="#cb92-353" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">sub</span>(lunch_regex, <span class="st">"food"</span>, x)</span>
+<span id="cb92-354"><a href="#cb92-354" aria-hidden="true" tabindex="-1"></a>  x</span>
+<span id="cb92-355"><a href="#cb92-355" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-356"><a href="#cb92-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-357"><a href="#cb92-357" aria-hidden="true" tabindex="-1"></a><span class="co"># clean_comments(commentStrings)</span></span>
+<span id="cb92-358"><a href="#cb92-358" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  commentStrings = character vector; can contain placeholders like "---", "NA"</span></span>
+<span id="cb92-359"><a href="#cb92-359" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    character vector; placeholders and empty strings replaced with NA.</span></span>
+<span id="cb92-360"><a href="#cb92-360" aria-hidden="true" tabindex="-1"></a>placeholder_regex <span class="ot">&lt;-</span> <span class="st">"^(---|NA|n/a)$"</span></span>
+<span id="cb92-361"><a href="#cb92-361" aria-hidden="true" tabindex="-1"></a>clean_comments <span class="ot">&lt;-</span> <span class="cf">function</span>(commentStrings) {</span>
+<span id="cb92-362"><a href="#cb92-362" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">trimws</span>(<span class="fu">as.character</span>(commentStrings))</span>
+<span id="cb92-363"><a href="#cb92-363" aria-hidden="true" tabindex="-1"></a>  x[<span class="fu">grepl</span>(placeholder_regex, x, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb92-364"><a href="#cb92-364" aria-hidden="true" tabindex="-1"></a>  x[x <span class="sc">==</span> <span class="st">""</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb92-365"><a href="#cb92-365" aria-hidden="true" tabindex="-1"></a>  x</span>
+<span id="cb92-366"><a href="#cb92-366" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-367"><a href="#cb92-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-368"><a href="#cb92-368" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-369"><a href="#cb92-369" aria-hidden="true" tabindex="-1"></a><span class="co"># MAIN CLEANUP</span></span>
+<span id="cb92-370"><a href="#cb92-370" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb92-371"><a href="#cb92-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-372"><a href="#cb92-372" aria-hidden="true" tabindex="-1"></a><span class="co"># cleanUp(expensesDF)</span></span>
+<span id="cb92-373"><a href="#cb92-373" aria-hidden="true" tabindex="-1"></a><span class="co">#   Arguments:  expensesDF = data frame with columns employee, date, amount, category, comments</span></span>
+<span id="cb92-374"><a href="#cb92-374" aria-hidden="true" tabindex="-1"></a><span class="co">#   Returns:    data frame with employee replaced by employeeFullName, employeeTitle,</span></span>
+<span id="cb92-375"><a href="#cb92-375" aria-hidden="true" tabindex="-1"></a><span class="co">#               employeeFirst, employeeMiddle, employeeLast, employeeSuffix; and with</span></span>
+<span id="cb92-376"><a href="#cb92-376" aria-hidden="true" tabindex="-1"></a><span class="co">#               date, amount, category, comments cleaned to consistent formats.</span></span>
+<span id="cb92-377"><a href="#cb92-377" aria-hidden="true" tabindex="-1"></a><span class="co">#   Example:    cleanUp(expenses)  -&gt;  wide table with cleaned columns</span></span>
+<span id="cb92-378"><a href="#cb92-378" aria-hidden="true" tabindex="-1"></a>cleanup <span class="ot">&lt;-</span> <span class="cf">function</span>(expensesDF) {</span>
+<span id="cb92-379"><a href="#cb92-379" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expensesDF, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb92-380"><a href="#cb92-380" aria-hidden="true" tabindex="-1"></a>  emp <span class="ot">&lt;-</span> <span class="fu">parse_employee_column</span>(df<span class="sc">$</span>employee)</span>
+<span id="cb92-381"><a href="#cb92-381" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>employee <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb92-382"><a href="#cb92-382" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(emp, df)</span>
+<span id="cb92-383"><a href="#cb92-383" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>date     <span class="ot">&lt;-</span> <span class="fu">parse_dates</span>(df<span class="sc">$</span>date)</span>
+<span id="cb92-384"><a href="#cb92-384" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>amount   <span class="ot">&lt;-</span> <span class="fu">clean_amounts</span>(df<span class="sc">$</span>amount)</span>
+<span id="cb92-385"><a href="#cb92-385" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>category <span class="ot">&lt;-</span> <span class="fu">clean_categories</span>(df<span class="sc">$</span>category)</span>
+<span id="cb92-386"><a href="#cb92-386" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>comments <span class="ot">&lt;-</span> <span class="fu">clean_comments</span>(df<span class="sc">$</span>comments)</span>
+<span id="cb92-387"><a href="#cb92-387" aria-hidden="true" tabindex="-1"></a>  df</span>
+<span id="cb92-388"><a href="#cb92-388" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb92-389"><a href="#cb92-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-390"><a href="#cb92-390" aria-hidden="true" tabindex="-1"></a><span class="fu">cleanup</span>(expenses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="cleanup-table-scroll"><code>        employeeFullName employeeTitle employeeFirst employeeMiddle employeeLast employeeSuffix       date  amount        category          comments
+1              Sue Smith          &lt;NA&gt;           Sue           &lt;NA&gt;        Smith           &lt;NA&gt; 2023-01-19   59.99            food lunch with client
+2           Joe Schwartz          &lt;NA&gt;           Joe           &lt;NA&gt;     Schwartz           &lt;NA&gt; 2023-01-19   27.00 office supplies paper for printer
+3      Mike David Harris          &lt;NA&gt;          Mike          David       Harris           &lt;NA&gt; 2023-01-19   25.00 office supplies              &lt;NA&gt;
+4             Dr A Davis            Dr             A           &lt;NA&gt;        Davis           &lt;NA&gt; 2023-01-19  500.00            food              &lt;NA&gt;
+5               Dr Jones            Dr          &lt;NA&gt;           &lt;NA&gt;        Jones           &lt;NA&gt; 2023-01-19 1234.56 office supplies            chairs
+6             S Jones Jr          &lt;NA&gt;             S           &lt;NA&gt;        Jones             Jr 2023-01-19 1000.00 office supplies              desk
+7         Ella Conway Sr          &lt;NA&gt;          Ella           &lt;NA&gt;       Conway             Sr 2023-01-19   35.23            food              &lt;NA&gt;
+8              Tom Brown          &lt;NA&gt;           Tom           &lt;NA&gt;        Brown           &lt;NA&gt; 2023-02-15   42.50            food    dinner meeting
+9          Kate Williams          &lt;NA&gt;          Kate           &lt;NA&gt;     Williams           &lt;NA&gt; 2023-02-15   89.99 office supplies   toner cartridge
+10      Robert James Lee          &lt;NA&gt;        Robert          James          Lee           &lt;NA&gt; 2023-02-15   75.00 office supplies              &lt;NA&gt;
+11         Mike Green Jr          &lt;NA&gt;          Mike           &lt;NA&gt;        Green             Jr 2023-02-15  500.00 office supplies              &lt;NA&gt;
+12           Dr B Wilson            Dr             B           &lt;NA&gt;       Wilson           &lt;NA&gt; 2023-02-15  200.00            food              &lt;NA&gt;
+13              Dr Smith            Dr          &lt;NA&gt;           &lt;NA&gt;        Smith           &lt;NA&gt; 2023-02-15 2345.67 office supplies           monitor
+14            R Brown Jr          &lt;NA&gt;             R           &lt;NA&gt;        Brown             Jr 2023-03-02  750.00 office supplies    filing cabinet
+15       Ana Martinez Sr          &lt;NA&gt;           Ana           &lt;NA&gt;     Martinez             Sr 2023-02-15   48.75            food              &lt;NA&gt;
+16          Mary Johnson          &lt;NA&gt;          Mary           &lt;NA&gt;      Johnson           &lt;NA&gt; 2023-03-22   63.45            food        team lunch
+17            Sam Cooper          &lt;NA&gt;           Sam           &lt;NA&gt;       Cooper           &lt;NA&gt; 2023-03-22  156.00 office supplies office decoration
+18      Peter Michael Wu          &lt;NA&gt;         Peter        Michael           Wu           &lt;NA&gt; 2023-03-22   50.00 office supplies              &lt;NA&gt;
+19           Dr C Taylor            Dr             C           &lt;NA&gt;       Taylor           &lt;NA&gt; 2023-02-03 1000.00            food              &lt;NA&gt;
+20          Drake Wilson          &lt;NA&gt;         Drake           &lt;NA&gt;       Wilson           &lt;NA&gt; 2024-03-14  500.00 office supplies           printer
+21               Dr Chen            Dr          &lt;NA&gt;           &lt;NA&gt;         Chen           &lt;NA&gt; 2023-03-02 3456.78 office supplies            laptop
+22           T Wilson Jr          &lt;NA&gt;             T           &lt;NA&gt;       Wilson             Jr       &lt;NA&gt;  500.00 office supplies           printer
+23      Eva Rodriguez Sr          &lt;NA&gt;           Eva           &lt;NA&gt;    Rodriguez             Sr 2023-03-22   92.45            food              &lt;NA&gt;
+24          Pat Williams          &lt;NA&gt;           Pat           &lt;NA&gt;     Williams           &lt;NA&gt; 2023-02-20  150.00          travel      train ticket
+25              Wei Chen          &lt;NA&gt;           Wei           &lt;NA&gt;         Chen           &lt;NA&gt; 2023-02-20   89.50          travel             hotel
+26 Jennifer Ann Martinez          &lt;NA&gt;      Jennifer            Ann     Martinez           &lt;NA&gt; 2023-02-21   42.00            food              &lt;NA&gt;
+27              Ms B Kim            Ms             B           &lt;NA&gt;          Kim           &lt;NA&gt; 2023-02-21  200.00 office supplies           stapler
+28            J Thompson          &lt;NA&gt;             J           &lt;NA&gt;     Thompson           &lt;NA&gt; 2023-02-21 2500.00          travel            flight
+29               R Patel          &lt;NA&gt;             R           &lt;NA&gt;        Patel           &lt;NA&gt; 2023-02-21   75.00 office supplies         notebooks
+30       Maria Garcia Jr          &lt;NA&gt;         Maria           &lt;NA&gt;       Garcia             Jr 2023-02-22  120.00            food       team dinner
+31              Dr Evans            Dr          &lt;NA&gt;           &lt;NA&gt;        Evans           &lt;NA&gt; 2023-03-01   95.99 office supplies          supplies
+32          Thompson III          &lt;NA&gt;          &lt;NA&gt;           &lt;NA&gt;     Thompson            III 2023-03-05  200.00          travel        conference
+33             Tom Brown          &lt;NA&gt;           Tom           &lt;NA&gt;        Brown           &lt;NA&gt; 2023-02-15   42.50            food    dinner meeting
+34         Kate Williams          &lt;NA&gt;          Kate           &lt;NA&gt;     Williams           &lt;NA&gt; 2023-02-15   89.99 office supplies   toner cartridge
+35      Robert James Lee          &lt;NA&gt;        Robert          James          Lee           &lt;NA&gt; 2023-02-15   75.00 office supplies              &lt;NA&gt;
+36         Mike Green Jr          &lt;NA&gt;          Mike           &lt;NA&gt;        Green             Jr 2023-02-15  500.00 office supplies              &lt;NA&gt;
+37           Dr B Wilson            Dr             B           &lt;NA&gt;       Wilson           &lt;NA&gt; 2023-02-15  200.00            food              &lt;NA&gt;
+38              Dr Smith            Dr          &lt;NA&gt;           &lt;NA&gt;        Smith           &lt;NA&gt; 2023-02-15 2345.67 office supplies           monitor
+39            R Brown Jr          &lt;NA&gt;             R           &lt;NA&gt;        Brown             Jr 2023-03-02  750.00 office supplies    filing cabinet
+40       Ana Martinez Sr          &lt;NA&gt;           Ana           &lt;NA&gt;     Martinez             Sr 2023-02-15   48.75            food              &lt;NA&gt;
+41          Mary Johnson          &lt;NA&gt;          Mary           &lt;NA&gt;      Johnson           &lt;NA&gt; 2023-03-22   63.45            food        team lunch
+42            Sam Cooper          &lt;NA&gt;           Sam           &lt;NA&gt;       Cooper           &lt;NA&gt; 2023-03-22  156.00 office supplies office decoration
+43      Peter Michael Wu          &lt;NA&gt;         Peter        Michael           Wu           &lt;NA&gt; 2023-03-22   50.00 office supplies              &lt;NA&gt;
+44           Dr C Taylor            Dr             C           &lt;NA&gt;       Taylor           &lt;NA&gt; 2023-02-03 1000.00            food              &lt;NA&gt;
+45          Drake Wilson          &lt;NA&gt;         Drake           &lt;NA&gt;       Wilson           &lt;NA&gt; 2024-03-14  500.00 office supplies           printer
+46               Dr Chen            Dr          &lt;NA&gt;           &lt;NA&gt;         Chen           &lt;NA&gt; 2023-03-02 3456.78 office supplies            laptop
+47           T Wilson Jr          &lt;NA&gt;             T           &lt;NA&gt;       Wilson             Jr       &lt;NA&gt;  500.00 office supplies           printer
+48      Eva Rodriguez Sr          &lt;NA&gt;           Eva           &lt;NA&gt;    Rodriguez             Sr 2023-03-22   92.45            food              &lt;NA&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Makes all level-2 (##) headings collapsible: click to expand/collapse -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var h2s = document.querySelectorAll('body h2');
+  h2s.forEach(function(h2) {
+    var details = document.createElement('details');
+    details.setAttribute('open', '');  // start expanded so page looks normal
+    var summary = document.createElement('summary');
+    summary.className = 'h2';
+    summary.style.cursor = 'pointer';
+    summary.style.fontWeight = 'bold';
+    summary.innerHTML = h2.innerHTML;
+    h2.parentNode.insertBefore(details, h2);
+    details.appendChild(summary);
+    var nodes = [];
+    var next = h2.nextElementSibling;
+    while (next && next.tagName !== 'H2') {
+      nodes.push(next);
+      next = next.nextElementSibling;
+    }
+    nodes.forEach(function(node) { details.appendChild(node); });
+    h2.remove();
+  });
+});
+</script>
 </section>
 </section>
 

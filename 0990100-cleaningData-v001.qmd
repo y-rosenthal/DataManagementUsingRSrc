@@ -92,7 +92,9 @@ The following are many of the inconsistencies
 # What you need to do 
 
 Write a function named cleanUp that takes the dataframe as 
-an argument and returns a cleaned dataframe. Do not lose any data.
+an argument and returns a cleaned dataframe. 
+Each column should have a consistent format for all columns.
+Do not lose any data in the process.
 
 Split the `employee` column into the following fields (and remove the 
 original single `employee` column):
@@ -128,11 +130,11 @@ consistent structure as before.
 ::: {.callout-note collapse="true"}
 ## click here to see one solution
 
-The solution below uses base R (grep, grepl, sub, gsub, strsplit, toupper, tolower, paste, paste0, nchar) where possible; any stringr functions are called with the `stringr::` prefix.
-
 ```{r}
 #| label: cleanUp-solution
 #| class-output: cleanup-table-scroll
+#| echo: false
+#| output: false
 
 # =============================================================================
 # STRING HELPERS
@@ -511,7 +513,7 @@ clean_comments <- function(commentStrings) {
 #               employeeFirst, employeeMiddle, employeeLast, employeeSuffix; and with
 #               date, amount, category, comments cleaned to consistent formats.
 #   Example:    cleanUp(expenses)  ->  wide table with cleaned columns
-cleanUp <- function(expensesDF) {
+cleanup <- function(expensesDF) {
   df <- as.data.frame(expensesDF, stringsAsFactors = FALSE)
   emp <- parse_employee_column(df$employee)
   df$employee <- NULL
@@ -523,7 +525,26 @@ cleanUp <- function(expensesDF) {
   df
 }
 
-cleanUp(expenses)
+cleanup(expenses)
+```
+:::
+
+
+
+Given the data above, your output should show the following:
+       
+<!-- show the values output by the answer code -->
+```{r}
+cleanup(expenses)
 ```
 
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: cleanUp-solution
+#| class-output: cleanup-table-scroll
+#| echo: true
+```
 :::
+

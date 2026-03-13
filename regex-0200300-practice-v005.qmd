@@ -1,5 +1,16 @@
 # Regular Expression Practice - Cleaning Data
 
+<style>
+/* Style all level-4 headings */
+h4 {
+  background-color: #f2f2f2;   /* light grey */
+  padding: 0.4em 0.6em;
+  margin-left: -1rem;          /* extend to container edges */
+  margin-right: -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+</style>
 
 ```{r}
 #| echo: false
@@ -135,7 +146,7 @@ head(expenses, 10)
     way to express that there are no comments for a given row.
 
 
-## Questions - PART I
+## Questions - PART I  (writing code)
 
 Your task is to write R code using regular expressions to identify different patterns in the data.
 
@@ -153,160 +164,1293 @@ For each question:
 
 ### Name Format Questions
 
-1. Answer all parts
+#### Question 1a
 
-    a) Write R code using regex to identify all names that are in "last, first" 
-       format (e.g., "Schwartz, Joe", including those with suffixes like "Sr." or
-       "Jr."). Make sure that you allow for any number of spaces between the 
-       comma and the first name (including if there aren't any spaces).
+Write R code using regex to identify all names that are in "last, first" 
+format (e.g., "Schwartz, Joe", including those with suffixes like "Sr." or
+"Jr."). Make sure that you allow for any number of spaces between the 
+comma and the first name (including if there aren't any spaces).
 
-       <!-- generate answer but don't show this code -->
-       ```{r}
-       #| label: answer-1a
-       #| echo: false
-       #| output: false
-      
-       answer = 
-         grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
-       ```
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-1a
+#| include: false
+#| echo: false
+#| output: false
 
-       Given the data above, your output should show the following:
-       
-       <!-- show the values output by the answer code -->
-       ```{r}
-       #| echo: false
-       cat(answer, sep = "\n")
-       ```
+answer = 
+ grep("^[a-zA-Z]+,.+$", expenses$employee, value=TRUE)
+```
 
-       ::: {.callout-note collapse="true"}
-       ### Click here for answer
-       <!-- show how to generate answer -->
-       ```{r}
-       #| ref.label: answer-1a
-       #| echo: true
-       ```
-       <!-- show the output -->
-       ```{r}
-       cat(answer, sep="\n")
-       ```
-       :::
+Given the data above, your output should show the following:
 
-    b) Modify your answer to show only names that are strictly in  
-       last, first form (without a suffix) 
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
 
-       <!-- generate answer but don't show this code -->
-       ```{r}
-       #| label: answer-1b
-       #| echo: false
-       #| output: false
-      
-       answer = 
-         grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
-       ```
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-1a
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
 
-       Given the data above, your output should show the following:
-       
-       <!-- show the values output by the answer code -->
-       ```{r}
-       #| echo: false
-       cat(answer, sep = "\n")
-       ```
+#### Question 1b
 
-       ::: {.callout-note collapse="true"}
-       ### Click here for answer
-       <!-- show how to generate answer -->
-       ```{r}
-       #| ref.label: answer-1b
-       #| echo: true
-       ```
-       <!-- show the output -->
-       ```{r}
-       cat(answer, sep="\n")
-       ```
-       :::
+Modify your answer to show only names that are strictly in  
+last, first form (without a suffix) 
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-1b
+#| include: false
+#| echo: false
+#| output: false
+
+answer = 
+ grep("^[a-zA-Z]+, *[a-zA-Z]+$", expenses$employee, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-1b
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
 
    
+#### Question 2
 
-2. Write R code using regex to display only names that begin with "Dr" (with or without a period).
-   Make sure that you don't display names (e.g. "Drake Wilson") that begin with Dr 
-   but who aren't doctors.
-
-
-   <!-- generate answer but don't show this code -->
-   ```{r}
-   #| label: answer-2
-   #| echo: false
-   #| output: false
-      
-   answer = 
-      grep("^Dr[. ]", expenses$employee, value=TRUE)
-   ```
-
-   Given the data above, your output should show the following:
-       
-   <!-- show the values output by the answer code -->
-   ```{r}
-   #| echo: false
-   cat(answer, sep = "\n")
-   ```
-
-   ::: {.callout-note collapse="true"}
-   ### Click here for answer
-   <!-- show how to generate answer -->
-   ```{r}
-   #| ref.label: answer-2
-   #| echo: true
-   ```
-   <!-- show the output -->
-   ```{r}
-   cat(answer, sep="\n")
-   ```
-   :::
+Write R code using regex to display only names that begin with "Dr" (with or without a period).
+Make sure that you don't display names (e.g. "Drake Wilson") that begin with Dr 
+but who aren't doctors.
 
 
-3. Write R code using regex to identify all names that are completely lowercase (no capitalization).
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-2
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+  grep("^Dr[. ]", expenses$employee, value=TRUE)
+```
 
-4. Write R code using regex to identify all names that include a middle name or middle initial.
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
 
-5. Write R code using regex to identify all names that have a suffix (Sr. or Jr., with or without the period).
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-2
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+
+#### Question 3
+
+Write R code using regex to identify all names that are completely lowercase (no capitalization).
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-3
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+ grep("^[a-z][a-z. ,]*$", trimws(expenses$employee), value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-3
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 4
+
+Write R code using regex to identify all names that include a middle name or middle initial.
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-4
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+ grep("( [A-Za-z]\\. |([^ ]+ ){2,}[^ ]+)", expenses$employee, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-4
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 5
+
+Write R code using regex to identify all names that have a suffix (Sr. or Jr., with or without the period).
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-5
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+ grep("(Jr\\.?|Sr\\.?) *$", trimws(expenses$employee), value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-5
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
 
 ### Date Format Questions
 
-6. Write R code using regex to identify dates in the MM/DD/YYYY format (with or without leading zeros), ensuring valid months (1-12) and days (1-31).
+#### Question 6
 
-7. Write R code using regex to identify dates in the European format (DD/MM/YYYY or DD/MM/YY), ensuring valid days and months.
+Write R code using regex to identify dates in the MM/DD/YYYY format (with or without leading zeros), ensuring valid months (1-12) and days (1-31).
 
-8. Write R code using regex to identify dates in ISO format (YYYY-MM-DD).
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-6
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+ grep("^(0?[1-9]|1[0-2])/(0?[1-9]|[12][0-9]|3[01])/([0-9]{4}|[0-9]{2})$", expenses$date, value=TRUE)
+```
 
-9. Write R code using regex to identify dates that use written month names (e.g., "Jan 19, 2023", "Feb 15, 2023").
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-6
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 7
+
+Write R code using regex to identify dates in the European format (DD/MM/YYYY or DD/MM/YY), ensuring valid days and months.
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-7
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+ grep("^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/([0-9]{4}|[0-9]{2})$", expenses$date, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-7
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 8
+
+Write R code using regex to identify dates in ISO format (YYYY-MM-DD).
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-8
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+ grep("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", expenses$date, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-8
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 9
+
+Write R code using regex to identify dates that use written month names (e.g., "Jan 19, 2023", "Feb 15, 2023").
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-9
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+ grep("(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* [0-9]{1,2},? [0-9]{4}", expenses$date, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-9
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
 
 ### Amount Format Questions
 
-10. Write R code using regex to identify amounts that include a dollar sign (e.g., "$27.00", "$156.00").
+#### Question 10
 
-11. Write R code using regex to identify amounts that are written out in words (e.g., "five hundred", "one thousand").
+Write R code using regex to identify amounts that include a 
+dollar sign (e.g., "$27.00", "$156.00").
 
-12. Write R code using regex to identify amounts that include thousand separators (commas) (e.g., "1,234.56", "2,345.67").
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-10
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+  grep("^\\$", expenses$amount, value=TRUE)
+```
 
-13. Write R code using regex to identify amounts that are whole numbers without decimal places (e.g., "25", "1000").
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-10
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 11
+
+Write R code using regex to identify amounts that are 
+written out in words (e.g., "five hundred", "one thousand").
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-11
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+  grep("^[a-z ]+$", expenses$amount, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-11
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 12
+
+Write R code using regex to identify amounts that include 
+thousand separators (commas) (e.g., "1,234.56", "2,345.67").
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-12
+#| include: false
+#| echo: false
+#| output: false
+   
+answer = 
+  grep(",[0-9]{3}", expenses$amount, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-12
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+
+#### Question 13
+
+Write R code using regex to identify amounts that are 
+whole numbers without decimal places (e.g., "25", "1000").
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-13
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+  grep("^[0-9]+$", expenses$amount, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-13
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
 
 ### Category Format Questions
 
-14. Write R code using regex to identify categories that are entirely uppercase (e.g., "FOOD", "LUNCH").
+#### Question 14
 
-15. Write R code using regex to identify all variations of "office supplies" (including abbreviated forms and different capitalizations).
+Write R code using regex to identify categories that are 
+entirely uppercase (e.g., "FOOD", "LUNCH").
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-14
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+  grep("^[A-Z ]+$", expenses$category, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-14
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 15
+
+Write R code using regex to identify all variations of 
+"office supplies" (including abbreviated forms and different capitalizations).
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-15
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+  grep("office (suppl|stuff|supplies)", expenses$category, ignore.case=TRUE, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-15
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
 
 ### Comment Format Questions
 
-16. Write R code using regex to identify comments that are either NA, "NA", or 
-    consist entirely of dashes (e.g "---" and "-----").
+#### Question 16
 
-17. Write R code using regex to identify comments that describe meetings (containing words like "lunch", "dinner", "client", "team").
+Write R code using regex to identify comments that are either NA, "NA", or 
+consist entirely of dashes (e.g "---" and "-----").
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-16
+#| include: false
+#| echo: false
+#| output: false
+  
+#cmt = as.character(expenses$comments)
+#idx = is.na(expenses$comments) | grepl("^NA$", cmt) | grepl("^[-]+$", cmt)
+tf = is.na(expenses$comments) | 
+     grepl("^NA$", expenses$comments) | 
+     grepl("^[-]+$", expenses$comments)
+answer = expenses$comments[tf]
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-16
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 17
+
+Write R code using regex to identify comments that describe 
+meetings (containing words like "lunch", "dinner", "client", "team").
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-17
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = 
+  grep("(lunch|dinner|client|team)", expenses$comments, ignore.case=TRUE, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-17
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
 
 ### Challenge Questions
 
-18. Write R code using regex to extract just the last name from any name format in the employee column. Your solution should work for all name formats in the dataset.
+#### Question 18
 
-19. Write R code using regex to convert all dates to YYYY-MM-DD format, regardless of their original format. Your solution should handle all date formats in the dataset.
+Write R code using regex to extract just the last name from any 
+name format in the employee column. Your solution should work 
+for all name formats in the dataset.
 
-20. Write R code using regex to standardize all amounts to a decimal number format (e.g., "1234.56"), removing dollar signs, commas, and converting written amounts to numbers.
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-18
+#| include: false
+#| echo: false
+#| output: false
+   
+name = trimws(expenses$employee)
+# Strip trailing suffixes (Jr, Sr, Ph.D, III, II, IV) so "last word" is the surname (case-insensitive)
+suffix_pat = "\\s*(Jr\\.?|Sr\\.?|Ph\\.?D\\.?|III|IV|II)\\s*$"
+name_clean = trimws(sub(suffix_pat, "", name, ignore.case = TRUE))
+last_name = ifelse(grepl("^[^,]+,", name),
+  trimws(sub("^([^,]+),.*", "\\1", name)),
+  sub(".*\\s+([^ ]+)$", "\\1", name_clean))
+# Remove any suffix from last_name (e.g. "Smith Jr" in comma format)
+answer = trimws(sub(suffix_pat, "", last_name, ignore.case = TRUE))
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-18
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 19
+
+Write R code using regex to convert all dates to YYYY-MM-DD format,
+regardless of their original format. Your solution should handle all 
+date formats in the dataset.
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-19
+#| include: false
+#| echo: false
+#| output: false
+  
+answer = format(
+  as.Date(expenses$date,
+    tryFormats = c("%Y-%m-%d", "%m/%d/%Y", "%m/%d/%y", "%d/%m/%Y", "%d/%m/%y",
+      "%B %d, %Y", "%b %d, %Y", "%B %d %Y", "%b %d %Y", "%Y/%m/%d")),
+      "%Y-%m-%d")
+```
+
+Given the data above, your output should show the following:
+   
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-19
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+#### Question 20
+
+Write R code using regex to standardize all amounts to a decimal number 
+format (e.g., "1234.56"), removing dollar signs, commas, and converting 
+written amounts to numbers.
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-20
+#| include: false
+#| echo: false
+#| output: false
+  
+amt = gsub("[$,]", "", expenses$amount)
+amt = gsub("one thousand", "1000", amt, ignore.case=TRUE)
+amt = gsub("five hundred", "500", amt, ignore.case=TRUE)
+amt = gsub("two hundred", "200", amt, ignore.case=TRUE)
+answer = format(round(as.numeric(amt), 2), nsmall=2)
+```
+
+Given the data above, your output should show the following:
+    
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+cat(answer, sep = "\n")
+```
+
+::: {.callout-note collapse="true"}
+### Click here for answer
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: answer-20
+#| echo: true
+```
+<!-- show the output -->
+```{r}
+cat(answer, sep="\n")
+```
+:::
+
+## Questions - PART II   (project)
+
+Write a function named cleanup that takes the dataframe as 
+an argument and returns a cleaned dataframe. 
+Each column should have a consistent format for all columns.
+Do not lose any data in the process.
+
+Split the `employee` column into the following fields (and remove the 
+original single `employee` column):
+
+- **employeeFullName** — a paste of all the name components below (title, first, middle, last, suffix)
+- **employeeTitle** — e.g. Dr, Ms (no period)
+- **employeeFirst** — first name or initial
+- **employeeMiddle** — middle name or initial (NA if none)
+- **employeeLast** — last name or initial
+- **employeeSuffix** — e.g. Sr, Jr (no period; NA if none)
+
+Leave out periods from all name parts (e.g. `J.` becomes `J`, `Dr.` becomes `Dr`).  
+All other columns (date, amount, category, comments) should be cleaned to a 
+consistent structure as before.
+
+<style>
+/* Scrollable box for wide table output: horizontal slider, no wrapping */
+.cleanup-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+}
+.cleanup-table-scroll pre {
+  white-space: pre;
+  margin: 0;
+}
+</style>
+
+```{r}
+#| label: cleanUp-solution
+#| class-output: cleanup-table-scroll
+#| echo: false
+#| output: false
+
+# =============================================================================
+# STRING HELPERS
+# =============================================================================
+
+# strip_periods(text)
+#   Arguments:  text  = character vector (e.g. "Dr.", "J. Smith")
+#   Returns:    character vector of same length with periods removed and
+#               leading/trailing spaces trimmed.
+#   Example:    strip_periods("  J. ")  ->  "J"
+strip_periods <- function(text) {
+  gsub("\\.", "", trimws(text))
+}
+
+# to_sentence_case(text)
+#   Arguments:  text = single string (e.g. "mike david", "O'BRIEN")
+#   Returns:    string with first letter of each word uppercase, rest lowercase (Sentence case).
+#               Returns NA unchanged if text is NA; empty string returned as-is.
+#   Example:    to_sentence_case("mike david harris")  ->  "Mike David Harris"
+to_sentence_case <- function(text) {
+  if (is.na(text) || nchar(trimws(text)) == 0) return(text)
+  words <- strsplit(trimws(text), "\\s+")[[1]]
+  capped <- paste0(toupper(substring(words, 1, 1)), tolower(substring(words, 2)))
+  paste(capped, collapse = " ")
+}
+
+# =============================================================================
+# NAME PARSING — split into small functions by format
+# =============================================================================
+
+# has_suffix(namePart)
+#   Arguments:  namePart = single string, no leading/trailing title (e.g. "Jones Jr")
+#   Returns:    TRUE if name ends with a suffix like Jr, Sr, III, II, IV.
+#   Example:    has_suffix("Jones Jr")  ->  TRUE
+# Suffix pattern: one of Jr/Sr/III/II/IV at end. Require at least one space before suffix
+# so that "Thompson III" correctly captures "III" (R's regex can otherwise match "II" inside "III").
+suffix_pattern <- "(Jr\\.?|Sr\\.?|III|II|IV)"
+suffix_at_end_regex <- paste0("\\s+", suffix_pattern, "\\s*$")
+has_suffix <- function(namePart) {
+  grepl(suffix_at_end_regex, namePart, ignore.case = TRUE)
+}
+
+# extract_suffix(namePart)
+#   Arguments:  namePart = string that may end with a suffix
+#   Returns:    list of two: suffix (string or NA), and nameWithSuffixRemoved (string).
+#   Example:    extract_suffix("Conway, Ella Sr.")  ->  list(suffix = "Sr", nameWithSuffixRemoved = "Conway, Ella")
+#   Uses two groups (name)(suffix) so the suffix is captured correctly; space before suffix required.
+extract_suffix <- function(namePart) {
+  if (!has_suffix(namePart)) {
+    return(list(suffix = NA, nameWithSuffixRemoved = trimws(namePart)))
+  }
+  # Two groups: everything before the suffix, and the suffix. Requiring \s+ before suffix fixes III vs II.
+  nameWithoutSuffix <- sub(paste0("^(.*)\\s+", suffix_pattern, "\\s*$"), "\\1", namePart, ignore.case = TRUE)
+  suffix <- sub(paste0("^.*\\s+", suffix_pattern, "\\s*$"), "\\1", namePart, ignore.case = TRUE)
+  list(suffix = strip_periods(suffix), nameWithSuffixRemoved = trimws(nameWithoutSuffix))
+}
+
+# normalize_suffix(suffix)
+#   Arguments:  suffix = string (e.g. "jr", "SR", "iii") or NA
+#   Returns:    correctly cased suffix: "Jr", "Sr", "II", "III", "IV", or NA if not recognized.
+#   Example:    normalize_suffix("jr")  ->  "Jr"
+normalize_suffix <- function(suffix) {
+  if (is.na(suffix) || trimws(suffix) == "") return(NA)
+  s <- tolower(trimws(suffix))
+  if (s %in% c("jr", "jr.")) return("Jr")
+  if (s %in% c("sr", "sr.")) return("Sr")
+  if (s == "ii") return("II")
+  if (s == "iii") return("III")
+  if (s == "iv") return("IV")
+  suffix
+}
+
+# has_trailing_title(namePart)
+#   Arguments:  namePart = string that might end with "Ph.D" or "PhD"
+#   Returns:    TRUE if it ends with that.
+trailing_phd_regex <- paste0(
+  "\\s+",           # space before Ph.D
+  "Ph\\.?D\\.?",    # Ph.D or PhD (periods optional)
+  "\\s*$"           # optional spaces at end
+)
+has_trailing_title <- function(namePart) {
+  grepl(trailing_phd_regex, namePart, ignore.case = TRUE)
+}
+
+# extract_trailing_phd(namePart)
+#   Returns:  list(titlePart = "PhD" or NA, nameWithTitleRemoved = string).
+extract_trailing_phd <- function(namePart) {
+  if (!has_trailing_title(namePart)) {
+    return(list(titlePart = NA, nameWithTitleRemoved = trimws(namePart)))
+  }
+  tit <- sub(paste0(".*", trailing_phd_regex), "\\1", namePart, ignore.case = TRUE)
+  nameWithout <- sub(trailing_phd_regex, "", namePart, ignore.case = TRUE)
+  list(titlePart = strip_periods(tit), nameWithTitleRemoved = trimws(nameWithout))
+}
+
+# has_leading_title(namePart)
+#   TRUE if name starts with Dr, Mr, Ms, Mrs (with optional period).
+leading_title_regex <- paste0(
+  "^(Dr\\.?|Mr\\.?|Ms\\.?|Mrs\\.?)",  # title at start
+  "\\s+"                               # at least one space after
+)
+has_leading_title <- function(namePart) {
+  grepl(leading_title_regex, namePart, ignore.case = TRUE)
+}
+
+# extract_leading_title(namePart)
+#   Returns:  list(titlePart = "Dr" or NA, nameWithTitleRemoved = string).
+extract_leading_title <- function(namePart) {
+  if (!has_leading_title(namePart)) {
+    return(list(titlePart = NA, nameWithTitleRemoved = trimws(namePart)))
+  }
+  tit <- sub(paste0(leading_title_regex, ".*"), "\\1", namePart, ignore.case = TRUE)
+  nameWithout <- sub(leading_title_regex, "", namePart, ignore.case = TRUE)
+  list(titlePart = strip_periods(tit), nameWithTitleRemoved = trimws(nameWithout))
+}
+
+# parse_name_last_comma_first(namePart)
+#   For names like "Last, First" or "Last, First Middle".
+#   Arguments:  namePart = string containing exactly one comma
+#   Returns:    list(first =, middle =, last =). Periods stripped from each.
+parse_name_last_comma_first <- function(namePart) {
+  parts <- strsplit(namePart, ",\\s*")[[1]]
+  last <- strip_periods(trimws(parts[1]))
+  firstAndMiddle <- strsplit(trimws(parts[2]), "\\s+")[[1]]
+  first <- strip_periods(firstAndMiddle[1])
+  middle <- if (length(firstAndMiddle) >= 2) strip_periods(firstAndMiddle[2]) else NA
+  list(first = first, middle = middle, last = last)
+}
+
+# parse_name_first_last(namePart)
+#   For names like "First Last", "First Middle Last", or just "Last".
+#   Arguments:  namePart = string with no comma
+#   Returns:    list(first =, middle =, last =).
+parse_name_first_last <- function(namePart) {
+  words <- strsplit(trimws(namePart), "\\s+")[[1]]
+  if (length(words) == 1) {
+    list(first = NA, middle = NA, last = strip_periods(words[1]))
+  } else if (length(words) == 2) {
+    list(first = strip_periods(words[1]), middle = NA, last = strip_periods(words[2]))
+  } else {
+    first <- strip_periods(words[1])
+    middle <- strip_periods(words[2])
+    last <- paste(strip_periods(words[3:length(words)]), collapse = " ")
+    list(first = first, middle = middle, last = last)
+  }
+}
+
+# parse_one_employee(employeeName)
+#   Arguments:  employeeName = one raw employee string (e.g. "Dr. A. Davis", "Schwartz, Joe")
+#   Returns:    list with employeeTitle, employeeFirst, employeeMiddle, employeeLast,
+#               employeeSuffix, employeeFullName. All name parts without periods.
+#   Example:    parse_one_employee("Conway, Ella Sr.")  ->  first=Ella, last=Conway, suffix=Sr, title=NA
+parse_one_employee <- function(employeeName) {
+  raw <- trimws(employeeName)
+  outSuffix <- extract_suffix(raw)
+  raw <- outSuffix$nameWithSuffixRemoved
+  outPhd <- extract_trailing_phd(raw)
+  title <- outPhd$titlePart
+  raw <- outPhd$nameWithTitleRemoved
+  outLead <- extract_leading_title(raw)
+  if (!is.na(outLead$titlePart)) {
+    title <- if (is.na(title) || title == "") outLead$titlePart else paste0(outLead$titlePart, " ", title)
+  }
+  raw <- outLead$nameWithTitleRemoved
+  if (is.na(title) || title == "") title <- NA
+
+  if (length(strsplit(raw, ",\\s*")[[1]]) >= 2) {
+    parsed <- parse_name_last_comma_first(raw)
+  } else {
+    parsed <- parse_name_first_last(raw)
+  }
+  first <- to_sentence_case(parsed$first)
+  middle <- to_sentence_case(parsed$middle)
+  last <- to_sentence_case(parsed$last)
+  suffix <- normalize_suffix(outSuffix$suffix)
+
+  fullParts <- c(title, first, middle, last, suffix)
+  fullParts <- fullParts[!is.na(fullParts) & fullParts != ""]
+  employeeFullName <- paste(fullParts, collapse = " ")
+
+  list(employeeTitle = title, employeeFirst = first, employeeMiddle = middle,
+       employeeLast = last, employeeSuffix = suffix, employeeFullName = employeeFullName)
+}
+
+# parse_employee_column(employeeNames)
+#   Arguments:  employeeNames = character vector of raw employee strings
+#   Returns:    data frame with columns employeeFullName, employeeTitle, employeeFirst,
+#               employeeMiddle, employeeLast, employeeSuffix.
+parse_employee_column <- function(employeeNames) {
+  rows <- lapply(employeeNames, parse_one_employee)
+  out <- as.data.frame(do.call(rbind, lapply(rows, unlist)), stringsAsFactors = FALSE)
+  out <- out[c("employeeFullName", "employeeTitle", "employeeFirst", "employeeMiddle", "employeeLast", "employeeSuffix")]
+  out
+}
+
+# =============================================================================
+# DATE PARSING
+# =============================================================================
+
+# is_iso_date(dateStr)
+#   Returns TRUE if string is already yyyy-mm-dd (e.g. "2023-01-19").
+iso_date_regex <- paste0(
+  "^[0-9]{4}",      # 4 digits at start (year)
+  "-",
+  "[0-9]{1,2}",     # 1 or 2 digits (month)
+  "-",
+  "[0-9]{1,2}$"     # 1 or 2 digits at end (day)
+)
+is_iso_date <- function(dateStr) {
+  grepl(iso_date_regex, trimws(dateStr))
+}
+
+# is_month_name_date(dateStr)
+#   Returns TRUE for strings like "Jan 19, 2023" or "January 19, 2023".
+month_name_date_regex <- paste0(
+  "^[A-Za-z]+",     # month name (letters)
+  "\\s+",
+  "[0-9]{1,2}",     # day
+  ",\\s*",
+  "[0-9]{2,4}$"     # 2- or 4-digit year
+)
+is_month_name_date <- function(dateStr) {
+  grepl(month_name_date_regex, trimws(dateStr))
+}
+
+# parse_one_date(dateStr)
+#   Arguments:  dateStr = one date string in any of the supported formats
+#   Returns:    string "yyyy-mm-dd" or NA if unparseable.
+#   Example:    parse_one_date("1/19/2023")  ->  "2023-01-19"
+parse_one_date <- function(dateStr) {
+  s <- trimws(dateStr)
+  if (is_iso_date(s)) return(s)
+  if (is_month_name_date(s)) {
+    d <- as.Date(s, format = "%b %d, %Y")
+    if (is.na(d)) d <- as.Date(s, format = "%B %d, %Y")
+    return(format(d, "%Y-%m-%d"))
+  }
+  date_parts <- strsplit(s, "[/-]")[[1]]
+  if (length(date_parts) != 3) return(NA)
+  n1 <- as.integer(date_parts[1])
+  n2 <- as.integer(date_parts[2])
+  n3 <- as.integer(date_parts[3])
+  len1 <- nchar(date_parts[1])
+  len3 <- nchar(date_parts[3])
+  if (len1 == 4) {
+    y <- n1; m <- n2; d <- n3
+  } else if (len3 == 4) {
+    y <- n3
+    if (n1 > 12) { d <- n1; m <- n2 } else if (n2 > 12) { m <- n1; d <- n2 } else { m <- n1; d <- n2 }
+  } else {
+    y <- 2000 + (n3 - 2000) %% 100
+    if (n1 > 12) { d <- n1; m <- n2 } else if (n2 > 12) { m <- n1; d <- n2 } else { m <- n1; d <- n2 }
+  }
+  sprintf("%04d-%02d-%02d", y, m, d)
+}
+
+# parse_dates(dateStrings)
+#   Arguments:  dateStrings = character vector of date strings
+#   Returns:    character vector of same length, each element "yyyy-mm-dd" or NA.
+parse_dates <- function(dateStrings) {
+  sapply(trimws(dateStrings), parse_one_date)
+}
+
+# =============================================================================
+# AMOUNT, CATEGORY, COMMENTS
+# =============================================================================
+
+# word_to_number(word)
+#   Arguments:  word = string with a number in words (e.g. "five hundred", "twenty-one",
+#               "one thousand two hundred thirty-four"). Hyphens and "and" are allowed.
+#   Returns:    numeric value, or NA if the string is not a recognized number phrase.
+#   Examples:   word_to_number("five hundred") -> 500; word_to_number("twenty-one") -> 21;
+#               word_to_number("one thousand two hundred thirty four") -> 1234.
+#   Supports:   zero–nine, ten–nineteen, twenty–ninety, hundred, thousand, million.
+word_to_number <- function(word) {
+  w <- tolower(trimws(word))
+  w <- gsub("-", " ", w)
+  w <- gsub("\\band\\b", " ", w)
+  words <- strsplit(w, "\\s+")[[1]]
+  words <- words[words != ""]
+  if (length(words) == 0) return(NA)
+
+  ones <- c(zero = 0, one = 1, two = 2, three = 3, four = 4, five = 5, six = 6, seven = 7, eight = 8, nine = 9)
+  teens <- c(ten = 10, eleven = 11, twelve = 12, thirteen = 13, fourteen = 14, fifteen = 15,
+             sixteen = 16, seventeen = 17, eighteen = 18, nineteen = 19)
+  tens <- c(twenty = 20, thirty = 30, forty = 40, fifty = 50, sixty = 60, seventy = 70, eighty = 80, ninety = 90)
+
+  total <- 0
+  current <- 0
+  i <- 1
+  while (i <= length(words)) {
+    x <- words[i]
+    if (x %in% names(ones)) {
+      current <- current + ones[x]
+      i <- i + 1
+    } else if (x %in% names(teens)) {
+      current <- current + teens[x]
+      i <- i + 1
+    } else if (x %in% names(tens)) {
+      current <- current + tens[x]
+      i <- i + 1
+    } else if (x == "hundred") {
+      if (current == 0) current <- 1
+      current <- current * 100
+      i <- i + 1
+    } else if (x == "thousand") {
+      if (current == 0) current <- 1
+      total <- total + current * 1000
+      current <- 0
+      i <- i + 1
+    } else if (x == "million") {
+      if (current == 0) current <- 1
+      total <- total + current * 1000000
+      current <- 0
+      i <- i + 1
+    } else {
+      return(NA)
+    }
+  }
+  total + current
+}
+
+# clean_amounts(amountStrings)
+#   Arguments:  amountStrings = character vector (e.g. "$27.00", "1,234.56", "five hundred")
+#   Returns:    numeric vector. Removes $ and commas; converts word amounts when possible.
+clean_amounts <- function(amountStrings) {
+  x <- trimws(amountStrings)
+  result <- numeric(length(x))
+  for (i in seq_along(x)) {
+    s <- gsub("[$,]", "", x[i])
+    s <- trimws(s)
+    if (grepl("^[0-9.]+$", s)) {
+      result[i] <- as.numeric(s)
+    } else {
+      result[i] <- word_to_number(x[i])
+    }
+  }
+  result
+}
+
+# clean_categories(categoryStrings)
+#   Arguments:  categoryStrings = character vector (e.g. "FOOD", "office suppl.")
+#   Returns:    character vector, lowercase, with abbreviations normalized
+#               (e.g. "office suppl." and "Office Stuff" -> "office supplies", "LUNCH" -> "food").
+office_suppl_regex <- paste0(
+  "\\boffice\\s+suppl\\.?\\s*$"   # "office suppl" or "office suppl." at end of string
+)
+office_stuff_regex <- "\\boffice\\s+stuff\\s*$"
+lunch_regex <- "\\blunch\\s*$"
+clean_categories <- function(categoryStrings) {
+  x <- tolower(trimws(categoryStrings))
+  x <- sub(office_suppl_regex, "office supplies", x)
+  x <- sub(office_stuff_regex, "office supplies", x)
+  x <- sub(lunch_regex, "food", x)
+  x
+}
+
+# clean_comments(commentStrings)
+#   Arguments:  commentStrings = character vector; can contain placeholders like "---", "NA"
+#   Returns:    character vector; placeholders and empty strings replaced with NA.
+placeholder_regex <- "^(---|NA|n/a)$"
+clean_comments <- function(commentStrings) {
+  x <- trimws(as.character(commentStrings))
+  x[grepl(placeholder_regex, x, ignore.case = TRUE)] <- NA
+  x[x == ""] <- NA
+  x
+}
+
+# =============================================================================
+# MAIN CLEANUP
+# =============================================================================
+
+# cleanUp(expensesDF)
+#   Arguments:  expensesDF = data frame with columns employee, date, amount, category, comments
+#   Returns:    data frame with employee replaced by employeeFullName, employeeTitle,
+#               employeeFirst, employeeMiddle, employeeLast, employeeSuffix; and with
+#               date, amount, category, comments cleaned to consistent formats.
+#   Example:    cleanUp(expenses)  ->  wide table with cleaned columns
+cleanup <- function(expensesDF) {
+  df <- as.data.frame(expensesDF, stringsAsFactors = FALSE)
+  emp <- parse_employee_column(df$employee)
+  df$employee <- NULL
+  df <- cbind(emp, df)
+  df$date     <- parse_dates(df$date)
+  df$amount   <- clean_amounts(df$amount)
+  df$category <- clean_categories(df$category)
+  df$comments <- clean_comments(df$comments)
+  df
+}
+
+cleanup(expenses)
+```
+
+Given the data above, your output should show the following:
+       
+<!-- show the values output by the answer code -->
+```{r}
+cleanup(expenses)
+```
+
+::: {.callout-note collapse="true"}
+### Click here for one possible solution
+<!-- show how to generate answer -->
+```{r}
+#| ref.label: cleanUp-solution
+#| class-output: cleanup-table-scroll
+#| echo: true
+```
+:::
+
+
+```{=html}
+<!-- Makes all level-2 (##) headings collapsible: click to expand/collapse -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var h2s = document.querySelectorAll('body h2');
+  h2s.forEach(function(h2) {
+    var details = document.createElement('details');
+    details.setAttribute('open', '');  // start expanded so page looks normal
+    var summary = document.createElement('summary');
+    summary.className = 'h2';
+    summary.style.cursor = 'pointer';
+    summary.style.fontWeight = 'bold';
+    summary.innerHTML = h2.innerHTML;
+    h2.parentNode.insertBefore(details, h2);
+    details.appendChild(summary);
+    var nodes = [];
+    var next = h2.nextElementSibling;
+    while (next && next.tagName !== 'H2') {
+      nodes.push(next);
+      next = next.nextElementSibling;
+    }
+    nodes.forEach(function(node) { details.appendChild(node); });
+    h2.remove();
+  });
+});
+</script>
+```
+
+
