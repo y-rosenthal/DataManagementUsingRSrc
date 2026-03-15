@@ -4,6 +4,11 @@
 rm(list=ls())
 ```
 
+```{r}
+#| file: 0200200-regex-setup.R
+#| include: false
+```
+
 ## Intro to Regular Expressions (Also Known As "regex")
 
 Regular expressions (AKA "regex") are patterns that are used to identify specific
@@ -56,20 +61,10 @@ Before we start, let's define some data to be used with examples in this file.
 ### fruit vector
 
 ```{r}
-#| file: createData-vecFruit-v001.R
-#| echo: true
-```
-
-```{r}
 fruit
 ```
 
 ### addresses vector
-
-```{r}
-#| file: createData-vecAddresses-v001.R
-#| echo: true
-```
 
 ```{r}
 addresses
@@ -81,8 +76,7 @@ cat(addresses, sep="\n")
 ### famousQuotes dataframe
 
 ```{r}
-#| file: createData-famousQuotesDf-v001.R
-#| echo: true
+famousQuotesDf
 ```
 
 ## The stringr package
@@ -97,8 +91,6 @@ The stringr package includes some data that we will use in the examples.
 # The stringr package also contains some data that can be used to experiment
 # with these functions. 
 #-------------------------------------------------------------------------.
-
-if(!require(stringr)){install.packages("stringr");require(stringr)}
 
 stringr::words
 head(stringr::words, 100)
@@ -371,8 +363,6 @@ between the different values. This "delimeter" can be a regular expression.
 We'll come back to strsplit later, but let's introduce it here.
 
 ```{r}
-sentences = c("He said hi. She said bye. We went to the park.",
-              "I like ice cream! Do you? Sue likes pizza.")
 sentences
 ```
 
