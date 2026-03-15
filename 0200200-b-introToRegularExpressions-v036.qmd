@@ -1,0 +1,345 @@
+## "anchors" \^ and \$
+
+```{r}
+# ^ and $    ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Regular Expressions use special characters to control what is matched.
+# These characters are called "meta-characters".
+#
+#   ^  "matches" the start of the character value
+#   $  "matches" the end of the character value
+#
+#   The [square brackets] described above are also "meta characters" in
+#   regular expressions. (We will describe those in more detail next)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep(pattern="^a", x=fruit, value=TRUE)  # find fruits that START with an "a"
+
+grep("a$", fruit, value=TRUE)  # find fruits that END with an "a"
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a command using grep to display all the fruits that start with
+# with a c or an s. Make your search case insensitive.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#         ANSWERS ####
+grep("^[csCS]", fruit, value=TRUE)
+
+grep("^[cs]", fruit, value=TRUE, ignore.case = TRUE)
+
+grep("^[cs]", tolower(fruit), value=TRUE)
+```
+
+## periods
+
+```{r}
+# . (i.e. a period) ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# a period (ie  .  ) "matches" any single character.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("^.a", fruit, value=TRUE)  # 2nd letter is a
+
+grep("^..a", fruit, value=TRUE)  # 3rd letter is a
+
+grep("a.$", fruit, value=TRUE)  # 2nd to last letter is an a
+
+grep("....", fruit, value=TRUE) # all fruit that are AT LEAST 4 characters long
+
+grep("^....$", fruit, value=TRUE) # all fruit that are EXACTLY 4 characters long
+```
+
+## "character classes" eg. [abc]
+
+```{r}
+# [abc] matches a SINGLE "a", "b" or "c".    ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# characters in [square brackets] match a single copy of
+# any of those characters, e.g.
+#  [abc]    matches exactly one of a,b or c
+#
+# DEFINITION: 
+# The [square brackets] with the characters in them are often referred to as 
+# "character classes" or "character sets"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### Examples
+
+```{r}
+grep("[qbxz]", fruit, value=TRUE)  # find fruit that contain q,b,x or z
+
+grep("[aeiou][aeiou]", fruit, value=TRUE)  # two vowels in a row
+
+grep("^.[aeiou][aeiou]", fruit, value=TRUE)  # vowels in the 2nd and 3rd positions
+
+grep("[aeiou][aeiou].$", fruit, value=TRUE)  # 2nd & 3rd to last characters are vowels
+
+grep("[aeiou][aeiou][aeiou]", fruit, value=TRUE)  # 3 vowels in a row
+
+
+
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# replace the FIRST vowel that appears in any fruit with the letter "X"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# replace ALL vowels that appears in any fruit with the letter "X"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+gsub("[aeiouAEIOU]", "X", fruit)
+
+
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# remove ALL of the vowels that appear in any fruit
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+gsub("[aeiouAEIOU]", "", fruit)
+```
+
+### dashes, e.g. [a-d]
+
+```{r}
+# Specify ranges with dash, e.g. [a-d] or [0-3] or [a-d0-3], etc ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Specify ranges with dash, e.g. [a-d] is same as [abcd], [0-3] is same as [0123] ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### Examples
+
+```{r}
+grep("[j-m]", fruit, value=TRUE)  # fruits that contain any of j,k,l,m
+
+addresses  # this was defined above
+
+grep("[0-9]", addresses, value=TRUE)  # contains a digit
+
+grep("[6-9]", addresses, value=TRUE)  # contains 6,7,8 or 9
+
+grep("[0-9][0-9]", addresses, value=TRUE)  # contains a number with at least 2 digits
+
+grep("[0-9][0-9][0-9][0-9]", addresses, value=TRUE)  # contains a # with at least 4 digits 
+
+grep("^[6-9]", addresses, value=TRUE)  # contains 6,7,8 or 9 as the first character
+
+grep("^.[6-9]", addresses, value=TRUE) # 6,7,8 or 9 is second character
+
+grep("[0-9]$", addresses, value=TRUE) # last character is a digit
+
+grep("[0-9][0-9][0-9]$", addresses, value=TRUE) # ends with at least 3 digits
+
+grep("[0-9][0-9][0-9][0-9]$", addresses, value=TRUE) # ends with at least 4 digits
+```
+
+### combine multiple ranges one [brackets]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You can combine multiple ranges and values in a single [brackets]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("[1-3x-z]$", addresses, value=TRUE) # ends with 1,2,3,x,y or z
+
+grep("[of-hq]", fruit, value=TRUE)  # seraches for any of o,f,g,h,q
+
+# REMEMBER THE [BRACKETS]!!!
+grep("of-hq", fruit, value=TRUE)  # searches for exactly :  "of-hq"
+```
+
+### [^abc]
+
+```{r}
+# [^abc] matches a single character that is NOT a,b or c ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# When ^ is the FIRST character in the [^brackets] it means to match a 
+# single character that is NOT one of the characters in the brackets
+#
+# [^abc]  - i.e. a single character that is NOT a,b or c
+# [^0-9]  - a non-digit
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("^[^0-9]", addresses, value=TRUE)  # does NOT start with a digit
+
+grep("[^0-9]$", addresses, value=TRUE)  # does NOT end with a digit
+
+grep("[^0-9]", addresses, value=TRUE)
+
+# Contains 5 non-vowels in a row (notice that space counts as a non-vowel)
+grep("[^aeiou][^aeiou][^aeiou][^aeiou][^aeiou]", fruit, value=TRUE, ignore.case=TRUE)
+```
+
+### metachars lose special meaning in brackets eg. [.$*] 
+
+```{r}
+# meta characters in [brackets] other than ^ - and ] lose their special meaning ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Most meta characters inside of [brackets] are treated like any other character.
+# They do NOT have any special meaning in the brackets. Therefore you can use
+# them without any problem inside a character class. For example [.$]
+# matches either a period or a dollar sign (see exmaples below).
+#
+# The only exceptions are ^ - and ] which DO have a special meaning inside of
+# the [square brackets] - see more info below.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("This is a period: .", "apple", "45 oranges", "$2", "This is an open bracket: [")
+stuff
+
+# EXAMPLE
+#
+# Match a period, left-square-bracket, or a dollar sign
+# You do NOT need backslashes inside of the [brackets]
+grep("[.[$]", stuff, value=TRUE)
+
+# ANOTHER EXAMPLE
+#
+# The following matches either a period or a digit.
+# You do NOT need to use a backslash before the period.
+grep("[.1-9]", stuff, value=TRUE)
+
+# The backslash will not hurt (but it isn't necessary inside the character class)
+# (below we will explain why there are TWO backslashes - for now you can leave
+# off both of the backslashes)
+grep("[\\.1-9]", stuff, value=TRUE)
+```
+
+### Special cases:    ^    -    ]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Special cases:    ^    -    ]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The following characters have to be addressed in a special way inside
+# of a character class. 
+#
+# ^   As we saw above, if the first character in the brackets is ^ the regex will
+#     look for characters that are NOT in the brackets. If ^ appears anywhere else
+#     inside the brackets it has no special meaning.
+#
+# -   As we saw above, [a-d] is the same as [abcd]. Therefore the - has a special
+#     meaning inside of a character class. If you want to actually search
+#     for a -, it must be the first, e.g. [-abc] or last character, eg. [abc-]
+#     in the class.
+#
+# ]   has a special meaning - i.e. to end the character class. Therefore if 
+#     you want to seach for an actual "]", the "]" should be specified
+#     as the very FIRST character in the class, e.g. []abc]
+#-------------------------------------------------------------------
+
+# Examples:
+
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+# The "." inside of [brackets] simply means an actual period.
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+stuff = c("...", "def", "...bbbzzzbz.bzz...z.b", "^^^")
+stuff
+grep ("[.x]", stuff, value=TRUE)
+```
+
+### matching ^ inside [square brackets]
+
+```{r}
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+# The "^" inside of [brackets] has a different meaning if it is in the 
+# first position or if it is anywhere else. For example:
+#
+# [^abc]   matches anything that is NOT an "a","b" or "c"
+#
+# [a^bc]   
+# [abc^]   both of these examples matches one "a","b","c" or "^" character
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+caretStuff = c("^^^", "hello", "???")
+caretStuff
+
+grep ("[^a-z]", caretStuff, value=TRUE)   # "^^^" "???"
+
+grep ("[a-z^]", caretStuff, value=TRUE)   # "^^^" "hello"
+
+grep ("[^^]", caretStuff, value=TRUE)     # "hello" "???"
+
+
+
+# find all entries that have any symbol that is not a ".", "b" or "z"
+
+stuff = c("...", "def", "...bbbzzzbz.bzz...z.b", "^^^")
+stuff
+grep ("[^.bz]", stuff, value=TRUE)
+
+#grep("[a-z.]", c())
+```
+
+### Matching a - inside [square brackets]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Matching a dash (i.e. - ) inside a character class
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# As we saw earlier, inside of [bracketes] a dash special meaning (to indicate a range).
+# To actually match a dash as one of the characters place the dash as either the 
+# first or last character in the brackets.
+
+
+dashStuff = c("---", "hello", "xxx")
+dashStuff
+
+grep ("[-xyz]", dashStuff, value=TRUE)   # "---" "xxx"
+
+grep ("[xyz-]", dashStuff, value=TRUE)   # "---" "xxx"   (same thing)
+
+grep ("[a-f]", dashStuff, value=TRUE)   # "hello"
+
+grep ("[-a-f]", dashStuff, value=TRUE)   # "---" "hello"
+```
+
+### Matching a ] inside [square brackets]
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# To match a closing-square-bracket "]" inside a character class you must
+# specify the ] as the very FIRST symbol in the character class.
+#
+# NOTE - there are no special rules for matching an open-square-bracket, "["
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("]", "apple", "zzz" )
+stuff
+grep("]", stuff, value=TRUE)    #  "]"
+
+# The pattern "[]a]" matches a single character that is either "]" or "a".
+# It finds "]" and also "apple" (since "apple" it contains an "a").
+#
+# This works since "]" is placed as the very first character in the 
+# [brackets] so it is simply one of the characters that is searched for.
+
+grep("[]a]", stuff, value=TRUE) #  "]"  "apple"
+
+# This is VERY different for the pattern "[a]]"
+#
+# The following example shows what happens if you put the "]" in any
+# position other than the first. The pattern "[a]]" is broken down as follows:
+#
+#   [a]   This is the single character "a". Note
+#
+#   ]     This does NOT signify the end of the character class, but is 
+#         rather just a regular character that must be part of the text to be 
+#         matched.
+#
+# Therefore [a]] is looking for the EXACT text "a]" somewhere in the text
+# being searched.
+
+grep("[a]]", stuff, value=TRUE) # No matches - looking for "a]" in the text
+```
+

@@ -1,0 +1,71 @@
+## backreferences \\1 \\2 etc
+
+```{r}
+# BACKREFERENCES  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Parenthesized expressions in a regex can be referred "back" to 
+# with \1, \2 ... 
+# (remember in R you need two backslashes - i.e. \\1, \\2, ...)
+#
+# The original regex standard only allowed for up to nine
+# backreferences, ie. \1 \2 \3 ... \9  
+# It did not allow for \10. Some environments have ways to
+# allow you to reference \10 and further but I personally
+# don't know how to do that in R ... I guess you could 
+# research that if you need to but it usually doesn't
+# come up. If it becomes an issue, there is almost always
+# a simple way to workaround the situation
+# using loops and other coding approaches.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+# Find fruits that have 3 letters in the pattern xyx or aba
+grep ("([a-z])[a-z]\\1", fruit, value=TRUE)
+
+grep ("([a-z])([a-z])\\1\\2", fruit, value=TRUE)
+
+grep("([a-z][a-z])\\1", fruit, value=TRUE)
+
+
+gsub ("([a-z])([a-z])\\1", "\\2\\1\\2", fruit)
+
+gsub("^(.)(.)(.)",   # reverse the first 3 characters  
+     "\\3\\2\\1", 
+     fruit)
+
+# QUESTION
+# Write a command to swap the first character and last character of
+# each fruit
+
+gsub( "^(.)(.*)(.)$" , "\\3\\2\\1" , fruit)
+
+gsub( "^(.)(.*)(.)$" , "\\3-\\2-\\1" , fruit)
+
+
+# QUESTION 
+# Find fruits that start and end with the same letter
+#
+
+grep("^(.).*\\1$", fruit, value=TRUE)
+
+
+shoppingList = c("35 yumberry pops", 
+                 "four strawberries         ", 
+                 " five apples",
+                 "six yumberry and strawberries pops")
+shoppingList
+
+# QUESTION
+# Use sub or gsub to replace words that start and end with the same letter
+# with the first letter then "XXXX" then the last letter of the word
+
+gsub("\\b(.).*\\1\\b", "\\1XXXX\\1", shoppingList)
+
+# Make the * UN-greedy by following it with a ?
+gsub("\\b(.).*?\\1\\b", "\\1XXXX\\1", shoppingList)
+
+#
+gsub("\\b([a-z])[a-z]*?\\1\\b", "\\1XXXX\\1", shoppingList)
+```
+

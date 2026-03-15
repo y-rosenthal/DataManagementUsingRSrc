@@ -1,0 +1,471 @@
+## Searching with regular expressions in a "text editor"
+
+A "text editor" is a program that is used to edit "text files". A text file
+can only contain "plain text" - i.e. no pictures, no music, only one font, 
+
+RStudio's text editor
+
+The text editor that is in RStudio can be used to create many different
+types of files. For example, it can be used to create 
+both "R Script files" (i.e. .R files) and "Quarto Documents" (i.e. .qmd files).
+In addition, it can be used to create "plain text files". To do so, choose
+the following menu choices from RStudio's menu: "File | New File | Text File"
+
+
+```{r}
+# NOTE: regular expressions are used in many different languages and environments.
+# In general in regular expression in OTHER environments, 
+# if you want to actually match a metacharacter (e.g. period, parentheses,
+# caret, dollar sign, etc) you precede the metacharacter with a backslash.
+#
+# For example, you can do this in RStudio's text editor - just type ctrl-f or cmd-f
+# and click "regex" checkbox. Then type your regular expression into the 
+# search box.
+# For example
+# Try searching the addresses.txt file for the following in the RStudio text
+# editor:
+#
+#   one|1
+#   .
+#   \.
+#   $
+#   \$
+#
+# Matching meta characters requires that you "escape" the meta-character
+# by preceding it with a backslash e.g.  \.
+```
+
+## Matching meta-characters
+
+```{r}
+# Matching meta-characters ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# NOTE: regular expressions are used in many different languages and environments.
+# In general in regular expression in OTHER environments, 
+# if you want to actually match a metacharacter (e.g. period, parentheses,
+# caret, dollar sign, etc) you precede the metacharacter with a backslash.
+#
+# For example, you can do this in RStudio's text editor - just type ctrl-f or cmd-f
+# and click "regex" checkbox. Then type your regular expression into the 
+# search box.
+#
+# For example
+# Try searching the addresses.txt file for the following in the RStudio text
+# editor:
+#
+#   one|1
+#   .
+#   \.
+#   $
+#   \$
+#
+# Matching meta characters requires that you "escape" the meta-character
+# by preceding it with a backslash e.g.  \.
+#
+#
+#
+# When writing regular expression patterns in R you must use TWO \\'s to escape a metacharacter ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# HOWEVER, in R, since character values already use a backslash
+# such as \n for a new line, you must use TWO backslashes in the regex
+# pattern. The first backslash escapes the 2nd backslash from R
+# so that R's character values don't interpret it in a special way.
+# See the examples below.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### Reminder of how backslashes (\) are used in R ####
+
+```{r}
+# Reminder of how backslashes (\) are used in R ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Remember that R uses backslashes to change the meaning (or to "escape" 
+# the meaning) of the character that follows the backslash. 
+# For example in the following cat command, \n, is displayed as a 
+# "newline character" and \t is displayed as a tab.
+
+cat("Hello\nJoe\thow are you\n\ndoing?\n\tI'm fine.")
+
+# Similarly in the following cat command the \" escapes the meaning
+# of the quote. It no longer implies the end of the quotation. The 
+# meaning of \" is simply to include a quotation mark as part of the 
+# text.
+
+cat("Lincoln said \"Four score and seven years ago today...\"")
+
+# If the following line were not commented it would cause an error
+# because the quotation is not actually closed due to the \ before the
+# final quotation mark.
+#
+#cat("This is a backslash: \")   # ERROR
+
+# The following works correctly. Note that \\ is needed to escape
+# the normal meaning of the backslash character!
+#cat("This is a backslash: \\")   # ERROR
+
+#cat("This is a period \.")   # ERROR \. is NOT an R escape sequence
+
+# You must use TWO backslashes in R's regular expressions ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# In R you must use two backslashes in a regex pattern to 
+# escape a metacharacter.
+
+
+grep("\\.", addresses, value=TRUE)  # all addresses that contain a period
+
+grep(".", addresses, value=TRUE)  # All the addresses
+
+stuff = c("", "apple", "", "banana")
+stuff
+grep(".", stuff, value=FALSE)
+
+grep(".", stuff, value=TRUE)
+
+# This is an ERROR in R but would be correct in other 
+# languages or environment that use regular expressions
+#grep("\.", addresses, value="TRUE")  # ERROR - R doesn't recognize \.
+
+# Without the backslash you will find all addresses that contain
+# at least a single character (i.e. all the addresses)
+grep(".", addresses, value="TRUE")  
+
+grep("\\$", addresses, value=TRUE)   # addresses that contain a dollar sign
+
+grep("$", addresses, value=TRUE)    # all addresses - why?? - they all have an ending
+```
+
+### To search for an actual backslash you must use 4 backslashes in the pattern
+
+```{r}
+# To search for an actual backslash you must use 4 backslashes in the pattern ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Searching for an actual backslash in the data can be tricky. 
+# Remember, one of our addresses had a backslash in it. Let's find it.
+#
+# To look for a single backslash in the data you must use FOUR backslashes.
+# Just as R character values need to "escape" a backslash with a 2nd backslash,
+# so too do regular expressions need to escape a backslash with a 2nd backslash.
+# Therefore if you want to write a regular expression in R that searches for
+# a backslash, you must write FOUR backslashes in a row. The first two resolve
+# to a single backslash. The 3rd and 4th resolve to a single backslash. Then finally
+# the two single backslashes are used in the regular expression to match a 
+# single actual backslash in the data.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+answer = grep("\\\\", addresses, value=TRUE)  # look for a single backslash in the data
+
+answer
+
+cat(answer)
+
+
+
+stuff="\\\\"
+stuff
+cat(stuff)
+```
+
+## Matching QUOTES
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Matching QUOTES
+#
+# "Quotation marks" are NOT meta-characters in regular expressions. They
+# have no special meaning in a regular expression. However, as with all 
+# R code you must make sure to use a single backslash if the quotation mark
+# is inside of quotation marks (e.g.  "\"" ) - see the example below.
+#
+# Note that when using R's regular expression functions, regex
+# meta-characters, such as the period or ^ for which you want to remove 
+# the special meaning require a DOUBLE backslash (as explained above).
+#
+# A regex pattern in VS Code (or a similar editor) that includes " or ' 
+# would not need any backslashes since these aren't regex meta characters.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+quoteStuff = c("Joe says great stuff.", "Franklin said \"a penny saved ...\"")
+quoteStuff
+cat(quoteStuff, sep="\n")
+grep ("\"", quoteStuff, value=TRUE) #  "Franklin said \"a penny saved ...\""
+
+
+grep ("\\.", quoteStuff, value=TRUE) #  "Franklin said \"a penny saved ...\""
+```
+
+## Different "flavors" or "dialects" of regular expressions. ####
+
+```{r}
+# Different "flavors" or "dialects" of regular expressions. ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Regular expressions have been around for a long time. Different "dialects"
+# of regular expressions have popped up over the years. 
+#
+# Some programming languages and tools use slightly different "rules" 
+# for regular expressions. This can be frustrating. However, the basic set
+# of regular expresion rules remains the same for most programming languages 
+# and tools. 
+#
+# Regular expressions first became popular with the Unix operating system in 
+# the 1970s. There were many different versions of Unix being marketed by 
+# different companies, each with slight differences. POSIX is a standard that
+# defines how things should be done in a standard way across all the different
+# versions of Unix. POSIX addresses regular expressions too. 
+#
+# POSIX introduced "named character classes" as described below. R will 
+# recognize these. 
+#
+# Other additions to the regular expression notation were introduced by 
+# the once very popular Perl programming language. You can get these features
+# to work in R by specifying perl=TRUE as one of the arguments for grep
+# and other functions in R that work with regular expressions. 
+# For more details about perl regular expressions, see ?regex.
+#
+# As we said above, regular expressions are NOT totally standardized across all 
+# languages and environments. For example (as of Feb 10, 2022)
+# there are subtle differences between the rules for regular expressions
+# that are used in R and those that are used in the 
+# Visual Studio Code (VS Code) text editor. You can see a summary of the 
+# rules used by VS Code here:
+#   https://docs.microsoft.com/en-us/visualstudio/ide/using-regular-expressions-in-visual-studio?view=vs-2022
+#
+# Although there may be some differences between different languaes and 
+# environments, the vast majority of regular expression meta characters
+# work the same across the different environments. 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### [[:digit:]] vs \\d - different shorthand notations for character classes
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Two different shorthand notations for character classes
+# - POSIX named character classes , e.g. [[:alnum:]]  [[:digit:]]   etc. 
+# - backslash shortcuts , e.g. \s \S \d \D  etc.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+#### "POSIX" named character classes, e.g. [[:digit:]] ####
+
+```{r}
+# "POSIX" named character classes, e.g. [[:alnum:]] ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# NOTE: These are available in R. 
+#
+#       They currently are NOT available in VSCode
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Bracket notation in regular expressions (e.g. [aeiou] or [0-9]) are known as 
+# character classes. 
+#
+# You can use several "named character classes" as shorthand for some common
+# character classes. These are shown below. Notice the [[double brackets]]
+# We'll explain more about the the [[double brackets]] below.
+#
+# [[:upper:]]   same as [A-Z]
+# [[:lower:]]   same as [a-z]
+# [[:space:]]   same as [ \r\n\t]
+# [[:punct:]]   all "special" characters, eg. !@#$% etc...
+# [[:digit:]]   same as [0-9]
+# [[:alpha:]]   same as [a-zA-Z]
+# [[:alnum:]]   same as [a-zA-Z0-9]
+#
+# The [[double brackets]] shown above are necessary since these
+# "named character classes" must actually be placed inside a pair of 
+# [square brackets]. For example, you can also use the named
+# character classes inside a larger character class.
+#
+# For example the following will match any single character
+# from the following list:    -,+,*,/,(,),0,1,2,3,4,5,6,7,8,9
+#
+#   [-+*/()[:digit:]]    is the same as [-+*/()0-9]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### --- practice ---
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search for addresses that contain at least one digit. Use a POSIX
+# named character class.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER 
+grep("[[:digit:]]", addresses, value=TRUE)   # uses POSIX named character classes
+
+str_view(addresses, "[[:digit:]]")
+
+# NOTE - the pattern "[:digit:]" with one set of [brackets] does NOT work.
+#
+# Since there is only one set of [brackets], the pattern matches any one of
+# the characters that are between the [brackets], i.e. match
+# one of the characters ":", "d", "i", "g", "i", "t" or ":"
+# This is equivalent to "[:digt]"  (I removed the 2nd ":" and the 2nd "i" as
+# they are repetitive.)
+
+# THIS DOESN'T WORK! - see note above
+grep("[:digit:]", addresses, value=TRUE)  # looks for one of the following :,d,i,g,i,t,:
+
+
+grep("^[N[:digit:]]", addresses, value=TRUE)   # same as [N0-9]
+```
+
+```{r}
+# QUESTION:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a command that replaces any sequence of digits or mathematical 
+# operators with the text "<<MATH-EXPRESSION>>"
+#
+# You can use the following "mathStuff" variable to test your answer.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mathStuff <- c("What is 3+2 ? Do you know the answer?",
+               "99.5 desgrees in Farenheit is 99.5*(5/9)-32 degrees in Celcius")
+
+mathStuff
+```
+
+```{r}
+# ANSWER
+
+gsub("[-+*/().[:digit:]]+", "<<MATH-EXPRESSION>>", mathStuff)
+```
+
+```{r]}
+# QUESTION:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a grep command that matches punctuation and letters, but not numbers.
+# You can use the following data to test your answer. Use POSIX named
+# character classes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("1234",  # This should NOT match since it doesn't contain letters or punctuation
+          "12.34", # This SHOULD match since it contains punctuation.
+          ".",     # This SHOULD match since it contains punctuation.
+          "hi")    # This SHOULD match since it contains at least one letter
+```
+
+```{r}
+# ANSWER
+
+# The following will match any punctuation or letters but not numbers
+grep("[[:punct:][:alpha:]]", stuff, value=TRUE)   #   "."    "hi"
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search for fruits that contain spaces using the POSIX
+# named character classes for spaces
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+grep("[[:space:]]", fruit, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search fruit for those that contain punctuation (e.g. periods, commas, etc)
+# using the POSIX named character classes
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+
+grep ("[[:punct:]]", fruit, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Show fruit that contain either an x,y,z or some punctuation.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+
+# NOTE that there are TWO sets of brackets. The POSIX named character
+# class, [:punct:], is itself inside a set of [brackets].
+
+grep("[xyz[:punct:]]", fruit, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search all ADDRESSES for those that contain punctuation (e.g. periods,
+# commas, etc) or actual digits (e.g. 0123456789) using POSIX named
+# character classes
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+
+grep("[[:punct:][:digit:]]", addresses, value=TRUE)
+
+# This also works
+grep("[[:punct:]0-9]", addresses, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Search all ADDRESSES for those that contain some punctuation that 
+# comes immediately after the letter t. Use POSIX named classes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# ANSWER
+grep("[tT][[:punct:]]", addresses, value=TRUE)
+
+# ANOTHER WAY
+grep("[tT][^[:alnum:]]", addresses, value=TRUE)
+```
+
+```{r}
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# answer the previous question without using POSIX named classes.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("[tT][,.!?]", addresses, value=TRUE)
+```
+
+#### backslash shortcuts for character classes, e.g. \s \S \d \D etc.
+
+```{r}
+# backslash shortcuts for character classes, e.g. \s \S \d \D etc. ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The following are also shorthand notation that you can use for some
+# characer classes.
+#
+# Note that in R you must use a double backslash, e.g. \\s instead of \s
+#
+# \s   is the same as [ \n\t\r]  also same as [[:space:]]
+#      It matches anything which is considered whitespace.
+#      This could be a space, tab, line break etc.
+#
+# \S   is the same as [^ \n\t\r]
+#      It matches the opposite of \s, that is anything which is not considered
+#      whitespace.
+#
+# \d   is the same as [0-9]  (ie. it matches a single digit)  same as [[:digit:]]
+#
+# \D   is the same as [^0-9] (i.e. it matches a single NON-digit)
+#
+# \w - matches anything which is considered a word character. That is
+#      [A-Za-z0-9_]. Note the inclusion of the underscore character '_'. This is
+#      because in programming and other areas we regularly use the underscore as part
+#      of, say, a variable or function name.
+#
+# \W - matches  [^A-Za-z0-9_] the opposite of \w, that is anything which is not considered a
+#      word character.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+

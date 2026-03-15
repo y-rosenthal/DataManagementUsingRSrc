@@ -1,0 +1,163 @@
+## "greedy" vs "non-greedy" quantifiers ####
+
+```{r}
+# "greedy" vs "non-greedy" quantifiers ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# By default, quantifiers (e.g. + * ?) are "greedy"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# By **default** quantifiers are "greedy". In other words ...
+#
+# A "greedy" match works as follows:
+#
+#   1. The regex engine tries to start matching the regex at the beginning o
+#      of the text
+#
+#   2. If there are any quantifiers (e.g. * + ?) in the regex, the reular
+#      expression engine tries to match AS MUCH of the text as possible.
+#      (see the example in VSCode described below).
+#
+#   3. 
+#   
+# by as much as it can. This behavior can be changed by using 
+# "non-greedy" quantifiers as shown below. To make a quantifier non-greedy
+# just follow it with a question mark.
+#
+
+
+# Greedy quantifiers: match as MUCH as possible while still being able to
+# match rest of the pattern. The greedy quantifiers:
+#
+#   PATTERN{n,m}  minimum of n, maximum of m
+#   PATTERN{n,}   n or more
+#   PATTERN+      same as {1,} i.e. one or more 
+#   PATTERN*      same as {0,} i.e. zero or more of the preceding pattern
+#   PATTERN?      same as {0,1} ie. zero or one (i.e. optional)
+#
+# UNgreedy (or stingy) quantifiers:
+# match as LITTLE as possible while still being able to
+# match rest of the pattern. The greedy quantifiers:
+#
+#   PATTERN{n,m}?  minimum of n, maximum of m
+#   PATTERN{n,}?   n or more
+#   PATTERN+?      same as {1,} i.e. one or more 
+#   PATTERN*?      same as {0,} i.e. zero or more of the preceding pattern
+#   PATTERN??      same as {0,1} ie. zero or one (i.e. optional)
+#
+
+# EXAMPLES:
+
+# greedy   {n,m}
+# ungreedy {n,m}?
+
+sub("[0-9]{3,5}", "x", "123456 1234")  # {3,5} greedy   "x6 1234"
+sub("[0-9]{3,5}?", "x", "123456 1234") # {3,5}? UNgreedy "x456 1234"
+
+gsub("[0-9]{3,5}", "x", "123456 1234")  # {3,5} greedy   "x6 x"
+gsub("[0-9]{3,5}?", "x", "123456 1234") # {3,5}? UNgreedy "xx x4"
+
+
+
+# greedy   +
+# ungreedy +?
+
+sub("[0-9]+", "x", "123456 1234")      # +  greedy   "x 1234"       
+sub("[0-9]+?", "x", "123456 1234")     # +? UNgreedy "x23456 1234"  
+
+gsub("[0-9]+", "x", "123456 1234")     # +     greedy   "x x"
+gsub("[0-9]+?", "x", "123456 1234")    # +?    UNgreedy "xxxxxx xxxx"
+
+
+
+
+# greedy   *
+# ungreedy *?
+
+sub("[0-9]*", "x", "123456 1234")      # *  greedy   "x 1234"
+sub("[0-9]*?", "x", "123456 1234")     # *? UNgreedy "x123456 1234"
+
+gsub("[0-9]*", "x", "123456 1234")     # *     greedy   "x x"
+gsub("[0-9]*?", "x", "123456 1234")    # *?    UNgreedy "xxxxxx xxxx"
+
+
+
+# greedy   ?
+# ungreedy ??
+
+sub("[0-9]?", "x", "123456 1234")      # ?  greedy   "x23456 1234"
+sub("[0-9]??", "x", "123456 1234")     # ?? UNgreedy "x123456 1234"
+
+gsub("[0-9]?", "x", "123456 1234")     # ?   greedy   "xxxxxx xxxx"
+gsub("[0-9]??", "x", "123456 1234")    # ??  UNgreedy  "x1x2x3x4x5x6x x1x2x3x4x"
+
+
+
+sub("[a-z]*?", "x", "abcde")
+```
+
+### examples
+
+```{r}
+# Question
+# Extract JUST the first quotation from each of the following.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+quotations = c('Bill said "hi" to Jill. She replied "bye" to him and "hello" to the driver.',
+               'Tony said "I love ice cream!" to his mom. He then said "I love mom:)"')
+
+# ANSWER: use greedy and UNgreedy quantifiers as appropriate
+sub('(.*?)(".*?")(.*)', "\\2", quotations)
+
+# ANOTHER ANSWER: This also works and perhaps is easier to understand (or perhaps not :)
+sub('([^"]*)("[^"]*")(.*)', "\\2", quotations)
+
+###################################.
+# The following are NOT answers
+###################################.
+
+# NOT an answer - Compare with the following - this one gets the last quotation
+sub('(.*)(".*")(.*)', "\\2", quotations)
+
+# It's helpful to see what happens with the str_view function in the following
+# cases
+
+# This matches everything from the first quotation mark to the last
+str_view(quotations, '".*"')
+
+# The following is more what we want. *? is now a non-greedy quantifier. 
+# Therefore, it matches the first quoted info.
+# Then str_view continues by showing you the next match (i.e. the 2nd
+# quoted info), then the 3rd match, etc.
+str_view(quotations, '".*?"')
+
+```
+
+#### AN ASIDE - the 1st question mark is not actually necessary in this case
+
+```{r}
+# This also works - see below for why the first ? is not necessary in this case.
+sub('(.*)(".*?")(.*)', "\\2", quotations)
+```
+
+
+
+
+```{r}
+# Use VSCode to understand greedy VS non-greedy quantifiers
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Use VSCode to open a text file that contains a lot of English text.
+#
+# Do a regex search in VSCode for
+#   e.*e
+#
+# This is a "greedy" search (since it uses * instead of *?).
+# It searches for "e" following by anything followed by another "e".
+# This will highlight on each line all the text starting from the 
+# first e on the line until the last e on the line.
+#
+# Now search again using a non-greedy quantifier, i.e. .*?
+#   e.*?e
+#
+# The results will be potentially several matches on each line. 
+# Each match starts with an "e" and extends to the next "e" but no further.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+

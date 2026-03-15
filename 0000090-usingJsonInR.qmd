@@ -1,4 +1,4 @@
-# <yrChapterNumber>39. </yrChapterNumber> Using JSON in R with jsonlite package
+# <yrChapterNumber>47. </yrChapterNumber> Using JSON in R with jsonlite package
 
 ## jsonlite vignettes
 

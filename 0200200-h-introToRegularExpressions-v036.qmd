@@ -1,0 +1,84 @@
+## The complete list of quantifiers 
+
+```{r}
+# The complete list of quantifiers 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# In general you can use ? to turn any greedy quantifier into a non-greedy
+# quantifier
+#
+#   *  - zero or more (greedy)
+#   *? - zero or more (non-greedy)
+#
+#   +  - one or more (greedy)
+#   +? - one or more (non-greedy)
+#
+#   ?  - zero or one (greedy)
+#   ?? - zero or one (non-greedy)
+#
+# NOTE the following also allow for non-greedy ? modifier. However, these
+# are not really necessary - see the notes below.
+#
+#   {3,5}  - 3,4 or 5 repetitions (greedy - i.e. will match all 5 if they are there)
+#   {3,5}? - (non-greedy - will match 3 even if there are 5)
+#            Notice - you could just write {3} instead of {3,5}? (think about it)
+#
+#   {3,}   - (greedy)     3 or more matches in a row, matches as many as there are
+#   {3,}?  - (non-greedy) will always match first 3 even if there are more (non-greedy)
+#            Notice - you could just write {3} instead of {3,}? (think about it)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### examples
+
+```{r}
+# EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+quotedCsv = c('"a,b,c","apple,orange","watermellon"')
+cat(quotedCsv)
+
+# The following gsub uses a greedy quantifier, ie. *.
+# It will match as much as it can.
+
+# greedy
+gsub('".*"', 'QUOTES', quotedCsv)   # "QUOTES"
+
+# non-greedy
+gsub('".*?"', 'QUOTES', quotedCsv) # "QUOTES,QUOTES,QUOTES"
+
+
+# A MORE COMPLEX EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+text = "She sells sea shells by the sea shore."
+
+result = gsub("(.*)(sea)(.*)", "1st \\1\n2nd \\2\n3rd \\3", text)
+
+cat(result)
+
+
+# Reults are "greedy", i.e. the .* in the beginning matches as much as 
+# it can as long as the whole regex will work. The result is:
+
+# 1st part: She sells sea shells by the 
+# 2nd part: sea
+# 3rd part: shore.
+
+# The following DOES NOT happen
+#
+# 1st part:    She sells 
+# 2nd part:    sea
+# 3rd par:     shells by the sea shore.
+
+
+# we can make the regex UN-GREEDY by using a ? AFTER the *
+#
+
+text = "She sells sea shells by the sea shore."
+
+
+result = gsub("(.*?)(sea)(.*)", "1st \\1\n2nd \\2\n3rd \\3", text)
+
+cat(result)
+```
+

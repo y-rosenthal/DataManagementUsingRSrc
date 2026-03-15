@@ -1,0 +1,361 @@
+## Challenges ####
+
+```
+# Challenges ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Use the following for the challenges below
+
+stuff = c("His ssn is 876543890.",
+          "Call me at 212 950 3216 when you have time.",
+          "Please call Joe at 777-7777",
+          "Sue's number is (555)123   4567.",
+          "7182345678 is the number for the helpdesk.",
+          "Email Anne at anne@anneco.com and explain.",
+          "Meet me @ 10pm.",
+          "Mikes company is called mike@large",
+          "To work in Whatsapp internationally you need to enter his number as +1 555 555 5555.")
+stuff
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a regular expression to find telephone numbers
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+pattern = paste0 ( "(^|\\D)",              # start with a non-digit or the start of the text
+                   "(\\(?\\d{3}\\)?)?",    # optional area code with optional (parentheses)
+                   " *",                   # zero or more spaces
+                   "\\d{3}",               # first 3 digits
+                   " *-? *",               # any number of spaces surrounding an optional dash
+                   "\\d{4}",
+                   "(\\D|$)")  # end with a non digit or a the end of the text
+
+pattern
+grep (pattern, stuff, value=TRUE)
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Challenge: 
+# 
+# Extract just the telephone numbers in a standard format.
+#
+# Make sure to use parentheses in the pattern.
+#
+# Substitute JUST the parts you want.
+#
+# Use grep (... value=FALSE ...) to get the positions that 
+# matched and keep only those.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# Show how to extract just the area code, first 3 and last 4 digits
+stuff
+newpattern = paste0 ( "(^|.*\\D)",  # tel# at beginning or after a non-digit
+                      "(\\(?(\\d{3})\\)?)?", # optional area code with optional (parentheses)
+                      "( *)",      # zero or more spaces
+                      "(\\d{3})",  # first 3 digits
+                      "( *-? *)",  # any number of spaces surrounding an optional dash
+                      "(\\d{4})",  # last 4 digits
+                      "(\\D.*|$)"  # tel # at end or before non-digit
+)
+grep(newpattern, stuff, value=TRUE)
+positionsWithTelNums = grep(newpattern, stuff)
+reformatted = gsub(newpattern, "\\2 \\5 \\7", stuff) 
+
+reformatted[positionsWithTelNums]
+
+
+
+
+result = gsub (newpattern, 
+               paste0("1stPart \\1\n",
+                      "2ndPart \\2\n",
+                      "3rdPart \\3\n4thPart \\4\n",
+                      "5thPart \\5\n6thPart \\6\n7thPart \\7\n8thPart \\8\n"),
+               stuff)
+
+result
+
+cat(result[1])
+cat(result[2])
+cat(result[3])
+
+# The following example shows a "bug" in the regex. 
+# Since regular expressions are "greedy", the area code is matched
+# in the 1st part if it is indeed surrounded by parentheses. 
+# We can fix this but it is tricky.
+cat(result[4])
+
+cat(result[5])
+cat(result[6])
+cat(result[7])
+cat(result[8])
+cat(result[9])
+
+# See the pattern used above
+
+telNums = gsub(newpattern, "\\3 \\5-\\7", stuff)
+telNums
+cat(telNums, sep="\n")
+
+positionsWithTelNums = grep(newpattern, stuff, value=FALSE)
+positionsWithTelNums
+
+telNums
+telNums [ positionsWithTelNums ]
+
+
+stuff
+gsub(newpattern, "XXXXXXXXXX", stuff)
+
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# - write a regular expression to find email addresses and extract them 
+#   from a character vector
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of all the words from "The adventures of Sherlock Holmes".
+# You can find the UTF-8 encoding version here:
+#    https://www.gutenberg.org/files/1661/1661-0.txt
+#
+# HINT: use
+#  - readLines  with  url("https://www.gutenberg.org/files/1661/1661-0.txt")
+#  - strsplit
+#  - unlist    (remember that strsplit returns a LIST)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+book = readLines(url("https://www.gutenberg.org/files/1661/1661-0.txt"),
+                 encoding="UTF-8")
+head(book)
+
+words = strsplit(book, " +")
+
+head(words)
+
+words = unlist(words)
+
+head(words, 100)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of the 10 most common words in "The Adventures of Sherlock Holmes"
+# HINT: Use the table function.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wordTable = table(words)
+head(wordTable)
+
+sorted = sort(wordTable)
+head(wordTable)
+
+tail(sorted)
+
+
+# Lookahead and lookbehind ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Lookahead and lookbehind are used to match a portion of the text but NOT
+# consider it part of the match. To use this you MUST set the following
+# argument in grep, strsplit, gsub, etc:    perl=TRUE
+#
+#    Positive Lookahead	(?=pattern)
+#    Negative Lookahead	(?!pattern)
+#    Positive Lookbehind	(?<= pattern)
+#    Negative Lookbehind	(?<! pattern)
+# 
+# See this page
+#  https://debuggingdata.com/post/r/regular-expressions-look-arounds/
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+stuff = c("a100", "200b" , "@300", "400@")
+stuff
+
+# Lookbehind
+gsub("(?<=[a-z])\\d+", "NUMBER", stuff, perl=TRUE)
+
+
+# Lookbehind  (not equal to )
+gsub("(?<![a-z0-9])\\d+", "NUMBER", stuff, perl=TRUE)
+
+
+# Lookahead
+gsub("\\d+(?=[a-z])", "NUMBER", stuff, perl=TRUE)
+
+# Lookahead   (not equal to )
+gsub("\\d+(?![a-z0-9])", "NUMBER", stuff, perl=TRUE)
+
+
+quotations
+
+# Replace all letters between quotation marks with XXXX
+gsub('(?<=")[a-zA-Z!.? ]+(?=")', "XXXX", quotations, perl=TRUE)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of all the sentences from "The adventures of Sherlock Holmes".
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+book = readLines(url("https://www.gutenberg.org/files/1661/1661-0.txt"),
+                 encoding="UTF-8")
+
+book[100:110]
+
+newBook = paste0(book, collapse=" ")
+
+length(newBook)
+
+str(newBook)
+
+sentences = strsplit(newBook, "[.?!]")[[1]]
+
+str(sentences)
+
+length(sentences)
+
+sentences[3]
+head(sentences)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CHALLENGE
+#
+# Get a vector of all quotations from "The adventures of Sherlock Holmes".
+# HINT: use an un-greedy search
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+# Other arguments and functions ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# help pages
+
+?regex
+
+?grep
+
+?strsplit
+
+
+# grep(pattern, x, ignore.case = FALSE, perl = FALSE, value = FALSE,
+#      fixed = FALSE, useBytes = FALSE, invert = FALSE)
+#
+# grepl(pattern, x, ignore.case = FALSE, perl = FALSE,
+#       fixed = FALSE, useBytes = FALSE)
+#
+# sub(pattern, replacement, x, ignore.case = FALSE, perl = FALSE,
+#     fixed = FALSE, useBytes = FALSE)
+#
+# gsub(pattern, replacement, x, ignore.case = FALSE, perl = FALSE,
+#      fixed = FALSE, useBytes = FALSE)
+#
+
+text = "She sells sea shells by the sea shore."
+
+sub("sea", "xxxxx", text)
+
+gsub("sea", "xxxxx", text)
+
+sub("s", "x", text)
+
+gsub("s", "x", text)
+
+gsub(".", "x", text)
+
+gsub("\\.", "x", text)
+
+gsub(".", "x", text, fixed=TRUE)
+
+
+words = strsplit(text, " ")
+
+words
+
+# Get the 2nd word from the text:
+words[[1]][2]
+
+
+words = strsplit(addresses, " ")
+
+
+words
+
+# Get the 2nd word from the 3rd address
+words[[3]][2]
+
+
+# Other functions - sub vs gsub, regexpr, gregexpr, regexec ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# See the documentation for the following functions: 
+#
+# regexpr(pattern, text, ignore.case = FALSE, perl = FALSE,
+#         fixed = FALSE, useBytes = FALSE)
+#
+# gregexpr(pattern, text, ignore.case = FALSE, perl = FALSE,
+#          fixed = FALSE, useBytes = FALSE)
+#
+# regexec(pattern, text, ignore.case = FALSE, perl = FALSE,
+#         fixed = FALSE, useBytes = FALSE)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+## More practice with regex - see the following websites
+
+
+
+
+
+```
+# More practice with regex  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# See the following sites:
+
+# http://regextutorials.com/
+# https://regexone.com/
+# https://librarycarpentry.org/lc-data-intro/03-quiz/index.html
+# https://www.hackerrank.com/domains/regex
+# https://regex.sketchengine.co.uk/
+
+
+# Period comes between rest of line and first word
+pattern = paste0("(^[A-Za-z]+)",     # first word on line
+                 "(\\s+)",           # spaces after the first word
+                 "(.*)"              # rest of the line
+                 )
+
+str_replace_all(sentences, pattern=pattern, replacement="\\3\\2\\1")
+
+
+
+# Period comes between rest of line and first word
+pattern = paste0("(^[A-Za-z]+)",     # first word on line
+                 "(\\s+)",           # spaces after the first word
+                 "(.*)",              # rest of the line except for the final period
+                 "([?!.])"
+)
+
+movedFirstWordToEnd = str_replace_all(sentences, pattern=pattern, replacement="\\3\\2\\1\\4")
+str_to_sentence(movedFirstWordToEnd)
+
+#########################
+
+# change the case on the first word to uppercase
+# change the case on the last word to lowercase
+
+toupper(c("hello", "goodbye"))
+
+
+
+#str_replace_all(sentences, pattern="(^[A-Za-z]+)(\\s+)(.*)", "\\3\\2\\1")
+```

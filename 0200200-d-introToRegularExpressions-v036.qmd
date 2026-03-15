@@ -1,0 +1,418 @@
+## WORD BOUNDARIES:  `\b`
+
+`\b` matches a "word boundary"   (remember in R use `\\b`)
+
+You can use this before a pattern, e.g. `\bSOME_PATTERN` 
+(or in R code use double backslash: `\\bSOME_PATTERN`)
+to mean that the pattern must match at the beginning of a word 
+that is in the text - see examples below.
+
+<blockquote>
+**NOTE:**  
+
+**`^SOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
+beginning of **the entire text**.
+
+**`\bSOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
+beginning of **a word within the text**.
+</blockquote>
+
+You can also use `SOME_PATTERN\b` to mean that the pattern must
+come at the end of a word - see examples below.
+
+Note that a "word boundary" is not a particular character such as a 
+space or comma, but rather is a position in the text. 
+
+NOTE - a "word" may include letters, digits or underscores (see the discussion 
+of the `\w` and `\W` metacharacters above.)
+
+<!-- old examples - newer examples, below are better -->
+
+```{r}
+heWords = c("he", "here", "there", "the", "who was she?", "headache")
+heWords
+
+# Example: word starts with "he"
+grep ("\\bhe", heWords, value=TRUE)  # "he" "here" (NOT "there","the","who was she?")
+
+# Example: word ends with "he"
+grep ("he\\b", heWords, value=TRUE)  # "he" "the" "who was she?" (NOT "here","there")
+
+# Example: match only the word "he"
+grep ("\\bhe\\b", heWords, value=TRUE)  # "he"
+```
+
+-->
+
+<!--
+```{r}
+if(!require(stringr)){install.packages("stringr");require(stringr);}
+```
+-->
+
+## Examples using word breaks (i.e. \\b)
+
+```{r}
+# Some data for our examples
+stuff = c("She, sells",
+          "grey seashells of all shades",
+          "by the seashore",
+          "the man with gray hair said hello",
+          "why must he smile",
+          "no one want heartache but a little happens sometimes",
+          "joe laughed (hehe) at his own thoughts"
+          )
+
+# Match text that contains a word that STARTS with "he"
+str_view(stuff, "\\bhe")
+
+# Match text that contains a word that ENDS with "he"
+str_view(stuff, "he\\b")
+
+# Match text that contains the word "he"
+str_view(stuff, "\\bhe\\b")
+```
+
+## Practice 
+
+### QUESTION 
+
+Write a regex that matches words such as "heartache" 
+and "headache" that start and end 
+with "he". However, the word "he" should not match.
+
+In other words, the letters, "he" must appear 
+twice - once in the beginning,
+and once at the end of the word (therefore, the word "he"
+should NOT be considered a match).
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER
+str_view(stuff, "\\bhe[A-Za-z]*he\\b")
+```
+:::
+
+### QUESTION
+
+Modify the previous answer so that the regex
+also matches "he".
+
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER 
+str_view(stuff, "\\bhe([A-Za-z]*he)*\\b")
+```
+:::
+
+## The | (i.e. or) symbol
+
+
+### QUESTION
+
+Write a regex to match words that have "he" at the beginning.
+Do not match words that only have "he" in the middle of 
+a word.
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER
+
+# Hint - use the | symbol to allow for multiple patterns
+str_view(stuff, "\\bhe|he\\b")
+```
+:::
+
+### Order of operations in R with |
+
+
+The answer to the previous question also works with 
+(parentheses) around each regex option. However, as shown
+above the (parentheses) are not necessary in this case.
+
+```{r}
+str_view(stuff, "(\\bhe)|(he\\b)")
+```
+
+Parentheses become necessary when you want to use | in
+the middle of a larger pattern. For example:
+
+
+# QUESTION
+
+Write a regex that matches the words "grey" or "gray" with 
+either spelling. Keep the regex as short as possible.
+
+::: {.callout-note collapse="true"}
+##### Click here for answer
+```{r}
+# ANSWER
+
+sentences = c("blue skies are ahead",
+              "it's going to be a grey day",
+              "oragne you glad i didn't say orange",
+              "the man with gray hair said hello")
+
+
+# Hint - use the | symbol to allow for multiple patterns
+str_view(sentences, "gr(e|a)y")
+
+# Of course this works also but the answer above is shorter
+str_view(sentences, "grey|gray")
+```
+:::
+
+## More `\b` examples
+
+```{r}
+# fruits that have a word that starts with H or h
+grep ("\\b[Hh]", fruit, value=TRUE)  
+
+# fruits that end with a vowel
+grep ("[aeiouAEIOU]\\b", fruit, value=TRUE)  
+```
+
+## "pattern1|pattern2"  matches pattern1 OR pattern2 
+
+```{r}
+# "pattern1|pattern2"  matches pattern1 OR pattern2 ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Combining patterns
+#
+#    PATTERN1|PATTERN2  matches if either PATTERN1 or PATTERN2 is found
+#
+#    (PATTERN)          you may surround patterns with (parentheses) if necessary
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+grep("black|blue|green", fruit, value=TRUE) # contains black,blue or green
+
+grep("^(1|One)", addresses, value=TRUE, ignore.case=TRUE) # 1 or One at beginning 
+
+grep("(^1|^One)", addresses, value=TRUE) # same thing 
+
+grep("^1|^One", addresses, value=TRUE) # same thing 
+
+grep("[0-9]", addresses, value=TRUE)
+
+grep("0|1|2|3|4|5|6|7|8|9", addresses, value=TRUE)  # Same as [0-9]
+```
+
+## breaking up long patterns with paste0 ####
+
+```{r}
+# breaking up long patterns with paste0 ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Do NOT include extra whitespace in patterns!!!
+# 
+# For long patterns you can use paste0 to break up the pattern
+# so it is more readable in the code.
+#
+# See examples below.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Show those addresses that contain one of the numbers 1-9 spelled out in words,
+# e.g. "one", "two", etc
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER - note that writing the pattern using paste0 with collapse = ""
+# makes the pattern easy to understand. You can also comment on 
+# individual portions of the pattern. 
+
+pattern = paste0("\\bone\\b|",     # match the word "one"
+                 "\\btwo\\b|",     # match the word "two"
+                 "\\bthree\\b|",   # etc.
+                 "\\bfour\\b|",
+                 "\\bfive\\b|",
+                 "\\bsix\\b|",
+                 "\\bseven\\b|",
+                 "\\beight\\b|",
+                 "\\bnine\\b")
+
+grep(pattern, addresses, value=TRUE, ignore.case = TRUE)
+
+# Note that the following also works but is
+#   - MUCH harder to read 
+#   - MUCH harder to check for errors and
+#   - cannot be commented on for different parts of the pattern
+
+grep(
+  "\\bone\\b|\\btwo\\b|\\bthree\\b|\\bfour\\b|\\bfive\\b|\\bsix\\b|\\bseven\\b|\\beight\\b|\\bnine\\b",
+  addresses, value=TRUE, ignore.case = TRUE)
+```
+
+### example
+
+```{r}
+# A more complex example ####
+
+# QUESTION 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Display those addresses that contain a number that is exactly one
+# digit long. For example: 
+#
+#   addresses =
+#    c("3 Olive St.",              # should match (because of 3)
+#      "Forty Five 2nd Street",    # should match (because of 2nd)
+#      "Ninety Nine Cone St. apartment 7",
+#                                  # should match (because of 7)
+#      "7",                        # should match
+#
+#      "12345 Sesame Street",      # should NOT match (12345 is five digits)
+#      "One main Street Apt 12b",  # should NOT match (12 is two digits)
+#      "Two Main St. Apt 99",      # should NOT match (99 is two digits) 
+#      "45")                       # should NOT match
+#
+#   > YOUR COMMAND GOES HERE
+#   [1] "3 Olive St."
+#   [2] "Forty Five 2nd Street"
+#   [3] "Ninety Nine Cone St. apartment 7"
+#   [4] "7"
+#
+# NOTE: the pattern "[0-9]" will NOT work as it will match every one of 
+# values above
+#
+# NOTE: the pattern "\\b[0-9]\\b" is a good try but will not match
+# "Forty Five 2nd Street" as the 2 in "2nd" is NOT followed by a word boundary.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+# Note - there are 4 possible ways for a single digit appear in the text:
+#
+# (a) The digit can appear at the very beginning of the text and be followed by
+#     a non-digit, e.g. "3 Olive street". 
+#
+#     The pattern: "^[0-9][^0-9]"     
+#     matches "3 Olive street"
+#     but doesn't match "Forty Five 2nd Street" (since the 2 is not at the
+#                                                beginning of the text).
+#
+# Similarly, each of the following patterns will match a single digit for
+# some texts but not for others. 
+#
+# (b) [^0-9][0-9][^0-9] : NONdigit digit NONdigit anywhere in the text
+# (c) [^0-9][0-9]$      : last two characters are a NONdigit followed by a single digit
+# (d) ^[0-9]$           : whole thing is JUST one digit
+#
+# For actual addresses you probably don't have to worry about the last
+# case, but for other types of data you might.
+#
+# You can write a pattern that deals with all of these cases by
+# separating the different "sub-patterns" from each other with "|" symbols.
+# For example, the following answers the question, but the pattern is VERY
+# hard to read. (see below for a better way to write this code.)
+
+grep("^[0-9][^0-9]|[^0-9][0-9][^0-9]|[^0-9][0-9]$|^[0-9]$", addresses, value=TRUE)
+
+
+# we can use paste0 to make this easier to read
+
+pattern <- 
+  paste0 ( "^[0-9][^0-9]" ,     # starts with digit followed by a NONdigit
+         "|[^0-9][0-9][^0-9]",  # NONdigit digit NONdigit anywhere in the text 
+         "|[^0-9][0-9]$",       # ends with a NONdigit followed by a single digit
+         "|^[0-9]$")            # whole thing is JUST one digit 
+
+grep(pattern, addresses, value=TRUE)
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Write a command that displays all addresses that contain the
+# number "one" or 1.
+#
+# Notice that the following will NOT work. This gets "Cone" and 12345 too:
+#
+#   grep("one|1", addresses, value=TRUE, ignore.case=TRUE) # NO - matches Cone and 12345
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWER
+
+# The following is the way to do it. Regular expressions require 
+# a very thoughtful approach!
+#
+# The word "one" or the number "1" (not including the number 123)
+pattern = paste0("^one[^a-z]|",       # one at beginning
+                 "[^a-z]one[^a-z]|",  # one in middle
+                 "[^a-z]one$|",       # one at end
+                 "^one$|",            # ONLY the word "one"
+                 "^1[^0-9]|",         # 1 at beginning
+                 "[^0-9]1[^0-9]|",    # 1 in middle
+                 "[^0-9]1$|",         # 1 at end
+                 "^1$")               # ONLY the number 1
+
+
+pattern
+
+grep(pattern, addresses, value=TRUE, ignore.case=TRUE)
+
+
+# Same thing but MUCH harder to read!!!
+# You should break up long patterns with paste0 and comment them as shown above.
+
+grep(
+  "^one[^a-z]|[^a-z]one[^a-z]|[^a-z]one$|^one$|^1[^0-9]|[^0-9]1[^0-9]|[^0-9]1$|^1$",
+  addresses, value=TRUE, ignore.case=TRUE)
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# df is a dataframe. Write a command that shows all rows from df
+# for which the 2nd character in the first column is "x". 
+# 
+# Hints: 
+#   a. Access a dataframe as you normally would but use grep or lgrep to
+#      return either the row numbers or TRUE/FALSE
+#      values that identify the rows to be displayed.
+# 
+#   b. Remember that you are NOT told what the column names are. Therefore you
+#      must use a number to stipulate the first column and NOT a column name.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Use this example data
+df = data.frame( partNum = c("ax4321", "az12", "bx1234", "bw987"),
+                 partName = c("widget","thingie","gadget","gizmo"),
+                 price =    c(0.50, 0.60, 1.70, 0.80),
+                 stringsAsFactors = FALSE)
+df
+
+# Show the rows that contain "x" as the 2nd character in the partNum
+
+
+# One answer - using grep
+df[ grep ( "^.x", df$partNum , ignore.case=TRUE ) ,   ]
+
+# Another answer - using grepl
+df[ grepl ( "^.x", df$partNum , ignore.case=TRUE ) ,   ]
+```
+
+### example
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Using the same data as above, only show those rows that contain an "x"
+# in the 2nd character of the partNum whose price is also less than 1.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+df
+
+df[ grepl ( "^.x", df$partNum , ignore.case=TRUE ) & df$price < 1 ,   ]
+```
+

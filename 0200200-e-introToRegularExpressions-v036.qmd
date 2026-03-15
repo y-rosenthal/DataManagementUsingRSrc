@@ -1,0 +1,280 @@
+## Quantifiers: {n,m}  {n}  {n,}  +  *  ?   
+
+```{r}
+#@ Quantifiers: {n,m}  {n}  {n,}  +  *  ?  ####
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@
+#@ Quantifiers are symbols in the pattern that identify how many repetetitions
+#@ to look for of a particular sub-pattern. The quantifiers include
+#@
+#@   SOME_SUB_PATTERN{n,m}    (where n and m are numbers)
+#@   SOME_SUB_PATTERN{n}      (where n is a number)
+#@   SOME_SUB_PATTERN{n,}      (where n is a number)
+#@   SOME_SUB_PATTERN+
+#@   SOME_SUB_PATTERN*
+#@   SOME_SUB_PATTERN?
+#@
+#@ See below for an explanation of each type of quantifier.
+#@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+```
+
+### Quantifiers with {curly braces}   eg. {3}   {2,5}   {3,}   ####
+
+```{r}
+# Quantifiers with {curly braces}   eg. {3}   {2,5}   {3,}   ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 
+#    SOME_PATTERN{3}       three matches in a row
+#    SOME_PATTERN{3,6}     between three and six matches in a row
+#    SOME_PATTERN{3,}      at least 3 matches in a row
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# "[0-9]{4}" matches 4 digits in a row, same as "[0-9][0-9][0-9][0-9]"
+#
+# Note that this will also return those entries that have more than 4 digits
+# in a row since these entries ALSO have 4 digits in a row (plus some extra
+# digits)
+
+grep("[0-9]{4}", addresses, value=TRUE)  # 4 digits , same as "[0-9][0-9][0-9][0-9]"
+# Note that if we use gsub, only the first 4 digits will be substituted.
+gsub("[0-9]{4}", "xxxx", addresses)  # 4 digits , same as "[0-9][0-9][0-9][0-9]"
+
+
+grep("[0-9]{3}", addresses, value=TRUE)  # 3 digits 
+# Note that if we use gsub, only the first 3 digits will be substituted.
+gsub("[0-9]{3}", "xxxx", addresses)  # 4 digits , same as "[0-9][0-9][0-9][0-9]"
+
+
+grep("[0-9]{3}", addresses, value=TRUE)  # 3 digits 
+grep("\\b[0-9]{3}\\b", addresses, value=TRUE)  # 3 digits 
+
+
+# EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# match a word that is exactly 4 letters long
+
+pattern = 
+  paste0 ("^[a-zA-Z]{4}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4}$",
+          "|^[a-zA-Z]{4}$")
+
+pattern =
+  paste0 ("\\b[a-zA-Z]{4}\\b")
+
+# use the same pattern for both addressess and fruit
+
+grep(pattern, addresses, value=TRUE)
+
+grep(pattern, fruit, value=TRUE)
+
+
+# Another way - using \b
+pattern = "\\b[a-zA-Z]{4}\\b"
+grep(pattern, addresses, value=TRUE)
+
+
+# Use a text editor (e.g. the one in RStudio) to see how this works ...
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Paste the following in the text editor to see how this pattern works.
+#
+#  \b[a-zA-Z]{4}\b
+#
+# This will match any 4 character word. It will NOT match 3 or 5 character words.
+# Note that in VS Code you should use only one backslash (i.e. \b ) but in R
+# you would use two backslashes (i.e. \\b ) as explained above.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```{r}
+# match a word that is at least 4 letters long
+# Use {4,} instead of {4}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Paste this into VSCode regex search.
+#   ^[a-zA-Z]{4,}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{4,}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{4,}$|^[a-zA-Z]{4,}$
+```
+
+```{r}
+# match a word that is at least 3,4 or 5 letters long
+# Use {3,5} instead of {4}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Paste this into VSCode regex search.
+#   ^[a-zA-Z]{3,5}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{3,5}[^a-zA-Z]|[^a-zA-Z][a-zA-Z]{3,5}$|^[a-zA-Z]{3,5}$
+```
+
+```{r}
+# ANOTHER EXAMPLE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# match a word that is exactly 7 letters long
+pattern = 
+  paste0 ("^[a-zA-Z]{7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7}$",
+          "|^[a-zA-Z]{7}$")
+
+# use the same pattern for both addresses and fruit
+grep(pattern, addresses, value=TRUE)
+grep(pattern, fruit, value=TRUE)
+
+
+# match any word that is between 4 and 7 letters long
+pattern = 
+  paste0 ("^[a-zA-Z]{4,7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4,7}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{4,7}$",
+          "|^[a-zA-Z]{4,7}$")
+
+grep(pattern, addresses, value=TRUE)
+grep(pattern, fruit, value=TRUE)      # ... "apple" ... "peach" ... (5 letter long words too)
+
+
+# match a word that is at least 7 letters long
+pattern = 
+  paste0 ("^[a-zA-Z]{7,}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7,}[^a-zA-Z]",
+          "|[^a-zA-Z][a-zA-Z]{7,}$",
+          "|^[a-zA-Z]{7,}$")
+
+grep(pattern, addresses, value=TRUE)
+grep(pattern, fruit, value=TRUE)
+
+
+# Exactly 3 digits (see example in last section of exactly one digit)
+pattern = paste0(
+  "^[0-9]{3}[^0-9]",
+  "|[^0-9][0-9]{3}[^0-9]",
+  "|[^0-9][0-9]{3}$",
+  "|^[0-9]{3}$"
+)
+grep(pattern, addresses, value=TRUE)
+
+
+grep("[^aeiou]{5}", fruit, value=TRUE)  # at least 5 non vowels in a row
+grep("[^aeiou]{6}", fruit, value=TRUE)  # at least 6 non vowels in a row
+grep("[^aeiou]{7}", fruit, value=TRUE)  # at least 7 non vowels in a row
+
+grep("^.[aeiou]{2}", fruit, value=TRUE)  # vowels in the 2nd and 3rd positions
+
+grep("[aeiou]{2}.$", fruit, value=TRUE)  # 2nd & 3rd to last characters are vowels
+```
+
+```{r}
+# QUESTION
+# Search for fruit that are 4 or 6 letters long.
+#
+
+grep ("^[a-zA-Z]{4}$|^[a-zA-Z]{6}$", fruit, value=TRUE)
+
+grep ("(^[a-zA-Z]{4}$)|(^[a-zA-Z]{6}$)", fruit, value=TRUE)
+
+grep ("^(([a-zA-Z]{4})|([a-zA-Z]{6}))$", fruit, value=TRUE)
+```
+
+## Quantifiers with    *   +  and  ?  ####
+
+```{r}
+# Quantifiers with    *   +  and  ?  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#      PATTERN* is the same as PATTERN{0,}  i.e. zero or more repetitions
+# 
+#      PATTERN+ is the same as PATTERN{1,}  i.e. one or more repetitions
+#
+#      PATTERN? is the same as PATTERN{0,1}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+grep("^[^aeiouAEIOU].*[^aeiouAEIOU]$", fruit, value=TRUE) # start and end with non-vowel 
+
+# match at least two spaces in the text (including just two spaces)
+pattern = ".* .* .*"       
+
+pattern = ".*e.*e.*"       
+grep(pattern, fruit, value=TRUE) 
+
+spacesStuff = c("nospaces",
+          "this has three spaces",
+          "just two spaces", 
+          "one space", 
+          "two  spaces", 
+          "three   spaces", 
+          "",
+          " ", 
+          "  ", 
+          "   ")
+spacesStuff
+grep(pattern, spacesStuff, value=TRUE) 
+```
+
+```{r}
+# QUESTION
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Find solutions for the questions at the website.
+# The website is free to use.
+#
+#         http://play.inginf.units.it/
+#
+# 1. When you get to this page, scroll all the way to the bottom.
+#
+# 2. You will be prompted for your "regex skill level" and other basic signup
+#    info. It, seems that you must fill in this info in order for the example
+#    questions to work correctly. However, the exact answers to these questions
+#    don't seem to matter (it seems that you get the same questions no 
+#    matter what "skill level" you choose)
+# 
+# 3. Press the "Next" button.
+#
+# 4. You will then be prompted with a list of regex metacharacters 
+# Some of these are a little challenging: http://play.inginf.units.it/#/
+#
+# You can find sample answers here: https://avicoder.me/2019/01/21/regex-fun/
+# There could definitely be other valid answers.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ANSWERS THAT WE DID TOGETHER IN CLASS
+
+# level 1
+#   \d+
+
+
+# level 2
+#   [a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}
+#   ([a-zA-Z0-9]{2}:){5}[a-zA-Z0-9]{2}
+#   ([0-9a-zA-Z][0-9a-zA-Z]:){5}[0-9a-zA-Z][0-9a-zA-Z]
+
+
+# level 3
+#
+#   ftp://ftp[^.]*\.[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?/pub/FreeBSD/
+#   ftp://ftp[^.]*(\.[a-zA-Z]+)+/pub/FreeBSD/
+#   ftp://ftp\d*(\.[a-zA-Z]+)+/pub/FreeBSD/
+
+
+# level 4
+#   \$[^$]+\$
+```
+
+## gsub works with patterns
+
+```{r}
+# gsub ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# gsub works with patterns
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+gsub("[aeiou]", "x", fruit)   # replace all vowels with x's
+
+gsub("[^aeiou]", "x", fruit)   # replace all non-vowels with x's
+
+gsub("[^aeiou]+", "x", fruit)   # replace one or more non-vowels with a single x
+
+gsub("[^aeiou]*", "x", fruit)
+
+gsub("[^aeiou]*", "x", "apple")
+```
+
