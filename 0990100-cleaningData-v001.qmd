@@ -91,7 +91,7 @@ The following are many of the inconsistencies
   
 # What you need to do 
 
-Write a function named cleanUp that takes the dataframe as 
+Write a function named cleanup that takes the dataframe as 
 an argument and returns a cleaned dataframe. 
 Each column should have a consistent format for all columns.
 Do not lose any data in the process.

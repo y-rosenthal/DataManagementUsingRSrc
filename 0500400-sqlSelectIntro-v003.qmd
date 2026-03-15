@@ -1,4 +1,4 @@
-# <yrChapterNumber>30. </yrChapterNumber> Intro to SQL Select ***(assumes some knowledge of dplyr)***
+# <yrChapterNumber>21. </yrChapterNumber> Intro to SQL Select ***(assumes some knowledge of dplyr)***
 
 ```{r}
 #| echo: false

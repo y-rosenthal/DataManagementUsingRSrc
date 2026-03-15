@@ -1,4 +1,4 @@
-# <yrChapterNumber>23. </yrChapterNumber> regular expressions (regex)
+# <yrChapterNumber>14. </yrChapterNumber> regular expressions (regex)
 
 ```{r}
 rm(list=ls())
@@ -12,7 +12,7 @@ character (i.e. textual) data in a variety of ways. The best
 way to understand is just to dive right in, which we will do below. 
 
 Before we get started it's important to note that 
-regex is not an "R" thing. Rather regular expressions
+regular expressions are not specic to R. Rather regular expressions
 are a concept that are available to use in most programming languages
 (e.g. Python, Java, etc.) as well as in many text editors and in other
 technical environments (e.g. Bash). There are slightly different versions
@@ -30,7 +30,7 @@ The following is one of the many online tutorials.
 The following R help pages are relevant to regular expressions.
 However, they are hard to understand without a little intro first. I 
 recommend that you go through the material in this book first or in 
-other tutorilas. Then you can refer to the help pages when necessary.
+other tutorials. Then you can refer to the help pages when necessary.
 
 **Relevant R help pages**
 
@@ -230,14 +230,12 @@ grep("ck", fruit, value=TRUE) # "prickly pear"  "black cherry"  "kumquat"
 
 ## regex patterns do NOT understand "numbers"
 
-```{r}
-# regex patterns do NOT understand "numbers" ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Digits are NOT treated as numbers. They are treated the same as any
-# other character. Therefore grep("12", SOME_VECTOR) will match any value
-# that contains a 1 followed by a 2, including "123" and "34321234".
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Digits are NOT treated as numbers. They are treated the same as any
+other character. Therefore grep("12", SOME_VECTOR) will match any value
+that contains a 1 followed by a 2, including "123" and "34321234".
 
+
+```{r}
 addresses # show all the addresses
 
 grep("23", addresses, value=TRUE)  # matches anything that contains 23
@@ -837,7 +835,7 @@ the following menu choices from RStudio's menu: "File | New File | Text File"
 # if you want to actually match a metacharacter (e.g. period, parentheses,
 # caret, dollar sign, etc) you precede the metacharacter with a backslash.
 #
-# For example, you can do this in RStudios text editor - just type ctrl-f or cmd-f
+# For example, you can do this in RStudio's text editor - just type ctrl-f or cmd-f
 # and click "regex" checkbox. Then type your regular expression into the 
 # search box.
 # For example
@@ -864,7 +862,7 @@ the following menu choices from RStudio's menu: "File | New File | Text File"
 # if you want to actually match a metacharacter (e.g. period, parentheses,
 # caret, dollar sign, etc) you precede the metacharacter with a backslash.
 #
-# For example, you can do this in RStudios text editor - just type ctrl-f or cmd-f
+# For example, you can do this in RStudio's text editor - just type ctrl-f or cmd-f
 # and click "regex" checkbox. Then type your regular expression into the 
 # search box.
 #
@@ -1288,7 +1286,7 @@ grep("[tT][,.!?]", addresses, value=TRUE)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-## WORD BOUNDRIES:  `\b`
+## WORD BOUNDARIES:  `\b`
 
 `\b` matches a "word boundary"   (remember in R use `\\b`)
 
@@ -1297,12 +1295,15 @@ You can use this before a pattern, e.g. `\bSOME_PATTERN`
 to mean that the pattern must match at the beginning of a word 
 that is in the text - see examples below.
 
-<em>
-Compare this with `^SOME_PATTERN` which means, match the pattern that 
-appears at the beginning of the text.
-`^SOME_PATTERN` means that the the pattern must match at the beginning of
-the entire character value.)
-</em>
+<blockquote>
+**NOTE:**  
+
+**`^SOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
+beginning of **the entire text**.
+
+**`\bSOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
+beginning of **a word within the text**.
+</blockquote>
 
 You can also use `SOME_PATTERN\b` to mean that the pattern must
 come at the end of a word - see examples below.
@@ -1312,6 +1313,8 @@ space or comma, but rather is a position in the text.
 
 NOTE - a "word" may include letters, digits or underscores (see the discussion 
 of the `\w` and `\W` metacharacters above.)
+
+<!-- old examples - newer examples, below are better -->
 
 ```{r}
 heWords = c("he", "here", "there", "the", "who was she?", "headache")
@@ -1327,8 +1330,7 @@ grep ("he\\b", heWords, value=TRUE)  # "he" "the" "who was she?" (NOT "here","th
 grep ("\\bhe\\b", heWords, value=TRUE)  # "he"
 ```
 
-
-# YRSTART
+-->
 
 <!--
 ```{r}
@@ -1452,19 +1454,14 @@ str_view(sentences, "grey|gray")
 ```
 :::
 
-
-
-# YREND
+## More `\b` examples
 
 ```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# You can use \b with more complicated patterns too.
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# fruits that have a word that starts with H or h
+grep ("\\b[Hh]", fruit, value=TRUE)  
 
-# Examples: 
-grep ("\\b[Hh]", fruit, value=TRUE)  # fruits that have a word that starts with H or h
-
-grep ("[aeiouAEIOU]\\b", fruit, value=TRUE)  # fruits that end with a vowel
+# fruits that end with a vowel
+grep ("[aeiouAEIOU]\\b", fruit, value=TRUE)  
 ```
 
 ## "pattern1|pattern2"  matches pattern1 OR pattern2 

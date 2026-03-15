@@ -1,4 +1,4 @@
-# <yrChapterNumber>35. </yrChapterNumber> Common Table Expressions (CTE)
+# <yrChapterNumber>26. </yrChapterNumber> Common Table Expressions (CTE)
 
 ## SQL Common Table Expressions (CTE)
 

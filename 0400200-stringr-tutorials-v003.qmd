@@ -1,4 +1,21 @@
-# <yrChapterNumber>15. </yrChapterNumber> stringr tutorial
+# <yrChapterNumber>12. </yrChapterNumber> stringr tutorial
+
+## vignette: intro to stringr
+
+In the Spring 2026 semester we went over the following vignette
+from the stringr CRAN webpage: <https://cran.r-project.org/web/packages/stringr/index.html>
+
+- Introduction to stringr  
+  <https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html>
+
+The section below "Another intro to stringr" goes through many of the same
+concepts and elaborates a little more. Students in my Spring 2026 classes
+are responsible for the portions of stringr that are covered in the vignette
+listed above. You might benefit from reading the material below, but you are not
+responsible for functions like str_glue(), that are covered in the material 
+below but not in the vignette above.
+
+## Another intro to stringr
 
 This is an overview of the stringr package that is part of the "tidyverse"
 family of packages.  The info in this section comes from this youtube playlist:
