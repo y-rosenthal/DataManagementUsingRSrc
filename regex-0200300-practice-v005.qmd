@@ -1,4 +1,4 @@
-# <yrChapterNumber>24. </yrChapterNumber> Cleaning Data (with regex in R)
+# <yrChapterNumber>24. </yrChapterNumber> Practice - Searching and Cleaning Data (with regex in R)
 
 <style>
 /* Style all level-4 headings */

@@ -76,8 +76,8 @@ book:
       
     - part: Relational databases and SQL
       chapters:
-      - sql0014-theBooksDatabase-v001.qmd # get the data # yrChapterNumber 27
-      - sql0006-introToDatabases-v023.qmd # db and dbms - copied from introToSQL # yrChapterNumber 28
+      - sql0006-introToDatabases-v023.qmd # db and dbms - copied from introToSQL # yrChapterNumber 27
+      - sql0014-theBooksDatabase-v001.qmd # get the data # yrChapterNumber 28
       - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 29
       - sql0010-introToSql-v023.qmd       # NO dplyr knowledge # yrChapterNumber 30
       - sql0035-workingWithMultipleTables-v012.qmd # inner joins - renumbered from sql0020 # yrChapterNumber 31

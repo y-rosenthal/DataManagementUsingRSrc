@@ -104,7 +104,7 @@ title_authors = read_csv("title_authors.csv", na="NULL", show_col_types=FALSE)
 royalties = read_csv("royalties.csv", na="NULL", show_col_types=FALSE)
 ```
 
-### Books Database - Entity Relationship Diagram (ERD)
+### Books Database - Entity Relationship Diagram (ERD)   {#yrBooksErd}
 
 The following is an "Entity Relationship Diagram (ERD)" that 
 describes the relationships between the tables. See the Word document
@@ -171,7 +171,7 @@ Below are the contents of these tables:
 options(width = 999)
 ```
 
-### titles table
+### titles table {#yrBooksData}
 
 Stores one row for each book (AKA title).
 

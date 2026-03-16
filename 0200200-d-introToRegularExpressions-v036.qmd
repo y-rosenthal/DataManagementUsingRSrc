@@ -1,3 +1,5 @@
+# <yrChapterNumber>17. </yrChapterNumber> (a) word boundaries `\b` (b) PATTERN1|PATTERN2 (c) paste0 to build long patterns
+
 ```{r}
 #| file: 0200200-regex-setup.R
 #| include: false
@@ -7,31 +9,41 @@
 
 `\b` matches a "word boundary"   (remember in R use `\\b`)
 
-You can use this before a pattern, e.g. `\bSOME_PATTERN` 
-(or in R code use double backslash: `\\bSOME_PATTERN`)
-to mean that the pattern must match at the beginning of a word 
-that is in the text - see examples below.
+- You can use `\b` before a pattern, e.g. `\bSOME_PATTERN` 
+  (or in R code use double backslash: `\\bSOME_PATTERN`)
+  to mean that the pattern must match at the beginning of a word 
+  that is in the text - see examples below.
 
-<blockquote>
-**NOTE:**  
 
-**`^SOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
+- You can also use `SOME_PATTERN\b` to mean that the pattern must
+  come at the end of a word - see examples below.
+
+- You can use `\bSOME_PATTERN\b` to mean that SOME_PATTERN must match
+  an entire word (i.e. there is word break both before and after the pattern).
+
+::: {.callout-note}
+A "word boundary" is not a particular character such as a 
+space or comma, but rather is a position in the text. 
+:::
+
+::: {.callout-note}
+A "word" may include letters, digits or underscores (see the discussion 
+of the `\w` and `\W` metacharacters above.)
+:::
+
+::: {.callout-note}
+Some students get confused between `\bSOME_PATTERB` and `^SOME_PATTERN` (caret). 
+They differ in the following way:
+
+- `^SOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
 beginning of **the entire text**.
 
-**`\bSOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
+- `\bSOME_PATTERN`** (with a leading caret, ^) means tbat SOME_PATTERN must match at the 
 beginning of **a word within the text**.
-</blockquote>
+:::
 
-You can also use `SOME_PATTERN\b` to mean that the pattern must
-come at the end of a word - see examples below.
 
-Note that a "word boundary" is not a particular character such as a 
-space or comma, but rather is a position in the text. 
-
-NOTE - a "word" may include letters, digits or underscores (see the discussion 
-of the `\w` and `\W` metacharacters above.)
-
-<!-- old examples - newer examples, below are better -->
+<!-- old examples - newer examples, below are better 
 
 ```{r}
 heWords = c("he", "here", "there", "the", "who was she?", "headache")

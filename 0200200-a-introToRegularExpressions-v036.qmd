@@ -1,4 +1,4 @@
-# <yrChapterNumber>14. </yrChapterNumber> regular expressions (regex)
+# <yrChapterNumber>14. </yrChapterNumber> Intro to Regular Expressions (regex)
 
 ```{r}
 rm(list=ls())
