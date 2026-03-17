@@ -1,3 +1,10 @@
+---
+toc: true
+toc-depth: 4
+format:
+  html:
+    anchor-sections: false
+---
 # <yrChapterNumber>24. </yrChapterNumber> Practice - Searching and Cleaning Data (with regex in R)
 
 <style>
@@ -22,22 +29,27 @@ options(width = 999)
 
 ## Introduction - about the data
 
-In this assignment, you'll practice using regular expressions to identify and clean messy data. The dataset below contains employee expense records with various inconsistencies in formatting. ***Some*** of the inconsistencies are described below
+In this assignment, you'll practice using regular expressions to identify and clean messy data. 
+The dataset below contains employee expense records with various inconsistencies in formatting. ***Some*** of the inconsistencies are described below
 the data.
 
 ### Employee expenses data
 
-Click on the link below to see the full dataset.
-The first few rows of data are shown below the link.
+::: {.content-hidden}
+COMMENT: create the dataframe but don't display it yet
+:::
 
-::: {.callout-note collapse="true"}
-## click here to see the full data set
 ```{r}
+#| label: make-data
+#| echo: false
+#| include: false
+
 library(tibble)
+
 expenses = tribble(
   ~employee,           ~date,          ~amount,          ~category,         ~comments,
   "Sue Smith",         "1/19/2023",    "59.99",         "food",            "lunch with client",
-  "schwartz, joe",     "01/19/2023",   "$27.00",        "office supplies", "paper for printer",
+  "  schwartz, joe",   "01/19/2023",   "$27.00",        "office supplies", "paper for printer",
   "mike david harris", "2023-01-19",   "25",            "Office Stuff",    NA,
   "Dr. A. Davis",      "19/1/2023",    "five hundred",  "FOOD",            "NA",
   "Dr Jones",          "1/19/23",      "1,234.56",      "office suppl.",   "chairs",
@@ -45,7 +57,76 @@ expenses = tribble(
   "Conway, Ella Sr.",  "Jan 19, 2023", "$35.23",        "LUNCH",           "---",
   "Brown, Tom",        "2/15/2023",    "42.50",         "food",            "dinner meeting",
   "  Williams, Kate  ","02/15/2023",   "$89.99",        "office supplies", "toner cartridge",
-  "robert james lee",  "2023/02/15",   "75",            "Office Stuff",    NA,
+  "robert james lee",  "2023/02/15",   "75",            "Office Stuff",    "",
+  "mike green jr.",    "2023/02/15",   "500",           "OFFICE SUPPLIES", NA,
+  "Dr. B. Wilson",     "15/2/2023",    "two hundred",   "FOOD",            "NA",
+  "Dr Smith",          "2/15/23",      "2,345.67",      "office suppl.",   "monitor",
+  "R. Brown Jr",       "March 2, 2023","750",           "Office supplies", "filing cabinet",
+  "Martinez, Ana Sr.", "Feb 15, 2023", "$48.75",        "LUNCH",           "---",
+  "Johnson,Mary",      "3/22/2023",    "63.45",         "food",            "team lunch",
+  "Cooper,  Sam",      "03/22/2023",   "$156.00",       "office supplies", "office decoration",
+  "peter michael wu",  "2023-03-22",   "50",            "OFFICE STUFF",    NA,
+  "Dr. C. Taylor",     "2/3/2023",     "one thousand",  "FOOD",            "NA",
+  "Drake Wilson",      "3/14/24",      "500",           "Office supplies", "printer",
+  "Dr Chen",           "3/2/23",       "3,456.78",      "office suppl.",   "laptop",
+  "T. Wilson Jr",      "Jun 27 2024",  "500",           "Office supplies", "printer",
+  "Rodriguez, Eva Sr.","Mar 22, 2023", "$92.45",        "LUNCH",           "---",
+  "Pat Williams",      "2/20/2023",    "150",           "travel",          "train ticket",
+  "Chen, Wei",         "20/02/2023",   "$89.50",        "Travel",          "hotel",
+  "jennifer ann martinez","2023-02-21","42",           "FOOD",            NA,
+  "Ms. B. Kim",        "21/2/2023",    "12.50",         "office supplies", "stapler",
+  "J. Thompson",       "2/21/23",      "2,500.00",      "TRAVEL",          "flight",
+  "R. Patel Ph.D",     "21/2/23",      "75",            "office suppl.",   "notebooks",
+  "Garcia, Maria Jr.", "Feb 22, 2023", "$120.00",       "food",            "team dinner",
+  "Dr. Evans",         "3/01/2023",    "95.99",         "Office Stuff",    "supplies",
+  "Thompson III",      "3/05/2023",    "200",           "travel",          "conference",
+  "Brown, Tom",        "3/10/2023",    "65.00",         "food",            "client lunch",
+  "  Williams, Kate  ","03/01/2023",   "$45.00",        "office supplies", "paper restock",
+  "robert james lee",  "2023/03/01",   "25",            "Office Stuff",    "mouse pad",
+  "mike green jr.",    "2023/03/05",   "150",           "OFFICE SUPPLIES", "desk lamp",
+  "Dr. B. Wilson",     "20/2/2023",    "85.00",         "FOOD",            "team lunch",
+  "Dr Smith",          "3/01/23",      "800.00",        "office suppl.",   "tablet",
+  "R. Brown Jr",       "March 10, 2023","300",          "Office supplies", "office chair",
+  "Martinez, Ana Sr.", "Feb 20, 2023", "$30.00",        "LUNCH",           "coffee meeting",
+  "Johnson,Mary",      "3/25/2023",    "22.00",         "food",            "snacks",
+  "Cooper,  Sam",      "03/25/2023",   "$75.00",        "office supplies", "whiteboard markers",
+  "peter michael wu",  "2023-03-25",   "35",            "Office Stuff",    "mouse",
+  "Dr. C. Taylor",     "3/10/2023",    "120.00",        "FOOD",            "staff lunch",
+  "Drake Wilson",      "4/01/24",      "250",           "Office supplies", "scanner",
+  "Dr Chen",           "3/10/23",      "900.00",        "office suppl.",   "monitor",
+  "T. Wilson Jr",      "Jul 5 2024",   "200",           "Office supplies", "router",
+  "Rodriguez, Eva Sr.","Apr 1, 2023",  "$55.00",        "LUNCH",           "team outing",
+
+  "Mike Turchini   ",  "2024-01-31",   "100",           "lunch",           ""
+)
+expenses = as.data.frame(expenses)
+```
+
+```{r}
+#| echo: false
+#| include: false
+
+# Save a copy of the dataframe.
+# If the answer to a question modifies the data, we will 
+# restore the data after the question is over.
+saveExpenses = expenses
+```
+
+::: {.content-hidden}
+COMMENT: original broken data
+```r
+expenses = tribble(
+  ~employee,           ~date,          ~amount,          ~category,         ~comments,
+  "Sue Smith",         "1/19/2023",    "59.99",         "food",            "lunch with client",
+  "  schwartz, joe",     "01/19/2023",   "$27.00",        "office supplies", "paper for printer",
+  "mike david harris", "2023-01-19",   "25",            "Office Stuff",    NA,
+  "Dr. A. Davis",      "19/1/2023",    "five hundred",  "FOOD",            "NA",
+  "Dr Jones",          "1/19/23",      "1,234.56",      "office suppl.",   "chairs",
+  "S. Jones Jr",       "19/01/23",     "1000",          "Office supplies", "desk",
+  "Conway, Ella Sr.",  "Jan 19, 2023", "$35.23",        "LUNCH",           "---",
+  "Brown, Tom",        "2/15/2023",    "42.50",         "food",            "dinner meeting",
+  "  Williams, Kate  ","02/15/2023",   "$89.99",        "office supplies", "toner cartridge",
+  "robert james lee",  "2023/02/15",   "75",            "Office Stuff",    "",
   "mike green jr.",  "2023/02/15",     "500",           "OFFICE SUPPLIES", NA,
   "Dr. B. Wilson",     "15/2/2023",    "two hundred",   "FOOD",            "NA",
   "Dr Smith",          "2/15/23",      "2,345.67",      "office suppl.",   "monitor",
@@ -84,19 +165,43 @@ expenses = tribble(
   "Dr Chen",           "3/2/23",       "3,456.78",      "office suppl.",   "laptop",
   "T. Wilson Jr",      "Jun 27 2024",  "500",           "Office supplies", "printer",
   "Rodriguez, Eva Sr.","Mar 22, 2023", "$92.45",        "LUNCH",           "---",
-
+  "Mike Turchini   ",     "2024-01-31",   "100",           "lunch",           "",
 )
 expenses = as.data.frame(expenses)
 ```
 :::
 
+::: {.content-hidden}
+COMMENT: Display the 1st few rows.
+:::
 
 ```{r}
+#| echo: false
+
 numrows = 10
-cat("There are a total of ", nrow(expenses), " rows. The following is 
-    just the first ", numrows, " rows.", sep="")
+cat("There are a total of ", nrow(expenses), " rows. The following are ", 
+    "just the first ", numrows, " rows.", sep="")
 head(expenses, 10)
 ```
+
+Click on the link below to see the full dataset.
+
+
+::: {.content-hidden}
+COMMENT: show the full dataset/code
+:::
+
+::: {.callout-note collapse="true"}
+## click here to see the full data set
+
+Copy the following code into R and run it to 
+recreate the full dataset.
+
+```{r}
+#| ref.label: make-data
+#| echo: true
+```
+:::
 
 - Inconsistencies with the `employee` column entries
 
@@ -138,7 +243,7 @@ head(expenses, 10)
 
 - Inconsistencies in the `comments` column
 
-  * blanks are expressed differently: NA vs "NA" vs "---".
+  * blanks are expressed differently: NA vs "NA" vs "---" vs "".
   
     Note that in this column, other differences are more forgivable since 
     comments are by their very nature written by people differently and are 
@@ -150,17 +255,232 @@ head(expenses, 10)
 
 Your task is to write R code using regular expressions to identify different patterns in the data.
 
+### Each question starts with a fresh copy of the data
+
+For each question, assume that you start with a fresh copy of the data.
+In other words, if question #5 asks you to change the data, assume that
+question #6 starts again with the original data shown above.
+
+### Focus on regex code, but use other R code if necessary
+
 You may use any of the regex functions we covered in class:
+
 - `grep()`: Find patterns and return matching indices or values
 - `grepl()`: Find patterns and return TRUE/FALSE for each element
 - `sub()`: Replace the first occurrence of a pattern
 - `gsub()`: Replace all occurrences of a pattern
 - `strsplit()`: Split strings based on a pattern
 
+In addition you can use other R code to help.
+
+### Advice on approaching the questions
+
 For each question:
+
 1. First try to solve it yourself
 2. If you get stuck, try to break down the pattern you're looking for into smaller pieces
 3. Test your solution with the sample data to make sure it catches all cases
+
+### The answer must work even if the data changes.
+
+You solution MUST work, even if the actual data changes. For example 
+
+QUESTION: Display all entries in the comments column that contain the word "for".
+
+**CORRECT ANSWER**: The following answer uses the `\b` metacharacter to indicate the start and
+the end of the word.
+
+```{r}
+grep("\\bfor\\b", expenses$comments, value=TRUE)
+```
+
+**WRONG ANSWER**: The following is obviously a wrong answer, even though it produces the same results.
+The answer refers to a specific row.
+The output would be different if the order of the rows changed.
+The answer must assume no knowledge of the actual data in the dataframe.
+
+```{r}
+expenses[2,]
+```
+
+**ANOTHER WRONG ANSWER**: The following is not totally correct either even though the output looks right.
+Can you see why?
+
+```{r}
+grep("for", expenses$comments, value=TRUE)
+
+# THE ANSWER IS WRONG BECAUSE ...
+#
+# Suppose someone were to add a new row that contained the comment 
+# "printer forms", the code
+#
+#           grep("for", expenses$comments, value=TRUE) 
+#
+# simply searches for the 
+# letters "for" anywhere in the comment and would incorrectly match
+# the "for" in the word "forms". The question specifically said that 
+# the comment must contain the word for. Even though none of the words
+# "form" or "forms" or  "format" or "before" or "information", etc.
+# appear in the data, the question asked for the word "for" and you 
+# answer should only pick up the word "for".
+#
+# Let's try it
+
+newExpense = data.frame(employee = "Joe Smith",
+                        date = "1/1/2026",
+                        amount = "$100.00",
+                        category = "office supplies",
+                        comments = "printer forms")
+expenses = rbind(expenses, newExpense)
+
+grep("for", expenses$comments, value=TRUE)
+```
+
+
+**THERE COULD BE MORE THAN ONE CORRECT ANSWER**: Suppse you forgot about the `\b` 
+metacharacter (which indicates a 
+word break), you could have answered the question using the following code:
+
+```{r}
+pattern = paste0("^for$",                  # "for" is the only text in the comment
+                 "|^for[^A-Za-z]",         # or "for" is at the beginning and followed by a non-letter  
+                 "|[^A-Za-z]for$",         # or "for" is at the end and preceded by a non-letter
+                 "|[^A-Za-z]for[^A-Za-z]"  # or "for" is in the middle and preceded and followed by non-letters
+                 )
+grep(pattern, expenses$comments, value=TRUE)
+```
+
+
+
+```{r}
+#| echo: false
+
+# RESET expenses back to the original values
+expenses = saveExpenses
+```
+
+
+
+### Warm up Questions 
+
+#### Question 1a
+
+Write R code that outputs all entries in the employee column where the very 
+last character in the entry is a lowercase "i" (Do not show the entry 
+if the ending is i followed by a space or a period, etc)
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-wu-1a
+#| include: false
+#| echo: false
+#| output: false
+
+answer = 
+ grep("i$", expenses$employee, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+print(answer)
+```
+
+#### Question 1b
+
+Modify your answer to the previous part so that the code outputs
+all entries where the last LETTER is lowercase "i" (even if it might be followed
+by digits or spaces or periods, etc)
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-wu-1b
+#| include: false
+#| echo: false
+#| output: false
+
+answer = 
+ grep("i[^a-zA-Z]*$", expenses$employee, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+print(answer)
+```
+
+
+#### Question 2a
+
+Show all names that have whitespace (spaces, tabs, newlines) at the beginning
+or end of the entry.
+
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-wu-2a
+#| include: false
+#| echo: false
+#| output: false
+
+answer = 
+ grep("^\\s+|\\s+$", expenses$employee, value=TRUE)
+```
+
+Given the data above, your output should show the following:
+
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+print(answer)
+```
+
+#### Question 2b
+
+Use regular expressions to r
+emove all whitespace that appears before or after an entry in the 
+employee column. You can do this in more than one command if you like.
+
+Prove that your code worked by comparing the names that you found in 
+previous
+<!-- generate answer but don't show this code -->
+```{r}
+#| label: answer-wu-2b
+#| include: false
+#| echo: false
+#| output: false
+
+# Get the rows that contain leading or trailing whitespace
+rowsWithWhitespace = expenses$employee = sub("^\\s+|\\s+$", "", expenses$employee)
+rowsWithWhitespace
+
+# Take a copy of the original data in order to modify it without affecting the original data
+newExpenses = expenses
+
+# Remove any spaces BEFORE the names
+newExpenses$employee = sub("^\\s+", "", expenses$employee)
+
+# Remove any spaces AFTER the names
+newExpenses$employee = sub("\\s+$", "", expenses$employee)
+
+# Show the rows that were changed in the old dataframe and the new dataframe
+
+data.frame ( oldEntries = expenses$employee[rowsWithWhitespace],
+             fixedEntries = newExpenses$employee[rowsWithWhitespace])
+
+
+```
+
+Given the data above, your output should show the following:
+
+<!-- show the values output by the answer code -->
+```{r}
+#| echo: false
+print(answer)
+```
 
 ### Name Format Questions
 
@@ -766,8 +1086,9 @@ cat(answer, sep="\n")
 
 #### Question 16
 
-Write R code using regex to identify comments that are either NA, "NA", or 
-consist entirely of dashes (e.g "---" and "-----").
+Write R code using regex to identify comments that are either 
+NA, "NA", or consist entirely of dashes (e.g "---" and "-----") or 
+are the empty string, i.e. "".
 
 <!-- generate answer but don't show this code -->
 ```{r}
@@ -776,11 +1097,8 @@ consist entirely of dashes (e.g "---" and "-----").
 #| echo: false
 #| output: false
   
-#cmt = as.character(expenses$comments)
-#idx = is.na(expenses$comments) | grepl("^NA$", cmt) | grepl("^[-]+$", cmt)
 tf = is.na(expenses$comments) | 
-     grepl("^NA$", expenses$comments) | 
-     grepl("^[-]+$", expenses$comments)
+     grepl("^NA$|^-+$|^$", expenses$comments) 
 answer = expenses$comments[tf]
 ```
 
@@ -1426,29 +1744,132 @@ cleanup(expenses)
 
 
 ```{=html}
-<!-- Makes all level-2 (##) headings collapsible: click to expand/collapse -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var h2s = document.querySelectorAll('body h2');
-  h2s.forEach(function(h2) {
-    var details = document.createElement('details');
-    details.setAttribute('open', '');  // start expanded so page looks normal
-    var summary = document.createElement('summary');
-    summary.className = 'h2';
-    summary.style.cursor = 'pointer';
-    summary.style.fontWeight = 'bold';
-    summary.innerHTML = h2.innerHTML;
-    h2.parentNode.insertBefore(details, h2);
-    details.appendChild(summary);
-    var nodes = [];
-    var next = h2.nextElementSibling;
-    while (next && next.tagName !== 'H2') {
-      nodes.push(next);
-      next = next.nextElementSibling;
+document.addEventListener('DOMContentLoaded', function () {
+
+  const firstH1 = document.querySelector('main h1') || document.querySelector('h1');
+  const sections = document.querySelectorAll('main section');
+
+  function getHeading(section) {
+    return section.querySelector(':scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6');
+  }
+
+  function getChildSections(section) {
+    return section.querySelectorAll(':scope > section');
+  }
+
+  // ===== toggle =====
+  function setSection(section, open) {
+    section.dataset.open = open;
+
+    const heading = getHeading(section);
+    const icon = heading?.querySelector('.toggle-icon');
+
+    const children = Array.from(section.children).filter(el => !/^H[1-6]$/.test(el.tagName));
+    children.forEach(el => {
+      el.style.display = open ? '' : 'none';
+    });
+
+    if (icon) icon.textContent = open ? '▼ ' : '▶ ';
+  }
+
+  function toggleSection(section) {
+    const open = section.dataset.open !== 'false';
+    setSection(section, !open);
+  }
+
+  // ===== build UI =====
+  sections.forEach(section => {
+
+    const heading = getHeading(section);
+    if (!heading) return;
+    if (heading === firstH1) return;
+
+    const children = getChildSections(section);
+    const hasSubsections = children.length > 0;
+
+    // ===== triangle =====
+    const icon = document.createElement('span');
+    icon.textContent = '▼ ';
+    icon.className = 'toggle-icon';
+    icon.style.cursor = 'pointer';
+    icon.setAttribute('tabindex', '0');
+
+    heading.prepend(icon);
+    heading.style.cursor = 'pointer';
+
+    // initial state
+    section.dataset.open = 'true';
+
+    heading.addEventListener('click', function(e){
+      if (e.target.tagName === 'A') return;
+      toggleSection(section);
+    });
+
+    icon.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleSection(section);
+      }
+    });
+
+    // ===== local buttons =====
+    if (hasSubsections) {
+
+      const controls = document.createElement('div');
+      controls.style.margin = '0.25rem 0 0.75rem 0';
+
+      const collapseBtn = document.createElement('button');
+      collapseBtn.textContent = 'Collapse Sections';
+      collapseBtn.style.marginRight = '0.5rem';
+
+      const expandBtn = document.createElement('button');
+      expandBtn.textContent = 'Expand Sections';
+
+      controls.appendChild(collapseBtn);
+      controls.appendChild(expandBtn);
+      heading.after(controls);
+
+      collapseBtn.onclick = () => {
+        children.forEach(s => setSection(s, false));
+      };
+
+      expandBtn.onclick = () => {
+        children.forEach(s => setSection(s, true));
+      };
     }
-    nodes.forEach(function(node) { details.appendChild(node); });
-    h2.remove();
+
   });
+
+  // ===== global buttons =====
+  function setAll(open) {
+    sections.forEach(section => {
+      const heading = getHeading(section);
+      if (!heading || heading === firstH1) return;
+      setSection(section, open);
+    });
+  }
+
+  const globalControls = document.createElement('div');
+  globalControls.style.margin = '0.5rem 0 1rem 0';
+
+  const collapseAll = document.createElement('button');
+  collapseAll.textContent = 'Collapse Sections';
+  collapseAll.style.marginRight = '0.5rem';
+
+  const expandAll = document.createElement('button');
+  expandAll.textContent = 'Expand Sections';
+
+  collapseAll.onclick = () => setAll(false);
+  expandAll.onclick = () => setAll(true);
+
+  globalControls.appendChild(collapseAll);
+  globalControls.appendChild(expandAll);
+
+  if (firstH1) {
+    firstH1.after(globalControls);
+  }
+
 });
 </script>
 ```
