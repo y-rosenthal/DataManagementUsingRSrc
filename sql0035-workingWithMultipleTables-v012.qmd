@@ -37,23 +37,40 @@ orders = read_csv("data/orders.csv", show_col_types=FALSE)
 
 ### Overview of the customers and orders tables
 
+The examples in this page use the customers and orders tables.
+The data for those tables can be imported into R using the
+customers.csv and the orders.csv files.
+This code to read in the data from the csv files appears 
+further up in this file. 
+
+see this page for more info: https://www.w3schools.com/sql/sql_join.asp
+
+Lets see a few rows from the customers table and from the orders table
+
+::: {.callout-note collapse="false"}
+##### customers table - click here to expand/collapse
 ```{r}
-# The examples in this page use the customers and orders tables.
-# The data for those tables can be imported into R using the
-# customers.csv and the orders.csv files.
-# This code to read in the data from the csv files appears 
-# further up in this file. 
-#
-# see this page for more info: https://www.w3schools.com/sql/sql_join.asp
+# The following query shows exactly how many rows there are in this table
+sqldf("select count(*) from customers order by CustomerId limit 10")
 
-
-#........................................................................
-# Lets see a few rows from the customers table and from the orders table
-#........................................................................
-
+# These are just the first 10 rows from the customers table ...
 sqldf("select * from customers order by CustomerId limit 10")
+```
+:::
+
+::: {.callout-note collapse="false"}
+##### orders table - click here to expand/collapse
+```{r}
+# The following query shows exactly how many rows there are in this table
+sqldf("select count(*) from orders order by CustomerId limit 10")
+
+# These are just the first 10 rows from the orders table ...
 sqldf("select * from orders order by CustomerId limit 10")
 ```
+:::
+
+
+
 
 ## "Primary Keys" and "Foreign Keys"
 
@@ -108,22 +125,34 @@ sqldf("select * from orders order by CustomerId limit 10")
 
 ### More about the customers and orders tables
 
+::: {.callout-note collapse="true"}
+##### click here to see the ENTIRE orders table
 ```{r}
 # show the orders table arranged in the order of the customerID
 
 sqldf("select *
        from orders
        order by CustomerID")
+```
+:::
+
+Show how customers map to orders
+
+```{r}
+# Show customer info for customer id 10,11 and 12
+
+sqldf("select * 
+       from customers 
+       where CustomerId in (10,11,12)
+       order by CustomerId")
 
 
-# Show customer info for customer id 10
+# Show all orders for customer id 10, 11 and 12 
 
-sqldf("select * from customers where CustomerId = 10")
-
-
-# Show all orders for customer id 10
-
-sqldf("select * from orders where CustomerId = 10")
+sqldf("select * 
+       from orders 
+       where CustomerId in (10,11,12) 
+       order by CustomerId")
 ```
 
 ### JOINing customers and orders into a single output
@@ -140,11 +169,11 @@ sqldf("select * from orders where CustomerId = 10")
 # - customer name and country from the customers table
 # - orderId, OrderDate from the orders table
 #
-# Only show data for all orders placed by customer 10
+# Only show data for all orders placed by customers 10, 11, 12
 
 sqldf("select OrderID, customers.CustomerId, CustomerName, Country, OrderDate
        from orders join customers on orders.customerId = customers.CustomerId
-       where customers.CustomerId = 10")   # ame result if you say orders.customerId
+       where customers.CustomerId in (10,11,12)")   # same result if you say orders.customerId
 
 
 # do the same for customerids 1 through 5

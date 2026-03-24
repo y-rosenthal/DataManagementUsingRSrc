@@ -1493,20 +1493,20 @@ WHERE conditions can include any/all of the following
 # NOT IN (.) 	Number does not exist in a list 	col_name NOT IN (1, 3, 5)
 ```
 
-```
 ###########################
 # Exercise 2 - Tasks
 ###########################
  
 # Find the movie with a row id of 6
 
+```{r}
 sql = "
   select *
   from movies
   where id=6"
 
 sqldf(sql)
-
+```
 
 
 ###############################################################.
@@ -1519,6 +1519,7 @@ sqldf(sql)
 
 # Find the movies released in the years between 2000 and 2010
 
+```{r}
 sql = "select * 
        from movies
        where year >= 2000 and year <= 2010 "
@@ -2008,7 +2009,7 @@ sqldf(sql)
 
 
 # See the table (i.e. dataframe)
-sqldf("select * north_american_cities")
+sqldf("select * from north_american_cities")
 
 # List all the Canadian cities and their populations
 
@@ -2157,3 +2158,252 @@ mySelect("movies", c("title","director"))
 
 mySelect("grades", c("student", "year", "test1", "test2"))
 ```
+
+<!--
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function getBlocks(section) {
+    return section.querySelectorAll("details");
+  }
+
+  function expandAll(section) {
+    getBlocks(section).forEach(d => d.open = true);
+  }
+
+  function collapseAll(section) {
+    getBlocks(section).forEach(d => d.open = false);
+  }
+
+  document.querySelectorAll("section").forEach(section => {
+    const hasDetails = section.querySelector("details");
+    if (!hasDetails) return;
+
+    const btnWrap = document.createElement("div");
+    btnWrap.style.margin = "0.5em 0";
+
+    const expandBtn = document.createElement("button");
+    expandBtn.textContent = "Expand all";
+    expandBtn.className = "btn btn-sm btn-outline-primary";
+    expandBtn.style.marginRight = "0.5em";
+
+    const collapseBtn = document.createElement("button");
+    collapseBtn.textContent = "Collapse all";
+    collapseBtn.className = "btn btn-sm btn-outline-secondary";
+
+    expandBtn.onclick = () => expandAll(section);
+    collapseBtn.onclick = () => collapseAll(section);
+
+    btnWrap.appendChild(expandBtn);
+    btnWrap.appendChild(collapseBtn);
+
+    const header = section.querySelector("h1, h2, h3, h4");
+    if (header) {
+      header.insertAdjacentElement("afterend", btnWrap);
+    }
+  });
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function getBlocks(section) {
+    return section.querySelectorAll(".collapse");
+  }
+
+  function expandAll(section) {
+    getBlocks(section).forEach(el => {
+      el.classList.add("show");
+    });
+  }
+
+  function collapseAll(section) {
+    getBlocks(section).forEach(el => {
+      el.classList.remove("show");
+    });
+  }
+
+  document.querySelectorAll("section").forEach(section => {
+    const hasBlocks = section.querySelector(".collapse");
+    if (!hasBlocks) return;
+
+    const btnWrap = document.createElement("div");
+    btnWrap.style.margin = "0.5em 0";
+
+    const expandBtn = document.createElement("button");
+    expandBtn.textContent = "Expand all";
+    expandBtn.className = "btn btn-sm btn-outline-primary";
+    expandBtn.style.marginRight = "0.5em";
+
+    const collapseBtn = document.createElement("button");
+    collapseBtn.textContent = "Collapse all";
+    collapseBtn.className = "btn btn-sm btn-outline-secondary";
+
+    expandBtn.onclick = () => expandAll(section);
+    collapseBtn.onclick = () => collapseAll(section);
+
+    btnWrap.appendChild(expandBtn);
+    btnWrap.appendChild(collapseBtn);
+
+    const header = section.querySelector("h1, h2, h3, h4");
+    if (header) {
+      header.insertAdjacentElement("afterend", btnWrap);
+    }
+  });
+
+});
+</script>
+-->
+
+<!--
+<style>
+/* make header a flex container */
+[data-bs-toggle="collapse"] {
+  display: flex;
+  align-items: center;
+}
+
+/* push buttons to the right */
+.quarto-expand-controls {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+/* smaller buttons */
+.quarto-expand-controls button {
+  font-size: 0.75em;
+  padding: 2px 6px;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function getSection(el) {
+    return el.closest("section");
+  }
+
+  function getBlocks(section) {
+    return section.querySelectorAll(".collapse");
+  }
+
+  function expandAll(section) {
+    getBlocks(section).forEach(el => el.classList.add("show"));
+  }
+
+  function collapseAll(section) {
+    getBlocks(section).forEach(el => el.classList.remove("show"));
+  }
+
+  document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(toggle => {
+
+    if (toggle.querySelector(".quarto-expand-controls")) return;
+
+    const wrapper = document.createElement("span");
+    wrapper.className = "quarto-expand-controls";
+
+    const expandBtn = document.createElement("button");
+    expandBtn.textContent = "Expand all";
+    expandBtn.className = "btn btn-sm btn-outline-primary";
+
+    const collapseBtn = document.createElement("button");
+    collapseBtn.textContent = "Collapse all";
+    collapseBtn.className = "btn btn-sm btn-outline-secondary";
+
+    expandBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      expandAll(getSection(toggle));
+    });
+
+    collapseBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      collapseAll(getSection(toggle));
+    });
+
+    wrapper.appendChild(expandBtn);
+    wrapper.appendChild(collapseBtn);
+    toggle.appendChild(wrapper);
+  });
+
+});
+</script>
+-->
+
+<!--
+
+<style>
+[data-bs-toggle="collapse"] {
+  display: flex;
+  align-items: center;
+}
+
+.quarto-expand-controls {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+.quarto-expand-controls button {
+  font-size: 0.75em;
+  padding: 2px 6px;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function getSection(el) {
+    return el.closest("section");
+  }
+
+  function getBlocks(section) {
+    return section.querySelectorAll(".collapse");
+  }
+
+  function expandAll(section) {
+    getBlocks(section).forEach(el => el.classList.add("show"));
+  }
+
+  function collapseAll(section) {
+    getBlocks(section).forEach(el => el.classList.remove("show"));
+  }
+
+  document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(toggle => {
+
+    if (toggle.querySelector(".quarto-expand-controls")) return;
+
+    const wrapper = document.createElement("span");
+    wrapper.className = "quarto-expand-controls";
+
+    const expandBtn = document.createElement("button");
+    expandBtn.textContent = "Expand all";
+    expandBtn.className = "btn btn-sm btn-outline-primary";
+
+    const collapseBtn = document.createElement("button");
+    collapseBtn.textContent = "Collapse all";
+    collapseBtn.className = "btn btn-sm btn-outline-secondary";
+
+    function handleClick(e, action) {
+      e.preventDefault();      // 🔑 stops Bootstrap toggle
+      e.stopPropagation();     // 🔑 stops bubbling
+      e.stopImmediatePropagation(); // 🔑 extra safety
+
+      const section = getSection(toggle);
+      action(section);
+    }
+
+    expandBtn.addEventListener("click", (e) => handleClick(e, expandAll));
+    collapseBtn.addEventListener("click", (e) => handleClick(e, collapseAll));
+
+    wrapper.appendChild(expandBtn);
+    wrapper.appendChild(collapseBtn);
+    toggle.appendChild(wrapper);
+  });
+
+});
+</script>
+-->
