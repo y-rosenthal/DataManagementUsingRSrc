@@ -253,15 +253,17 @@ recreate the full dataset.
 
 ## Questions - PART I  (writing code)
 
+### Instructions
+
 Your task is to write R code using regular expressions to identify different patterns in the data.
 
-### Each question starts with a fresh copy of the data
+#### Each question starts with a fresh copy of the data
 
 For each question, assume that you start with a fresh copy of the data.
 In other words, if question #5 asks you to change the data, assume that
 question #6 starts again with the original data shown above.
 
-### Focus on regex code, but use other R code if necessary
+#### Focus on regex code, but use other R code if necessary
 
 You may use any of the regex functions we covered in class:
 
@@ -273,7 +275,7 @@ You may use any of the regex functions we covered in class:
 
 In addition you can use other R code to help.
 
-### Advice on approaching the questions
+#### Advice on approaching the questions
 
 For each question:
 
@@ -281,7 +283,7 @@ For each question:
 2. If you get stuck, try to break down the pattern you're looking for into smaller pieces
 3. Test your solution with the sample data to make sure it catches all cases
 
-### The answer must work even if the data changes.
+#### The answer must work even if the data changes.
 
 You solution MUST work, even if the actual data changes. For example 
 
@@ -413,6 +415,11 @@ Given the data above, your output should show the following:
 print(answer)
 ```
 
+::: {.callout-note collapse="true"}
+### Click here for answer
+```{r}
+```
+:::
 
 #### Question 2a
 
@@ -433,6 +440,7 @@ answer =
 Given the data above, your output should show the following:
 
 <!-- show the values output by the answer code -->
+:::
 ```{r}
 #| echo: false
 print(answer)
@@ -440,25 +448,31 @@ print(answer)
 
 #### Question 2b
 
-Use regular expressions to r
-emove all whitespace that appears before or after an entry in the 
+Use regular expressions to remove all whitespace that appears before or 
+after an entry in the 
 employee column. You can do this in more than one command if you like.
 
 Prove that your code worked by comparing the names that you found in 
-previous
-<!-- generate answer but don't show this code -->
+previous question to the new versions from this question.
+
+  
+::: {.callout-note collapse="true"}
+### Click here for answer
 ```{r}
-#| label: answer-wu-2b
-#| include: false
-#| echo: false
-#| output: false
+###########################
+# Some preparation
+###########################
 
 # Get the rows that contain leading or trailing whitespace
-rowsWithWhitespace = expenses$employee = sub("^\\s+|\\s+$", "", expenses$employee)
-rowsWithWhitespace
+rowNumbers = grep("^\\s+|\\s+$", expenses$employee)
+rowNumbers
 
 # Take a copy of the original data in order to modify it without affecting the original data
 newExpenses = expenses
+
+############################
+# Modify the new dataframe
+############################
 
 # Remove any spaces BEFORE the names
 newExpenses$employee = sub("^\\s+", "", expenses$employee)
@@ -466,21 +480,17 @@ newExpenses$employee = sub("^\\s+", "", expenses$employee)
 # Remove any spaces AFTER the names
 newExpenses$employee = sub("\\s+$", "", expenses$employee)
 
-# Show the rows that were changed in the old dataframe and the new dataframe
 
-data.frame ( oldEntries = expenses$employee[rowsWithWhitespace],
-             fixedEntries = newExpenses$employee[rowsWithWhitespace])
+###############################################################################
+# Compare the rows that were changed in the old dataframe and the new dataframe
+###############################################################################
+
+data.frame ( oldEntries = paste0('"' , expenses$employee[rowNumbers] , '"'),
+             fixedEntries = paste0('"' , newExpenses$employee[rowNumbers] , '"') )
 
 
 ```
-
-Given the data above, your output should show the following:
-
-<!-- show the values output by the answer code -->
-```{r}
-#| echo: false
-print(answer)
-```
+:::
 
 ### Name Format Questions
 

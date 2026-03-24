@@ -1,0 +1,105 @@
+# regex test
+
+```{r}
+#| include: false
+
+# helper function to ensure output is displayed one element per line
+yrOnePerLine <- function(x, check = TRUE, debug = FALSE) {
+  
+  n <- length(x)
+  
+  if (n == 0) {
+    # match print() for empty vectors
+    print(x)
+    return(invisible(x))
+  }
+  
+  # capture full print output (reference)
+  if (check) {
+    ref <- capture.output(print(x))
+  }
+  
+  # build output by printing one element at a time
+  out <- unlist(lapply(seq_along(x), function(i) {
+    capture.output(print(x[i]))
+  }))
+  
+  # flatten (each element gives one line already)
+  out <- trimws(out)
+  
+  if (check) {
+    # ALSO normalize ref to per-element lines for fair comparison
+    ref_split <- unlist(strsplit(ref, "\n"))
+    ref_split <- trimws(ref_split)
+    
+    # reconstruct expected per-element version from ref
+    ref_rebuilt <- unlist(lapply(seq_along(x), function(i) {
+      trimws(capture.output(print(x[i])))
+    }))
+    
+    if (!identical(out, ref_rebuilt)) {
+      if (debug) {
+        cat("---- DEBUG START ----\n")
+        cat("\nOriginal print(x):\n"); print(ref)
+        cat("\nPer-element print (OUT):\n"); print(out)
+        cat("\nRebuilt reference:\n"); print(ref_rebuilt)
+        cat("\nclass(x):\n"); print(class(x))
+        cat("---- DEBUG END ----\n")
+      }
+      stop("Output does not match base R print() format.")
+    }
+  }
+  
+  cat(out, sep = "\n")
+}
+
+test_list <- list(
+  simple = c("a", "b", "c"),
+  tabs = c("a\tb", "c\td"),
+  spaces = c("a  b", "c   d"),
+  mixed = c("a \t  b", "\t\tc"),
+  numbers = c(1, 2.5, NA),
+  factors = factor(c("a", "b", "a")),
+  empty = character(0)
+)
+
+for (nm in names(test_list)) {
+  cat("\n==== TEST:", nm, "====\n")
+  try(yrOnePerLine(test_list[[nm]], debug = TRUE))
+}
+```
+
+## Instructions
+
+1. You may use 1 sheet of notes (double sided) no computer, no other materials.
+
+2. Unless told otherwise, all regex patterns are to be written as they would be used in R.
+
+3. **When writing code:** indicate a space with the word **SPACE** or an **underscore i.e. _** 
+   so that I can see it when I'm grading.
+
+4. **When writing code:** your answer **must work even if the data for the question would be different**. 
+   The data given is just one example.
+
+# Part I - reading code
+
+For each question write the output of the code EXACTLY as it would appear in R.
+
+
+
+--- 
+
+For the following questions, assume that ***stuff*** is defined as:
+
+```{r}
+stuff = c("abc", "def", "123.456", "I hope -- you do well.")
+```
+
+## Q1
+
+```{r}
+answer = 
+grep("f", stuff, value=FALSE)   # value=FALSE
+answer
+yrOnePerLine(answer)
+```
