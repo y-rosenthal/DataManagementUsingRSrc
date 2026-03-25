@@ -123,6 +123,67 @@ database is a better long-term system for storing and serving data reliably.
 - Use a **database** when data must be shared across applications, edited by
   many users, protected by strong rules, and stored reliably over time.
 
+## Architecture of software that uses a database
+
+Many modern software systems are "multi-user" systems. That means lots of users
+can use the same system at the same time.
+
+Examples include:
+
+- social media sites (e.g. Facebook)
+- shopping sites (e.g. Amazon)
+- school systems (e.g. a university course registration system)
+- banking and payment systems
+
+Even though these systems can look very different, they usually share a similar
+high-level architecture:
+
+1. A **client** (usually a browser or mobile app) sends a request.
+2. A **web server program** receives that request and runs business logic.
+3. The web server program asks a **database server program (DBMS)** for data.
+4. The DBMS reads/writes data in the database and returns results.
+5. The web server program sends a response back to the client.
+
+### One concrete example: university course registration
+
+Suppose a student logs in and searches for open courses in Fall 2026.
+
+- The student clicks "Search" in a browser.
+- The web server receives the request (for example, with filters like department,
+  course level, and meeting time).
+- The web server sends a SQL query to the DBMS.
+- The DBMS returns matching course records, seat counts, and instructor details.
+- The web server formats that information and sends an HTML/JSON response
+  to the browser.
+- The student sees a list of available courses.
+
+When the student clicks "Enroll", another request is sent and the same
+architecture is used again. The DBMS updates enrollment data and the web server
+returns a success/failure message.
+
+```{mermaid}
+flowchart LR
+    U[Student using browser/app] -->|1. Search or Enroll request| W[Web server program]
+    W -->|2. SQL query| D[Database server program (DBMS)]
+    D -->|3. Results / update status| W
+    W -->|4. HTML or JSON response| U
+
+    D --> S[(Database storage:\nCourses, Sections, Seats,\nStudents, Enrollments)]
+    S --> D
+```
+
+### "Single computer" mental model vs. real deployments
+
+For learning, it is perfectly fine to imagine the web server program and DBMS
+running on one computer. That simple model helps explain the core idea.
+
+In real production systems, organizations often use technical strategies (that
+we will not cover here) to run **multiple web servers** and **multiple database
+servers** for scale, reliability, and fault tolerance.
+
+So the simple model is still conceptually correct; real systems are usually
+larger versions of the same pattern.
+
 ## Different categories of databases 
 
 There are different types of databases and Database Management System (DBMS) 
