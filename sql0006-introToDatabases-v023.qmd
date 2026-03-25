@@ -162,15 +162,30 @@ architecture is used again. The DBMS updates enrollment data and the web server
 returns a success/failure message.
 
 ```{mermaid}
-flowchart LR
-    U[Student using browser/app] -->|1. Search or Enroll request| W[Web server program]
-    W -->|2. SQL query| D[Database server program (DBMS)]
-    D -->|3. Results / update status| W
-    W -->|4. HTML or JSON response| U
+flowchart TD
+    U[Student using browser or app]
+    W[Web server program: receives requests, runs business logic, returns responses]
+    D[(Database server program: stores and retrieves data about courses, sections, seats, students, and enrollments)]
 
-    D --> S[(Database storage:\nCourses, Sections, Seats,\nStudents, Enrollments)]
-    S --> D
+    U -->|Step 1: request| W
+    W -->|Step 2: SQL query| D
+    D -->|Step 3: results/status| W
+    W -->|Step 4: response| U
 ```
+
+Where the numbered arrows mean:
+
+1. **Request from client to web server**  
+   The student submits an action in the browser/app (for example, search or enroll).
+
+2. **Web server asks the DBMS for data/action**  
+   The web server sends a SQL command to retrieve data or update records.
+
+3. **DBMS returns results to web server**  
+   The DBMS returns matching rows or update status (success/failure).
+
+4. **Web server sends final response to client**  
+   The web server formats the result and returns it to the browser/app.
 
 ### "Single computer" mental model vs. real deployments
 
