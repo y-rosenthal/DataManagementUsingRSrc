@@ -9,6 +9,8 @@ project:
     - yrstuff-v001.js
     - assignment-api-0000100-weatherDataApi-v002.qmd.zip
     - assignment-api-0000100-weatherDataApi-v001.qmd.zip
+    - data/moviesPractice-v001.sqlite
+    - data/moviesPractice-v001.csv
   render:
     - "*.qmd"  # Ensures all .qmd files are rendered, even if not in `chapters`
     - "assignment-api-0000100-weatherDataApi-v001.qmd"  # Ensure the old version gets rendered
@@ -78,6 +80,7 @@ book:
       chapters:
       - sql0006-introToDatabases-v023.qmd # db and dbms - copied from introToSQL # yrChapterNumber 27
       - sql0014-theBooksDatabase-v001.qmd # get the data # yrChapterNumber 28
+      - sql0016-moviesPractice-v001.qmd # movies practice dataset and questions
       - 0500400-sqlSelectIntro-v003.qmd # assumes dplyr knowledge      # yrChapterNumber 29
       - sql0010-introToSql-v023.qmd       # NO dplyr knowledge # yrChapterNumber 30
       - sql0035-workingWithMultipleTables-v012.qmd # inner joins - renumbered from sql0020 # yrChapterNumber 31

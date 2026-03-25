@@ -55,6 +55,14 @@ A collection of a few tables that come from some of the lessons on the website
   
   * Download as a .RData file:   
     <a href="data/sqlbolt_tables-v007.RData" download>sqlbolt_tables-v007.RData</a>
+
+### movies practice table
+
+A standalone movies table for extra SQL practice questions is available here:
+
+- Practice page: [SQL Practice: Movies Table](sql0016-moviesPractice-v001.qmd)
+- Download as a sqlite file: [moviesPractice-v001.sqlite](data/moviesPractice-v001.sqlite)
+- Download as a CSV file: [moviesPractice-v001.csv](data/moviesPractice-v001.csv)
  
 ### The "books" database 
 

@@ -1,0 +1,72 @@
+# <yrChapterNumber>28.1 </yrChapterNumber> SQL Practice: Movies Table
+
+## Download the practice data
+
+Use either format below (same data in both files):
+
+- SQLite database file: [moviesPractice-v001.sqlite](data/moviesPractice-v001.sqlite)
+- CSV file: [moviesPractice-v001.csv](data/moviesPractice-v001.csv)
+
+The SQLite file contains one table named `movies`.
+
+## Table structure
+
+`movies(movie_id, title, genre, director, release_year, runtime_minutes, rating, domestic_box_office_millions, oscar_wins, franchise)`
+
+## Sample rows
+
+| movie_id | title | genre | director | release_year | runtime_minutes | rating | domestic_box_office_millions | oscar_wins | franchise |
+|---:|---|---|---|---:|---:|---|---:|---:|---|
+| 1 | The Last Algorithm | Sci-Fi | Ava Chen | 2018 | 124 | PG-13 | 210.4 | 2 | DataVerse |
+| 6 | Skyline Detectives II | Action | Noah Price | 2022 | 146 | PG-13 | 455.1 | 2 | Skyline |
+| 11 | Map of Small Worlds | Animation | Kira Stone | 2018 | 93 | G | 132.4 | 1 | Small Worlds |
+| 16 | The Null Value | Mystery | Priya Raman | 2024 | 110 | NULL | NULL | 0 | NULL |
+
+## Practice questions (easy to challenging)
+
+Write SQL queries that answer the following.
+
+### Level 1: Core SELECT/FROM
+
+1. Show all columns for all movies.
+2. Show only `title`, `director`, and `release_year`.
+3. Show the first 5 rows in alphabetical order by `title`.
+4. Show all distinct `genre` values in alphabetical order.
+
+### Level 2: WHERE, ORDER BY, LIMIT, IN, BETWEEN
+
+5. Show all movies released between 2018 and 2022 (inclusive), ordered by `release_year` then `title`.
+6. Show all movies directed by `Ava Chen`, `Noah Price`, or `Lena Brooks`.
+7. Show the 3 longest movies (display `title` and `runtime_minutes`).
+8. Show movies with `rating = 'PG'` or `rating = 'G'`, ordered by `release_year` descending.
+
+### Level 3: LIKE, calculated columns, aliases
+
+9. Show movies whose `title` starts with `Map`.
+10. Show movies whose `title` contains the word `Skyline`.
+11. Show `title`, `runtime_minutes`, and a calculated column named `runtime_hours` (`runtime_minutes / 60.0`).
+12. Show `title` and a calculated column named `box_office_per_minute` (`domestic_box_office_millions / runtime_minutes`), ordered from highest to lowest.
+
+### Level 4: NULL handling and logic
+
+13. Show movies where `rating` is NULL.
+14. Show movies where `domestic_box_office_millions` is NOT NULL and is at least 100.
+15. Show movies where `franchise` is NULL and `release_year >= 2018`.
+16. Show movies where `genre = 'Drama'` and (`release_year < 2018` or `oscar_wins >= 1`).
+
+### Level 5: GROUP BY and HAVING
+
+17. For each `director`, show the number of movies they directed (`movie_count`), ordered from largest to smallest.
+18. For each `genre`, show average runtime (`avg_runtime`) rounded to 1 decimal place.
+19. Show directors with at least 3 movies in the table.
+20. For each non-NULL `franchise`, show total domestic box office and keep only franchises above 300 million.
+
+## Optional stretch questions
+
+21. Show the second page of results when listing movies by `title`, 5 rows per page.
+22. Show each movie with a label column named `era` that is:
+   - `'classic'` if `release_year < 2015`
+   - `'modern'` if `release_year` is 2015 to 2020
+   - `'new'` if `release_year > 2020`
+23. Show the top movie (or movies) by `domestic_box_office_millions` within each `genre`.
+

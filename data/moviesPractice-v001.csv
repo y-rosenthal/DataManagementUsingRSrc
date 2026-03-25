@@ -1,0 +1,19 @@
+movie_id,title,genre,director,release_year,runtime_minutes,rating,domestic_box_office_millions,oscar_wins,franchise
+1,The Last Algorithm,Sci-Fi,Ava Chen,2018,124,PG-13,210.4,2,DataVerse
+2,Midnight in Orion,Sci-Fi,Ava Chen,2021,132,PG-13,305.7,1,DataVerse
+3,Campus at Dawn,Drama,Miguel Torres,2016,109,PG,48.2,0,
+4,Borrowed Umbrella,Romance,Lena Brooks,2014,97,PG-13,62.9,0,
+5,Skyline Detectives,Action,Noah Price,2019,141,PG-13,410.3,3,Skyline
+6,Skyline Detectives II,Action,Noah Price,2022,146,PG-13,455.1,2,Skyline
+7,Quiet Library,Mystery,Priya Raman,2013,103,PG,35.6,0,
+8,Pixels and Promises,Comedy,Jordan Lee,2017,101,PG-13,88.0,0,
+9,Road to Cedar Bay,Drama,Miguel Torres,2020,115,R,74.3,1,
+10,Under the Neon Bridge,Thriller,Priya Raman,2015,112,R,58.7,0,
+11,Map of Small Worlds,Animation,Kira Stone,2018,93,G,132.4,1,Small Worlds
+12,Map of Small Worlds: Beyond,Animation,Kira Stone,2023,99,PG,166.2,0,Small Worlds
+13,Autumn Query,Drama,Lena Brooks,2012,121,PG-13,27.5,0,
+14,Ninety Seconds Left,Action,Noah Price,2011,107,PG-13,95.8,0,
+15,Station Eleven Minutes,Sci-Fi,Ava Chen,2010,118,PG-13,120.0,0,
+16,The Null Value,Mystery,Priya Raman,2024,110,,,0,
+17,How to Sort a Heart,Romance,Lena Brooks,2021,104,PG,81.6,0,
+18,From Here to Integer,Comedy,Jordan Lee,2019,98,PG,54.1,0,
