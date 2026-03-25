@@ -53,6 +53,76 @@ for quickly gaining insights into data. However, Excel does not have most of
 the  features listed above that describe typical databases. 
 :::
 
+## Excel vs databases: what is the difference?
+
+Excel and relational databases both organize information into rows and columns,
+so they can look similar at first. But they are designed for different goals.
+
+- **Excel is primarily person-first software**: A human usually opens a workbook,
+  edits cells, adds formulas, and builds charts.
+
+- **Databases are primarily application-first systems**: A software program
+  (website, app, API, report process, etc.) usually sends commands to a DBMS to
+  read and write data.
+
+In other words, Excel is an excellent analysis and presentation tool, while a
+database is a better long-term system for storing and serving data reliably.
+
+### Quick comparison
+
+| Topic | Excel | Relational Database (DBMS) |
+|---|---|---|
+| Typical use | Interactive analysis by people | Data storage/retrieval for software + teams |
+| Main interface | Spreadsheet UI | SQL (Structured Query Language) + admin tools |
+| Data size | Great for small-to-medium data | Designed for very large data volumes |
+| Number of users editing at once | Limited and can get messy | Built for many concurrent users safely |
+| Validation rules | Basic validation options (useful, but limited) | Strong constraints/rules to enforce quality |
+| Structure | Workbook with sheets | Database with multiple related tables |
+| How related data is organized | Often spread across multiple sheets, with manual links | Related tables are connected with keys, reducing duplication |
+| Where data usually lives | Usually a file (local drive/shared folder/cloud file app) | Usually a database server (on a network or in the cloud) |
+| Repeatability of data tasks | Heavily dependent on workbook formulas and manual steps | Queries/scripts can be saved and rerun consistently |
+| Reliability | Easier to break accidentally | Transaction and recovery features reduce data loss |
+| Security | File-level sharing controls | Fine-grained user/role permissions |
+
+### Why this matters in practice
+
+1. **Scale**  
+   Excel can become slow and difficult to manage as data grows. Databases are
+   engineered to keep performance reasonable even with large datasets.
+
+2. **Data quality**  
+   Excel does support validation (for example, requiring GPA to be between 0 and
+   4). But database systems provide stronger, centralized rules (types, keys,
+   constraints, relationships) so all applications follow the same standards.
+
+3. **Many people working at once**  
+   Spreadsheets can be hard to coordinate when many people update data.
+   Databases are designed for concurrent access and include locking/transaction
+   logic to prevent collisions and inconsistent results.
+
+4. **Program integration**  
+   A DBMS is designed to be queried by programs using SQL. This makes databases
+   a better fit for websites and business systems that must continuously read and
+   update data.
+
+5. **Relationships between topics**  
+   In many real systems, data naturally spans multiple related topics (for
+   example: students, courses, and grades). Databases are built to connect these
+   topics cleanly across tables, while spreadsheets often require more manual
+   linking across tabs.
+
+6. **Consistency over time**  
+   Spreadsheet workflows can drift over time (formula edits, copied tabs, and
+   one-off manual fixes). Database queries and rules are easier to standardize,
+   so teams are more likely to get the same result each time.
+
+### A helpful rule of thumb
+
+- Use **Excel** when the goal is quick exploration, ad hoc analysis, and
+  visualization by a person or a small team.
+- Use a **database** when data must be shared across applications, edited by
+  many users, protected by strong rules, and stored reliably over time.
+
 ## Different categories of databases 
 
 There are different types of databases and Database Management System (DBMS) 
