@@ -1,0 +1,704 @@
+---
+title: "SQL commands from lesson 32 — aggregate functions, GROUP BY, HAVING"
+---
+
+Extracted from [sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019](https://y-rosenthal.github.io/DataManagementUsingR/sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.html). Each statement is the SQL string passed to `sqldf()` in the source lesson ([sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd](sql0030-sqlFunctions_aggregateFunctions_groupBy_having-v019.qmd)), in the same order as in the chapter. There are 88 commands.
+
+## Command 1
+
+```sql
+select * from titles
+```
+
+## Command 2
+
+```sql
+select title_name, price from titles
+```
+
+## Command 3
+
+```sql
+select upper(title_name), price from titles
+```
+
+## Command 4
+
+```sql
+select price from titles
+```
+
+## Command 5
+
+```sql
+select avg(price) from titles
+```
+
+## Command 6
+
+```sql
+select 3+2,   10*2,   23/5,   23.0/5
+```
+
+## Command 7
+
+```sql
+select 3+2 as A,   10*2 as B,   23/5 as C,   23.0/5 as D
+```
+
+## Command 8
+
+```sql
+select 3+2 A,   10*2 B,   23/5 C,   23.0/5 D
+```
+
+## Command 9
+
+```sql
+select upper('abcde')
+```
+
+## Command 10
+
+```sql
+select * from titles
+```
+
+## Command 11
+
+```sql
+select title_name
+       from titles
+       limit 5
+```
+
+## Command 12
+
+```sql
+select upper(title_name)
+      from titles
+      limit 5
+```
+
+## Command 13
+
+```sql
+select upper(title_name) as title
+      from titles
+      limit 5
+```
+
+## Command 14
+
+```sql
+select title_name, upper(title_name) as TITLE_NAME
+      from titles
+      limit 5
+```
+
+## Command 15
+
+```sql
+select upper(title_name) as TITLE_NAME, price
+      from titles
+      limit 5
+```
+
+## Command 16
+
+```sql
+select upper(title_name) as TITLE_NAME, *
+       from titles
+       limit 5
+```
+
+## Command 17
+
+```sql
+select title_name, pubdate
+      from titles
+```
+
+## Command 18
+
+```sql
+select title_name, rtrim(pubdate, '0:') as publication_date
+      from titles
+```
+
+## Command 19
+
+```sql
+select title_id, substr(title_id, 2, 2) as title_number from titles
+```
+
+## Command 20
+
+```sql
+select title_id, substr(title_id, 2, 200) as title_number from titles
+```
+
+## Command 21
+
+```sql
+select title_name, substr(title_name, 1, 20) as abbreviated_title from titles
+```
+
+## Command 22
+
+```sql
+select title_name, substr(title_name, 1, 20) || ' ...' as abbreviated_title from titles
+```
+
+## Command 23
+
+```sql
+select *
+       from titles
+       where substr(pubdate, 2, 1) = '/'
+       order by title_name
+```
+
+## Command 24
+
+```sql
+select title_name, type, pubdate
+       from titles
+       where substr(pubdate, 2, 1) != '/'
+       order by pubdate
+```
+
+## Command 25
+
+```sql
+select title_name, type, pubdate 
+       from titles
+       where substr(pubdate, 3, 1) = '/'
+```
+
+## Command 26
+
+```sql
+select title_name, type, pubdate 
+       from titles
+       where substr(pubdate, 1, 2) in ('10','11','12')
+```
+
+## Command 27
+
+```sql
+select title_name, trim(pubdate, '0123456789: ') 
+       from titles
+```
+
+## Command 28
+
+```sql
+select title_name, trim(trim(pubdate, '0123456789: '),'/') as dayOfMonth
+       from titles
+```
+
+## Command 29
+
+```sql
+select title_name, trim(pubdate, '0123456789: /') as dayOfMonth
+       from titles
+```
+
+## Command 30
+
+```sql
+select * from titles
+```
+
+## Command 31
+
+```sql
+select avg(price),  min(price) , max(price)
+      from titles
+```
+
+## Command 32
+
+```sql
+select avg(price), sum(pages),  title_name, type
+      from titles
+```
+
+## Command 33
+
+```sql
+select * from titles
+```
+
+## Command 34
+
+```sql
+select sum(price) , avg(price) , avg(DISTINCT price), count(*), count(price) , count(DISTINCT price), min(price) , max(price), count(type), count(DISTINCT type)
+      from titles
+```
+
+## Command 35
+
+```sql
+select min(type), max(type), count(*), count(type), count(DISTINCT type)
+      from titles
+```
+
+## Command 36
+
+```sql
+select distinct type from titles order by type asc
+```
+
+## Command 37
+
+```sql
+select DISTINCT type
+      from titles
+```
+
+## Command 38
+
+```sql
+select type
+      from titles
+```
+
+## Command 39
+
+```sql
+select type, pub_id
+      from titles
+      order by type, pub_id
+```
+
+## Command 40
+
+```sql
+select distinct type, pub_id
+      from titles
+      order by type, pub_id
+```
+
+## Command 41
+
+```sql
+select * from titles
+```
+
+## Command 42
+
+```sql
+select count(*), max(price), avg(price) 
+        from titles
+```
+
+## Command 43
+
+```sql
+select count(*), max(price), avg(price)
+        from titles
+        where type = 'biography'
+```
+
+## Command 44
+
+```sql
+select distinct au_fname, au_lname
+       from authors join title_authors on authors.au_id = title_authors.au_id
+       where royalty_shares = 1.0
+       order by au_lname asc, au_fname asc
+```
+
+## Command 45
+
+```sql
+select au_fname, au_lname
+       from authors join title_authors on authors.au_id = title_authors.au_id
+       where royalty_shares = 1.0
+       order by au_lname asc, au_fname asc
+```
+
+## Command 46
+
+```sql
+ select distinct au_fname, au_lname, royalty_rate
+        from authors join title_authors on authors.au_id = title_authors.au_id
+                     join titles        on title_authors.title_id = titles.title_id
+                     join royalties     on titles.title_id = royalties.title_id
+        where royalty_rate > .05
+        order by au_lname, au_fname
+```
+
+## Command 47
+
+```sql
+ select distinct au_fname, au_lname
+        from authors join title_authors on authors.au_id = title_authors.au_id
+                     join titles        on title_authors.title_id = titles.title_id
+                     join royalties     on titles.title_id = royalties.title_id
+        where royalty_rate > .06
+        order by au_lname, au_fname
+```
+
+## Command 48
+
+```sql
+select authors.*, title_authors.* 
+      from authors CROSS JOIN title_authors
+```
+
+## Command 49
+
+```sql
+select authors.*, title_authors.*
+      from authors join title_authors on authors.au_id = title_authors.au_id
+```
+
+## Command 50
+
+```sql
+select authors.*, title_authors.*, titles.*
+      from authors join title_authors on authors.au_id = title_authors.au_id
+                   join titles        on title_authors.title_id = titles.title_id
+```
+
+## Command 51
+
+```sql
+select authors.*, title_authors.*, titles.*, royalties.*
+      from authors join title_authors on authors.au_id = title_authors.au_id
+                   join titles        on title_authors.title_id = titles.title_id
+                   join royalties     on titles.title_id = royalties.title_id
+```
+
+## Command 52
+
+```sql
+select authors.*, title_authors.*, titles.*, royalties.*
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+```
+
+## Command 53
+
+```sql
+select authors.*, title_authors.*, titles.*, royalties.*
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+               order by au_lname, au_fname
+```
+
+## Command 54
+
+```sql
+select au_fname, au_lname
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+               order by au_lname, au_fname
+```
+
+## Command 55
+
+```sql
+select DISTINCT au_fname, au_lname
+               from authors join title_authors on authors.au_id = title_authors.au_id
+                            join titles        on title_authors.title_id = titles.title_id
+                            join royalties     on titles.title_id = royalties.title_id
+               where royalty_rate > .06
+               order by au_lname, au_fname
+```
+
+## Command 56
+
+```sql
+select count(*), sum(pages), avg(pages), min(pages), max(pages)
+      from titles
+      where type = 'this type does not exist'
+```
+
+## Command 57
+
+```sql
+select count(*), sum(pages), avg(pages)
+      from titles
+      where type = 'cookbook'
+```
+
+## Command 58
+
+```sql
+select avg(price) from titles
+```
+
+## Command 59
+
+```sql
+select title_name from titles
+```
+
+## Command 60
+
+```sql
+select avg(price) , title_name from titles
+```
+
+## Command 61
+
+```sql
+select type, price 
+      from titles 
+      order by type, price
+```
+
+## Command 62
+
+```sql
+select type, count(*), avg(price), max(price), min(price)
+      from titles
+      group by type
+      order by type
+```
+
+## Command 63
+
+```sql
+select type, count(*) as '#copies', avg(price), max(price), min(price)
+      from titles
+      group by type
+      order by type
+```
+
+## Command 64
+
+```sql
+select count(*) as '#copies', avg(price), max(price), min(price)
+      from titles
+```
+
+## Command 65
+
+```sql
+select type, pub_id, price, title_name
+       from titles
+       order by type, pub_id, price
+```
+
+## Command 66
+
+```sql
+select type, pub_id, count(*)
+       from titles
+       group by type, pub_id
+       order by type, pub_id
+```
+
+## Command 67
+
+```sql
+select type, pub_id, count(*) as '#copies', avg(price), min(price), max(price)
+      from titles
+      group by type, pub_id
+      order by type
+```
+
+## Command 68
+
+```sql
+select type, pub_id, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type, pub_id   
+      order by pub_id, type
+```
+
+## Command 69
+
+```sql
+select pub_id, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type, pub_id
+      order by pub_id, type
+```
+
+## Command 70
+
+```sql
+select pub_id, type, title_name, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type, pub_id
+      order by pub_id, type
+```
+
+## Command 71
+
+```sql
+select titles.*, publishers.*
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      order by pub_name, type
+```
+
+## Command 72
+
+```sql
+select pub_name, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by type, pub_name
+      order by pub_name, type
+```
+
+## Command 73
+
+```sql
+select pub_name, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by type, publishers.pub_id
+      order by pub_name, type
+```
+
+## Command 74
+
+```sql
+select pub_name, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by pub_name
+      order by pub_name
+```
+
+## Command 75
+
+```sql
+select pub_name, type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles join publishers on titles.pub_id = publishers.pub_id
+      group by pub_name
+      order by pub_name
+```
+
+## Command 76
+
+```sql
+select * 
+       from titles
+       order by type
+```
+
+## Command 77
+
+```sql
+select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      order by type
+```
+
+## Command 78
+
+```sql
+select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      having count(*) >=3 
+      order by type
+```
+
+## Command 79
+
+```sql
+select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      order by type
+```
+
+## Command 80
+
+```sql
+select type, avg(price), count(*), min(price), max(price), sum(price)
+      from titles
+      group by type
+      having count(*) >=3 and (avg(price) >= 20 or avg(price) <= 10)
+      order by type
+```
+
+## Command 81
+
+```sql
+select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       GROUP BY TYPE
+       order by type
+```
+
+## Command 82
+
+```sql
+select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       WHERE PAGES > 350
+       GROUP BY TYPE
+       order by type
+```
+
+## Command 83
+
+```sql
+select type, pages, title_name
+       from titles
+       order by type, pages, title_name
+```
+
+## Command 84
+
+```sql
+select type, pages, title_name
+       from titles
+       WHERE PAGES > 350
+       order by type, pages, title_name
+```
+
+## Command 85
+
+```sql
+select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       GROUP BY TYPE
+       order by type
+```
+
+## Command 86
+
+```sql
+select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       group by type
+       having count(*) > 1
+       order by type
+```
+
+## Command 87
+
+```sql
+select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       where pages > 350
+       group by type
+       order by type
+```
+
+## Command 88
+
+```sql
+select type, count(*), count(pages), min(pages), max(pages)
+       from titles
+       where pages > 350
+       group by type
+       having count(*) > 1
+       order by type
+```
+

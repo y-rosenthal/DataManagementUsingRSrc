@@ -139,45 +139,6 @@ ONCE YOU'VE REMOVED A FILE/FOLDER YOU CANNOT GET IT BACK!
 
   For an example see see @sec-bashPrompt for info about the PS1 variable
 
-## Some more commands
-
-- touch SOME_FILE       - update the timestamp of the file OR create the file if it didn't exist
-
-- chmod  PERMISSIONS  FILE_OR_DIR_NAMES  - change the permissions of a files or directories
-
-
-## Additional commands that can also be used as filters in a pipeline
-
-Many of the commands in Bash can be used either directly on files or as
-"filters" in a pipeline. For example see  wc  command below.
-
-- grep REGEX_PATTERN SOME_FILES - display lines from the files that match the REGEX_PATTERN
-
-- SOME_COMMAND | grep REGEX_PATTERN - display only lines of output from SOME_COMMAND that match the REGEX_PATTERN
-
-- wc SOME_FILE - count words, lines, sybols in a file
-
-- wc -l SOME_FILE -   -l option shows just the number of lines
-
-- SOME_COMMAND | wc - count words, lines, symbols in the output of a command
-
-- head SOME_FILE   - show first few lines of a file
-
-- SOME_COMMAND | head   - show first few lines of output from SOME_COMMAND 
-
-- tail SOME_FILE   - show last few lines of a file
-
-- SOME_COMMAND | tail   - show last few lines of output from SOME_COMMAND 
-
-- sort SOME_FILE   - display the lines in the file in sorted order
-
-- SOME_COMMAND | sort   - sort the output of the command
-
-- uniq SOME_FILE   - display the unique lines of the file (file must be sorted first)
-
-- SOME_COMMAND | uniq - display the unique lines of output (consecutive, duplicate lines are removed from output)
-
-
 ---
 
 ## Material that is NOT on the midterm
@@ -193,15 +154,31 @@ on all computer platforms.
 
 ### SOME MORE COMMANDS - search online for info about these
 
+- wc - count words, lines, symbols in a file
+
+- head   - show first few lines of a file
+
+- tail   - show last few lines of a file
+
+- sort
+
+- uniq
+
 - cut
 
 - paste
 
 - curl    - download files from the Internet
 
+- touch SOME_FILE       - update the timestamp of the file OR create the file if it didn't exist
+
 - less (or "more" depending on your system) - display the contents of a file one page at a time
 
+- grep - search for a specific string of text in a file or multiple files
+
 - find - search for files and directories in a file system
+
+- chmod - change the permissions of a file or directory
 
 - chown - change the ownership of a file or directory
 

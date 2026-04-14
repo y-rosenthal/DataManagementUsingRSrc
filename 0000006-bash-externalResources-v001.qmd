@@ -47,4 +47,12 @@ the midterm.
 
 - [Permissions - Learn to identify and change the permissions of files and directories and what the consequences of these are.](https://ryanstutorials.net/linuxtutorial/permissions.php){target="yrOtherTab"}
 
+- [Filters](https://ryanstutorials.net/linuxtutorial/filters.php){target="yrOtherTab"}
+
+- [grep and regex](https://ryanstutorials.net/linuxtutorial/grep.php){target="yrOtherTab"}
   
+- [piping | and redirection > >> etc](https://ryanstutorials.net/linuxtutorial/piping.php){target="yrOtherTab"}
+
+  NOTE: We only covered | and > , not >> and others
+
+- [Bash scripting](https://ryanstutorials.net/linuxtutorial/scripting.php){target="yrOtherTab"}
